@@ -1,0 +1,27 @@
+<!-- Hand-written after a common store plugin's checkout: labels and name attributes, no autocomplete. -->
+<form name="checkout" method="post" class="checkout" action="/checkout/">
+  <p><label for="billing_first_name">First name <abbr title="required">*</abbr></label>
+    <input type="text" class="input-text" name="billing_first_name" id="billing_first_name"></p>
+  <p><label for="billing_last_name">Last name <abbr title="required">*</abbr></label>
+    <input type="text" class="input-text" name="billing_last_name" id="billing_last_name"></p>
+  <p><label for="billing_company">Company name (optional)</label>
+    <input type="text" class="input-text" name="billing_company" id="billing_company"></p>
+  <p><label for="billing_address_1">Street address</label>
+    <input type="text" class="input-text" name="billing_address_1" id="billing_address_1" placeholder="House number and street name"></p>
+  <p><label for="billing_address_2" class="screen-reader-text">Apartment, suite, unit, etc. (optional)</label>
+    <input type="text" class="input-text" name="billing_address_2" id="billing_address_2"></p>
+  <p><label for="billing_city">Town / City</label>
+    <input type="text" class="input-text" name="billing_city" id="billing_city"></p>
+  <p><label for="billing_state">State / County</label>
+    <select name="billing_state" id="billing_state"><option value="">Select an option</option><option value="CA">California</option></select></p>
+  <p><label for="billing_postcode">ZIP Code</label>
+    <input type="tel" class="input-text" name="billing_postcode" id="billing_postcode"></p>
+  <p><label for="billing_phone">Phone</label>
+    <input type="tel" class="input-text" name="billing_phone" id="billing_phone"></p>
+  <p><label for="billing_email">Email address</label>
+    <input type="email" class="input-text" name="billing_email" id="billing_email"></p>
+  <p><label for="order_comments">Order notes (optional)</label>
+    <textarea name="order_comments" id="order_comments" placeholder="Notes about your order, e.g. special notes for delivery."></textarea></p>
+  <p><label for="coupon_code">Coupon code</label><input type="text" name="coupon_code" id="coupon_code"></p>
+  <button type="submit" class="button alt" name="checkout_place_order" id="place_order">Place order</button>
+</form>

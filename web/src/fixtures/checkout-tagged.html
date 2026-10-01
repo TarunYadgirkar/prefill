@@ -1,0 +1,31 @@
+<!-- Hand-written after a typical hosted checkout: every field tagged, shipping and billing blocks. -->
+<form id="checkout" action="/checkout" method="post">
+  <h2>Contact</h2>
+  <input type="email" id="checkout_email" name="checkout[email]" autocomplete="email" placeholder="Email" required>
+  <h2>Shipping address</h2>
+  <select id="ship_country" name="checkout[shipping_address][country]" autocomplete="shipping country">
+    <option value="US" selected>United States</option>
+    <option value="CA">Canada</option>
+  </select>
+  <input id="ship_first" name="checkout[shipping_address][first_name]" autocomplete="shipping given-name" placeholder="First name">
+  <input id="ship_last" name="checkout[shipping_address][last_name]" autocomplete="shipping family-name" placeholder="Last name">
+  <input id="ship_line1" name="checkout[shipping_address][address1]" autocomplete="shipping address-line1" placeholder="Address">
+  <input id="ship_line2" name="checkout[shipping_address][address2]" autocomplete="shipping address-line2" placeholder="Apartment, suite, etc. (optional)">
+  <input id="ship_city" name="checkout[shipping_address][city]" autocomplete="shipping address-level2" placeholder="City">
+  <select id="ship_state" name="checkout[shipping_address][province]" autocomplete="shipping address-level1">
+    <option value="">State</option>
+    <option value="CA">California</option>
+    <option value="NY">New York</option>
+  </select>
+  <input id="ship_zip" name="checkout[shipping_address][zip]" autocomplete="shipping postal-code" placeholder="ZIP code">
+  <input id="ship_phone" type="tel" name="checkout[shipping_address][phone]" autocomplete="shipping tel" placeholder="Phone">
+  <h2>Billing address</h2>
+  <input id="bill_line1" name="checkout[billing_address][address1]" autocomplete="billing address-line1" placeholder="Address">
+  <input id="bill_city" name="checkout[billing_address][city]" autocomplete="billing address-level2" placeholder="City">
+  <input id="bill_zip" name="checkout[billing_address][zip]" autocomplete="billing postal-code" placeholder="ZIP code">
+  <h2>Payment</h2>
+  <input id="cc_number" name="checkout[credit_card][number]" autocomplete="cc-number" inputmode="numeric" placeholder="Card number">
+  <input id="cc_name" name="checkout[credit_card][name]" autocomplete="cc-name" placeholder="Name on card">
+  <input id="cc_csc" name="checkout[credit_card][verification_value]" autocomplete="cc-csc" placeholder="Security code">
+  <button type="submit" id="pay">Pay now</button>
+</form>

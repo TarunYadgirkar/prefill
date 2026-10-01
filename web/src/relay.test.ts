@@ -15,6 +15,14 @@ describe("relayToNative", () => {
     expect(sendNative).toHaveBeenCalledWith(request);
   });
 
+  it("turns a malformed native reply into an error", async () => {
+    const sendNative = vi.fn().mockResolvedValue({ type: "pageContextResult", status: "maybe" });
+    await expect(relayToNative({ type: "ping" }, sendNative)).resolves.toEqual({
+      type: "error",
+      reason: "unreadable reply",
+    });
+  });
+
   it.each([null, "ping", { type: "other" }, {}, { type: "capture", host: "example.net" }])("ignores %j", (message) => {
     const sendNative = vi.fn();
     expect(relayToNative(message, sendNative)).toBeUndefined();
