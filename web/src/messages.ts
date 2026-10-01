@@ -4,7 +4,7 @@
 
 export const FIELD_KINDS = ["email", "phone", "address", "name"] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
-export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off"] as const;
+export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off", "notSetUp"] as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
 export type SectionHint = (typeof SECTION_HINTS)[number];

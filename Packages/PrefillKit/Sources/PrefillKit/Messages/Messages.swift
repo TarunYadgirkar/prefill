@@ -29,17 +29,23 @@ public struct PageContextRequest: Codable, Sendable, Hashable {
         self.fields = fields
     }
 
-    // One card order serves the whole page, so the first field of a kind sets its hint.
     public var hints: [ContactKind: SectionHint] {
+        SectionHint.firstPerKind(fields.map { ($0.kind, $0.section) })
+    }
+}
+
+extension SectionHint {
+    // One card order serves the whole page, so the first field of a kind sets its hint.
+    static func firstPerKind(_ fields: [(FieldKind, SectionHint?)]) -> [ContactKind: SectionHint] {
         fields.reduce(into: [:]) { hints, field in
-            guard let kind = field.kind.contactKind, hints[kind] == nil, let section = field.section else { return }
+            guard let kind = field.0.contactKind, hints[kind] == nil, let section = field.1 else { return }
             hints[kind] = section
         }
     }
 }
 
 public enum SyncStatus: String, Codable, Sendable, CaseIterable {
-    case unchanged, saved, failed, off
+    case unchanged, saved, failed, off, notSetUp
 }
 
 public struct PageContextResponse: Codable, Sendable, Hashable {
@@ -49,6 +55,14 @@ public struct PageContextResponse: Codable, Sendable, Hashable {
     public init(status: SyncStatus, reason: String? = nil) {
         self.status = status
         self.reason = reason
+    }
+
+    public init(outcome: CardWriteOutcome) {
+        switch outcome {
+        case .unchanged: self.init(status: .unchanged)
+        case .saved: self.init(status: .saved)
+        case .failed(let failure): self.init(status: .failed, reason: failure.reason)
+        }
     }
 }
 
@@ -84,6 +98,10 @@ public struct CaptureRequest: Codable, Sendable, Hashable {
         self.host = host
         self.fields = fields
         self.hasPassword = hasPassword
+    }
+
+    public var hints: [ContactKind: SectionHint] {
+        SectionHint.firstPerKind(fields.map { ($0.kind, $0.section) })
     }
 }
 

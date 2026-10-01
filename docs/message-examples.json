@@ -2,7 +2,7 @@
   "enums": {
     "fieldKind": ["email", "phone", "address", "name"],
     "sectionHint": ["home", "work", "shipping", "billing"],
-    "syncStatus": ["unchanged", "saved", "failed", "off"]
+    "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"]
   },
   "requests": {
     "ping": { "type": "ping" },
