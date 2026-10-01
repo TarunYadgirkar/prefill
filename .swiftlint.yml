@@ -10,6 +10,7 @@ excluded:
   - build
   - spikes
   - Packages/PrefillKit/.build
+  - .worktrees
 
 cyclomatic_complexity:
   warning: 8

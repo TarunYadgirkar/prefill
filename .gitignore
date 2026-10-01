@@ -10,3 +10,4 @@ node_modules/
 .swiftpm/
 /Extension/Resources/content.js
 /Extension/Resources/background.js
+.worktrees/
