@@ -1,0 +1,16 @@
+t5-off-tagged-tapbar {'src': 'page', 'event': 'focus', 'field': 'email', 'value': '', 'isTrusted': True}
+t5-off-tagged-tapbar {'src': 'uitest', 'event': 'tap-candidate', 'found': '9 dl-two@example.net (134.0, 546.0, 134.0, 44.0)'}
+t5-off-tagged-tapbar {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'dl-two@example.net', 'isTrusted': True}
+t5-off-tagged-tapbar {'src': 'page', 'event': 'change', 'field': 'email', 'value': 'dl-two@example.net', 'isTrusted': True}
+t5b-on-tagged-tapdropdown {'src': 'page', 'event': 'focus', 'field': 'email', 'value': '', 'isTrusted': True}
+t5b-on-tagged-tapdropdown {'src': 'uitest', 'event': 'tap-candidate', 'found': 'none'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'focus', 'field': 'email', 'value': '', 'isTrusted': True}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'keydown', 'field': 'email', 'value': '', 'isTrusted': True, 'key': 'd'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'd', 'isTrusted': True, 'inputType': 'insertText'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'keydown', 'field': 'email', 'value': 'd', 'isTrusted': True, 'key': 'l'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'dl', 'isTrusted': True, 'inputType': 'insertText'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'keydown', 'field': 'email', 'value': 'dl', 'isTrusted': True, 'key': '-'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'dl-', 'isTrusted': True, 'inputType': 'insertText'}
+t5c-on-tagged-typed-tapbar {'src': 'uitest', 'event': 'tap-candidate', 'found': '9 dl-three@example.net (268.0, 546.0, 134.0, 44.0)'}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'dl-three@example.net', 'isTrusted': True}
+t5c-on-tagged-typed-tapbar {'src': 'page', 'event': 'change', 'field': 'email', 'value': 'dl-three@example.net', 'isTrusted': True}

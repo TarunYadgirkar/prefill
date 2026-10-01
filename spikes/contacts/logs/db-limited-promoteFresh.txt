@@ -1,0 +1,5 @@
+UID|identifier|label|value
+45|0|Personal|new.first@example.org
+46|1||alex.school@example.edu
+47|2|_$!<Home>!$_|alex.rivera@example.com
+48|3|_$!<Work>!$_|alex@work.example.org

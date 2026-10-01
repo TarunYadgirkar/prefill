@@ -1,0 +1,354 @@
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-root.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-root.png
+127.0.0.1 - - [30/Sep/2026 23:17:17] "GET /snap?name=settings-root HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-root.txt
+127.0.0.1 - - [30/Sep/2026 23:17:17] "POST /tree?name=settings-root HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png
+127.0.0.1 - - [30/Sep/2026 23:17:25] "GET /snap?name=settings-apps HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-apps.txt
+127.0.0.1 - - [30/Sep/2026 23:17:26] "POST /tree?name=settings-apps HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png
+127.0.0.1 - - [30/Sep/2026 23:28:20] "GET /snap?name=settings-apps HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-apps.txt
+127.0.0.1 - - [30/Sep/2026 23:28:20] "POST /tree?name=settings-apps HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png
+127.0.0.1 - - [30/Sep/2026 23:28:30] "GET /snap?name=settings-safari HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-safari.txt
+127.0.0.1 - - [30/Sep/2026 23:28:31] "POST /tree?name=settings-safari HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png
+127.0.0.1 - - [30/Sep/2026 23:28:36] "GET /snap?name=settings-extensions HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-extensions.txt
+127.0.0.1 - - [30/Sep/2026 23:28:36] "POST /tree?name=settings-extensions HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extension-detail.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extension-detail.png
+127.0.0.1 - - [30/Sep/2026 23:28:39] "GET /snap?name=settings-extension-detail HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-extension-detail.txt
+127.0.0.1 - - [30/Sep/2026 23:28:40] "POST /tree?name=settings-extension-detail HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png
+127.0.0.1 - - [30/Sep/2026 23:29:26] "GET /snap?name=settings-apps HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-apps.txt
+127.0.0.1 - - [30/Sep/2026 23:29:26] "POST /tree?name=settings-apps HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png
+127.0.0.1 - - [30/Sep/2026 23:29:35] "GET /snap?name=settings-safari HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-safari.txt
+127.0.0.1 - - [30/Sep/2026 23:29:36] "POST /tree?name=settings-safari HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png
+127.0.0.1 - - [30/Sep/2026 23:29:41] "GET /snap?name=settings-extensions HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-extensions.txt
+127.0.0.1 - - [30/Sep/2026 23:29:41] "POST /tree?name=settings-extensions HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-enable-1-detail-before.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-enable-1-detail-before.png
+127.0.0.1 - - [30/Sep/2026 23:29:45] "GET /snap?name=enable-1-detail-before HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-enable-1-detail-before.txt
+127.0.0.1 - - [30/Sep/2026 23:29:45] "POST /tree?name=enable-1-detail-before HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-enable-2-detail-after-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-enable-2-detail-after-toggle.png
+127.0.0.1 - - [30/Sep/2026 23:29:49] "GET /snap?name=enable-2-detail-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-enable-2-detail-after-toggle.txt
+127.0.0.1 - - [30/Sep/2026 23:29:49] "POST /tree?name=enable-2-detail-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-enable-switch.txt
+127.0.0.1 - - [30/Sep/2026 23:29:49] "POST /tree?name=enable-switch HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-1-page-ask.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-1-page-ask.png
+127.0.0.1 - - [30/Sep/2026 23:30:25] "GET /snap?name=perm-1-page-ask HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-1-page-ask.txt
+127.0.0.1 - - [30/Sep/2026 23:30:25] "POST /tree?name=perm-1-page-ask HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-buttons.txt
+127.0.0.1 - - [30/Sep/2026 23:30:25] "POST /tree?name=perm-buttons HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-1-page-ask.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-1-page-ask.png
+127.0.0.1 - - [30/Sep/2026 23:34:45] "GET /snap?name=perm-1-page-ask HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-1-page-ask.txt
+127.0.0.1 - - [30/Sep/2026 23:34:46] "POST /tree?name=perm-1-page-ask HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-buttons.txt
+127.0.0.1 - - [30/Sep/2026 23:34:46] "POST /tree?name=perm-buttons HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-2-page-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-2-page-menu.png
+127.0.0.1 - - [30/Sep/2026 23:34:49] "GET /snap?name=perm-2-page-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-2-page-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:34:49] "POST /tree?name=perm-2-page-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-3-extension-item.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-perm-3-extension-item.png
+127.0.0.1 - - [30/Sep/2026 23:34:53] "GET /snap?name=perm-3-extension-item HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-perm-3-extension-item.txt
+127.0.0.1 - - [30/Sep/2026 23:34:54] "POST /tree?name=perm-3-extension-item HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-filled.png
+127.0.0.1 - - [30/Sep/2026 23:38:23] "GET /snap?name=ask-button-filled HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-before-submit.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-before-submit.png
+127.0.0.1 - - [30/Sep/2026 23:38:25] "GET /snap?name=ask-button-before-submit HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-ask-button-before-submit.txt
+127.0.0.1 - - [30/Sep/2026 23:38:26] "POST /tree?name=ask-button-before-submit HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-ask-button-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:38:33] "POST /tree?name=ask-button-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-ask-button-after.png
+127.0.0.1 - - [30/Sep/2026 23:38:34] "GET /snap?name=ask-button-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-ask-button-after.txt
+127.0.0.1 - - [30/Sep/2026 23:38:34] "POST /tree?name=ask-button-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-0-page-before.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-0-page-before.png
+127.0.0.1 - - [30/Sep/2026 23:39:10] "GET /snap?name=grant-0-page-before HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-0-page-before.txt
+127.0.0.1 - - [30/Sep/2026 23:39:10] "POST /tree?name=grant-0-page-before HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-1-page-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-1-page-menu.png
+127.0.0.1 - - [30/Sep/2026 23:39:13] "GET /snap?name=grant-1-page-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-1-page-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:39:13] "POST /tree?name=grant-1-page-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-2-site-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-2-site-prompt.png
+127.0.0.1 - - [30/Sep/2026 23:39:16] "GET /snap?name=grant-2-site-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-2-site-prompt.txt
+127.0.0.1 - - [30/Sep/2026 23:39:17] "POST /tree?name=grant-2-site-prompt HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-3-always-options.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-3-always-options.png
+127.0.0.1 - - [30/Sep/2026 23:39:19] "GET /snap?name=grant-3-always-options HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-3-always-options.txt
+127.0.0.1 - - [30/Sep/2026 23:39:19] "POST /tree?name=grant-3-always-options HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-4-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-4-after.png
+127.0.0.1 - - [30/Sep/2026 23:39:23] "GET /snap?name=grant-4-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-4-after.txt
+127.0.0.1 - - [30/Sep/2026 23:39:23] "POST /tree?name=grant-4-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-5-page-menu-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-grant-5-page-menu-after.png
+127.0.0.1 - - [30/Sep/2026 23:39:26] "GET /snap?name=grant-5-page-menu-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-grant-5-page-menu-after.txt
+127.0.0.1 - - [30/Sep/2026 23:39:26] "POST /tree?name=grant-5-page-menu-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-filled.png
+127.0.0.1 - - [30/Sep/2026 23:40:22] "GET /snap?name=g1-button-filled HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-before-submit.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-before-submit.png
+127.0.0.1 - - [30/Sep/2026 23:40:24] "GET /snap?name=g1-button-before-submit HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-button-before-submit.txt
+127.0.0.1 - - [30/Sep/2026 23:40:24] "POST /tree?name=g1-button-before-submit HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-button-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:40:31] "POST /tree?name=g1-button-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-button-after.png
+127.0.0.1 - - [30/Sep/2026 23:40:33] "GET /snap?name=g1-button-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-button-after.txt
+127.0.0.1 - - [30/Sep/2026 23:40:33] "POST /tree?name=g1-button-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-return-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-return-filled.png
+127.0.0.1 - - [30/Sep/2026 23:40:59] "GET /snap?name=g1-return-filled HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-filled.png
+127.0.0.1 - - [30/Sep/2026 23:41:29] "GET /snap?name=g1-fetch-filled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-fetch-status.txt
+127.0.0.1 - - [30/Sep/2026 23:41:31] "POST /tree?name=g1-fetch-status HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-fetch-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:41:37] "POST /tree?name=g1-fetch-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-after.png
+127.0.0.1 - - [30/Sep/2026 23:41:38] "GET /snap?name=g1-fetch-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-fetch-after.txt
+127.0.0.1 - - [30/Sep/2026 23:41:38] "POST /tree?name=g1-fetch-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-navigated-away.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g1-fetch-navigated-away.png
+127.0.0.1 - - [30/Sep/2026 23:41:44] "GET /snap?name=g1-fetch-navigated-away HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g1-fetch-navigated-away.txt
+127.0.0.1 - - [30/Sep/2026 23:41:44] "POST /tree?name=g1-fetch-navigated-away HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-return-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-return-filled.png
+127.0.0.1 - - [30/Sep/2026 23:42:47] "GET /snap?name=g2-return-filled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-return-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:42:56] "POST /tree?name=g2-return-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-return-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-return-after.png
+127.0.0.1 - - [30/Sep/2026 23:42:57] "GET /snap?name=g2-return-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-return-after.txt
+127.0.0.1 - - [30/Sep/2026 23:42:57] "POST /tree?name=g2-return-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-fetch-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-fetch-filled.png
+127.0.0.1 - - [30/Sep/2026 23:43:23] "GET /snap?name=g2-fetch-filled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-fetch-status.txt
+127.0.0.1 - - [30/Sep/2026 23:43:25] "POST /tree?name=g2-fetch-status HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-fetch-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:43:31] "POST /tree?name=g2-fetch-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-fetch-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-fetch-after.png
+127.0.0.1 - - [30/Sep/2026 23:43:32] "GET /snap?name=g2-fetch-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-fetch-after.txt
+127.0.0.1 - - [30/Sep/2026 23:43:32] "POST /tree?name=g2-fetch-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-latency-badges.txt
+127.0.0.1 - - [30/Sep/2026 23:44:37] "POST /tree?name=g2-latency-badges HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-latency-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g2-latency-after.png
+127.0.0.1 - - [30/Sep/2026 23:44:38] "GET /snap?name=g2-latency-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g2-latency-after.txt
+127.0.0.1 - - [30/Sep/2026 23:44:39] "POST /tree?name=g2-latency-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-filled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-filled.png
+127.0.0.1 - - [30/Sep/2026 23:45:24] "GET /snap?name=g3-fetch-filled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g3-fetch-status.txt
+127.0.0.1 - - [30/Sep/2026 23:45:26] "POST /tree?name=g3-fetch-status HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g3-fetch-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:45:32] "POST /tree?name=g3-fetch-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-after.png
+127.0.0.1 - - [30/Sep/2026 23:45:33] "GET /snap?name=g3-fetch-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g3-fetch-after.txt
+127.0.0.1 - - [30/Sep/2026 23:45:34] "POST /tree?name=g3-fetch-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-navigated-away.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-g3-fetch-navigated-away.png
+127.0.0.1 - - [30/Sep/2026 23:45:38] "GET /snap?name=g3-fetch-navigated-away HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-g3-fetch-navigated-away.txt
+127.0.0.1 - - [30/Sep/2026 23:45:38] "POST /tree?name=g3-fetch-navigated-away HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p1-probe-alert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p1-probe-alert.png
+127.0.0.1 - - [30/Sep/2026 23:46:25] "GET /snap?name=p1-probe-alert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p1-probe-alert-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:46:25] "POST /tree?name=p1-probe-alert-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p1-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:46:26] "POST /tree?name=p1-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p1-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:46:27] "POST /tree?name=p1-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p1-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p1-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:46:28] "GET /snap?name=p1-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p1-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:46:28] "POST /tree?name=p1-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p2-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:47:21] "POST /tree?name=p2-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p2-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:47:23] "POST /tree?name=p2-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p2-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p2-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:47:24] "GET /snap?name=p2-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p2-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:47:24] "POST /tree?name=p2-probe-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p3-probe-alert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p3-probe-alert.png
+127.0.0.1 - - [30/Sep/2026 23:47:58] "GET /snap?name=p3-probe-alert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p3-probe-alert-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:47:58] "POST /tree?name=p3-probe-alert-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p3-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:47:59] "POST /tree?name=p3-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p3-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:48:00] "POST /tree?name=p3-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p3-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p3-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:48:01] "GET /snap?name=p3-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p3-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:48:01] "POST /tree?name=p3-probe-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-alert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-alert.png
+127.0.0.1 - - [30/Sep/2026 23:48:40] "GET /snap?name=p4-probe-alert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p4-probe-alert-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:48:40] "POST /tree?name=p4-probe-alert-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-continue-1.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-continue-1.png
+127.0.0.1 - - [30/Sep/2026 23:48:43] "GET /snap?name=p4-probe-continue-1 HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p4-probe-continue-1-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:48:43] "POST /tree?name=p4-probe-continue-1-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p4-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:48:43] "POST /tree?name=p4-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p4-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:48:44] "POST /tree?name=p4-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p4-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:48:45] "GET /snap?name=p4-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p4-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:48:46] "POST /tree?name=p4-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p5-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:49:37] "POST /tree?name=p5-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p5-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:49:38] "POST /tree?name=p5-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p5-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p5-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:49:39] "GET /snap?name=p5-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p5-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:49:39] "POST /tree?name=p5-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p6-probe-alert-result.txt
+127.0.0.1 - - [30/Sep/2026 23:50:10] "POST /tree?name=p6-probe-alert-result HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p6-probe-badge.txt
+127.0.0.1 - - [30/Sep/2026 23:50:11] "POST /tree?name=p6-probe-badge HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p6-probe-after.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-p6-probe-after.png
+127.0.0.1 - - [30/Sep/2026 23:50:13] "GET /snap?name=p6-probe-after HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-p6-probe-after.txt
+127.0.0.1 - - [30/Sep/2026 23:50:13] "POST /tree?name=p6-probe-after HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-apps.png
+127.0.0.1 - - [30/Sep/2026 23:50:52] "GET /snap?name=settings-apps HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-apps.txt
+127.0.0.1 - - [30/Sep/2026 23:50:53] "POST /tree?name=settings-apps HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-safari.png
+127.0.0.1 - - [30/Sep/2026 23:51:01] "GET /snap?name=settings-safari HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-safari.txt
+127.0.0.1 - - [30/Sep/2026 23:51:02] "POST /tree?name=settings-safari HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extensions.png
+127.0.0.1 - - [30/Sep/2026 23:51:08] "GET /snap?name=settings-extensions HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-extensions.txt
+127.0.0.1 - - [30/Sep/2026 23:51:08] "POST /tree?name=settings-extensions HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extension-detail.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: 800901BB-7327-42E3-A85A-AF44E65D5465 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-capture-settings-extension-detail.png
+127.0.0.1 - - [30/Sep/2026 23:51:11] "GET /snap?name=settings-extension-detail HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/logs/ui-settings-extension-detail.txt
+127.0.0.1 - - [30/Sep/2026 23:51:11] "POST /tree?name=settings-extension-detail HTTP/1.1" 200 -

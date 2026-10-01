@@ -1,0 +1,17 @@
+127.0.0.1 - - [30/Sep/2026 23:13:14] "GET /email.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:13:20] "GET /email.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:13:30] "GET /email.html?t=baseline HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:13:30] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:13:30] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:14:49] "GET /email.html?t=after-terminate HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:15:42] "GET /email.html?t=after-contactsd HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:16:39] "GET /email.html?t=after-contactsd-2 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:32:42] "GET /save-get.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:33:13] "GET /save-post.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:34:15] "GET /save-get.html?v=2 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:34:37] "GET /save-get.html?v=2 HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:34:57] "GET /thanks.html?name=&email=typed.new%40example.com&tel=4155550142 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:35:15] "GET /save-post.html?v=2 HTTP/1.1" 200 -
+POST /thanks.html body=name=&email=typed.new%40example.com&tel=4155550142
+127.0.0.1 - - [30/Sep/2026 23:35:38] "POST /thanks.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:36:12] "GET /email.html?t=after-submit HTTP/1.1" 200 -

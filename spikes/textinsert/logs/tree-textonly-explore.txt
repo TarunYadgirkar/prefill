@@ -1,0 +1,2 @@
+edit menu: app=["Paste", "AutoFill"] springboard=[]
+autofill submenu: app=[] springboard=[]

@@ -1,0 +1,10 @@
+                                    Cell, identifier: 'Allow Extension'
+                                          Switch, identifier: 'Allow Extension', label: 'Allow Extension', value: 1
+                                            Button, identifier: 'Allow Extension', label: 'Allow Extension'
+                                    Cell, identifier: 'Allow in Private Browsing'
+                                          Switch, identifier: 'Allow in Private Browsing', label: 'Allow in Private Browsing', value: 0
+                                            Button, identifier: 'Allow in Private Browsing', label: 'Allow in Private Browsing'
+                                    Cell, identifier: 'All Websites', label: 'All Websites, Allow'
+                                          Button, identifier: 'All Websites', label: 'All Websites, Allow'
+                                            StaticText, label: 'All Websites'
+                                            StaticText, label: 'Allow'

@@ -1,0 +1,1016 @@
+2026-09-30 23:28:52.728 Df MobileSafari[97353:c52029] [com.apple.PlugInKit:discovery] [d C92A6FC0-29E7-4B94-9FB7-8E3528518E16] <PKHost:0x107de0f00> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13aa46ae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:28:52.799 Df MobileSafari[97353:c52029] [com.apple.PlugInKit:discovery] [d A42C40FD-799D-41A4-AD01-78B6CD3D8AF6] <PKHost:0x107de0f00> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13aa46ae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:28:52.850 Df MobileSafari[97353:c52029] [com.apple.PlugInKit:discovery] [d E8B72763-D522-4F81-A962-F77175A47889] <PKHost:0x107de0f00> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13aa46ae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:28:53.076 Df MobileSafari[97353:c52029] [com.apple.PlugInKit:discovery] [d D6D16DC1-1A47-4BE2-B762-621B1FE85930] <PKHost:0x107de0f00> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13aa46ae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:28:59.348 Df MobileSafari[11061:c54e5f] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.app
+2026-09-30 23:28:59.600 Df MobileSafari[11061:c54fd7] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:28:59.600 Df MobileSafari[11061:c54fd7] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:28:59.600 Df MobileSafari[11061:c54fd7] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:00.231 Df MobileSafari[11061:c54e5f] [com.apple.xpc:connection] [0x13b9812c0] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:29:00.238 Df MobileSafari[11061:c54fd8] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.238 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:29:00.238 Df MobileSafari[11061:c54fd8] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.261 E  MobileSafari[11061:c54fdf] [com.apple.mobilesafari:Passwords] Failed to fetch current user participant ID with error: Error Domain=KCSharingErrorDomain Code=43 "(null)"
+2026-09-30 23:29:00.262 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:29:00.262 E  MobileSafari[11061:c54fdf] [com.apple.mobilesafari:Passwords] Failed to provision for password sharing with error: Error Domain=KCSharingErrorDomain Code=33 "(null)" UserInfo={NSUnderlyingError=0x13b8d2c70 {Error Domain=KCSharingErrorDomain Code=35 "(nu
+2026-09-30 23:29:00.268 E  MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:29:00.276 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:29:00.276 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:00.287 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:00.309 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:29:00.309 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:29:00.309 Df MobileSafari[11061:c54fda] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.309 Df MobileSafari[11061:c54fda] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.316 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:29:00.320 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:00.328 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:00.330 Df MobileSafari[11061:c54fde] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.335 Df MobileSafari[11061:c54fde] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.335 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Aborting clean up for passwords with unmatchable contributor ID because groups have changed since the account store was loaded.
+2026-09-30 23:29:00.335 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:29:00.342 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:29:00.344 E  MobileSafari[11061:c550a8] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:29:00.352 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:29:00.356 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:00.361 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:00.378 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:29:00.384 Df MobileSafari[11061:c550a8] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:29:00.385 Df MobileSafari[11061:c54fde] [com.apple.mobilesafari:Passwords] Aborting clean up for passwords with unmatchable contributor ID because groups have changed since the account store was loaded.
+2026-09-30 23:29:00.385 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.385 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.392 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Reloading generated passwords store
+2026-09-30 23:29:00.398 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Keychain] No recently generated password items found in access group com.apple.password-manager.generated-passwords
+2026-09-30 23:29:00.398 Df MobileSafari[11061:c54fe3] [com.apple.mobilesafari:Passwords] Finished reloading generated passwords store
+2026-09-30 23:29:00.411 Df MobileSafari[11061:c54e5f] [com.apple.xpc:connection] [0x13b983c00] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:29:00.413 Df MobileSafari[11061:c54fe3] [com.apple.PlugInKit:discovery] [d B9BA595E-6A33-49EB-A9BD-D4C83C550300] <PKHost:0x104b523c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x105989ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:00.850 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.850 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.852 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:29:00.853 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:29:00.853 E  MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:29:00.854 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:29:00.854 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:00.855 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:00.856 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:29:00.856 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:29:00.856 Df MobileSafari[11061:c54fda] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.856 Df MobileSafari[11061:c54fda] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:00.857 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:29:00.857 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:00.858 Df MobileSafari[11061:c54fdd] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:00.861 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:00.861 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:02.317 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing asynchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:02.317 Df MobileSafari[11061:c54fd9] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:02.318 Df AuthenticationServicesAgent[88774:c54a59] [com.apple.xpc:connection] [0x101530500] activating connection: mach=false listener=false peer=true name=com.apple.AuthenticationServices.AutoFill.peer[11061].0x101530500
+2026-09-30 23:29:02.320 Df MobileSafari[11061:c54fd9] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:02.320 Df MobileSafari[11061:c54fd9] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: 'yLgYO1jQAAmpQCmLagZ5Ow=='>', prefix
+2026-09-30 23:29:02.320 Df MobileSafari[11061:c54fd9] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:02.320 Df MobileSafari[11061:c54fd9] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:02.735 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, criteria: dictionary
+2026-09-30 23:29:02.736 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 0
+2026-09-30 23:29:02.736 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), dict
+2026-09-30 23:29:02.736 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] xpc_activity_set_criteria, lower half: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), dict
+2026-09-30 23:29:02.736 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), dict
+2026-09-30 23:29:02.736 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: xpc_set_event com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, 1
+2026-09-30 23:29:02.747 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), setting state now to 1
+2026-09-30 23:29:02.747 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 1
+2026-09-30 23:29:04.091 Df MobileSafari[11061:c54fdc] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:29:04.091 Df MobileSafari[11061:c54fdc] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:04.092 Df MobileSafari[11061:c54fdc] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:04.094 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:04.094 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: beginning dispatch, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, seqno 1
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40): found an activity with matching seqno 1
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_begin_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40) seqno: 1.
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: lower half, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), seqno from top half was 1
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: created connection 0x13b987ac0 for activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), seqno 1
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 2
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 2
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), set activity state to 2
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), current state 2, pending state 0
+2026-09-30 23:29:04.639 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 4
+2026-09-30 23:29:04.640 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__ returned from handler: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), current state 2, pending state 4
+2026-09-30 23:29:04.640 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:04.640 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 4
+2026-09-30 23:29:04.640 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:04.641 Df MobileSafari[11061:c54fe0] [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/67D26F69-0444-498D-ADEE-F687E565B7CB/data/Containers/Data/Application/940B02CD-FEDE-4572-85D6-
+2026-09-30 23:29:04.642 Df MobileSafari[11061:c54fe0] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:04.643 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 5
+2026-09-30 23:29:04.643 Df MobileSafari[11061:c54fd7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), 5
+2026-09-30 23:29:04.645 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40), set activity state to 1
+2026-09-30 23:29:04.645 Df MobileSafari[11061:c54fe0] [com.apple.xpc.activity:Client] _xpc_activity_end_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13be3fd40) seqno: 1.
+2026-09-30 23:29:05.500 Df MobileSafari[11061:c55148] [com.apple.mobilesafari:AutoFill] WebContent[11149] Will not inject JavaScript in injected bundle
+2026-09-30 23:29:05.579 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Creating EMOneTimeCodeAccelerator for SFAppAutoFillOneTimeCodeProvider 0x13af0c600
+2026-09-30 23:29:05.716 Df MobileSafari[11061:c54fdc] [com.apple.mobilesafari:AutoFill] SFAppAutoFillOneTimeCodeProvider 0x13af0c600 added observer <SFFormAutocompleteState: 0x13ad1ab00>; 1 observer remain
+2026-09-30 23:29:05.727 Df MobileSafari[11061:c54e5f] [com.apple.xpc:connection] [0x13ddb8280] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:29:06.087 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.087 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.090 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.090 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: 'yLgYO1jQAAmpQCmLagZ5Ow=='>', prefix
+2026-09-30 23:29:06.090 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.090 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:06.091 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.091 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: 'yLgYO1jQAAmpQCmLagZ5Ow=='>', prefix
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.093 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: 'yLgYO1jQAAmpQCmLagZ5Ow=='>', prefix
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.094 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.095 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.095 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: 'yLgYO1jQAAmpQCmLagZ5Ow=='>', prefix
+2026-09-30 23:29:06.095 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.095 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:06.102 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.102 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.103 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.103 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:29:06.103 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.103 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:06.216 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:29:06.216 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:29:06.218 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:29:06.218 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'b079UTDfxVV65kvX2y6iXg=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:29:06.218 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:29:06.218 Df MobileSafari[11061:c54e5f] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:29:10.001 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:10.001 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:10.036 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:29:10.036 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:10.036 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:10.036 E  MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:10.037 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:10.037 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:29:10.037 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:10.037 E  MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:10.037 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:29:10.037 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:10.038 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:10.038 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:10.040 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:10.040 Df MobileSafari[11061:c54fe0] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x13fe76f10> (error: (null))
+2026-09-30 23:29:11.846 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.846 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.857 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:11.857 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.857 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.857 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:11.857 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.857 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.857 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.858 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:29:11.859 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:29:11.859 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x13fd9e9d0> (error: (null))
+2026-09-30 23:29:11.865 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.865 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.876 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:11.876 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.876 E  MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.876 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:11.876 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.876 E  MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.876 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.877 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+2026-09-30 23:29:11.878 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:29:11.878 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.884 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.884 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.895 E  MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.895 E  MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.895 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+2026-09-30 23:29:11.896 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:29:11.897 Df MobileSafari[11061:c54fdf] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:11.902 Df MobileSafari[11061:c54e5f] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+    "XC_kAXXCAttributeLabel" = AutoFill;
+2026-09-30 23:29:11.948 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:11.948 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.961 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:29:11.961 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.962 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.962 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:29:11.962 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:29:11.963 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:11.963 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:11.964 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:29:11.965 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x13fe6c1b0> (error: (null))
+2026-09-30 23:29:11.988 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:29:11.988 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.988 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.988 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:29:11.988 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:29:11.988 E  MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:29:11.988 Df MobileSafari[11061:c54fda] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+    "<_UIEditMenuBridgedContextMenuInteraction 0x13be34dc0>"
+2026-09-30 23:29:12.127 Df MobileSafari[11061:c54e5f] [com.apple.UIKit:UIFocusSystemSceneComponent] Override focusSystemState: (DISABLED) for reason(s): <_UIEditMenuBridgedContextMenuInteraction: 0x13be34dc0>
+2026-09-30 23:29:12.130 Df MobileSafari[11061:c54e5f] [com.apple.UIKit:UICMILifecycle] performAllAnimations for animator: <_UIContextMenuAnimator: 0x13fe69e30>
+2026-09-30 23:29:12.131 Df MobileSafari[11061:c54e5f] [com.apple.UIKit:UICMILifecycle] performAllCompletions for animator: <_UIContextMenuAnimator: 0x13fe69e30>
+        "<Credential (0x13b893bf0) | Requestor>" = "<Authorization Record (0x10598ed80) | Service: kTCCServiceAddressBook, AuthRight: Allowed, Reason: Entitled, Version: 2, >";
+2026-09-30 23:29:14.371 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:14.371 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:29:14.380 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:29:14.381 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+2026-09-30 23:29:14.381 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x13fe6e9d0> (error: (null))
+2026-09-30 23:29:14.408 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:29:14.408 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 11061 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:29:14.419 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:29:14.420 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:29:14.421 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' found matching snapshots: {(
+2026-09-30 23:29:14.421 Df MobileSafari[11061:c54fe2] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' with results: <XCTElementQueryResults: 0x13c93c600> (error: (null))
+2026-09-30 23:29:50.372 Df MobileSafari[11061:c5647c] [com.apple.PlugInKit:discovery] [d 2C3775BE-ED54-4E6B-A5D0-E23E8923FA3B] <PKHost:0x104b523c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x168189ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:50.436 Df MobileSafari[11061:c5710f] [com.apple.PlugInKit:discovery] [d 5058BC23-3C02-4AA7-92D5-EFAB7B26C60B] <PKHost:0x104b523c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x168189ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:50.487 Df MobileSafari[11061:c570fb] [com.apple.PlugInKit:discovery] [d F8D9A52E-D3C4-4948-8BE1-6518365BE830] <PKHost:0x104b523c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x168189ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:50.581 Df MobileSafari[11061:c5647c] [com.apple.PlugInKit:discovery] [d 44F3A79E-66BD-400D-9FE0-5416B783764D] <PKHost:0x104b523c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x168189ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:57.154 Df MobileSafari[13505:c575ef] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.app
+2026-09-30 23:29:57.416 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:57.416 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:57.417 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, criteria: dictionary
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] _xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 0
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), dict
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] xpc_activity_set_criteria, lower half: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), dict
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), dict
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: xpc_set_event com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, 1
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), setting state now to 1
+2026-09-30 23:29:57.657 Df MobileSafari[13505:c57728] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 1
+2026-09-30 23:29:57.836 Df MobileSafari[13505:c575ef] [com.apple.xpc:connection] [0x13f619cc0] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:29:57.842 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:57.845 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:57.845 E  MobileSafari[13505:c57723] [com.apple.mobilesafari:Passwords] Failed to fetch current user participant ID with error: Error Domain=KCSharingErrorDomain Code=43 "(null)"
+2026-09-30 23:29:57.846 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:29:57.846 E  MobileSafari[13505:c57723] [com.apple.mobilesafari:Passwords] Failed to provision for password sharing with error: Error Domain=KCSharingErrorDomain Code=33 "(null)" UserInfo={NSUnderlyingError=0x10645f330 {Error Domain=KCSharingErrorDomain Code=35 "(nu
+2026-09-30 23:29:57.847 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:29:57.853 E  MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:29:57.856 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:29:57.856 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:57.860 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:57.864 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:29:57.864 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:29:57.864 Df MobileSafari[13505:c57734] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:57.864 Df MobileSafari[13505:c57734] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:57.865 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:29:57.869 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:57.872 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:57.873 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:57.873 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:57.882 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Passwords] Reloading generated passwords store
+2026-09-30 23:29:57.883 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Keychain] No recently generated password items found in access group com.apple.password-manager.generated-passwords
+2026-09-30 23:29:57.888 Df MobileSafari[13505:c57732] [com.apple.mobilesafari:Passwords] Finished reloading generated passwords store
+2026-09-30 23:29:57.915 Df MobileSafari[13505:c575ef] [com.apple.xpc:connection] [0x13f61be80] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:29:57.921 Df MobileSafari[13505:c57725] [com.apple.PlugInKit:discovery] [d 870EDFD0-3F66-4ED9-9539-5C214831EB78] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x16005ddc0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:29:58.240 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:58.240 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:58.241 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:29:58.242 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:29:58.243 E  MobileSafari[13505:c57725] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:29:58.244 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:29:58.244 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:58.244 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:58.245 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:29:58.246 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:29:58.246 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:58.246 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:58.246 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:29:58.246 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:29:58.247 Df MobileSafari[13505:c57725] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:29:58.248 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:29:58.248 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: beginning dispatch, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, seqno 1
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80): found an activity with matching seqno 1
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_begin_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80) seqno: 1.
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: lower half, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), seqno from top half was 1
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: created connection 0x1603dd680 for activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), seqno 1
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 2
+2026-09-30 23:29:59.646 Df MobileSafari[13505:c57722] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 2
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57733] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), set activity state to 2
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57733] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), current state 2, pending state 0
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57733] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 4
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57733] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__ returned from handler: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), current state 2, pending state 4
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57724] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57733] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 4
+2026-09-30 23:29:59.647 Df MobileSafari[13505:c57724] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:59.648 Df MobileSafari[13505:c57724] [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/67D26F69-0444-498D-ADEE-F687E565B7CB/data/Containers/Data/Application/940B02CD-FEDE-4572-85D6-
+2026-09-30 23:29:59.649 Df MobileSafari[13505:c57724] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:29:59.650 Df MobileSafari[13505:c5780b] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 5
+2026-09-30 23:29:59.650 Df MobileSafari[13505:c5780b] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), 5
+2026-09-30 23:29:59.651 Df MobileSafari[13505:c5780b] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80), set activity state to 1
+2026-09-30 23:29:59.651 Df MobileSafari[13505:c5780b] [com.apple.xpc.activity:Client] _xpc_activity_end_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x10348aa80) seqno: 1.
+2026-09-30 23:30:00.386 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing asynchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:00.386 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:00.388 Df AuthenticationServicesAgent[88774:c5718b] [com.apple.xpc:connection] [0x101530500] activating connection: mach=false listener=false peer=true name=com.apple.AuthenticationServices.AutoFill.peer[13505].0x101530500
+2026-09-30 23:30:00.393 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:00.393 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: 'Vcbz0/Pb7JhsRaUvLMzLLA=='>', prefix
+2026-09-30 23:30:00.393 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:00.393 Df MobileSafari[13505:c57733] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:01.392 Df MobileSafari[13505:c5780b] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:30:01.392 Df MobileSafari[13505:c5780b] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:30:01.393 Df MobileSafari[13505:c5780b] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:30:01.394 Df MobileSafari[13505:c5780c] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:30:01.394 Df MobileSafari[13505:c5780c] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:30:02.766 Df MobileSafari[13505:c5786c] [com.apple.mobilesafari:AutoFill] WebContent[13582] Will not inject JavaScript in injected bundle
+2026-09-30 23:30:02.833 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Creating EMOneTimeCodeAccelerator for SFAppAutoFillOneTimeCodeProvider 0x161acbf00
+2026-09-30 23:30:02.837 Df MobileSafari[13505:c57726] [com.apple.mobilesafari:AutoFill] SFAppAutoFillOneTimeCodeProvider 0x161acbf00 added observer <SFFormAutocompleteState: 0x13f50d300>; 1 observer remain
+2026-09-30 23:30:02.839 Df MobileSafari[13505:c575ef] [com.apple.xpc:connection] [0x1603e0000] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:30:03.086 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.086 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.087 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.088 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: 'Vcbz0/Pb7JhsRaUvLMzLLA=='>', prefix
+2026-09-30 23:30:03.088 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.088 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:03.088 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.088 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: 'Vcbz0/Pb7JhsRaUvLMzLLA=='>', prefix
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.089 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: 'Vcbz0/Pb7JhsRaUvLMzLLA=='>', prefix
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.090 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.091 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.091 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: 'Vcbz0/Pb7JhsRaUvLMzLLA=='>', prefix
+2026-09-30 23:30:03.091 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.091 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:03.094 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.095 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.095 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.096 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:30:03.096 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.096 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:03.136 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:30:03.136 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:30:03.137 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:30:03.137 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'pR459HGOpRtlMx8AE/PZDw=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:30:03.137 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:30:03.137 Df MobileSafari[13505:c575ef] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:30:06.865 Df MobileSafari[13505:c57726] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:06.865 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:06.898 E  MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:06.898 E  MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:30:06.898 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:06.900 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:06.900 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:06.901 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:06.901 Df MobileSafari[13505:c57723] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x16514f0c0> (error: (null))
+2026-09-30 23:30:08.717 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.717 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.729 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:08.729 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.729 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.729 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:08.729 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.729 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.729 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.731 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:30:08.733 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:30:08.733 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x165226880> (error: (null))
+2026-09-30 23:30:08.742 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.742 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.753 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:08.753 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.753 E  MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.753 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:08.753 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.753 E  MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.753 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.754 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+2026-09-30 23:30:08.755 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:30:08.755 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.761 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.761 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.773 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:08.773 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.773 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.773 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:08.773 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.773 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.773 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.774 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+2026-09-30 23:30:08.775 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:30:08.775 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:08.780 Df MobileSafari[13505:c575ef] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+    "XC_kAXXCAttributeLabel" = AutoFill;
+2026-09-30 23:30:08.838 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:08.838 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.852 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.852 E  MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:30:08.852 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:30:08.854 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:08.854 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:08.855 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:30:08.855 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x16514e8b0> (error: (null))
+2026-09-30 23:30:08.881 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:30:08.881 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.882 E  MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.882 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:30:08.882 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:30:08.882 E  MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:30:08.882 Df MobileSafari[13505:c57b07] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+    "<_UIEditMenuBridgedContextMenuInteraction 0x1605f1720>"
+2026-09-30 23:30:09.033 Df MobileSafari[13505:c575ef] [com.apple.UIKit:UIFocusSystemSceneComponent] Override focusSystemState: (DISABLED) for reason(s): <_UIEditMenuBridgedContextMenuInteraction: 0x1605f1720>
+2026-09-30 23:30:09.036 Df MobileSafari[13505:c575ef] [com.apple.UIKit:UICMILifecycle] performAllAnimations for animator: <_UIContextMenuAnimator: 0x1619d9260>
+2026-09-30 23:30:09.037 Df MobileSafari[13505:c575ef] [com.apple.UIKit:UICMILifecycle] performAllCompletions for animator: <_UIContextMenuAnimator: 0x1619d9260>
+        "<Credential (0x1602fb9c0) | Requestor>" = "<Authorization Record (0x1600609a0) | Service: kTCCServiceAddressBook, AuthRight: Allowed, Reason: Entitled, Version: 2, >";
+2026-09-30 23:30:14.770 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:14.770 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:30:14.782 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:30:14.783 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+2026-09-30 23:30:14.783 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x16523c840> (error: (null))
+2026-09-30 23:30:14.814 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:30:14.814 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 13505 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:30:14.826 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:30:14.828 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:30:14.829 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' found matching snapshots: {(
+2026-09-30 23:30:14.829 Df MobileSafari[13505:c57b06] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' with results: <XCTElementQueryResults: 0x1651109f0> (error: (null))
+2026-09-30 23:31:12.642 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d 39E3B378-CF93-4F60-9380-0D934379F483] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x16006abc0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:12.693 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d 2E075A37-30DA-4497-BDAF-8E4443A27CF4] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x16006abc0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:12.719 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d 6129A35E-414D-4A69-A654-8B944CAEAEE3] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x16006abc0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:12.792 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d 6B15E74A-31CD-4AC2-9640-7F46FB7EF404] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x16006abc0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:15.653 Df MobileSafari[13505:c5acfb] [com.apple.PlugInKit:discovery] [d F0EBC164-0B02-4109-A377-821C5B04AAF6] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:31:15.697 Df MobileSafari[13505:c5acc5] [com.apple.PlugInKit:discovery] [d EA912825-498E-4337-A06F-5D626E41B1C2] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x160069b20> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:15.712 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d C9A32E7E-18DE-4DCD-93AB-147B48A9C8CF] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:31:15.816 Df MobileSafari[13505:c5acc5] [com.apple.PlugInKit:discovery] [d 516CF305-1CA5-402C-8FCF-EE8660B620EB] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    "<LSPlugInKitProxy: 0x13f519400> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=68FE3345-F50F-4BC6-9327-924972DEF312 version=0.1"
+    "<LSPlugInKitProxy: 0x13f519400> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+2026-09-30 23:31:15.828 Df MobileSafari[13505:c58efd] [com.apple.PlugInKit:discovery] [d 9982DCD1-BEFE-45C6-A5DD-6D35C45CFF5E] <PKHost:0x102b1ad40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x160069b20> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+        "<Credential (0x1602fb9c0) | Requestor>" = "<Authorization Record (0x1600609a0) | Service: kTCCServiceAddressBook, AuthRight: Allowed, Reason: Entitled, Version: 2, >";
+2026-09-30 23:31:35.119 Df MobileSafari[17408:c5bafc] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.app
+2026-09-30 23:31:35.598 Df MobileSafari[17408:c5bbed] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:35.599 Df MobileSafari[17408:c5bbed] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:35.599 Df MobileSafari[17408:c5bbed] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:36.355 Df MobileSafari[17408:c5bafc] [com.apple.xpc:connection] [0x13e7f52c0] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:31:36.359 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.359 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.364 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:31:36.369 E  MobileSafari[17408:c5bbfd] [com.apple.mobilesafari:Passwords] Failed to fetch current user participant ID with error: Error Domain=KCSharingErrorDomain Code=43 "(null)"
+2026-09-30 23:31:36.369 E  MobileSafari[17408:c5bbfd] [com.apple.mobilesafari:Passwords] Failed to provision for password sharing with error: Error Domain=KCSharingErrorDomain Code=33 "(null)" UserInfo={NSUnderlyingError=0x105758510 {Error Domain=KCSharingErrorDomain Code=35 "(nu
+2026-09-30 23:31:36.370 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:31:36.371 E  MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:31:36.375 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:31:36.380 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:36.387 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:36.392 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:31:36.392 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:31:36.395 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.395 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.396 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:31:36.400 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:36.401 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:36.408 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.408 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.410 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Aborting clean up for passwords with unmatchable contributor ID because groups have changed since the account store was loaded.
+2026-09-30 23:31:36.410 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Aborting clean up for passwords with unmatchable contributor ID because groups have changed since the account store was loaded.
+2026-09-30 23:31:36.410 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:31:36.411 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:31:36.418 E  MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:31:36.430 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:31:36.430 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:36.435 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:36.436 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:31:36.436 Df MobileSafari[17408:c5bc00] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:31:36.436 Df MobileSafari[17408:c5bc01] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.436 Df MobileSafari[17408:c5bc01] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.441 Df MobileSafari[17408:c5bd56] [com.apple.mobilesafari:Passwords] Reloading generated passwords store
+2026-09-30 23:31:36.442 Df MobileSafari[17408:c5bd56] [com.apple.mobilesafari:Keychain] No recently generated password items found in access group com.apple.password-manager.generated-passwords
+2026-09-30 23:31:36.443 Df MobileSafari[17408:c5bd56] [com.apple.mobilesafari:Passwords] Finished reloading generated passwords store
+2026-09-30 23:31:36.448 Df MobileSafari[17408:c5bafc] [com.apple.xpc:connection] [0x13e7f6800] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:31:36.448 Df MobileSafari[17408:c5bc01] [com.apple.PlugInKit:discovery] [d C40561B7-C655-4CAC-9C75-B9F548D69517] <PKHost:0x101fb2d40> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13f125ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:31:36.874 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.874 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.875 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Beginning saved account store load
+2026-09-30 23:31:36.877 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] No passkeys found.
+2026-09-30 23:31:36.878 E  MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Could not fetch passkeys: -25300
+2026-09-30 23:31:36.879 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork
+2026-09-30 23:31:36.879 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:36.880 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:36.881 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:31:36.881 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Passwords] Completed saved account store load
+2026-09-30 23:31:36.882 Df MobileSafari[17408:c5bbee] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.882 Df MobileSafari[17408:c5bbee] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:36.882 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:31:36.883 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:36.884 Df MobileSafari[17408:c5bbff] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:36.885 Df MobileSafari[17408:c5bbfe] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:36.885 Df MobileSafari[17408:c5bbfe] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, criteria: dictionary
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] _xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 0
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), dict
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] xpc_activity_set_criteria, lower half: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), dict
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), dict
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: xpc_set_event com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, 1
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), setting state now to 1
+2026-09-30 23:31:37.687 Df MobileSafari[17408:c5bbef] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 1
+2026-09-30 23:31:38.571 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing asynchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:38.571 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:38.572 Df AuthenticationServicesAgent[88774:c5b9d0] [com.apple.xpc:connection] [0x101530500] activating connection: mach=false listener=false peer=true name=com.apple.AuthenticationServices.AutoFill.peer[17408].0x101530500
+2026-09-30 23:31:38.573 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:38.573 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: '8QFI5wj8nq7NJVfXf8e56w=='>', prefix
+2026-09-30 23:31:38.573 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:38.573 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: beginning dispatch, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, seqno 1
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60): found an activity with matching seqno 1
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_begin_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60) seqno: 1.
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: lower half, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), seqno from top half was 1
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: created connection 0x13f379a40 for activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), seqno 1
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 2
+2026-09-30 23:31:39.635 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 2
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bbfe] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), set activity state to 2
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bbfe] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), current state 2, pending state 0
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bbfe] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 4
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bd5c] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bbfe] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__ returned from handler: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), current state 2, pending state 4
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bbfe] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 4
+2026-09-30 23:31:39.636 Df MobileSafari[17408:c5bd5c] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:39.638 Df MobileSafari[17408:c5bd5c] [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/67D26F69-0444-498D-ADEE-F687E565B7CB/data/Containers/Data/Application/940B02CD-FEDE-4572-85D6-
+2026-09-30 23:31:39.639 Df MobileSafari[17408:c5bd5c] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:31:39.641 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 5
+2026-09-30 23:31:39.641 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), 5
+2026-09-30 23:31:39.642 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60), set activity state to 1
+2026-09-30 23:31:39.642 Df MobileSafari[17408:c5bd5c] [com.apple.xpc.activity:Client] _xpc_activity_end_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13f99ac60) seqno: 1.
+2026-09-30 23:31:39.960 Df MobileSafari[17408:c5bbef] [com.apple.mobilesafari:Keychain] No credential items found in access group com.apple.cfnetwork-recently-deleted
+2026-09-30 23:31:39.961 Df MobileSafari[17408:c5bbef] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: Loaded 0 password keychain records from gro
+2026-09-30 23:31:39.962 Df MobileSafari[17408:c5bbef] [com.apple.mobilesafari:Keychain] -[WBSSavedAccountStore _loadSavedAccountsWithPasswordsFromKeychainData:forGroupID:withDictionaryForSavedAccountsWithPasswords:fromRecentlyDeleted:]: loaded 0 sidecar items from personal keycha
+2026-09-30 23:31:39.963 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Keychain] Ongoing credential sharing is disabled because iCloud Keychain is disabled
+2026-09-30 23:31:39.963 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:Passwords] Not fetching shared account groups because ongoing credential sharing is disabled
+2026-09-30 23:31:41.309 Df MobileSafari[17408:c5bd1c] [com.apple.mobilesafari:AutoFill] WebContent[17495] Will not inject JavaScript in injected bundle
+2026-09-30 23:31:41.475 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Creating EMOneTimeCodeAccelerator for SFAppAutoFillOneTimeCodeProvider 0x13e5d9d80
+2026-09-30 23:31:41.488 Df MobileSafari[17408:c5bbf1] [com.apple.mobilesafari:AutoFill] SFAppAutoFillOneTimeCodeProvider 0x13e5d9d80 added observer <SFFormAutocompleteState: 0x13e3e3900>; 1 observer remain
+2026-09-30 23:31:41.495 Df MobileSafari[17408:c5bafc] [com.apple.xpc:connection] [0x13f37c280] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:31:41.721 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.721 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.722 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.722 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: '8QFI5wj8nq7NJVfXf8e56w=='>', prefix
+2026-09-30 23:31:41.722 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.722 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:41.723 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.723 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: '8QFI5wj8nq7NJVfXf8e56w=='>', prefix
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.724 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: '8QFI5wj8nq7NJVfXf8e56w=='>', prefix
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.725 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.727 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.727 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: '8QFI5wj8nq7NJVfXf8e56w=='>', prefix
+2026-09-30 23:31:41.727 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.727 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:41.729 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.729 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.730 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.730 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:31:41.730 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.730 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:41.773 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Enqueueing synchronous query for saved accounts matching criteria <private>
+2026-09-30 23:31:41.773 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Beginning query for saved accounts matching criteria
+2026-09-30 23:31:41.774 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Found 0 tree matches for <private> and associated domains: <private>
+2026-09-30 23:31:41.774 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Executed query for host '<mask.hash: 'njQFVwBVq+ofED9Nre3l+g=='>' with partial username '<mask.hash: (null)>', prefix
+2026-09-30 23:31:41.774 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:AutoFill] Query returned 0 matches
+2026-09-30 23:31:41.774 Df MobileSafari[17408:c5bafc] [com.apple.mobilesafari:Passwords] Finished query for saved accounts matching criteria
+2026-09-30 23:31:44.960 Df MobileSafari[17408:c5c0d1] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:44.960 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:45.001 E  MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:45.001 E  MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:45.001 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:45.002 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:45.004 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:45.004 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:45.005 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:45.005 Df MobileSafari[17408:c5bbff] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x160c24f00> (error: (null))
+2026-09-30 23:31:46.865 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.865 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.876 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:46.877 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.877 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.877 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:46.877 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.877 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.877 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.878 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:31:46.879 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+    MenuItem,
+    MenuItem
+2026-09-30 23:31:46.879 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x164e0ca80> (error: (null))
+2026-09-30 23:31:46.884 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.884 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.895 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:46.895 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.895 E  MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.895 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:46.895 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.895 E  MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.895 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.896 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+2026-09-30 23:31:46.897 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:31:46.898 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.904 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.904 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.915 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:46.915 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.915 E  MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.915 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:46.915 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:46.915 E  MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:46.915 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.916 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+2026-09-30 23:31:46.917 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    MenuItem
+2026-09-30 23:31:46.917 Df MobileSafari[17408:c5bbfe] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:46.923 Df MobileSafari[17408:c5bafc] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+    "XC_kAXXCAttributeLabel" = AutoFill;
+2026-09-30 23:31:47.092 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.092 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.112 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.113 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.113 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.113 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.116 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.116 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.118 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.118 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x164d72160> (error: (null))
+2026-09-30 23:31:47.155 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:47.155 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.155 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.155 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:47.155 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.155 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.155 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:47.193 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.193 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.211 E  MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.211 E  MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.211 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.213 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.213 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.215 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.215 Df MobileSafari[17408:c5bbef] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x164e14d80> (error: (null))
+2026-09-30 23:31:47.232 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.232 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.392 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:47.392 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:47.392 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.395 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.395 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.397 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:47.397 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x160c2ae80> (error: (null))
+2026-09-30 23:31:47.865 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:47.866 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 32 instead of legacy element type OTHER derived from class/trait: _UIEditMenuCollectionView:_UIEditMenuCollectionView 8589934592
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:48.042 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'Paste', including at this point anyway (rdar://problem/20738636)
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Preferring automation type 75 instead of legacy element type OTHER derived from class/trait: _UIEditMenuListViewCell:_UIEditMenuListViewCell 4503745656258560
+2026-09-30 23:31:48.042 E  MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Automation type mismatch; legacy system derived element type 54 from class _UIEditMenuListViewCell:_UIEditMenuListViewCell, traits 4503745656258560, but AXAutomationType returned 75 which maps to 
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Checking 'AutoFill' for privileged AX value slot attributes
+2026-09-30 23:31:48.042 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Other is not actually a child of MenuItem, label: 'AutoFill', including at this point anyway (rdar://problem/20738636)
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+2026-09-30 23:31:48.046 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:48.046 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] [Match All] applied transformer `Elements matching predicate '"AutoFill" IN identifiers'` to input {(
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:48.048 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+2026-09-30 23:31:48.048 Df MobileSafari[17408:c5bc00] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x164e0c930> (error: (null))
+    "<_UIEditMenuBridgedContextMenuInteraction 0x13f98c140>"
+2026-09-30 23:31:48.716 Df MobileSafari[17408:c5bafc] [com.apple.UIKit:UIFocusSystemSceneComponent] Override focusSystemState: (DISABLED) for reason(s): <_UIEditMenuBridgedContextMenuInteraction: 0x13f98c140>
+2026-09-30 23:31:48.723 Df MobileSafari[17408:c5bafc] [com.apple.UIKit:UICMILifecycle] performAllAnimations for animator: <_UIContextMenuAnimator: 0x163382d00>
+2026-09-30 23:31:48.724 Df MobileSafari[17408:c5bafc] [com.apple.UIKit:UICMILifecycle] performAllCompletions for animator: <_UIContextMenuAnimator: 0x163382d00>
+2026-09-30 23:31:53.578 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+ ↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:53.578 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+2026-09-30 23:31:53.588 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:31:53.589 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem found matching snapshots: {(
+2026-09-30 23:31:53.589 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem with results: <XCTElementQueryResults: 0x1633fc960> (error: (null))
+2026-09-30 23:31:53.611 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Received request to fetch matches for query: ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:31:53.611 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Getting snapshot for App element pid: 17408 for query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:31:53.622 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Checking 'AutoFill Contact' for privileged AX value slot attributes
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers'
+2026-09-30 23:31:53.623 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] [Match All] applied transformer `Descendants matching type MenuItem` to input {(
+2026-09-30 23:31:53.624 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' found matching snapshots: {(
+2026-09-30 23:31:53.624 Df MobileSafari[17408:c5bbed] [com.apple.dt.xctest:Default] Replying to query ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"Passwords" IN identifiers' with results: <XCTElementQueryResults: 0x164d70810> (error: (null))

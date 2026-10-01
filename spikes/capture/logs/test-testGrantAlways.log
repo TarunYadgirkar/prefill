@@ -1,0 +1,82 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/GrantTests/testGrantAlways"
+
+2026-09-30 23:38:59.354199-0700 CaptureUITests-Runner[32802:13023325] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:39:01.608.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:39:01.608.
+Test Suite 'GrantTests' started at 2026-09-30 23:39:01.608.
+Test Case '-[CaptureUITests.GrantTests testGrantAlways]' started.
+    t =     0.00s Start Test at 2026-09-30 23:39:01.611
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/form-button.html
+    t =     0.02s     Launch com.apple.mobilesafari
+    t =     0.11s         Setting up automation session
+objc[32802]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10a5e8398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10b478310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.60s         Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:09.856349-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-0-page-before should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     8.76s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-0-page-before should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     9.01s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =     9.04s Tap "MoreMenuButton" Button
+    t =     9.04s     Wait for com.apple.mobilesafari to idle
+    t =     9.05s     Find the "MoreMenuButton" Button
+    t =     9.07s     Check for interrupting elements affecting "MoreMenuButton" Button
+    t =     9.09s     Synthesize event
+    t =     9.38s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:13.252506-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-1-page-menu should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    12.06s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-1-page-menu should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    12.35s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =    12.39s Tap "Prefill Capture" Button
+    t =    12.39s     Wait for com.apple.mobilesafari to idle
+    t =    12.39s     Find the "Prefill Capture" Button
+    t =    12.42s     Check for interrupting elements affecting "Prefill Capture" Button
+    t =    12.45s     Synthesize event
+    t =    12.75s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:16.470295-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-2-site-prompt should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    15.32s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-2-site-prompt should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    15.67s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =    15.72s Tap "Always Allow…" Button
+    t =    15.72s     Wait for com.apple.mobilesafari to idle
+    t =    15.72s     Find the "Always Allow…" Button
+    t =    15.75s     Check for interrupting elements affecting "Always Allow…" Button
+    t =    15.79s     Synthesize event
+    t =    16.08s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:18.992483-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-3-always-options should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    17.88s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-3-always-options should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    18.21s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =    18.24s Waiting 3.0s for Button (First Match) to exist
+    t =    19.26s     Checking `Expect predicate `existsNoRetry == 1` for object Button (First Match)`
+    t =    19.27s         Checking existence of `Button (First Match)`
+    t =    19.29s Tap Button (First Match)
+    t =    19.29s     Wait for com.apple.mobilesafari to idle
+    t =    19.30s     Find the Button (First Match)
+    t =    19.32s     Check for interrupting elements affecting "Always Allow on Every Website" Button
+    t =    19.38s     Synthesize event
+    t =    19.67s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:22.730725-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-4-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    21.61s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-4-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    21.82s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =    21.84s Tap "MoreMenuButton" Button
+    t =    21.84s     Wait for com.apple.mobilesafari to idle
+    t =    21.84s     Find the "MoreMenuButton" Button
+    t =    21.86s     Check for interrupting elements affecting "MoreMenuButton" Button
+    t =    21.89s     Synthesize event
+    t =    22.18s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:39:25.836888-0700 CaptureUITests-Runner[32802:13023325] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-5-page-menu-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    24.67s Requesting snapshot of accessibility hierarchy for app with pid 32905
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.GrantTests testGrantAlways] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=grant-5-page-menu-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    25.05s Requesting snapshot of accessibility hierarchy for app with pid 32905
+    t =    25.10s Tear Down
+Test Case '-[CaptureUITests.GrantTests testGrantAlways]' passed (25.358 seconds).
+Test Suite 'GrantTests' passed at 2026-09-30 23:39:26.969.
+	 Executed 1 test, with 0 failures (0 unexpected) in 25.358 (25.361) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:39:26.973.
+	 Executed 1 test, with 0 failures (0 unexpected) in 25.358 (25.364) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:39:26.973.
+	 Executed 1 test, with 0 failures (0 unexpected) in 25.358 (25.365) seconds
+** BUILD INTERRUPTED **

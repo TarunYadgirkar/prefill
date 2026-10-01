@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "Prefill Capture",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Captures contact values you submit in web forms and queues them for Prefill.",
+        "description": "Description of what the extension does."
+    }
+}

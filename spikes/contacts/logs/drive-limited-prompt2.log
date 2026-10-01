@@ -1,0 +1,277 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:20:25.211170-0700 ProbeUITests-Runner[99254:12870498] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:20:27.005.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:20:27.005.
+Test Suite 'DriverTests' started at 2026-09-30 23:20:27.005.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.00s Start Test at 2026-09-30 23:20:27.010
+    t =     0.02s Set Up
+[driver] step probe request
+    t =     0.02s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.02s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+2026-09-30 23:20:27.074 xcodebuild[99251:12870238] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:20:27.074 xcodebuild[99251:12870238] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.48s         Setting up automation session
+objc[99254]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x107be8398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108958310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.89s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step app com.apple.springboard
+    t =     5.21s Open com.apple.springboard
+    t =     5.21s     Activate com.apple.springboard
+    t =     5.22s         Wait for com.apple.springboard to idle
+[driver] step tap Continue
+    t =     5.25s Waiting 10.0s for Any (First Match) to exist
+    t =     6.26s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     6.26s         Checking existence of `Any (First Match)`
+    t =     6.29s Tap Any (First Match)
+    t =     6.29s     Wait for com.apple.springboard to idle
+    t =     6.29s     Find the Any (First Match)
+    t =     6.32s     Check for interrupting elements affecting "Continue" Button
+    t =     6.34s     Synthesize event
+    t =     6.63s     Wait for com.apple.springboard to idle
+[driver] step wait 3
+[driver] step dump 
+    t =     9.90s Requesting snapshot of accessibility hierarchy for app with pid 84202
+    t =    10.18s Requesting snapshot of accessibility hierarchy for app with pid 84202
+[driver] tree
+Attributes: Application, 0x107c1da40, pid: 84202, label: ' '
+Element subtree:
+ →Application, 0x107c1da40, pid: 84202, label: ' '
+    Window, 0x107c1db80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x107c1dcc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x107c1df40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x107c1de00, {{0.0, 0.0}, {402.0, 100.0}}
+        Other, 0x107c1e1c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Home screen icons'
+          Other, 0x107c1e440, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x107c1e080, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x107c1e300, {{402.0, 0.0}, {402.0, 874.0}}
+              Icon, 0x107c1e6c0, {{0.0, 0.0}, {0.0, 0.0}}
+                Icon, 0x107c1e800, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Maps', label: 'Maps'
+                Icon, 0x107c1cb40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Calendar', label: 'Calendar'
+                Icon, 0x107c1d900, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Calendar', label: 'Calendar', value: Wednesday, Septemb...
+                Icon, 0x107c1cf00, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Photos', label: 'Photos'
+                Icon, 0x107c1d040, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Maps', label: 'Maps'
+                Icon, 0x107c1d180, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'News', label: 'News'
+                Icon, 0x107c1cdc0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Health', label: 'Health'
+                Icon, 0x107c1ea80, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Wallet', label: 'Wallet'
+                Icon, 0x107c1e940, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Siri', label: 'Siri'
+                Icon, 0x107c1ebc0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Settings', label: 'Settings'
+              Icon, 0x107c1ee40, {{0.0, 0.0}, {0.0, 0.0}}
+                Icon, 0x107c1ef80, {{28.3, 88.0}, {68.0, 90.7}}, identifier: 'Fitness', label: 'Fitness'
+                  Other, 0x107c1ed00, {{30.3, 90.0}, {64.0, 78.0}}
+                    Other, 0x107c1f0c0, {{30.3, 90.0}, {64.0, 64.0}}
+                      Other, 0x107c1f340, {{30.3, 90.0}, {64.0, 64.0}}
+                        Other, 0x107c1f480, {{30.3, 90.0}, {64.0, 64.0}}
+                    Other, 0x107c1f200, {{33.3, 157.0}, {57.7, 19.7}}, identifier: 'label-view'
+                      Other, 0x107c1f5c0, {{33.3, 157.0}, {57.7, 19.7}}
+                        Other, 0x107c1f840, {{33.3, 157.0}, {57.7, 19.7}}
+                          Image, 0x107c1f980, {{0.8, 122.4}, {123.7, 87.7}}
+                          Image, 0x107c1f700, {{33.3, 157.0}, {57.7, 19.7}}
+                Icon, 0x107c1fac0, {{120.7, 88.0}, {68.0, 90.7}}, identifier: 'Watch', label: 'Watch'
+                  Other, 0x107c1fc00, {{122.7, 90.0}, {64.0, 78.0}}
+                    Other, 0x107c1fe80, {{122.7, 90.0}, {64.0, 64.0}}
+                      Other, 0x107c1fd40, {{122.7, 90.0}, {64.0, 64.0}}
+                        Other, 0x107c1c640, {{122.7, 90.0}, {64.0, 64.0}}
+                    Other, 0x107c1c500, {{128.3, 157.0}, {52.3, 19.7}}, identifier: 'label-view'
+                      Other, 0x104e6b840, {{128.3, 157.0}, {52.3, 19.7}}
+                        Other, 0x104e6b980, {{128.3, 157.0}, {52.3, 19.7}}
+                          Image, 0x104e6b700, {{95.8, 122.4}, {118.3, 87.7}}
+                          Image, 0x104e688c0, {{128.3, 157.0}, {52.3, 19.7}}
+                Icon, 0x104e69040, {{206.7, 88.0}, {81.3, 90.7}}, identifier: 'Reminders', label: 'Reminders'
+                  Other, 0x1086e0000, {{215.7, 90.0}, {64.0, 78.0}}
+                    Other, 0x1086e0140, {{215.7, 90.0}, {64.0, 64.0}}
+                      Other, 0x1086e0280, {{215.7, 90.0}, {64.0, 64.0}}
+                        Other, 0x1086e03c0, {{215.7, 90.0}, {64.0, 64.0}}
+                    Other, 0x1086e0500, {{208.7, 157.0}, {77.3, 19.7}}, identifier: 'label-view'
+                      Other, 0x1086e0640, {{208.7, 157.0}, {77.3, 19.7}}
+                        Other, 0x1086e0780, {{208.7, 157.0}, {77.3, 19.7}}
+                          Image, 0x1086e08c0, {{176.2, 122.4}, {143.3, 87.7}}
+                          Image, 0x1086e0a00, {{208.7, 157.0}, {77.3, 19.7}}
+                Icon, 0x1086e0b40, {{306.0, 88.0}, {68.0, 90.7}}, identifier: 'Files', label: 'Files'
+                  Other, 0x1086e0c80, {{308.0, 90.0}, {64.0, 78.0}}
+                    Other, 0x1086e0dc0, {{308.0, 90.0}, {64.0, 64.0}}
+                      Other, 0x1086e0f00, {{308.0, 90.0}, {64.0, 64.0}}
+                        Other, 0x1086e1040, {{308.0, 90.0}, {64.0, 64.0}}
+                    Other, 0x1086e1180, {{318.3, 157.0}, {42.7, 19.7}}, identifier: 'label-view'
+                      Other, 0x1086e12c0, {{318.3, 157.0}, {42.7, 19.7}}
+                        Other, 0x1086e1400, {{318.3, 157.0}, {42.7, 19.7}}
+                          Image, 0x1086e1540, {{285.8, 122.4}, {108.7, 87.7}}
+                          Image, 0x1086e1680, {{318.3, 157.0}, {42.7, 19.7}}
+                Icon, 0x1086e17c0, {{28.3, 188.3}, {68.0, 90.7}}, identifier: 'Preview', label: 'Preview'
+                  Other, 0x1086e1900, {{30.3, 190.3}, {64.0, 78.0}}
+                    Other, 0x1086e1a40, {{30.3, 190.3}, {64.0, 64.0}}
+                      Other, 0x1086e1b80, {{30.3, 190.3}, {64.0, 64.0}}
+                        Other, 0x1086e1cc0, {{30.3, 190.3}, {64.0, 64.0}}
+                    Other, 0x1086e1e00, {{31.3, 257.3}, {61.3, 19.7}}, identifier: 'label-view'
+                      Other, 0x1086e1f40, {{31.3, 257.3}, {61.3, 19.7}}
+                        Other, 0x1086e2080, {{31.3, 257.3}, {61.3, 19.7}}
+                          Image, 0x1086e21c0, {{-1.2, 222.7}, {127.3, 87.7}}
+                          Image, 0x1086e2300, {{31.3, 257.3}, {61.3, 19.7}}
+                Icon, 0x1086e2440, {{120.7, 188.3}, {68.0, 90.7}}, identifier: 'Utilities', label: 'Utilities folder', value: 2 apps
+                  Icon, 0x1086e2580, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Shortcuts', label: 'Shortcuts'
+                  Icon, 0x1086e26c0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Passwords', label: 'Passwords'
+                Icon, 0x1086e2800, {{211.3, 188.3}, {72.3, 90.7}}, identifier: 'Contacts', label: 'Contacts'
+                  Other, 0x1086e2940, {{215.7, 190.3}, {64.0, 78.0}}
+                    Other, 0x1086e2a80, {{215.7, 190.3}, {64.0, 64.0}}
+                      Other, 0x1086e2bc0, {{215.7, 190.3}, {64.0, 64.0}}
+                        Other, 0x1086e2d00, {{215.7, 190.3}, {64.0, 64.0}}
+                    Other, 0x1086e2e40, {{213.3, 257.3}, {68.3, 19.7}}, identifier: 'label-view'
+                      Other, 0x1086e2f80, {{213.3, 257.3}, {68.3, 19.7}}
+                        Other, 0x1086e30c0, {{213.3, 257.3}, {68.3, 19.7}}
+                          Image, 0x1086e3200, {{180.8, 222.7}, {134.3, 87.7}}
+                          Image, 0x1086e3340, {{213.3, 257.3}, {68.3, 19.7}}
+                Icon, 0x1086e3480, {{306.0, 188.3}, {68.0, 90.7}}, identifier: 'Probe', label: 'Probe'
+                  Other, 0x1086e35c0, {{308.0, 190.3}, {64.0, 78.0}}
+                    Other, 0x1086e3700, {{308.0, 190.3}, {64.0, 64.0}}
+                      Other, 0x1086e3840, {{308.0, 190.3}, {64.0, 64.0}}
+                        Other, 0x1086e3980, {{308.0, 190.3}, {64.0, 64.0}}
+                    Other, 0x1086e3ac0, {{314.7, 257.3}, {50.0, 19.7}}, identifier: 'label-view'
+                      Other, 0x1086e3c00, {{314.7, 257.3}, {50.0, 19.7}}
+                        Other, 0x1086e3d40, {{314.7, 257.3}, {50.0, 19.7}}
+                          Image, 0x1086e3e80, {{282.2, 222.7}, {116.0, 87.7}}
+                          Image, 0x1086e8000, {{314.7, 257.3}, {50.0, 19.7}}
+                Icon, 0x1086e8140, {{10.0, 288.7}, {105.0, 94.0}}, identifier: 'ProbeUITests-Runner', label: 'ProbeUITests-Runner'
+                  Other, 0x1086e8280, {{30.3, 290.7}, {64.0, 78.0}}
+                    Other, 0x1086e83c0, {{30.3, 290.7}, {64.0, 64.0}}
+                      Other, 0x1086e8500, {{30.3, 290.7}, {64.0, 64.0}}
+                        Other, 0x1086e8640, {{30.3, 290.7}, {64.0, 64.0}}
+                    Other, 0x1086e8780, {{12.0, 354.7}, {101.0, 26.0}}, identifier: 'label-view'
+                      Other, 0x1086e88c0, {{12.0, 354.7}, {101.0, 26.0}}
+                        Other, 0x1086e8a00, {{12.0, 354.7}, {101.0, 26.0}}
+                          Image, 0x1086e8b40, {{-20.8, 319.9}, {167.0, 94.0}}
+                          Image, 0x1086e8c80, {{12.0, 354.7}, {101.0, 26.0}}
+              Other, 0x1086e8dc0, {{162.0, 703.7}, {78.0, 30.0}}, identifier: 'spotlight-pill', label: 'Search', value: Page 2 of 2
+                PageIndicator, 0x1086e8f00, {{162.0, 703.7}, {78.0, 35.0}}, identifier: 'Page control', value: Page 2 of 2
+                Other, 0x1086e9040, {{162.0, 703.7}, {78.0, 30.0}}, identifier: 'spotlight-pill'
+                  Other, 0x1086e9180, {{162.0, 703.7}, {78.0, 30.0}}
+                    Image, 0x1086e92c0, {{173.7, 713.0}, {11.3, 10.7}}, identifier: 'magnifyingglass', label: 'Search'
+                    StaticText, 0x1086e9400, {{188.0, 711.3}, {40.3, 14.3}}, label: 'Search'
+              Other, 0x1086e9540, {{0.0, 753.7}, {402.0, 120.3}}
+                Other, 0x1086e9680, {{17.0, 753.7}, {368.0, 103.3}}
+                  Other, 0x1086e97c0, {{0.0, 753.7}, {402.0, 103.3}}, label: 'Dock'
+                    Other, 0x1086e9900, {{0.0, 753.7}, {402.0, 103.3}}
+                    Icon, 0x1086e9a40, {{123.0, 771.3}, {68.0, 68.0}}, identifier: 'Safari', label: 'Safari'
+                      Other, 0x1086e9b80, {{125.0, 773.3}, {64.0, 64.0}}
+                        Other, 0x1086e9cc0, {{125.0, 773.3}, {64.0, 64.0}}
+                          Other, 0x1086e9e00, {{125.0, 773.3}, {64.0, 64.0}}
+                            Other, 0x1086e9f40, {{125.0, 773.3}, {64.0, 64.0}}
+                    Icon, 0x1086ea080, {{211.0, 771.3}, {68.0, 68.0}}, identifier: 'Messages', label: 'Messages'
+                      Other, 0x1086ea1c0, {{213.0, 773.3}, {64.0, 64.0}}
+                        Other, 0x1086ea300, {{213.0, 773.3}, {64.0, 64.0}}
+                          Other, 0x1086ea440, {{213.0, 773.3}, {64.0, 64.0}}
+                            Other, 0x1086ea580, {{213.0, 773.3}, {64.0, 64.0}}
+          Other, 0x1086ea6c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086ea800, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1086ea940, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086eaa80, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086eabc0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1086ead00, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086eae40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086eaf80, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086eb0c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1086eb200, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086eb340, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086eb480, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1086eb5c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086eb700, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086eb840, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086eb980, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1086ebac0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086ebc00, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086ebd40, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1086ebe80, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1086f0000, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1086f0140, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f0280, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f03c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f0500, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f0640, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1086f0780, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1086f08c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1086f0a00, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x1086f0b40, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x1086f0c80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f0dc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f0f00, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1086f1040, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086f1180, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f12c0, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f1400, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1086f1540, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f1680, {{139.3, 15.0}, {123.3, 34.7}}
+          Other, 0x1086f17c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086f1900, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f1a40, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x1086f1b80, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f1cc0, {{139.0, 14.7}, {124.0, 35.3}}
+          Other, 0x1086f1e00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1086f1f40, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1086f2080, {{128.3, 10.0}, {145.3, 52.0}}
+              Other, 0x1086f21c0, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1086f2300, {{138.3, 14.0}, {125.3, 36.7}}
+                  Other, 0x1086f2440, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1086f2580, {{138.3, 14.0}, {125.3, 36.7}}
+          Other, 0x1086f26c0, {{218.0, 28.0}, {9.0, 9.0}}
+    Window, 0x1086f2800, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f2940, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f2a80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f2bc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f2d00, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f2e40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f2f80, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f30c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f3200, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f3340, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f3480, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f35c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f3700, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f3840, {{0.0, 0.0}, {134.0, 291.3}}
+      Other, 0x1086f3980, {{0.0, 0.0}, {134.0, 291.3}}
+        Other, 0x1086f3ac0, {{0.0, 0.0}, {134.0, 291.3}}
+    Window, 0x1086f3c00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f3d40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1086f3e80, {{0.0, 0.0}, {402.0, 874.0}}
+    Window (Main), 0x1086f4000, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f4140, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x1086f4280, {{0.0, 0.0}, {402.0, 874.0}}
+      StatusBar, 0x1086f43c0, {{0.0, 0.0}, {402.0, 54.0}}
+        Other, 0x1086f4500, {{0.0, 0.0}, {402.0, 54.0}}
+          Other, 0x1086f4640, {{0.0, 0.0}, {402.0, 54.0}}
+            StaticText, 0x1086f4780, {{51.7, 21.7}, {45.0, 21.7}}, label: '11:20 PM'
+            Other, 0x1086f48c0, {{284.7, 25.0}, {20.3, 13.7}}, label: 'Cellular', value: No signal
+            Other, 0x1086f4a00, {{314.0, 26.0}, {17.7, 12.7}}, identifier: '3 of 3 Wi-Fi bars', value: SSID, 3 of 3 Wi-Fi...
+              Image, 0x1086f4b40, {{311.3, 23.7}, {23.0, 17.7}}, identifier: 'wifi', label: 'Wi-Fi'
+            Other, 0x1086f4c80, {{340.7, 25.3}, {29.0, 13.7}}, label: '100% battery power', value: Not charging
+    Window, 0x1086f4dc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f4f00, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1086f5040, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1086f5180, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x107c1da40, pid: 84202, label: ' '
+Query chain:
+ →Find: Application 'com.apple.springboard'
+  Output: {
+    Application, 0x1086f52c0, pid: 84202, label: ' '
+  }
+
+    t =    10.22s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (10.442 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:20:37.453.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.442 (10.448) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:20:37.454.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.442 (10.448) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:20:37.455.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.442 (10.450) seconds
+2026-09-30 23:20:37.750 xcodebuild[99251:12870238] [MT] IDETestOperationsObserverDebug: 13.444 elapsed -- Testing started completed.
+2026-09-30 23:20:37.750 xcodebuild[99251:12870238] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:20:37.750 xcodebuild[99251:12870238] [MT] IDETestOperationsObserverDebug: 13.444 sec, +13.444 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-20-24--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

@@ -1,0 +1,208 @@
+2026-10-01T06:13:03.060Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:13:03.248Z [probe] action status start; status=authorized
+2026-10-01T06:13:03.248Z [probe] action status result: authorized
+2026-10-01T06:13:06.781Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:13:06.833Z [probe] action dump start; status=authorized
+2026-10-01T06:13:06.908Z [probe] action dump result: Alex id=CE06AC49-D37D-4D59-BBFD-46E6553656F2:ABPerson emails[1:home=alex.rivera@example.com, 2:work=alex@work.example.org, 3:none=alex.school@example.edu]
+2026-10-01T06:14:07.074Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:14:07.146Z [probe] action reorder start; status=authorized
+2026-10-01T06:14:07.188Z [probe] before: emails[1:home=alex.rivera@example.com, 2:work=alex@work.example.org, 3:none=alex.school@example.edu]
+2026-10-01T06:14:07.275Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "1D37AF55-CDCB-432C-9535-856FC3FF5091",
+    "1D37AF55-CDCB-432C-9535-856FC3FF5091"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1054a9fc0>",
+    "<CNDataMapperContactStore: 0x108c84000: mapper=<CNXPCDataMapper: 0x1054a9e40>>"
+)
+2026-10-01T06:14:07.282Z [probe] saved OK at 2026-10-01T06:14:07.282Z
+2026-10-01T06:14:07.285Z [probe] action reorder result: saved; after: emails[1:none=alex.school@example.edu, 2:home=alex.rivera@example.com, 3:work=alex@work.example.org]
+2026-10-01T06:14:07.454Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:17:36.374Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:17:36.429Z [probe] action add start; status=authorized
+2026-10-01T06:17:37.582Z [probe] before: emails[1:none=alex.school@example.edu, 2:home=alex.rivera@example.com, 3:work=alex@work.example.org]
+2026-10-01T06:17:37.644Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "92D26316-E6C5-4EF9-8EA6-263903E2A1F2",
+    "92D26316-E6C5-4EF9-8EA6-263903E2A1F2"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1060aa040>",
+    "<CNDataMapperContactStore: 0x109880000: mapper=<CNXPCDataMapper: 0x1060a9fc0>>"
+)
+2026-10-01T06:17:37.657Z [probe] saved OK at 2026-10-01T06:17:37.657Z
+2026-10-01T06:17:37.661Z [probe] action add result: saved; after: emails[1:Personal=new.first@example.org, 2:none=alex.school@example.edu, 3:home=alex.rivera@example.com, 4:work=alex@work.example.org]
+2026-10-01T06:17:37.746Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:18:20.342Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:18:20.446Z [probe] action promoteFresh start; status=authorized
+2026-10-01T06:18:20.477Z [probe] before: emails[1:Personal=new.first@example.org#7E3E7C9E, 2:none=alex.school@example.edu#07601FE4, 3:home=alex.rivera@example.com#B853F4D4, 4:work=alex@work.example.org#B8F86635]
+2026-10-01T06:18:20.496Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "C1E2AD70-7954-49E8-BBB3-75B71A141A37",
+    "C1E2AD70-7954-49E8-BBB3-75B71A141A37"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1040a6c40>",
+    "<CNDataMapperContactStore: 0x1043c5d10: mapper=<CNXPCDataMapper: 0x1040a6b40>>"
+)
+2026-10-01T06:18:20.505Z [probe] saved OK at 2026-10-01T06:18:20.505Z
+2026-10-01T06:18:20.508Z [probe] action promoteFresh result: saved; after: emails[1:none=alex.school@example.edu#D56BF2CB, 2:Personal=new.first@example.org#2687EB3C, 3:home=alex.rivera@example.com#94566034, 4:work=alex@work.example.org#244046EB]
+2026-10-01T06:18:20.612Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:19:22.295Z [probe] watching CNContactStoreDidChange; status=authorized
+2026-10-01T06:19:22.473Z [probe] action promoteFresh start; status=authorized
+2026-10-01T06:19:22.525Z [probe] before: emails[1:none=alex.school@example.edu#D56BF2CB, 2:Personal=new.first@example.org#2687EB3C, 3:home=alex.rivera@example.com#94566034, 4:work=alex@work.example.org#244046EB]
+2026-10-01T06:19:22.595Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "FC49AC1C-7177-4B82-B5FD-2DF248DF56BF",
+    "FC49AC1C-7177-4B82-B5FD-2DF248DF56BF"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1054bf100>",
+    "<CNDataMapperContactStore: 0x102aeb2d0: mapper=<CNXPCDataMapper: 0x1054bf000>>"
+)
+2026-10-01T06:19:22.610Z [probe] saved OK at 2026-10-01T06:19:22.610Z
+2026-10-01T06:19:22.624Z [probe] action promoteFresh result: saved; after: emails[1:work=alex@work.example.org#469B850B, 2:none=alex.school@example.edu#02675EB5, 3:Personal=new.first@example.org#A2193A6B, 4:home=alex.rivera@example.com#2BDE24E9]
+2026-10-01T06:19:22.799Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:19:56.829Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:19:56.878Z [probe] action status start; status=notDetermined
+2026-10-01T06:19:56.878Z [probe] action status result: notDetermined
+2026-10-01T06:20:06.428Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:20:06.525Z [probe] action request start; status=notDetermined
+2026-10-01T06:20:29.025Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:20:29.123Z [probe] action request start; status=notDetermined
+2026-10-01T06:20:34.639Z [probe] action request result: error domain=CNErrorDomain code=100 desc=Access Denied info=["NSLocalizedFailureReason": This application has not been granted permission to access Contacts., "NSLocalizedDescription": Access Denied]
+2026-10-01T06:20:58.179Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:20:58.299Z [probe] action request start; status=notDetermined
+2026-10-01T06:21:02.696Z [probe] action request result: error domain=CNErrorDomain code=100 desc=Access Denied info=["NSLocalizedDescription": Access Denied, "NSLocalizedFailureReason": This application has not been granted permission to access Contacts.]
+2026-10-01T06:21:31.042Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:21:31.103Z [probe] action status start; status=notDetermined
+2026-10-01T06:21:31.105Z [probe] action status result: notDetermined
+2026-10-01T06:22:32.356Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:22:32.549Z [probe] action request start; status=notDetermined
+2026-10-01T06:23:19.305Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:23:19.451Z [probe] action request start; status=notDetermined
+2026-10-01T06:28:26.696Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:28:26.828Z [probe] action request start; status=notDetermined
+2026-10-01T06:29:01.926Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:29:02.053Z [probe] action status start; status=notDetermined
+2026-10-01T06:29:02.056Z [probe] action status result: notDetermined
+2026-10-01T06:29:04.957Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:29:05.006Z [probe] action listAll start; status=notDetermined
+2026-10-01T06:29:23.033Z [probe] watching CNContactStoreDidChange; status=notDetermined
+2026-10-01T06:29:23.190Z [probe] action request start; status=notDetermined
+2026-10-01T06:29:47.304Z [probe] action request result: granted=true status=limited
+2026-10-01T06:29:57.057Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:29:57.139Z [probe] action status start; status=limited
+2026-10-01T06:29:57.139Z [probe] action status result: limited
+2026-10-01T06:30:00.919Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:30:00.985Z [probe] action listAll start; status=limited
+2026-10-01T06:30:01.018Z [probe] action listAll result: count=1 Alex Rivera [CE06AC49-D37D-4D59-BBFD-46E6553656F2:ABPerson]
+2026-10-01T06:30:15.186Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:30:15.282Z [probe] action reset start; status=limited
+2026-10-01T06:30:15.302Z [probe] before: emails[1:work=alex@work.example.org#469B850B, 2:none=alex.school@example.edu#02675EB5, 3:Personal=new.first@example.org#A2193A6B, 4:home=alex.rivera@example.com#2BDE24E9]
+2026-10-01T06:30:15.333Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "C8CCFA1D-EDA3-4E5C-8D8A-AA85429377E2",
+    "C8CCFA1D-EDA3-4E5C-8D8A-AA85429377E2"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1058a5f80>",
+    "<CNDataMapperContactStore: 0x109470180: mapper=<CNXPCDataMapper: 0x1058a5e40>>"
+)
+2026-10-01T06:30:15.344Z [probe] saved OK at 2026-10-01T06:30:15.344Z
+2026-10-01T06:30:15.360Z [probe] action reset result: saved; after: emails[1:home=alex.rivera@example.com#7AF01AE6, 2:work=alex@work.example.org#CA97B671, 3:none=alex.school@example.edu#82313FA0]
+2026-10-01T06:30:15.393Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:30:34.264Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:30:34.372Z [probe] action reorder start; status=limited
+2026-10-01T06:30:34.397Z [probe] before: emails[1:home=alex.rivera@example.com#7AF01AE6, 2:work=alex@work.example.org#CA97B671, 3:none=alex.school@example.edu#82313FA0]
+2026-10-01T06:30:34.443Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "9C290FFA-9158-4ADD-B55D-2F22CC8B57AC",
+    "9C290FFA-9158-4ADD-B55D-2F22CC8B57AC"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1034a6280>",
+    "<CNDataMapperContactStore: 0x107064000: mapper=<CNXPCDataMapper: 0x1034a6180>>"
+)
+2026-10-01T06:30:34.458Z [probe] saved OK at 2026-10-01T06:30:34.458Z
+2026-10-01T06:30:34.462Z [probe] action reorder result: saved; after: emails[1:none=alex.school@example.edu#82313FA0, 2:home=alex.rivera@example.com#7AF01AE6, 3:work=alex@work.example.org#CA97B671]
+2026-10-01T06:30:34.760Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:30:49.412Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:30:49.530Z [probe] action add start; status=limited
+2026-10-01T06:30:49.554Z [probe] before: emails[1:none=alex.school@example.edu#82313FA0, 2:home=alex.rivera@example.com#7AF01AE6, 3:work=alex@work.example.org#CA97B671]
+2026-10-01T06:30:49.582Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "B8802B21-7801-41E5-8999-869706142E38",
+    "B8802B21-7801-41E5-8999-869706142E38"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x105ca6380>",
+    "<CNDataMapperContactStore: 0x1094681e0: mapper=<CNXPCDataMapper: 0x105ca62c0>>"
+)
+2026-10-01T06:30:49.587Z [probe] saved OK at 2026-10-01T06:30:49.587Z
+2026-10-01T06:30:49.590Z [probe] action add result: saved; after: emails[1:Personal=new.first@example.org#3F82566B, 2:none=alex.school@example.edu#82313FA0, 3:home=alex.rivera@example.com#7AF01AE6, 4:work=alex@work.example.org#CA97B671]
+2026-10-01T06:30:49.623Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:31:05.512Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:31:05.576Z [probe] action dump start; status=limited
+2026-10-01T06:31:05.591Z [probe] action dump result: Alex id=CE06AC49-D37D-4D59-BBFD-46E6553656F2:ABPerson emails[1:Personal=new.first@example.org#3F82566B, 2:none=alex.school@example.edu#82313FA0, 3:home=alex.rivera@example.com#7AF01AE6, 4:work=alex@work.example.org#CA97B671]
+2026-10-01T06:31:24.761Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:31:24.826Z [probe] action promoteFresh start; status=limited
+2026-10-01T06:31:24.862Z [probe] before: emails[1:Personal=new.first@example.org#3F82566B, 2:none=alex.school@example.edu#82313FA0, 3:home=alex.rivera@example.com#7AF01AE6, 4:work=alex@work.example.org#CA97B671]
+2026-10-01T06:31:24.981Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "83A7CB1D-9BFB-4546-9968-D8DF152699A6",
+    "83A7CB1D-9BFB-4546-9968-D8DF152699A6"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1034a5e40>",
+    "<CNDataMapperContactStore: 0x1070781b0: mapper=<CNXPCDataMapper: 0x1034a5dc0>>"
+)
+2026-10-01T06:31:25.017Z [probe] saved OK at 2026-10-01T06:31:25.017Z
+2026-10-01T06:31:25.020Z [probe] action promoteFresh result: saved; after: emails[1:Personal=new.first@example.org#F6DD74E5, 2:none=alex.school@example.edu#DC4E222A, 3:home=alex.rivera@example.com#B7D0BF54, 4:work=alex@work.example.org#FEDA7397]
+2026-10-01T06:31:25.057Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:31:56.941Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:31:57.114Z [probe] action picker start; status=limited
+2026-10-01T06:31:57.189Z [probe] action picker result: picker presented
+2026-10-01T06:32:03.793Z [probe] picker returned Kate Bell id=177C371E-701D-42F8-A03B-C61CA31627F6
+2026-10-01T06:32:03.819Z [probe] picker fetch: fetch 177C371E-701D-42F8-A03B-C61CA31627F6 failed error domain=CNErrorDomain code=200 desc=Updated Record Does Not Exist info=["NSLocalizedFailureReason": The save request failed because it updates a record that does not exist or has already been deleted., "NSLocalizedDescription": Updated Record Does Not Exist]
+2026-10-01T06:32:03.821Z [probe] picker save: fetch-for-save 177C371E-701D-42F8-A03B-C61CA31627F6 failed error domain=CNErrorDomain code=200 desc=Updated Record Does Not Exist info=["NSLocalizedFailureReason": The save request failed because it updates a record that does not exist or has already been deleted., "NSLocalizedDescription": Updated Record Does Not Exist]
+2026-10-01T06:32:20.951Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:32:21.078Z [probe] action fetchId start; status=limited
+2026-10-01T06:32:21.107Z [probe] action fetchId result: fetch 177C371E-701D-42F8-A03B-C61CA31627F6 failed error domain=CNErrorDomain code=200 desc=Updated Record Does Not Exist info=["NSLocalizedFailureReason": The save request failed because it updates a record that does not exist or has already been deleted., "NSLocalizedDescription": Updated Record Does Not Exist]
+2026-10-01T06:32:23.847Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:32:23.899Z [probe] action saveId start; status=limited
+2026-10-01T06:32:23.907Z [probe] action saveId result: fetch-for-save 177C371E-701D-42F8-A03B-C61CA31627F6 failed error domain=CNErrorDomain code=200 desc=Updated Record Does Not Exist info=["NSLocalizedDescription": Updated Record Does Not Exist, "NSLocalizedFailureReason": The save request failed because it updates a record that does not exist or has already been deleted.]
+2026-10-01T06:36:09.179Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:36:09.282Z [probe] action dump start; status=limited
+2026-10-01T06:36:09.305Z [probe] action dump result: Alex id=CE06AC49-D37D-4D59-BBFD-46E6553656F2:ABPerson emails[1:Personal=new.first@example.org#F6DD74E5, 2:none=alex.school@example.edu#DC4E222A, 3:home=alex.rivera@example.com#B7D0BF54, 4:work=alex@work.example.org#FEDA7397]
+2026-10-01T06:38:01.826Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:38:01.928Z [probe] action status start; status=limited
+2026-10-01T06:38:01.928Z [probe] action status result: limited
+2026-10-01T06:38:22.652Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:38:53.308Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:38:53.459Z [probe] action status start; status=limited
+2026-10-01T06:38:53.459Z [probe] action status result: limited
+2026-10-01T06:39:41.168Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:39:41.493Z [probe] action status start; status=limited
+2026-10-01T06:39:41.493Z [probe] action status result: limited
+2026-10-01T06:40:08.456Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)
+2026-10-01T06:40:32.059Z [probe] watching CNContactStoreDidChange; status=limited
+2026-10-01T06:40:32.113Z [probe] action reset start; status=limited
+2026-10-01T06:40:32.128Z [probe] before: emails[1:Personal=new.first@example.org#F6DD74E5, 2:none=alex.school@example.edu#DC4E222A, 3:home=alex.rivera@example.com#B7D0BF54, 4:work=alex@work.example.org#FEDA7397]
+2026-10-01T06:40:32.137Z [probe] CNContactStoreDidChange CNNotificationSaveIdentifiersKey=(
+    "1FF32ADD-EAD8-4E0A-B078-2B3C73D8B7D1",
+    "1FF32ADD-EAD8-4E0A-B078-2B3C73D8B7D1"
+) CNNotificationSourcesKey=(
+    "<CNAggregateContactStore: 0x1060a7040>",
+    "<CNDataMapperContactStore: 0x109870150: mapper=<CNXPCDataMapper: 0x1060a6fc0>>"
+)
+2026-10-01T06:40:32.143Z [probe] saved OK at 2026-10-01T06:40:32.143Z
+2026-10-01T06:40:32.146Z [probe] action reset result: saved; after: emails[1:home=alex.rivera@example.com#A033E0DF, 2:work=alex@work.example.org#F5B71CA7, 3:none=alex.school@example.edu#BC979092]
+2026-10-01T06:40:32.165Z [probe] CNContactStoreDidChange CNNotificationOriginationExternally=1 CNNotificationSaveIdentifiersKey=(
+) CNNotificationSourcesKey=(
+)

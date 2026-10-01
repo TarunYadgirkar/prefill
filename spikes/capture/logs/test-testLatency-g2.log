@@ -1,0 +1,245 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/FormTests/testLatency"
+
+2026-09-30 23:43:41.701091-0700 CaptureUITests-Runner[40014:13054012] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:43:43.790.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:43:43.790.
+Test Suite 'FormTests' started at 2026-09-30 23:43:43.790.
+Test Case '-[CaptureUITests.FormTests testLatency]' started.
+    t =     0.01s Start Test at 2026-09-30 23:43:43.795
+    t =     0.03s Set Up
+    t =     0.05s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/form-latency.html
+    t =     0.05s     Launch com.apple.mobilesafari
+    t =     0.31s         Setting up automation session
+objc[40014]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x107fc0398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1088c0310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.81s         Wait for com.apple.mobilesafari to idle
+    t =     7.86s Tap Any (First Match)
+    t =     7.86s     Wait for com.apple.mobilesafari to idle
+    t =     7.86s     Find the Any (First Match)
+    t =     7.94s     Check for interrupting elements affecting "Email" TextField
+    t =     7.96s     Synthesize event
+    t =     8.26s     Wait for com.apple.mobilesafari to idle
+    t =     9.54s Type 'lat1.g2@newmail.ex...' into "Email" TextField
+    t =     9.54s     Wait for com.apple.mobilesafari to idle
+    t =     9.55s     Find the "Email" TextField
+    t =     9.61s     Check for interrupting elements affecting "Email" TextField
+    t =     9.65s     Synthesize event
+    t =    10.23s     Wait for com.apple.mobilesafari to idle
+    t =    10.24s Checking existence of `"Done" Button`
+    t =    10.28s Find the "Done" Button
+    t =    10.31s Tap "Done" Button
+    t =    10.31s     Wait for com.apple.mobilesafari to idle
+    t =    10.32s     Find the "Done" Button
+    t =    10.34s     Check for interrupting elements affecting "Done" Button
+    t =    10.37s     Synthesize event
+    t =    10.66s     Wait for com.apple.mobilesafari to idle
+    t =    11.56s Tap "Save" Button
+    t =    11.56s     Wait for com.apple.mobilesafari to idle
+    t =    11.56s     Find the "Save" Button
+    t =    11.58s     Check for interrupting elements affecting "Save" Button
+    t =    11.61s     Synthesize event
+    t =    11.89s     Wait for com.apple.mobilesafari to idle
+    t =    14.40s Waiting 4.0s for StaticText (First Match) to exist
+    t =    15.43s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    15.43s         Checking existence of `StaticText (First Match)`
+    t =    15.47s Find the StaticText (First Match)
+    t =    15.49s Tap "Clear" Button
+    t =    15.49s     Wait for com.apple.mobilesafari to idle
+    t =    15.50s     Find the "Clear" Button
+    t =    15.51s     Check for interrupting elements affecting "Clear" Button
+    t =    15.57s     Synthesize event
+    t =    15.86s     Wait for com.apple.mobilesafari to idle
+    t =    15.86s Tap Any (First Match)
+    t =    15.86s     Wait for com.apple.mobilesafari to idle
+    t =    15.86s     Find the Any (First Match)
+    t =    15.90s     Check for interrupting elements affecting "Email" TextField
+    t =    15.93s     Synthesize event
+    t =    16.22s     Wait for com.apple.mobilesafari to idle
+    t =    16.78s Type 'lat2.g2@newmail.ex...' into "Email" TextField
+    t =    16.78s     Wait for com.apple.mobilesafari to idle
+    t =    16.79s     Find the "Email" TextField
+    t =    16.87s     Check for interrupting elements affecting "Email" TextField
+    t =    16.91s     Synthesize event
+    t =    17.50s     Wait for com.apple.mobilesafari to idle
+    t =    17.50s Checking existence of `"Done" Button`
+    t =    17.53s Find the "Done" Button
+    t =    17.56s Tap "Done" Button
+    t =    17.56s     Wait for com.apple.mobilesafari to idle
+    t =    17.57s     Find the "Done" Button
+    t =    17.59s     Check for interrupting elements affecting "Done" Button
+    t =    17.62s     Synthesize event
+    t =    17.91s     Wait for com.apple.mobilesafari to idle
+    t =    18.79s Tap "Save" Button
+    t =    18.79s     Wait for com.apple.mobilesafari to idle
+    t =    18.80s     Find the "Save" Button
+    t =    18.82s     Check for interrupting elements affecting "Save" Button
+    t =    18.85s     Synthesize event
+    t =    19.14s     Wait for com.apple.mobilesafari to idle
+    t =    21.65s Waiting 4.0s for StaticText (First Match) to exist
+    t =    22.68s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    22.68s         Checking existence of `StaticText (First Match)`
+    t =    22.71s Find the StaticText (First Match)
+    t =    22.73s Tap "Clear" Button
+    t =    22.73s     Wait for com.apple.mobilesafari to idle
+    t =    22.74s     Find the "Clear" Button
+    t =    22.75s     Check for interrupting elements affecting "Clear" Button
+    t =    22.78s     Synthesize event
+    t =    23.07s     Wait for com.apple.mobilesafari to idle
+    t =    23.07s Tap Any (First Match)
+    t =    23.07s     Wait for com.apple.mobilesafari to idle
+    t =    23.07s     Find the Any (First Match)
+    t =    23.10s     Check for interrupting elements affecting "Email" TextField
+    t =    23.13s     Synthesize event
+    t =    23.42s     Wait for com.apple.mobilesafari to idle
+    t =    24.05s Type 'lat3.g2@newmail.ex...' into "Email" TextField
+    t =    24.05s     Wait for com.apple.mobilesafari to idle
+    t =    24.05s     Find the "Email" TextField
+    t =    24.11s     Check for interrupting elements affecting "Email" TextField
+    t =    24.14s     Synthesize event
+    t =    24.72s     Wait for com.apple.mobilesafari to idle
+    t =    24.73s Checking existence of `"Done" Button`
+    t =    24.75s Find the "Done" Button
+    t =    24.79s Tap "Done" Button
+    t =    24.79s     Wait for com.apple.mobilesafari to idle
+    t =    24.80s     Find the "Done" Button
+    t =    24.83s     Check for interrupting elements affecting "Done" Button
+    t =    24.86s     Synthesize event
+    t =    25.15s     Wait for com.apple.mobilesafari to idle
+    t =    26.02s Tap "Save" Button
+    t =    26.02s     Wait for com.apple.mobilesafari to idle
+    t =    26.03s     Find the "Save" Button
+    t =    26.05s     Check for interrupting elements affecting "Save" Button
+    t =    26.08s     Synthesize event
+    t =    26.37s     Wait for com.apple.mobilesafari to idle
+    t =    28.88s Waiting 4.0s for StaticText (First Match) to exist
+    t =    29.92s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    29.92s         Checking existence of `StaticText (First Match)`
+    t =    29.96s Find the StaticText (First Match)
+    t =    29.99s Tap "Clear" Button
+    t =    29.99s     Wait for com.apple.mobilesafari to idle
+    t =    29.99s     Find the "Clear" Button
+    t =    30.01s     Check for interrupting elements affecting "Clear" Button
+    t =    30.04s     Synthesize event
+    t =    30.33s     Wait for com.apple.mobilesafari to idle
+    t =    30.33s Tap Any (First Match)
+    t =    30.33s     Wait for com.apple.mobilesafari to idle
+    t =    30.33s     Find the Any (First Match)
+    t =    30.37s     Check for interrupting elements affecting "Email" TextField
+    t =    30.39s     Synthesize event
+    t =    30.68s     Wait for com.apple.mobilesafari to idle
+    t =    31.66s Type 'lat4.g2@newmail.ex...' into "Email" TextField
+    t =    31.66s     Wait for com.apple.mobilesafari to idle
+    t =    31.67s     Find the "Email" TextField
+    t =    31.73s     Check for interrupting elements affecting "Email" TextField
+    t =    31.77s     Synthesize event
+    t =    32.35s     Wait for com.apple.mobilesafari to idle
+    t =    32.35s Checking existence of `"Done" Button`
+    t =    32.38s Find the "Done" Button
+    t =    32.42s Tap "Done" Button
+    t =    32.42s     Wait for com.apple.mobilesafari to idle
+    t =    32.42s     Find the "Done" Button
+    t =    32.45s     Check for interrupting elements affecting "Done" Button
+    t =    32.48s     Synthesize event
+    t =    32.76s     Wait for com.apple.mobilesafari to idle
+    t =    33.63s Tap "Save" Button
+    t =    33.63s     Wait for com.apple.mobilesafari to idle
+    t =    33.63s     Find the "Save" Button
+    t =    33.66s     Check for interrupting elements affecting "Save" Button
+    t =    33.70s     Synthesize event
+    t =    33.99s     Wait for com.apple.mobilesafari to idle
+    t =    36.50s Waiting 4.0s for StaticText (First Match) to exist
+    t =    37.54s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    37.54s         Checking existence of `StaticText (First Match)`
+    t =    37.56s Find the StaticText (First Match)
+    t =    37.59s Tap "Clear" Button
+    t =    37.59s     Wait for com.apple.mobilesafari to idle
+    t =    37.59s     Find the "Clear" Button
+    t =    37.60s     Check for interrupting elements affecting "Clear" Button
+    t =    37.62s     Synthesize event
+    t =    37.91s     Wait for com.apple.mobilesafari to idle
+    t =    37.91s Tap Any (First Match)
+    t =    37.91s     Wait for com.apple.mobilesafari to idle
+    t =    37.91s     Find the Any (First Match)
+    t =    37.95s     Check for interrupting elements affecting "Email" TextField
+    t =    37.97s     Synthesize event
+    t =    38.26s     Wait for com.apple.mobilesafari to idle
+    t =    39.26s Type 'lat5.g2@newmail.ex...' into "Email" TextField
+    t =    39.26s     Wait for com.apple.mobilesafari to idle
+    t =    39.26s     Find the "Email" TextField
+    t =    39.33s     Check for interrupting elements affecting "Email" TextField
+    t =    39.36s     Synthesize event
+    t =    39.95s     Wait for com.apple.mobilesafari to idle
+    t =    39.95s Checking existence of `"Done" Button`
+    t =    39.99s Find the "Done" Button
+    t =    40.03s Tap "Done" Button
+    t =    40.03s     Wait for com.apple.mobilesafari to idle
+    t =    40.03s     Find the "Done" Button
+    t =    40.06s     Check for interrupting elements affecting "Done" Button
+    t =    40.09s     Synthesize event
+    t =    40.38s     Wait for com.apple.mobilesafari to idle
+    t =    41.24s Tap "Save" Button
+    t =    41.24s     Wait for com.apple.mobilesafari to idle
+    t =    41.25s     Find the "Save" Button
+    t =    41.27s     Check for interrupting elements affecting "Save" Button
+    t =    41.30s     Synthesize event
+    t =    41.59s     Wait for com.apple.mobilesafari to idle
+    t =    44.09s Waiting 4.0s for StaticText (First Match) to exist
+    t =    45.13s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    45.13s         Checking existence of `StaticText (First Match)`
+    t =    45.15s Find the StaticText (First Match)
+    t =    45.17s Tap "Clear" Button
+    t =    45.18s     Wait for com.apple.mobilesafari to idle
+    t =    45.18s     Find the "Clear" Button
+    t =    45.19s     Check for interrupting elements affecting "Clear" Button
+    t =    45.22s     Synthesize event
+    t =    45.51s     Wait for com.apple.mobilesafari to idle
+    t =    45.51s Tap Any (First Match)
+    t =    45.51s     Wait for com.apple.mobilesafari to idle
+    t =    45.51s     Find the Any (First Match)
+    t =    45.54s     Check for interrupting elements affecting "Email" TextField
+    t =    45.56s     Synthesize event
+    t =    45.85s     Wait for com.apple.mobilesafari to idle
+    t =    46.85s Type 'lat6.g2@newmail.ex...' into "Email" TextField
+    t =    46.85s     Wait for com.apple.mobilesafari to idle
+    t =    46.86s     Find the "Email" TextField
+    t =    46.96s     Check for interrupting elements affecting "Email" TextField
+    t =    47.02s     Synthesize event
+    t =    47.62s     Wait for com.apple.mobilesafari to idle
+    t =    47.62s Checking existence of `"Done" Button`
+    t =    47.65s Find the "Done" Button
+    t =    47.68s Tap "Done" Button
+    t =    47.68s     Wait for com.apple.mobilesafari to idle
+    t =    47.69s     Find the "Done" Button
+    t =    47.71s     Check for interrupting elements affecting "Done" Button
+    t =    47.74s     Synthesize event
+    t =    48.03s     Wait for com.apple.mobilesafari to idle
+    t =    48.90s Tap "Save" Button
+    t =    48.90s     Wait for com.apple.mobilesafari to idle
+    t =    48.91s     Find the "Save" Button
+    t =    48.93s     Check for interrupting elements affecting "Save" Button
+    t =    48.95s     Synthesize event
+    t =    49.24s     Wait for com.apple.mobilesafari to idle
+    t =    51.75s Waiting 4.0s for StaticText (First Match) to exist
+    t =    52.78s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    52.78s         Checking existence of `StaticText (First Match)`
+    t =    52.81s Find the StaticText (First Match)
+    t =    52.83s Tap "Clear" Button
+    t =    52.83s     Wait for com.apple.mobilesafari to idle
+    t =    52.83s     Find the "Clear" Button
+    t =    52.85s     Check for interrupting elements affecting "Clear" Button
+    t =    52.87s     Synthesize event
+    t =    53.15s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:44:38.162486-0700 CaptureUITests-Runner[40014:13054012] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=g2-latency-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    55.14s Requesting snapshot of accessibility hierarchy for app with pid 40069
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.FormTests testLatency] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=g2-latency-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    55.37s Requesting snapshot of accessibility hierarchy for app with pid 40069
+    t =    55.40s Tear Down
+Test Case '-[CaptureUITests.FormTests testLatency]' passed (55.665 seconds).
+Test Suite 'FormTests' passed at 2026-09-30 23:44:39.460.
+	 Executed 1 test, with 0 failures (0 unexpected) in 55.665 (55.670) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:44:39.461.
+	 Executed 1 test, with 0 failures (0 unexpected) in 55.665 (55.671) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:44:39.461.
+	 Executed 1 test, with 0 failures (0 unexpected) in 55.665 (55.672) seconds
+** BUILD INTERRUPTED **

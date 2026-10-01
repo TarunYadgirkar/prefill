@@ -1,0 +1,3 @@
+edit menu: app=["Paste", "AutoFill"] springboard=[]
+submenu has Passwords: true
+after Passwords menu: app=[] springboard=[] buttons=["Emoji", "Dictate", "shift", "return", "home\nalex.rivera@example.com", "work\nalex@work.example.org", "Previous", "Next", "AutoFill Contact", "Done"]

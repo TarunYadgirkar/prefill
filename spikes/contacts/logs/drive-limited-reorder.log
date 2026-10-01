@@ -1,0 +1,54 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:30:39.425231-0700 ProbeUITests-Runner[15212:12948805] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:30:43.415.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:30:43.417.
+Test Suite 'DriverTests' started at 2026-09-30 23:30:43.418.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.01s Start Test at 2026-09-30 23:30:43.424
+    t =     0.03s Set Up
+[driver] step app com.apple.mobilesafari
+    t =     0.04s Open com.apple.mobilesafari
+    t =     0.04s     Activate com.apple.mobilesafari
+    t =     0.17s         Wait for com.apple.mobilesafari to idle
+[driver] step tapWeb Phone
+    t =     0.53s Waiting 15.0s for TextField (First Match) to exist
+objc[15212]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106210398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106bac310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.53s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =     1.53s         Checking existence of `TextField (First Match)`
+    t =     1.57s Tap TextField (First Match)
+    t =     1.57s     Wait for com.apple.mobilesafari to idle
+    t =     1.58s     Find the TextField (First Match)
+    t =     1.61s     Check for interrupting elements affecting "Phone" TextField
+    t =     1.64s     Synthesize event
+    t =     1.93s     Wait for com.apple.mobilesafari to idle
+[driver] step tapWeb Email
+    t =     2.33s Waiting 15.0s for TextField (First Match) to exist
+    t =     3.35s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =     3.35s         Checking existence of `TextField (First Match)`
+    t =     3.38s Tap TextField (First Match)
+    t =     3.38s     Wait for com.apple.mobilesafari to idle
+    t =     3.38s     Find the TextField (First Match)
+    t =     3.41s     Check for interrupting elements affecting "Email" TextField
+    t =     3.43s     Synthesize event
+    t =     3.72s     Wait for com.apple.mobilesafari to idle
+    t =     4.10s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (4.125 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:30:47.551.
+	 Executed 1 test, with 0 failures (0 unexpected) in 4.125 (4.133) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:30:47.551.
+	 Executed 1 test, with 0 failures (0 unexpected) in 4.125 (4.134) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:30:47.551.
+	 Executed 1 test, with 0 failures (0 unexpected) in 4.125 (4.137) seconds
+2026-09-30 23:30:47.848 xcodebuild[15154:12948449] [MT] IDETestOperationsObserverDebug: 10.222 elapsed -- Testing started completed.
+2026-09-30 23:30:47.848 xcodebuild[15154:12948449] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:30:47.848 xcodebuild[15154:12948449] [MT] IDETestOperationsObserverDebug: 10.222 sec, +10.222 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-30-37--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

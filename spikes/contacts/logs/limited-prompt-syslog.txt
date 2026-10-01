@@ -1,0 +1,702 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-30 23:20:58.000 Df Probe[99802:c4732f] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 1
+2026-09-30 23:20:58.000 Df Probe[99802:c4732f] [com.apple.UIKit:BackgroundTask] Ending task with identifier 1 and description: <_UIBackgroundTaskInfo: 0x106e2c940>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 516049 (elapsed = 2), _expireHandler: (null)
+2026-09-30 23:20:58.001 Df Probe[99802:c4732f] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x105fc56a0> (used by background task with identifier 1: <_UIBackgroundTaskInfo: 0x106e2c940>: taskID = 1, taskName = Launch Background Task for Coalescing, creationTime = 516049 (elapsed = 2))
+2026-09-30 23:20:58.001 Df Probe[99802:c4732f] [com.apple.UIKit:BackgroundTask] Will invalidate assertion: <BKSProcessAssertion: 0x105fc56a0> for task identifier: 1
+2026-09-30 23:20:58.032 A  Probe[99802:c472ff] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-09-30 23:20:58.041 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 11; deactivation reasons: 1024 -> 3072; animating application lifecycle event: 0
+2026-09-30 23:20:58.043 Df Probe[99802:c472ff] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x106e8c8c0> for initial
+2026-09-30 23:20:58.043 Df Probe[99802:c472ff] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x106e8c8c0> for CADisplay KVO
+2026-09-30 23:20:58.044 Df Probe[99802:c472ff] [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 1, category name = (null)
+2026-09-30 23:20:58.044 Df Probe[99802:c472ff] [com.apple.Accessibility:AXSupportCommon] Read CategoryName: per-app = 0, category name = (null)
+2026-09-30 23:20:58.045 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 10; deactivation reasons: 3072 -> 2048; animating application lifecycle event: 0
+2026-09-30 23:20:58.064 Df Probe[99802:c472ff] [com.apple.app_launch_measurement:ApplicationLaunch] alm_acquire_pageins_recording_assertion: acquired pageins recording assertion!
+2026-09-30 23:20:58.065 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 5; deactivation reasons: 2048 -> 2080; animating application lifecycle event: 1
+2026-09-30 23:20:58.065 Df Probe[99802:c4732d] [com.apple.dt.automationmode:Default] XAM shared observer connecting to com.apple.dt.automationmode.reader
+2026-09-30 23:20:58.065 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x106e8d400] activating connection: mach=true listener=false peer=false name=com.apple.dt.automationmode.reader
+2026-09-30 23:20:58.066 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Should send trait collection or coordinate space update, interface style 1 -> 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.066 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.066 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x106e8d400] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-09-30 23:20:58.067 Df Probe[99802:c472ff] [com.apple.UIKit:HomeAffordanceObservation] Initializing: <_UIHomeAffordanceSceneNotifier: 0x1099fabc0>; with scene: <UIWindowScene: 0x1098e3c00>
+2026-09-30 23:20:58.067 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x106e8d400] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-09-30 23:20:58.067 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x106e8d400] Connection returned listener port: 0x4e0b
+2026-09-30 23:20:58.067 Df Probe[99802:c472ff] [com.apple.BacklightServices:scenes] 0x109a0d6e0 setDelegate:<0x109a0e250 _UIBacklightEnvironment> hasDelegate:YES for environment:sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.067 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.067 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] Initialized with scene: <UIWindowScene: 0x1098e3c00>; behavior: <_UIEventDeferringBehavior_iOS: 0x1099b0e60>; availableForProcess: 1, systemShellManagesKeyboardFocus: 1
+2026-09-30 23:20:58.068 Df Probe[99802:c4732d] [com.apple.dt.automationmode:Default] Returning 1 for enabled state
+2026-09-30 23:20:58.068 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x106e8d540] activating connection: mach=false listener=false peer=true name=com.apple.xpc.anonymous.0x106e8d400.peer[99724].0x106e8d540
+2026-09-30 23:20:58.068 Df Probe[99802:c472ff] [com.apple.GenerativeModels:availability] UserDefaults(com.apple.gms.availability, 502
+    "query runtime issue reporting" = 1;
+    "query runtime issue reporting/automation type mismatch" = 1;
+}
+2026-09-30 23:20:58.074 Df Probe[99802:c472ff] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.gms.availability.notification
+2026-09-30 23:20:58.074 Df Probe[99802:c472ff] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.os-eligibility-domain.change.greymatter
+2026-09-30 23:20:58.074 Df Probe[99802:c472ff] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.language.changed
+2026-09-30 23:20:58.075 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.075 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x106e8d680] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Setting default evaluation strategy for UIUserInterfaceIdiomPhone to LastOneWins
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Scene target of keyboard event deferring environment did change: target=1; ancestor=0; scene: UIWindowScene: 0x1098e3c00; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] Scene target of event deferring environments did update: scene: 0x1098e3c00; current systemShellManagesKeyboardFocus: 1; systemShellManagesKeyboardFocusForScene: 1; eligibleForRecordRemoval: 1;
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Scene became target of keyboard event deferring environment: UIWindowScene: 0x1098e3c00; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Stack[KeyWindow] 0x109a24240: Taking no further action for migration from LastOneWins -> SystemShellManaged as there are no scenes
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Setting default evaluation strategy for UIUserInterfaceIdiomPhone to SystemShellManaged
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Key window needs update: 0; currentKeyWindowScene: 0x0; evaluatedKeyWindowScene: 0x1098e3c00; currentApplicationKeyWindow: 0x0; evaluatedApplicationKeyWindow: 0x0; reason: UIWindowScene: 0x1098e3c00: Window scene became target of keyboard environment
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.076 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardFocusAssistant] Event deferring policy changed: finalScene:N->Y (token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardSceneDelegate] Scene gained keyboard focus (scene: <UIWindowScene: 0x1098e3c00>, responder: (nil), wantsKB: N)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardArbiterClientLog] isWritingToolsHandlingKeyboardTracking:Y (WT ready:Y, Arbiter ready:Y)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardArbiterClientLog] -[_UIRemoteKeyboards prepareToMoveKeyboard:withIAV:isIAVRelevant:showing:notifyRemote:forScene:] position: {{0, 0}, {0, 0}} visible: 0; notifyRemote: 1; isMinimized: NO
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Requesting keyboard scene for (FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.077 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x106e8fc00] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-09-30 23:20:58.078 Df Probe[99802:c472ff] [com.apple.FrontBoard:Common] FBSWorkspace registering source: com.apple.UIKit.KeyboardManagement.hosted
+2026-09-30 23:20:58.078 Df Probe[99802:c472ff] [com.apple.FrontBoard:Common] FBSWorkspace connected to endpoint : <BSServiceConnectionEndpoint: 0x1099b19c0; target: NL:com.apple.UIKit.KeyboardManagement.hosted; service: com.apple.frontboard.workspace-service>
+2026-09-30 23:20:58.080 A  Probe[99802:c4732c] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:20:58.082 Df Probe[99802:c47330] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x106e32ee0 com.apple.UIKit.KeyboardManagement.hosted> attempting delayed handshake from activation handler
+2026-09-30 23:20:58.082 Df Probe[99802:c47330] [com.apple.FrontBoard:Common] <FBSWorkspaceScenesClient:0x106e32ee0 com.apple.UIKit.KeyboardManagement.hosted> sent handshake
+2026-09-30 23:20:58.084 Df Probe[99802:c4732c] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UIKeyboardInputSceneSettings> on FBSSceneSettings
+2026-09-30 23:20:58.084 Df Probe[99802:c4732c] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UIKeyboardInputSceneClientSettings> on FBSSceneClientSettings
+2026-09-30 23:20:58.101 Df Probe[99802:c472ff] [com.apple.UIKit:Orientation] <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB) Scene updated orientation preferences: none -> ( Pu Ll Lr )
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Key window API is scene-level: YES
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] UIWindowScene: 0x1098e3c00: Window became key in scene: UIWindow: 0x106ea0400; contextId: 0x623E8A0B: reason: UIWindowScene: 0x1098e3c00: Window requested to become key in scene: 0x106ea0400
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Key window needs update: 1; currentKeyWindowScene: 0x0; evaluatedKeyWindowScene: 0x1098e3c00; currentApplicationKeyWindow: 0x0; evaluatedApplicationKeyWindow: 0x106ea0400; reason: UIWindowScene: 0x1098e3c00: Window requested to become key in scene: 0x106ea0400
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Window did become application key: UIWindow: 0x106ea0400; contextId: 0x623E8A0B; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] Begin local event deferring requested for token: 0x106e88480; environments: 1; reason: UIWindowScene: 0x1098e3c00: Begin event deferring in keyboardFocus for window: 0x106ea0400
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] [keyboardFocus] Start observing context for local target window: 0x106ea0400; contextId: 0x623E8A0B
+2026-09-30 23:20:58.102 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] [keyboardFocus] Began tracking context for local target window: 0x106ea0400; contextId: 0x623E8A0B
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+    <0x109920310; _UIKeyWindowSce…ver-0x109a269a0; fb/FBSceneManag…03-C9F5242856EB; <target; generation: 387; finalStringToken>>,
+    <0x109921960; _UIKeyboardFocu…ant-0x106c734e0; fb/FBSceneManag…03-C9F5242856EB; <target; generation: 387; finalStringToken>>
+)
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 5; deactivation reasons: 2080
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 12; deactivation reasons: 2080 -> 6176; animating application lifecycle event: 1
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 11; deactivation reasons: 6176 -> 4128; animating application lifecycle event: 1
+2026-09-30 23:20:58.103 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <_UISceneIntelligenceSupportSettings> on FBSSceneSettings
+2026-09-30 23:20:58.104 Df Probe[99802:c4732f] [com.apple.UIIntelligenceSupport:xpc] establishing connection to agent
+2026-09-30 23:20:58.104 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.104 Df Probe[99802:c4732f] [com.apple.xpc:session] [0x109965bd0] Session created.
+2026-09-30 23:20:58.104 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Ingesting properties from UIApplicationSceneSettings...
+    <0x109920310; _UIKeyWindowSce…ver-0x109a269a0; fb/FBSceneManag…03-C9F5242856EB; <ancestor; generation: 388; finalStringToken>>,
+    <0x109921960; _UIKeyboardFocu…ant-0x106c734e0; fb/FBSceneManag…03-C9F5242856EB; <ancestor; generation: 388; finalStringToken>>
+)
+2026-09-30 23:20:58.104 Df Probe[99802:c4732f] [com.apple.xpc:session] [0x109965bd0] Session created from connection [0x109a8ad00]
+2026-09-30 23:20:58.104 Df Probe[99802:c4732f] [com.apple.xpc:connection] [0x109a8ad00] activating connection: mach=true listener=false peer=false name=com.apple.uiintelligencesupport.agent
+2026-09-30 23:20:58.104 Df Probe[99802:c4732f] [com.apple.xpc:session] [0x109965bd0] Session activated
+2026-09-30 23:20:58.104 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIApplicationSceneSettings[derived]> on FBSSceneSettings
+2026-09-30 23:20:58.105 Df Probe[99802:c472ff] [com.apple.UIKit:ScenePostSettingsUpdateResponse] <_UIScenePostSettingsUpdateResponseComponent: 0x109a24600>: Scheduling <_UIScenePostSettingsUpdateWindowLayout: 0x106ed05a0>
+2026-09-30 23:20:58.105 Df Probe[99802:c472ff] [com.apple.UIKit:ScenePostSettingsUpdateResponse] <_UIScenePostSettingsUpdateResponseComponent: 0x109a24600>: Reducing <_UIScenePostSettingsUpdateWindowLayout: 0x106ed0840> into <_UIScenePostSettingsUpdateWindowLayout: 0x106ed05a0>
+2026-09-30 23:20:58.105 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.105 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.106 A  Probe[99802:c4732c] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:20:58.107 Df Probe[99802:c4732c] [com.apple.UIIntelligenceSupport:xpc] Connection established with agent PID: 84541
+2026-09-30 23:20:58.108 A  Probe[99802:c472ff] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-09-30 23:20:58.129 Df Probe[99802:c4732c] [com.apple.xpc:connection] [0x109ab4780] activating connection: mach=true listener=false peer=false name=com.apple.distributed_notifications@1v3
+2026-09-30 23:20:58.129 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109ab48c0] activating connection: mach=true listener=false peer=false name=com.apple.distributed_notifications@1v3
+2026-09-30 23:20:58.131 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109ab4a00] activating connection: mach=true listener=false peer=false name=com.apple.contactsd
+2026-09-30 23:20:58.132 A  Probe[99802:c472ff] (TCC) tcc_send_request_authorization() IPC
+2026-09-30 23:20:58.132 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109ab4b40] activating connection: mach=true listener=false peer=false name=com.apple.tccd
+2026-09-30 23:20:58.133 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[99802].0x103ce1680
+2026-09-30 23:20:58.133 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=99802, sender_uid=502, sender_auid=502, function=TCCAccessRequest, msgID=99802.1
+2026-09-30 23:20:58.133 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_CTX: msgID=99802.1, function=TCCAccessRequest, service=kTCCServiceAddressBook, preflight=yes, query=1, client_dict=(null), daemon_dict={
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 0;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:20:58.133 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=99802.1, attribution={requesting={TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-88C2-83EDF2CA571D/data/Containers/Bundle/Application/3997E43F-A082-4951-B
+2026-09-30 23:20:58.133 Df tccd[84214:c46777] [com.apple.TCC:access] kTCCServiceAddressBook does not support RBS assertion override
+2026-09-30 23:20:58.134 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_SUBJECT: msgID=99802.1, subject=com.tarunyadgirkar.prefill.spike.contacts.probe,
+2026-09-30 23:20:58.135 A  tccd[84214:c46777] (CoreFoundation) Loading Preferences From User Session CFPrefsD
+2026-09-30 23:20:58.135 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.1, authValue=1, authReason=0, authVersion=2, desired_auth=6, error=(null),
+2026-09-30 23:20:58.135 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99802.1
+2026-09-30 23:20:58.135 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109ab4b40] invalidated after the last release of the connection object
+2026-09-30 23:20:58.135 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 99802) either cancelled the connection or exited
+2026-09-30 23:20:58.135 Df Probe[99802:c472ff] [com.apple.contacts:aggregate-store] Adding shared photo decorator (includeSharedPhotoContacts=YES)
+2026-09-30 23:20:58.141 Df Probe[99802:c4732f] [com.apple.xpc:connection] [0x109ab5180] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-09-30 23:20:58.143 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x109ab5900] activating connection: mach=true listener=false peer=false name=com.apple.fontservicesd
+2026-09-30 23:20:58.162 Df Probe[99802:c472ff] [PrototypeTools:domain] Not observing PTDefaults on customer install.
+2026-09-30 23:20:58.169 A  Probe[99802:c472ff] (TCC) TCCAccessRequest() IPC
+2026-09-30 23:20:58.169 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109a89a40] activating connection: mach=true listener=false peer=false name=com.apple.tccd
+2026-09-30 23:20:58.169 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[99802].0x103ce1680
+2026-09-30 23:20:58.169 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=99802, sender_uid=502, sender_auid=502, function=TCCAccessRequest, msgID=99802.2
+2026-09-30 23:20:58.170 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_CTX: msgID=99802.2, function=TCCAccessRequest, service=kTCCServiceAddressBook, preflight=yes, query=1, client_dict=(null), daemon_dict={
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 0;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 0;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:20:58.170 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=99802.2, attribution={requesting={TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-88C2-83EDF2CA571D/data/Containers/Bundle/Application/3997E43F-A082-4951-B
+2026-09-30 23:20:58.170 Df tccd[84214:c46777] [com.apple.TCC:access] kTCCServiceAddressBook does not support RBS assertion override
+2026-09-30 23:20:58.170 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_SUBJECT: msgID=99802.2, subject=com.tarunyadgirkar.prefill.spike.contacts.probe,
+2026-09-30 23:20:58.170 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.2, authValue=1, authReason=0, authVersion=2, desired_auth=6, error=(null),
+2026-09-30 23:20:58.171 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99802.2
+2026-09-30 23:20:58.171 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x109a89a40] invalidated after the last release of the connection object
+2026-09-30 23:20:58.171 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 99802) either cancelled the connection or exited
+2026-09-30 23:20:58.240 E  Probe[99802:c472ff] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-09-30 23:20:58.241 A  Probe[99802:c4732c] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:20:58.243 A  Probe[99802:c4732f] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:20:58.243 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x10a30b700] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+2026-09-30 23:20:58.267 Df Probe[99802:c472ff] [com.apple.network:activity] Create activity from XPC object <nw_activity 50:1 [AE968D9E-40D5-4469-885A-EE30D62D3D49] (reporting strategy default)>
+2026-09-30 23:20:58.267 Df Probe[99802:c472ff] [com.apple.network:activity] Create activity from XPC object <nw_activity 50:2 [DAE06D8C-BC87-4DB6-9834-1DEC52C88F79] (reporting strategy default)>
+2026-09-30 23:20:58.267 Df Probe[99802:c472ff] [com.apple.network:activity] Set activity <nw_activity 50:1 [AE968D9E-40D5-4469-885A-EE30D62D3D49] (reporting strategy default)> as the global parent
+2026-09-30 23:20:58.285 A  Probe[99802:c472ff] (CoreFoundation) Updating Key-Value Observers Of Preferences
+2026-09-30 23:20:58.285 Df Probe[99802:c472ff] [com.apple.Accessibility:AXCommon] Read Per-App on Init: Smart invert = (null)
+2026-09-30 23:20:58.288 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] Scene target of event deferring environments did update: scene: 0x1098e3c00; current systemShellManagesKeyboardFocus: 1; systemShellManagesKeyboardFocusForScene: 1; eligibleForRecordRemoval: 1;
+2026-09-30 23:20:58.288 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Scene became target of keyboard event deferring environment: UIWindowScene: 0x1098e3c00; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.289 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardFocusAssistant] Event deferring policy changed: finalScene:Y->Y (token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.296 A  Probe[99802:c472ff] (TCC) TCCAccessRequest() IPC
+2026-09-30 23:20:58.297 A  Probe[99802:c472ff] (Contacts) RequestAccessForContacts
+2026-09-30 23:20:58.297 A  Probe[99802:c472ff] (TCC) tcc_send_request_authorization() IPC
+2026-09-30 23:20:58.297 Df Probe[99802:c4735a] [com.apple.xpc:connection] [0x10a30b480] activating connection: mach=true listener=false peer=false name=com.apple.tccd
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[99802].0x103ce1680
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=99802, sender_uid=502, sender_auid=502, function=TCCAccessRequest, msgID=99802.3
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_CTX: msgID=99802.3, function=TCCAccessRequest, service=kTCCServiceAddressBook, preflight=no, query=1, client_dict=(null), daemon_dict={
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 0;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=99802.3, attribution={requesting={TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-88C2-83EDF2CA571D/data/Containers/Bundle/Application/3997E43F-A082-4951-B
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.TCC:access] kTCCServiceAddressBook does not support RBS assertion override
+2026-09-30 23:20:58.299 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_SUBJECT: msgID=99802.3, subject=com.tarunyadgirkar.prefill.spike.contacts.probe,
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] service not protected: kTCCServiceAddressBook
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_PROMPTING: msgID=99802.3, service=kTCCServiceAddressBook, subject=Sub:{com.tarunyadgirkar.prefill.spike.contacts.probe}Resp:{TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-8
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] got authorization choices for staged prompting request: legacy SPI: 0 service: kTCCServiceAddressBook currentAuth: 1 desiredAuth: 6
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] aButtonAuth: 6 bButtonAuth: 0 cButtonAuth: 1
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] found usage string: Probe edits your My Info card to test Safari AutoFill.
+2026-09-30 23:20:58.300 Df tccd[84214:c46777] [com.apple.TCC:access] extensionItem.userInfo: {
+    ClientBundleIdentifier = "com.tarunyadgirkar.prefill.spike.contacts.probe";
+    ClientDisplayName = Probe;
+    kTCCNotificationExtensionClientDataKey =     {
+    };
+    kTCCNotificationExtensionDaemonDataKey =     {
+        kTCCNotificationExtensionDaemonDataDesiredAuthKey = 6;
+        kTCCNotificationExtensionDaemonDataInfoString = "";
+        kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+        kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+    };
+}
+2026-09-30 23:20:58.302 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.302 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.310 E  Probe[99802:c472ff] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-09-30 23:20:58.311 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Realizing settings extension SBUISecureRenderingSettingsExtension on FBSSceneSettings
+2026-09-30 23:20:58.314 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+    <0x109920310; _UIKeyWindowSce…ver-0x109a269a0; fb/FBSceneManag…03-C9F5242856EB; <ancestor; generation: 388; finalStringToken>>,
+    <0x109921960; _UIKeyboardFocu…ant-0x106c734e0; fb/FBSceneManag…03-C9F5242856EB; <ancestor; generation: 388; finalStringToken>>
+)
+2026-09-30 23:20:58.318 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.319 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.319 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 12; deactivation reasons: 4128 -> 32; animating application lifecycle event: 1
+2026-09-30 23:20:58.322 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] Send setDeactivating: N (-DeactivationReason:SuspendedEventsOnly)
+2026-09-30 23:20:58.327 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 5; deactivation reasons: 32 -> 0; animating application lifecycle event: 0
+2026-09-30 23:20:58.330 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] applicationDidBecomeActive (force:N)
+2026-09-30 23:20:58.335 Df Probe[99802:c472ff] [com.apple.contacts:CNTCCVersion2] CNTCCVersion2, app is coming into the foreground. reprompt? 1
+2026-09-30 23:20:58.335 Df Probe[99802:c472ff] [com.apple.contacts:CNTCCVersion2] CNTCCVersion2, app is coming into the foreground. reprompt? 1
+2026-09-30 23:20:58.335 Df Probe[99802:c472ff] [com.apple.UIKit:ScenePostSettingsUpdateResponse] <_UIScenePostSettingsUpdateResponseComponent: 0x109a24600>: Scheduling <_UIScenePostSettingsUpdateWindowLayout: 0x106ed0e60>
+2026-09-30 23:20:58.335 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.335 Df Probe[99802:c472ff] [com.apple.UIKit:DisplayLink] Legacy remapping target changed from '(null)' to '1ED8BCB0-809D-4A32-9D8A-B49127691832'
+2026-09-30 23:20:58.349 A  Probe[99802:c4735a] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:20:58.350 Df Probe[99802:c472ff] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x109a8aa80> for initial
+2026-09-30 23:20:58.350 Df Probe[99802:c472ff] [com.apple.UIKit:UIScreen] Evaluated capturing state as 0 on <UIScreen: 0x109a8aa80> for CADisplay KVO
+2026-09-30 23:20:58.350 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.350 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Should send trait collection or coordinate space update, interface style 1 -> 1, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.351 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.354 Df Probe[99802:c472ff] [com.apple.UIKit:HomeAffordanceObservation] Initializing: <_UIHomeAffordanceSceneNotifier: 0x1098fd880>; with scene: <_UIKeyboardInputScene: 0x1099bb480>
+2026-09-30 23:20:58.354 Df Probe[99802:c472ff] [com.apple.BacklightServices:scenes] 0x109971200 setDelegate:<0x109971500 _UIBacklightEnvironment> hasDelegate:YES for environment:KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.354 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.358 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x10a3f6200] Initialized with scene: <_UIKeyboardInputScene: 0x1099bb480>; behavior: <_UIEventDeferringBehavior_iOS: 0x10a3f3020>; availableForProcess: 1, systemShellManagesKeyboardFocus: 1
+2026-09-30 23:20:58.358 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.359 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.361 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.370 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.370 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.371 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.374 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Notifying observers of geometry update -> app scene 1: {{0, 0}, {402, 874}}, keyboard scene: 1: {{0, 0}, {402, 874}}
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:ScenePostSettingsUpdateResponse] <_UIScenePostSettingsUpdateResponseComponent: 0x1099722e0>: Scheduling <_UIScenePostSettingsUpdateWindowLayout: 0x106ed3530>
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.379 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 0, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.383 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] applicationWillResume note:UIApplicationWillEnterForegroundNotification
+2026-09-30 23:20:58.386 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] startConnection
+2026-09-30 23:20:58.391 Df Probe[99802:c472ff] [com.apple.runningboard:connection] Creating side-channel connection to com.apple.runningboard
+2026-09-30 23:20:58.397 Df Probe[99802:c472ff] [com.apple.xpc:connection] [0x10a30bc00] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-09-30 23:20:58.397 Df Probe[99802:c472ff] [com.apple.runningboard:process] Hit the server for a process handle f4e176c000185da that resolved to: [app<com.tarunyadgirkar.prefill.spike.contacts.probe((null))>:99802]
+2026-09-30 23:20:58.397 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.399 Df Probe[99802:c472ff] [com.apple.UIKit:UIAlertControllerStackManager] canShowAlerts Updated: <FBSSceneSettingsDiff: 0x1098a27c0; UIApplicationSceneSettings> {
+    subclassSettings = <BSSettingsDiff: 0x109970870> {
+        canShowAlerts = NO;
+    };
+}
+2026-09-30 23:20:58.404 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.404 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Scene did update interface style to 1, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.404 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Push traits update to screen for new style 1, <_UIKeyboardInputScene: 0x1099bb480> (KeyboardInputScene-com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.404 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Keyboard scene for com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB successfully connected: com.apple.UIKit.KeyboardManagement.hosted/com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices%2F
+2026-09-30 23:20:58.407 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] reloadInputViews for keyboard scene com.apple.UIKit.KeyboardManagement.hosted/com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices%2FFBSceneManager%3AsceneID%253Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.411 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardSceneDelegate] forceReloadInputViews
+2026-09-30 23:20:58.411 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardSceneDelegate] Try reloading input views for responder:(nil) requiresKB:N force:Y scene-identity:com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.411 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardSceneDelegate] Reloading input views for key-window scene responder:(nil) requiresKB:N force:Y scene-identity:com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.411 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] startConnection callback handleKeyboardChange:N (hasFocus:Y hasActiveInput:N expectingInitialState:Y disabled:N hasInfo:Y isWritingTOols:N)
+2026-09-30 23:20:58.448 Df Probe[99802:c472ff] [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.network:] networkd_settings_read_from_file_locked initialized networkd settings by reading plist directly
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.network:activity] <nw_activity 50:1 [AE968D9E-40D5-4469-885A-EE30D62D3D49] (global parent) (reporting strategy default) complete (reason success)> complete with reason 2 (success), duration 2097ms
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.network:activity] <nw_activity 50:2 [DAE06D8C-BC87-4DB6-9834-1DEC52C88F79] (reporting strategy default) complete (reason success)> complete with reason 2 (success), duration 2098ms
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.network:activity] Unsetting the global parent activity <nw_activity 50:1 [AE968D9E-40D5-4469-885A-EE30D62D3D49] (global parent) (reporting strategy default) complete (reason success)>
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.network:activity] Unset the global parent activity
+2026-09-30 23:20:58.451 Df Probe[99802:c472ff] [com.apple.app_launch_measurement:ApplicationLaunch] alm_release_pageins_recording_assertion: releasing pageins recording assertion
+2026-09-30 23:20:58.466 Df Probe[99802:c472ff] [com.apple.Accessibility:AXCommon] Loading PDFKit
+2026-09-30 23:20:58.592 Df contactsd[91508:c444f7] [com.apple.contacts.contactsd:settingsDefaultApps] SettingsDefaultAppsService will perform check.
+2026-09-30 23:20:58.593 Df contactsd[91508:c444f7] [com.apple.calls.telephonyutilities:Default] Found iPad DefaultAppRelayTelephonySetting == 0
+2026-09-30 23:20:58.797 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:20:58.798 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:58.798 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 13; deactivation reasons: 0 -> 8192; animating application lifecycle event: 0
+2026-09-30 23:20:58.798 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] applicationWillResignActive
+2026-09-30 23:20:58.798 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 13; deactivation reasons: 8192
+2026-09-30 23:20:58.798 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 12; deactivation reasons: 8192 -> 12288; animating application lifecycle event: 0
+2026-09-30 23:20:58.806 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:20:59.700 Df generativeexperiencesd[84308:c46f83] [com.apple.MobileAsset:AutoSet] MA-auto-set[AUTO-SHORT-TERM][FRAMEWORK]{_shortTermLockAtomicSync} com.apple.MobileAsset.UAF.FM.Overrides SUCCESS | lockReason:UAFAssetSet lock of com.apple.MobileAsset.UAF.FM.Overrides for SHORT_TERM_LOCKER | shortTermLock:assetSetAtomicInstance:DC05022D-05DA-4BDD-9D85-21119525BD11|lockedFilename:/Users
+2026-09-30 23:20:59.730 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce12c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84308].0x103ce12c0
+2026-09-30 23:20:59.730 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84308, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.42
+2026-09-30 23:20:59.731 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.42
+2026-09-30 23:20:59.731 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce12c0] invalidated because the client process (pid 84308) either cancelled the connection or exited
+2026-09-30 23:20:59.732 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce12c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84308].0x103ce12c0
+2026-09-30 23:20:59.732 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84308, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.43
+2026-09-30 23:20:59.732 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.43
+2026-09-30 23:20:59.733 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce12c0] invalidated because the client process (pid 84308) either cancelled the connection or exited
+2026-09-30 23:20:59.733 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce12c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84308].0x103ce12c0
+2026-09-30 23:20:59.733 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84308, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.44
+2026-09-30 23:20:59.734 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersForService, msgID=84308.44
+2026-09-30 23:20:59.734 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce12c0] invalidated because the client process (pid 84308) either cancelled the connection or exited
+2026-09-30 23:21:01.432 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.432 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 13; deactivation reasons: 12288
+2026-09-30 23:21:01.432 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 5; deactivation reasons: 12288 -> 12320; animating application lifecycle event: 1
+2026-09-30 23:21:01.439 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.447 E  SpringBoard[84202:c2f3b0] [com.apple.UIKit:UIFocus] SBIconView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-09-30 23:21:01.454 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.454 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Ignoring already applied deactivation reason: 13; deactivation reasons: 12320
+2026-09-30 23:21:01.454 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 13; deactivation reasons: 12320 -> 4128; animating application lifecycle event: 1
+2026-09-30 23:21:01.456 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.458 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.459 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Notifying observers of geometry update -> app scene 1: {{0, 0}, {402, 874}}, keyboard scene: 1: {{0, 0}, {402, 874}}
+2026-09-30 23:21:01.460 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.461 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Notifying observers of geometry update -> app scene 1: {{0, 0}, {402, 874}}, keyboard scene: 1: {{0, 0}, {402, 874}}
+2026-09-30 23:21:02.087 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Received action(s) in scene-update: <FBSceneSnapshotAction: 0x148ea0073>
+2026-09-30 23:21:02.098 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.098 Df Probe[99802:c4732d] [com.apple.xpc:connection] [0x109a8ad00] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-09-30 23:21:02.098 Df Probe[99802:c4732d] [com.apple.xpc:session] [0x109965bd0] Session canceled.
+2026-09-30 23:21:02.100 Df Probe[99802:c4732f] [com.apple.UIIntelligenceSupport:xpc] agent connection cancelled (details: Session manually canceled)
+2026-09-30 23:21:02.100 Df Probe[99802:c4732f] [com.apple.xpc:session] [0x109965bd0] Disposing of session
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason added: 11; deactivation reasons: 4128 -> 6176; animating application lifecycle event: 0
+    <0x109921960; _UIKeyboardFocu…ant-0x106c734e0; fb/FBSceneManag…03-C9F5242856EB; <none; generation: 0>>,
+    <0x109920310; _UIKeyWindowSce…ver-0x109a269a0; fb/FBSceneManag…03-C9F5242856EB; <none; generation: 0>>,
+    <0x1098fd340; _UIKeyWindowSce…ver-0x109971260; com.apple.UIKit…03-C9F5242856EB; <none; generation: 0>>
+)
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: _UIRemoteKeyboard XPC disconnection, expirationHandler: (null)
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Creating new assertion because there is no existing background assertion.
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Creating new background assertion
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created new background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] com.tarunyadgirkar.prefill.spike.contacts.probe(99802) invalidateConnection (appDidSuspend)
+2026-09-30 23:21:02.116 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: com.apple.asset_manager.cache_resource_cleanup, expirationHandler: <__NSMallocBlock__: 0x10997cab0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Reusing background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 3, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 3
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 3 and description: <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 3, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0), _expireHandler: <__NSMallocBlock__: 0x10997db00>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 3: <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 3, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: com.apple.asset_manager.cache_resource_cleanup, expirationHandler: <__NSMallocBlock__: 0x10997db00>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Reusing background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 4, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 4
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 4 and description: <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 4, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0), _expireHandler: <__NSMallocBlock__: 0x10997cab0>
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 4: <_UIBackgroundTaskInfo: 0x109810b00>: taskID = 4, taskName = com.apple.asset_manager.cache_resource_cleanup, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.117 Df Probe[99802:c472ff] [com.apple.UIKit:Application] Deactivation reason removed: 5; deactivation reasons: 6176 -> 6144; animating application lifecycle event: 0
+2026-09-30 23:21:02.122 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: com.apple.uikit.applicationSnapshot, expirationHandler: <__NSMallocBlock__: 0x10997d590>
+2026-09-30 23:21:02.122 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Reusing background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.122 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.122 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x1098108c0>: taskID = 5, taskName = com.apple.uikit.applicationSnapshot, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.122 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.123 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Should not send trait collection or coordinate space update, interface style 1 -> 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.138 Df Probe[99802:c472ff] [com.apple.FrontBoard:Common] Performing snapshot request 0x109941050 (type 1)
+2026-09-30 23:21:02.138 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Ingesting properties from UIApplicationSceneClientSettings...
+2026-09-30 23:21:02.139 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneExtension] Realizing settings extension <UIApplicationSceneClientSettings[derived]> on FBSSceneClientSettings
+2026-09-30 23:21:02.139 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Sending action(s): <FBSSceneSnapshotRequestAction: 0x185da0000>
+2026-09-30 23:21:02.168 Df Probe[99802:c4732f] [com.apple.FrontBoard:Common] Snapshot request 0x109941050 complete
+2026-09-30 23:21:02.169 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.169 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Should not send trait collection or coordinate space update, interface style 2 -> 2, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.172 A  Probe[99802:c4732f] (RunningBoardServices) didChangeInheritances
+2026-09-30 23:21:02.178 Df Probe[99802:c472ff] [com.apple.FrontBoard:Common] Performing snapshot request 0x1099ad1d0 (type 1)
+2026-09-30 23:21:02.178 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Sending action(s): <FBSSceneSnapshotRequestAction: 0x185da0001>
+2026-09-30 23:21:02.201 Df Probe[99802:c4735a] [com.apple.FrontBoard:Common] Snapshot request 0x1099ad1d0 complete
+2026-09-30 23:21:02.201 E  Probe[99802:c472ff] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-09-30 23:21:02.202 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 5
+2026-09-30 23:21:02.203 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 5 and description: <_UIBackgroundTaskInfo: 0x1098108c0>: taskID = 5, taskName = com.apple.uikit.applicationSnapshot, creationTime = 516055 (elapsed = 0), _expireHandler: <__NSMallocBlock__: 0x10997d1a0>
+2026-09-30 23:21:02.203 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 5: <_UIBackgroundTaskInfo: 0x1098108c0>: taskID = 5, taskName = com.apple.uikit.applicationSnapshot, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.203 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.203 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Should not send trait collection or coordinate space update, interface style 1 -> 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:EventDeferring] [0x106f16480] [keyboardFocus] Disabling event deferring records requested: adding recreation reason: detachedContext; for reason: _UIEventDeferringManager: 0x106f16480: disabling keyboardFocus: context detached for window: 0x106ea0400; contextID: 0x623E8A0B
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: com.apple.UIKit.CABackingStoreCollect, expirationHandler: (null)
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Reusing background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Incrementing reference count for background assertion <BKSProcessAssertion: 0x10ad94be0>
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x109810f80>: taskID = 6, taskName = com.apple.UIKit.CABackingStoreCollect, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.204 Df Probe[99802:c472ff] [com.apple.UIKit:DisplayLink] Legacy remapping target changed from '1ED8BCB0-809D-4A32-9D8A-B49127691832' to '(null)'
+2026-09-30 23:21:02.216 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardFocusAssistant] Event deferring policy changed: finalScene:Y->N (token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.216 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Scene target of keyboard event deferring environment did change: target=0; ancestor=0; scene: UIWindowScene: 0x1098e3c00; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.218 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.218 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardScene] Notifying observers of geometry update -> app scene 1: {{0, 0}, {402, 874}}, keyboard scene: 1: {{0, 0}, {402, 874}}
+2026-09-30 23:21:02.219 E  Probe[99802:c472ff] [com.apple.coreanimation:API] cannot add handler to 0 from 0 - dropping
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:InterfaceStyle] Not push traits update to screen for new style 1, <UIWindowScene: 0x1098e3c00> (CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 2
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 2 and description: <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0), _expireHandler: (null)
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 2: <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.225 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending background task with UIBackgroundTaskIdentifier: 6
+2026-09-30 23:21:02.225 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 6 and description: <_UIBackgroundTaskInfo: 0x109810f80>: taskID = 6, taskName = com.apple.UIKit.CABackingStoreCollect, creationTime = 516055 (elapsed = 0), _expireHandler: (null)
+2026-09-30 23:21:02.225 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 6: <_UIBackgroundTaskInfo: 0x109810f80>: taskID = 6, taskName = com.apple.UIKit.CABackingStoreCollect, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.225 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will invalidate assertion: <BKSProcessAssertion: 0x10ad94be0> for task identifier: 6
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, authValue=6, authReason=2, authVersion=2, desired_auth=6, error=(null),
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, service=kTCCServiceAddressBook, user wants to learn more, redoing prompt with secondary stage
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_CTX: msgID=99802.3, function=TCCAccessRequest, service=kTCCServiceAddressBook, preflight=no, query=2, client_dict=(null), daemon_dict={
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 2;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] kTCCServiceAddressBook does not support RBS assertion override
+2026-09-30 23:21:02.666 Df tccd[84214:c46e83] [com.apple.TCC:events] Publishing <TCCDEvent: type=Create, service=kTCCServiceAddressBook, identifier_type=Bundle ID, identifier=com.tarunyadgirkar.prefill.spike.contacts.probe> to 5 subscribers: {
+    1512 = "<TCCDEventSubscriber: token=1512, state=Initial, csid=(null)>";
+    374 = "<TCCDEventSubscriber: token=374, state=Initial, csid=(null)>";
+    1521 = "<TCCDEventSubscriber: token=1521, state=Passed, csid=com.apple.chronod>";
+    1405 = "<TCCDEventSubscriber: token=1405, state=Passed, csid=com.apple.cloudd>";
+    1439 = "<TCCDEventSubscriber: token=1439, state=Passed, csid=com.apple.assetsd>";
+}
+2026-09-30 23:21:02.666 Df tccd[84214:c46777] [com.apple.TCC:access] got existing auth right: 6 with requested upgrade auth: 2
+2026-09-30 23:21:02.666 Df tccd[84214:c46777] [com.apple.TCC:access] attempting upgrade: currentAuth: 6 desiredAuth: 2
+2026-09-30 23:21:02.667 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[89270].0x103ce1400
+2026-09-30 23:21:02.667 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=89270, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformation, msgID=89270.6
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] service not protected: kTCCServiceAddressBook
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_PROMPTING: msgID=99802.3, service=kTCCServiceAddressBook, subject=Sub:{com.tarunyadgirkar.prefill.spike.contacts.probe}Resp:{TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-8
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] got authorization choices for staged prompting request: legacy SPI: 0 service: kTCCServiceAddressBook currentAuth: 6 desiredAuth: 2
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] aButtonAuth: 2 bButtonAuth: 3 cButtonAuth: 1
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] found usage string: Probe edits your My Info card to test Safari AutoFill.
+2026-09-30 23:21:02.669 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[88726].0x103ce03c0
+2026-09-30 23:21:02.669 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=88726, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersForService, msgID=88726.8
+2026-09-30 23:21:02.669 Df SpringBoard[84202:c47572] [com.apple.SpringBoard:TransientOverlay] Created <SBRemoteTransientOverlaySession: 0x116692f00> for definition: <SBSRemoteAlertDefinition: 0x1236b5ea0> {
+    sceneProvidingProcess = app<com.apple.ContactsUI.LimitedAccessPromptView()>;
+}
+2026-09-30 23:21:02.670 Df tccd[84214:c46777] [com.apple.TCC:access] acquired watchdog opt-out assertion for client with pid: 99802
+2026-09-30 23:21:02.670 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersForService, msgID=88726.8
+2026-09-30 23:21:02.670 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] invalidated because the client process (pid 88726) either cancelled the connection or exited
+2026-09-30 23:21:02.671 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce03c0
+2026-09-30 23:21:02.671 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.72
+2026-09-30 23:21:02.672 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.72
+2026-09-30 23:21:02.672 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c2f3b0] [com.apple.FrontBoard:Process] Asked to bootstrap a new process with identity: app<com.apple.ContactsUI.LimitedAccessPromptView()>
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c2f3b0] [com.apple.FrontBoard:Process] Did not create a new process: A process for app<com.apple.ContactsUI.LimitedAccessPromptView()> already exists.
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c2f3b0] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Registered new scene: <FBWorkspaceScene: 0x11bc2cf00; com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert> (fromRemnant = 0)
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace interruption policy did change: terminate
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c2f3b0] [com.apple.FrontBoard:Scene] [com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert] Client process connected: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.673 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.SpringBoard>:84202] with description <RBSAssertionDescriptor| "com.apple.frontboard.after-life.subordinate" ID:84205-84202-6627 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"AfterLife-Subordinate" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.673 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Assertion 84205-84202-6627 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.673 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process visibility to: Background
+2026-09-30 23:21:02.674 Df runningboardd[84205:c46f53] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-suspended (role: None) (endowments: (null))
+2026-09-30 23:21:02.674 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.SpringBoard>:84202] with description <RBSAssertionDescriptor| "FBWorkspace (BG-Active[40])" ID:84205-84202-6628 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Suspend" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-NonUI" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Active" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.674 Df SpringBoard[84202:c47538] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-suspended-NotVisible
+2026-09-30 23:21:02.674 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Assertion 84205-84202-6628 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.674 Df mediaremoted[84209:c46254] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-suspended-NotVisible
+2026-09-30 23:21:02.674 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: XX-None[0] --> BG-Active[40] (assertion acquired).
+2026-09-30 23:21:02.674 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce03c0
+2026-09-30 23:21:02.674 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.73
+2026-09-30 23:21:02.674 Df runningboardd[84205:c46f53] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: NonUserInteractive) (endowments: (null))
+2026-09-30 23:21:02.674 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] Resuming task.
+2026-09-30 23:21:02.675 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformation, msgID=89270.6
+2026-09-30 23:21:02.675 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.73
+2026-09-30 23:21:02.675 Df mediaremoted[84209:c46254] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-NotVisible
+2026-09-30 23:21:02.675 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1400] invalidated because the client process (pid 89270) either cancelled the connection or exited
+2026-09-30 23:21:02.675 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce03c0] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:02.675 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:Common] Application process state changed for com.apple.ContactsUI.LimitedAccessPromptView: <SBApplicationProcessState: 0x1163f32c0; pid: 99421; taskState: Suspended; visibility: Background>
+2026-09-30 23:21:02.676 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.SpringBoard>:84202] with description <RBSAssertionDescriptor| "FBWorkspace (FV-Focal[100])" ID:84205-84202-6629 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Resume" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"Visibility" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-UIFocal" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Foreground" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.676 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Assertion 84205-84202-6629 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.676 Df SpringBoard[84202:c47539] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-NotVisible
+2026-09-30 23:21:02.676 Df runningboardd[84205:c46f53] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: UserInteractiveFocal) (endowments: {(
+    <RBSProcessEndowmentInfo| namespace:com.apple.frontboard.visibility env:(null)  0>
+)})
+2026-09-30 23:21:02.676 Df SpringBoard[84202:c47539] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.676 Df mediaremoted[84209:c46f8e] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.677 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process task state to: Running
+2026-09-30 23:21:02.677 Df SpringBoard[84202:c47539] [com.apple.UserNotifications:RemoteNotifications] [com.apple.ContactsUI.LimitedAccessPromptView] com.apple.ContactsUI.LimitedAccessPromptView application state changed to <RBSProcessState| task:running-active debug:none>
+2026-09-30 23:21:02.678 Df SpringBoard[84202:c2f3b0] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Unregistering scene: <FBWorkspaceScene: 0x11bc2cf00; com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert>
+2026-09-30 23:21:02.679 E  tccd[84214:c46ea7] [com.apple.TCC:access] Remote Alert: handle: <SBSRemoteAlertHandle: 0x103fd2670>, didInvalidateWithError: Error Domain=SBSRemoteAlertHandleInvalidationErrorDomain Code=6 "invalidated due to view service initialization failure" UserInfo={NSLocalizedDescription=invalidated due to view service initialization failure}
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] invalidated watchdog opt-out assertion for client with pid: 99802
+2026-09-30 23:21:02.679 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:Common] Application process state changed for com.apple.ContactsUI.LimitedAccessPromptView: <SBApplicationProcessState: 0x116564480; pid: 99421; taskState: Running; visibility: Background>
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: Got 6 auth from db for client: Sub:{com.tarunyadgirkar.prefill.spike.contacts.probe}Resp:{TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-88C2-83EDF2CA571D/data/Conta
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, authValue=6, authReason=2, authVersion=2, desired_auth=2, error=(null),
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99802.3
+2026-09-30 23:21:02.679 Df SpringBoard[84202:c4756b] [com.apple.UserNotifications:Settings] [com.apple.ContactsUI.LimitedAccessPromptView] Foreground app will not request ephemeral notifications
+2026-09-30 23:21:02.679 Df SpringBoard[84202:c47539] [com.apple.UserNotifications:RemoteNotifications] [com.apple.ContactsUI.LimitedAccessPromptView] com.apple.ContactsUI.LimitedAccessPromptView application state changed to <RBSProcessState| task:running-active debug:none endowmentNamespace:[
+	com.apple.frontboard.visibility
+	]>
+2026-09-30 23:21:02.679 Df Probe[99802:c47358] [com.apple.xpc:connection] [0x10a30b480] invalidated after the last release of the connection object
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 99802) either cancelled the connection or exited
+2026-09-30 23:21:02.680 Df SpringBoard[84202:c47539] [com.apple.UserNotifications:RemoteNotifications] [com.apple.ContactsUI.LimitedAccessPromptView] Ignore becoming foreground for application without push registration
+2026-09-30 23:21:02.682 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] with description <RBSAssertionDescriptor| "app_launch_measurement: pageins recording enabled" ID:84205-99421-6630 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.pagein-prefetching" name:"LaunchPrefetch" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.682 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Assertion 84205-99421-6630 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.682 Df runningboardd[84205:c46364] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: UserInteractiveFocal) (endowments: {(
+    <RBSProcessEndowmentInfo| namespace:com.apple.frontboard.visibility env:(null)  0>
+)})
+2026-09-30 23:21:02.688 E  runningboardd[84205:c46f33] [com.apple.runningboard:process] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] pid_resume() returned error 1: Operation not permitted
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] Set darwin role to: NonUserInteractive
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] Set darwin role to: UserInteractiveFocal
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] with description <RBSAssertionDescriptor| "Shared Background Assertion 1 for com.apple.ContactsUI.LimitedAccessPromptView" ID:84205-99421-6631 target:
+	<RBSLegacyAttribute| requestedReason:FinishTask reason:FinishTask flags:( PreventTaskSuspend )>,
+	<RBSAcquisitionCompletionAttribute| policy:AfterValidation>
+	]>
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] visiblity is yes
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46f33] [com.apple.DynamicPrefetching:default] start_scenario: recording pageins for bundleid "com.apple.ContactsUI.LimitedAccessPromptView" scenario "Launch"
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46f33] [com.apple.DynamicPrefetching:default] start_scenario: Prefetching clean profile for bundleid "com.apple.ContactsUI.LimitedAccessPromptView" scenario "Launch"
+2026-09-30 23:21:02.688 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: BG-Active[40] --> FV-Focal[100] (assertion acquired).
+2026-09-30 23:21:02.688 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Assertion 84205-99421-6631 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as inactive as start-time-defining assertions exist
+2026-09-30 23:21:02.689 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace interruption policy did change: default
+2026-09-30 23:21:02.689 Df SpringBoard[84202:c47572] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process visibility to: Unknown
+2026-09-30 23:21:02.689 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:Common] Application process state changed for com.apple.ContactsUI.LimitedAccessPromptView: <SBApplicationProcessState: 0x1165671c0; pid: 99421; taskState: Running; visibility: Unknown>
+2026-09-30 23:21:02.689 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Invalidating assertion 84205-84202-6628 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [osservice<com.apple.SpringBoard>:84202]
+2026-09-30 23:21:02.689 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Invalidating assertion 84205-84202-6627 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [osservice<com.apple.SpringBoard>:84202]
+2026-09-30 23:21:02.689 E  Probe[99802:c4735a] [com.apple.contacts:Contacts] Contacts TCC acccess request was denied
+2026-09-30 23:21:02.702 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] Asked to bootstrap a new process for handle: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.702 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] Creating process (sync=true) for handle: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.702 Df InputUI[84395:c469e7] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Registering event dispatcher at init
+2026-09-30 23:21:02.702 Df InputUI[84395:c469e7] [com.apple.FrontBoard:ProcessWorkspace] Created <FBWorkspace: 0x10869f3e0; <FBApplicationProcess: 0x108be8f00; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)>>
+2026-09-30 23:21:02.702 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] Bootstrapping app<com.apple.ContactsUI.LimitedAccessPromptView> with intent background
+2026-09-30 23:21:02.703 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.InputUI>:84395] with description <RBSAssertionDescriptor| "FBApplicationProcess" ID:84205-84395-6632 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Suspend" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-NonUI" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Active" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableBootstrapping" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.704 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Assertion 84205-84395-6632 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.704 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Bootstrap success!
+2026-09-30 23:21:02.704 Df runningboardd[84205:c46f8d] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: UserInteractiveFocal) (endowments: {(
+    <RBSProcessEndowmentInfo| namespace:com.apple.frontboard.visibility env:(null)  0>
+)})
+2026-09-30 23:21:02.704 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process visibility to: Background
+2026-09-30 23:21:02.704 Df InputUI[84395:c469e7] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Initial launch state: BG-Active[40].
+2026-09-30 23:21:02.704 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.InputUI>:84395] with description <RBSAssertionDescriptor| "FBWorkspaceDomain: injecting saved endowment" ID:84205-84395-6633 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"WorkspaceEndpointInjection" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.704 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Assertion 84205-84395-6633 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.704 Df runningboardd[84205:c46364] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: UserInteractiveFocal) (endowments: {(
+    <RBSProcessEndowmentInfo| namespace:com.apple.boardservices.endpoint-injection env:(null) payload: 1123808615356859296>,
+    <RBSProcessEndowmentInfo| namespace:com.apple.frontboard.visibility env:(null)  0>
+)})
+2026-09-30 23:21:02.705 Df InputUI[84395:c469e7] [com.apple.runningboard:process] Starting death monitoring for handle [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.705 Df InputUI[84395:c469e7] [com.apple.FrontBoard:Process] Adding: <FBApplicationProcess: 0x108be8f00; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)>
+2026-09-30 23:21:02.705 Df LimitedAccessPromptView[99421:c4677e] [com.apple.contacts.ui:LimitedAccessPromptUI] ContactsLimitedAccessPromptSceneDelegate: scene will connect
+2026-09-30 23:21:02.705 Df InputUI[84395:c469e7] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Connection established.
+2026-09-30 23:21:02.705 Df InputUI[84395:c469e7] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] created proxy of <BSXPCServiceConnectionProxy<FBSWorkspaceServiceServerInterface>: 0x1085a7d80>
+2026-09-30 23:21:02.705 Df InputUI[84395:c47352] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Connection to remote process established!
+2026-09-30 23:21:02.706 Df InputUI[84395:c4705e] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.706 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] received incoming handshake : process=<FBApplicationProcess: 0x108be8f00; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85); taskState: Running; visibility: Background> remote=<BSAuditToken: 0x1087ae940; AUID: 502; EUID: 502; EGID: 20; RUID: 502; RGID: 20; PID: 99421; ASID: 100039; PIDVersion: 2
+2026-09-30 23:21:02.710 Df LimitedAccessPromptView[99421:c4677e] [com.apple.contacts.ui:LimitedAccessPromptUI] ContactsLimitedAccessPromptSceneDelegate will activate with context <SBSRemoteAlertActivationContext: 0x10261ea60; reason: Secondary Prompt for kTCCServiceAddressBook; actions: 0x0; presentationTarget: <SBSRemoteAlertPresentationTarget: 0x1052ea0e0; <SBSRemoteAlertPresentationTargetPredic
+    BundleRequestingSecondaryPrompt = "com.tarunyadgirkar.prefill.spike.contacts.probe";
+    ResponsiblePID = 99802;
+}>
+2026-09-30 23:21:02.711 Df LimitedAccessPromptView[99421:c4677e] [com.apple.contacts.ui:LimitedAccessPromptUI] ContactsLimitedAccessPromptViewController activated with userInfo: {
+    BundleRequestingSecondaryPrompt = "com.tarunyadgirkar.prefill.spike.contacts.probe";
+    ResponsiblePID = 99802;
+}
+2026-09-30 23:21:02.713 Df InputUI[84395:c2f8c6] [com.apple.FrontBoard:Process] Asked to bootstrap a new process for handle: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.713 Df InputUI[84395:c2f8c6] [com.apple.FrontBoard:Process] A process already exists for this handle: <FBApplicationProcess: 0x108be8f00; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)>
+2026-09-30 23:21:02.713 Df InputUI[84395:c2f8c6] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Registered new scene: <FBWorkspaceScene: 0x108651500; com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices/com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert> (fromRemnant = 
+2026-09-30 23:21:02.713 Df InputUI[84395:c4705d] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace interruption policy did change: reconnect
+2026-09-30 23:21:02.713 Df InputUI[84395:c2f8c6] [com.apple.FrontBoard:Scene] [com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices/com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert] Client process connected: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.713 Df InputUI[84395:c2f8c6] [com.apple.UIKit:KeyboardScene] Created keyboard scene com.apple.UIKit.KeyboardManagement.hosted/com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices%2Fcom.apple.SpringBoard.SceneWorkspace.RemoteAlert%3A7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert requested from [app<com.apple.ContactsUI.LimitedAccessPromptView()>
+2026-09-30 23:21:02.713 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.InputUI>:84395] with description <RBSAssertionDescriptor| "com.apple.frontboard.after-life.interrupted" ID:84205-84395-6635 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"AfterLife-Interrupted" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.713 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Assertion 84205-84395-6635 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as inactive as originator process has not exited
+2026-09-30 23:21:02.713 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [osservice<com.apple.InputUI>:84395] with description <RBSAssertionDescriptor| "FBWorkspace (BG-Active[40])" ID:84205-84395-6636 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableLPRunReason-Suspend" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableRole-NonUI" sourceEnvironment:"(null)">,
+	<RBSDomainAttribute| domain:"com.apple.frontboard" name:"SuspendableJetsamPriority-Active" sourceEnvironment:"(null)">
+	]>
+2026-09-30 23:21:02.713 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Assertion 84205-84395-6636 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as active
+2026-09-30 23:21:02.713 Df InputUI[84395:c4705d] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: XX-None[0] --> BG-Active[40] (assertion acquired).
+2026-09-30 23:21:02.727 Df intelligencecontextd[84541:c4635e] [com.apple.UIIntelligenceSupport:xpc] Accepting new connection ConnectionID(22, ProcessInfo("com.apple.ContactsUI.LimitedAccessPromptView", pid: 99421))
+2026-09-30 23:21:02.780 Df SpringBoard[84202:c47572] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.780 Df InputUI[84395:c4705d] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.780 Df mediaremoted[84209:c46254] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.786 Df runningboardd[84205:c46f8d] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: running-active (role: UserInteractiveFocal) (endowments: {(
+    <RBSProcessEndowmentInfo| namespace:com.apple.boardservices.endpoint-injection env:(null) payload: 1123808615356859296>,
+    <RBSProcessEndowmentInfo| namespace:com.apple.frontboard.visibility env:(null)  0>
+)})
+2026-09-30 23:21:02.787 Df SpringBoard[84202:c47539] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.787 Df InputUI[84395:c4705d] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.787 Df mediaremoted[84209:c46f8e] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, running-active-Visible
+2026-09-30 23:21:02.884 Df distnoted[84230:c45abb] [com.apple.distnoted:diagnostic] New connection from /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/Applications/LimitedAccessPromptView.app/LimitedAccessPromptView (99421)
+2026-09-30 23:21:02.903 Df distnoted[84230:c45abb] [com.apple.distnoted:diagnostic] New connection from /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/Applications/LimitedAccessPromptView.app/LimitedAccessPromptView (99421)
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[99421].0x103ce1680
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=99421, sender_uid=502, sender_auid=502, function=TCCAccessRequest, msgID=99421.1
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] AUTHREQ_CTX: msgID=99421.1, function=TCCAccessRequest, service=kTCCServiceAddressBook, preflight=yes, query=1, client_dict=(null), daemon_dict={
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 0;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=99421.1, attribution={requesting={TCCDProcess: identifier=com.apple.ContactsUI.LimitedAccessPromptView, pid=99421, auid=502, euid=502, binary_path=/private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] Granting TCCDProcess: identifier=com.apple.ContactsUI.LimitedAccessPromptView, pid=99421, auid=502, euid=502, binary_path=/private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/Appl
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99421.1, authValue=2, authReason=11, authVersion=2, desired_auth=0, error=(null),
+2026-09-30 23:21:02.910 E  tccd[84214:c46ea7] [com.apple.TCC:access] Failed to issue generic sandbox extension for class: com.apple.tcc.kTCCServiceAddressBook
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99421.1
+2026-09-30 23:21:02.911 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 99421) either cancelled the connection or exited
+2026-09-30 23:21:02.914 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Acquiring assertion targeting [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] from originator [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] with description <RBSAssertionDescriptor| "AppSupport sqlite connection lock" ID:84205-99421-6637 target:99421 attributes:[
+	<RBSDomainAttribute| domain:"com.apple.common" name:"FinishTaskUninterruptable" sourceEnvironment:"(null)">,
+	<RBSAcquisitionCompletionAttribute| policy:AfterApplication>
+	]>
+2026-09-30 23:21:02.914 Df runningboardd[84205:c46364] [com.apple.runningboard:ttl] Assertion 84205-99421-6637 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) will be created as inactive as start-time-defining assertions exist
+2026-09-30 23:21:02.920 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] Invalidating assertion 84205-99421-6637 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+    controllerClass = "LimitedAccessPromptView.ContactsLimitedAccessPromptViewController";
+    event = ViewDidAppear;
+}
+    controllerClass = "LimitedAccessPromptView.ContactsLimitedAccessPromptViewController";
+    event = ViewDidAppear;
+}
+    controllerClass = "_TtGC7SwiftUI19UIHostingControllerGVS_15ModifiedContentV23LimitedAccessPromptView34LimitedAccessPromptViewPerPlatformGVS_30_EnvironmentKeyWritingModifierGSqCS2_22ContactStoreVisualizer____";
+    event = ViewDidAppear;
+}
+    controllerClass = "_TtGC7SwiftUI19UIHostingControllerGVS_15ModifiedContentV23LimitedAccessPromptView34LimitedAccessPromptViewPerPlatformGVS_30_EnvironmentKeyWritingModifierGSqCS2_22ContactStoreVisualizer____";
+    event = ViewDidAppear;
+}
+    HighFrequency = 0;
+    bundleID = "com.apple.ContactsUI.LimitedAccessPromptView";
+    lastPathComponent = LimitedAccessPromptView;
+    pid = 99421;
+} state:0x1 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE
+    HighFrequency = 0;
+    bundleID = "com.apple.ContactsUI.LimitedAccessPromptView";
+    lastPathComponent = LimitedAccessPromptView;
+    pid = 99421;
+} state:0x1 events:0 mask:0x0 dropped:0 dropStatus:0 droppedMask:0x0 lastDroppedTime:NONE source:HID
+2026-09-30 23:21:02.979 Df SpringBoard[84202:c47539] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace connection invalidated.
+2026-09-30 23:21:02.979 Df SpringBoard[84202:c47539] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Now flagged as pending exit for reason: workspace client connection invalidated
+2026-09-30 23:21:02.979 Df runningboardd[84205:c46f33] [com.apple.runningboard:process] XPC connection invalidated: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.979 Df SpringBoard[84202:c47539] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: FV-Focal[100] --> XX-None[0] (assertion dropped).
+2026-09-30 23:21:02.979 Df runningboardd[84205:c46f33] [com.apple.runningboard:ttl] Invalidating assertion 84205-84202-6629 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [osservice<com.apple.SpringBoard>:84202]
+2026-09-30 23:21:02.979 Df InputUI[84395:c4705d] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace connection invalidated.
+2026-09-30 23:21:02.979 Df InputUI[84395:c4705d] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Now flagged as pending exit for reason: workspace client connection invalidated
+2026-09-30 23:21:02.979 Df InputUI[84395:c2f8c6] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Unregistering scene: <FBWorkspaceScene: 0x108651500; com.apple.InputUI.keyboard:KeyboardInputScene-com.apple.frontboard.systemappservices/com.apple.SpringBoard.SceneWorkspace.RemoteAlert:7C73BD37-CFC1-455B-AB70-29FF2D2CAD1A-RemoteAlert>
+2026-09-30 23:21:02.979 Df intelligencecontextd[84541:c4635e] [com.apple.UIIntelligenceSupport:xpc] client ConnectionID(22, ProcessInfo("com.apple.ContactsUI.LimitedAccessPromptView", pid: 99421)) disconnected
+2026-09-30 23:21:02.980 Df runningboardd[84205:c46f33] [com.apple.runningboard:assertion] ignoring [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] as candidate for concrete target as it is terminating
+2026-09-30 23:21:02.980 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: BG-Active[40] --> FG-Active[90] (assertion acquisition failed!).
+2026-09-30 23:21:02.980 E  InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace assertion failed: <NSError: 0x1085777b0; domain: RBSAssertionErrorDomain; code: 2; "Specified target process 99421 does not exist">
+2026-09-30 23:21:02.980 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Invalidating assertion 84205-84395-6636 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [osservice<com.apple.InputUI>:84395]
+2026-09-30 23:21:02.980 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace interruption policy did change: default
+2026-09-30 23:21:02.980 Df InputUI[84395:c47352] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process visibility to: Unknown
+2026-09-30 23:21:02.980 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] Invalidating assertion 84205-84395-6635 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]) from originator [osservice<com.apple.InputUI>:84395]
+2026-09-30 23:21:02.980 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Workspace state did change: FG-Active[90] --> XX-None[0] (assertion dropped).
+2026-09-30 23:21:02.990 Df launchd_sim[84199:c473b4] [user/502:] service inactive: UIKitApplication:com.apple.ContactsUI.LimitedAccessPromptView[c813][rb-legacy]
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:ttl] [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] termination reported by launchd (0, 0, 0)
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:process] Removing process: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:job] Removing launch job for: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.991 Df launchd_sim[84199:c473b4] [user/502:] removing service: UIKitApplication:com.apple.ContactsUI.LimitedAccessPromptView[c813][rb-legacy]
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:job] Removed job for [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:process] Removing assertions for terminated process: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.991 Df runningboardd[84205:c46fcc] [com.apple.runningboard:assertion] Removed last relative-start-date-defining assertion for process app<com.apple.ContactsUI.LimitedAccessPromptView()>
+2026-09-30 23:21:02.992 Df runningboardd[84205:c46364] [com.apple.runningboard:process] Notifying connection [osservice<com.apple.SpringBoard>:84202] that process [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] exited with context <RBSProcessExitContext| voluntary>
+2026-09-30 23:21:02.992 Df runningboardd[84205:c46f33] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: none (role: None) (endowments: (null))
+2026-09-30 23:21:02.992 Df runningboardd[84205:c46364] [com.apple.runningboard:process] Notifying connection [osservice<com.apple.InputUI>:84395] that process [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421] exited with context <RBSProcessExitContext| voluntary>
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Launch assertion invalidated: <NSError: 0x108574090; domain: RBSAssertionErrorDomain; code: 1; "Assertions were invalidated, count = 2.
+84205-84395-6632: invalidation reason: 1
+84205-84395-6633: invalidation reason: 1">
+2026-09-30 23:21:02.992 Df runningboardd[84205:c46364] [com.apple.runningboard:monitor] Calculated state for app<com.apple.ContactsUI.LimitedAccessPromptView()>: none (role: None) (endowments: (null))
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.runningboard:process] Calling process death completion block for handle [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.runningboard:process] Calling process death completion block for handle [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Process exited: <RBSProcessExitContext| voluntary>.
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Process exited: <RBSProcessExitContext| voluntary>.
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c47539] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process task state to: Not Running
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:Process] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Setting process task state to: Not Running
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Invalidating workspace.
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:ProcessWorkspace] [app<com.apple.ContactsUI.LimitedAccessPromptView>:99421] Invalidating workspace.
+2026-09-30 23:21:02.992 Df InputUI[84395:c4705d] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:ProcessWorkspace] Removing source registration for processHandle: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:ProcessWorkspace] Removing source registration for processHandle: [app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421]
+2026-09-30 23:21:02.992 Df InputUI[84395:c47352] [com.apple.FrontBoard:Process] Removing: <FBApplicationProcess: 0x108be8f00; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)>
+2026-09-30 23:21:02.992 Df SpringBoard[84202:c4756b] [com.apple.FrontBoard:Process] Removing: <FBApplicationProcess: 0x1213cf480; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)>
+2026-09-30 23:21:02.992 Df mediaremoted[84209:c46f8e] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.993 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:Workspace] Process exited: <FBApplicationProcess: 0x1213cf480; app<com.apple.ContactsUI.LimitedAccessPromptView>:99421(v264B85)> -> <RBSProcessExitContext| voluntary>
+2026-09-30 23:21:02.993 Df mediaremoted[84209:c46254] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.993 Df InputUI[84395:c4705d] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.993 Df SpringBoard[84202:c47539] [com.apple.runningboard:monitor] Received state update for 99421 (app<com.apple.ContactsUI.LimitedAccessPromptView()>, none-NotVisible
+2026-09-30 23:21:02.994 Df SpringBoard[84202:c47539] [com.apple.UserNotifications:RemoteNotifications] [com.apple.ContactsUI.LimitedAccessPromptView] com.apple.ContactsUI.LimitedAccessPromptView application state changed to <RBSProcessState| task:none debug:none>
+2026-09-30 23:21:02.994 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:Common] Application process state changed for com.apple.ContactsUI.LimitedAccessPromptView: (null)
+2026-09-30 23:21:02.994 Df SpringBoard[84202:c47539] [com.apple.UserNotifications:RemoteNotifications] [com.apple.ContactsUI.LimitedAccessPromptView] Ignore becoming background for application without push registration
+2026-09-30 23:21:03.026 E  runningboardd[84205:c46f8d] [com.apple.runningboard:general] RBSStateCapture remove item called for untracked item 84205-84395-6635 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421])
+2026-09-30 23:21:03.026 E  runningboardd[84205:c46f8d] [com.apple.runningboard:general] RBSStateCapture remove item called for untracked item 84205-99421-6637 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421])
+2026-09-30 23:21:03.026 E  runningboardd[84205:c46f8d] [com.apple.runningboard:general] RBSStateCapture remove item called for untracked item 84205-84395-6636 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421])
+2026-09-30 23:21:03.026 E  runningboardd[84205:c46f8d] [com.apple.runningboard:general] RBSStateCapture remove item called for untracked item 84205-84202-6629 (target:[app<com.apple.ContactsUI.LimitedAccessPromptView()>:99421])
+2026-09-30 23:21:03.152 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84317].0x103ce1680
+2026-09-30 23:21:03.152 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84317, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84317.12
+2026-09-30 23:21:03.153 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84317.12
+2026-09-30 23:21:03.154 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 84317) either cancelled the connection or exited
+2026-09-30 23:21:03.157 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84347].0x103ce1680
+2026-09-30 23:21:03.157 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84347, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.20
+2026-09-30 23:21:03.161 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.20
+2026-09-30 23:21:03.161 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 84347) either cancelled the connection or exited
+2026-09-30 23:21:03.161 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84347].0x103ce1680
+2026-09-30 23:21:03.161 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84347, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.21
+2026-09-30 23:21:03.162 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.21
+2026-09-30 23:21:03.163 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 84347) either cancelled the connection or exited
+2026-09-30 23:21:03.166 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce1680
+2026-09-30 23:21:03.166 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce03c0
+2026-09-30 23:21:03.166 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.74
+2026-09-30 23:21:03.166 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.75
+2026-09-30 23:21:03.166 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.75
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.74
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce03c0] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.xpc:connection] [0x103ce1680] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce1680
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.76
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1400] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce1400
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.77
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.76
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.77
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.xpc:connection] [0x103ce1680] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:03.167 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:03.180 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce1400
+2026-09-30 23:21:03.181 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.78
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.78
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] invalidated because the client process (pid 84212) either cancelled the connection or exited
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] activating connection: mach=false listener=false peer=true name=com.apple.tccd.peer[84212].0x103ce1400
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.79
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.79
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.xpc:connection] [0x103ce1400] invalidated because the client process (pid 84212) either cancelled the connection or exited

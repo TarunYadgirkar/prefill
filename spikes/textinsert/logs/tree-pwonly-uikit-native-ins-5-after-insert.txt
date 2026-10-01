@@ -1,0 +1,76 @@
+Attributes: Application, 0x10eacca00, pid: 53514, label: 'Prefill Spike'
+Element subtree:
+ →Application, 0x10eacca00, pid: 53514, label: 'Prefill Spike'
+    Window (Main), 0x10eaccb40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10eaccc80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eaccdc0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10eaccf00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10eacd040, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10eacd180, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10eacd540, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Native fields'
+                  Button, 0x10eacd680, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Prefill Spike'
+                  StaticText, 0x10eacd7c0, {{16.0, 119.7}, {196.0, 40.7}}, label: 'Native fields'
+                Other, 0x10eacda40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10eace300, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10eace440, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10eace080, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x10eace1c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10eacde00, {{-16.0, -1580.0}, {434.0, 1880.0}}
+                          Other, 0x10eacdf40, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10eacdb80, {{0.0, 0.0}, {402.0, 156.0}}
+                          Other, 0x10eacdcc0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x10eace580, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x10eace6c0, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x10eace800, {{16.0, 168.0}, {370.0, 40.3}}
+                              Other, 0x10eace940, {{16.0, 168.0}, {370.0, 40.3}}
+                                Other, 0x10eacf200, {{16.0, 168.0}, {370.0, 40.3}}
+                                  StaticText, 0x10eacf340, {{16.0, 168.0}, {370.0, 40.3}}, label: 'UITextField, textContentType email'
+                          Cell, 0x10eacef80, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x10eacf0c0, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x10eaced00, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x10eacee40, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x10eacea80, {{16.0, 208.3}, {370.0, 74.0}}
+                                Other, 0x10eacebc0, {{16.0, 208.3}, {370.0, 74.0}}
+                                  TextField, 0x10eacd900, {{32.0, 223.3}, {338.0, 44.0}}, identifier: 'nativeEmail', label: 'Email', placeholderValue: 'Email'
+                          Other, 0x10eacc640, {{-16.0, 300.0}, {434.0, 1882.3}}
+                          Cell, 0x10eacc780, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x10eacc3c0, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x10eacc000, {{16.0, 300.0}, {370.0, 40.3}}
+                              Other, 0x10eacc140, {{16.0, 300.0}, {370.0, 40.3}}
+                                Other, 0x10eacc8c0, {{16.0, 300.0}, {370.0, 40.3}}
+                                  StaticText, 0x10eacc280, {{16.0, 300.0}, {370.0, 40.3}}, label: 'UITextField, no content type'
+                          Cell, 0x10eacc500, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x105e62bc0, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x105e62f80, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x10eac7480, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x10eac7840, {{16.0, 340.3}, {370.0, 74.0}}
+                                Other, 0x10eac6440, {{16.0, 340.3}, {370.0, 74.0}}
+                                  TextField, 0x10eac7340, {{32.0, 355.3}, {338.0, 44.0}}, identifier: 'nativePlain', label: 'Anything', placeholderValue: 'Anything'
+                          Other, 0x10eac7ac0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10eac7c00, {{396.0, 524.7}, {3.0, 284.3}}
+                          Other, 0x10eac7d40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x10eac4640, {{396.0, 524.7}, {3.0, 284.3}}
+                Toolbar, 0x10eac4a00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x10eac4500, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10eac4780, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eac7e80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10eac7980, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10eac8000, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10eac8140, {{0.0, 0.0}, {804.0, 1748.0}}
+                Other, 0x10eac8280, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10eac83c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10eac8500, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10eac8640, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10eac8780, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10eac88c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10eac8a00, {{0.0, 0.0}, {0.0, 0.0}}
+    Window, 0x10eac8b40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10eac8c80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eac8dc0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10eacca00, pid: 53514, label: 'Prefill Spike'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.textinsert'
+  Output: {
+    Application, 0x10eac8f00, pid: 53514, label: 'Prefill Spike'
+  }

@@ -1,0 +1,55 @@
+127.0.0.1 - - [30/Sep/2026 23:16:36] "GET /web/form-button.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:30:21] "GET /web/away.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:30:21] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:30:21] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:30:47] "GET /web/away.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:32:50] "GET /web/away.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:34:41] "GET /web/away.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:34:41] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:34:41] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:35:35] "GET /web/form-button.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:35:35] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:35:35] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:36:51] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:36:51] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:37:54] "GET /web/form-button.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:37:54] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:37:54] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:38:26] "GET /web/thanks.html?fullname=Jordan+Button&email=button.ask%40newmail.example&phone=5105550111&street=77+Button+Way&pw=hunter2-test&otp=123456 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:39:05] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:39:05] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:39:51] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:39:51] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:40:25] "GET /web/thanks.html?fullname=Jordan+Button&email=button.g1%40newmail.example&phone=5105550111&street=77+Button+Way&pw=hunter2-test&otp=123456 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:40:45] "GET /web/form-return.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:40:45] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:40:45] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:41:15] "GET /web/form-fetch.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:41:29] "GET /web/api.json?em=fetch.g1%40newmail.example&ph=5105550122 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:41:38] "GET /web/away.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:42:49] "GET /web/thanks.html?your_name=Jordan+Return&usr_contact=return.g2%40newmail.example HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:43:23] "GET /web/api.json?em=fetch.g2%40newmail.example&ph=5105550122 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:43:48] "GET /web/form-latency.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:45:10] "GET /web/form-fetch.html?r=1790837106 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:45:10] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:45:10] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:45:25] "GET /web/api.json?em=fetch.g3%40newmail.example&ph=5105550122 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:45:34] "GET /web/away.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:46:12] "GET /web/form-latency.html?probe=1&r=1790837169 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:46:12] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:46:12] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:47:02] "GET /web/form-latency.html?probe=1&r=1790837219 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:47:02] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:47:02] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:47:47] "GET /web/form-latency.html?probe=1&r=1790837264 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:47:48] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:47:48] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:48:28] "GET /web/form-latency.html?probe=1&r=1790837305 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:48:28] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:48:28] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:49:18] "GET /web/form-latency.html?probe=1&r=1790837355 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:49:18] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:49:18] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:49:51] "GET /web/form-latency.html?probe=1&r=1790837388 HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:49:52] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:49:52] "GET /favicon.ico HTTP/1.1" 404 -

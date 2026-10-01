@@ -1,0 +1,217 @@
+Attributes: Application, 0x10a62b5c0, pid: 49174, label: 'Prefill Spike'
+Element subtree:
+ →Application, 0x10a62b5c0, pid: 49174, label: 'Prefill Spike'
+    Window (Main), 0x10a628000, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a62b980, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a62bac0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a62bc00, {{-402.0, -874.0}, {1206.0, 2622.0}}
+          Other, 0x10a62bd40, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a62b0c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10a62b700, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10a629400, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Native fields'
+                  Button, 0x10a629540, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Prefill Spike'
+                  StaticText, 0x106eb3340, {{16.0, 119.7}, {196.0, 40.7}}, label: 'Native fields'
+                Other, 0x106eb3700, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x106eb3840, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x106eb3980, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x106eb3c00, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x106eb3d40, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x106eb3ac0, {{-16.0, -1580.0}, {434.0, 1880.0}}
+                          Other, 0x109cb4640, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x109cb5180, {{0.0, 0.0}, {402.0, 156.0}}
+                          Other, 0x109cb48c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x109cb5040, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x109cb52c0, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x109cb5400, {{16.0, 168.0}, {370.0, 40.3}}
+                              Other, 0x109cb5540, {{16.0, 168.0}, {370.0, 40.3}}
+                                Other, 0x109cb5a40, {{16.0, 168.0}, {370.0, 40.3}}
+                                  StaticText, 0x109cb5cc0, {{16.0, 168.0}, {370.0, 40.3}}, label: 'UITextField, textContentType email'
+                          Cell, 0x109cb5e00, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x109cb5f40, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x109cb61c0, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x109cb6080, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x109cb6440, {{16.0, 208.3}, {370.0, 74.0}}
+                                Other, 0x109cb6580, {{16.0, 208.3}, {370.0, 74.0}}
+                                  TextField, 0x109cb6300, {{32.0, 223.3}, {338.0, 44.0}}, identifier: 'nativeEmail', label: 'Email', placeholderValue: 'Email'
+                          Other, 0x109cb66c0, {{-16.0, 300.0}, {434.0, 1882.3}}
+                          Cell, 0x109cb7e80, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x109cb7d40, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x109cb6940, {{16.0, 300.0}, {370.0, 40.3}}
+                              Other, 0x109cb6a80, {{16.0, 300.0}, {370.0, 40.3}}
+                                Other, 0x109cb6d00, {{16.0, 300.0}, {370.0, 40.3}}
+                                  StaticText, 0x109cb6bc0, {{16.0, 300.0}, {370.0, 40.3}}, label: 'UITextField, no content type'
+                          Cell, 0x109cb6e40, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x109cb70c0, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x109cb7200, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x109cb6f80, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x109cb7340, {{16.0, 340.3}, {370.0, 74.0}}
+                                Other, 0x109cb7480, {{16.0, 340.3}, {370.0, 74.0}}
+                                  TextField, 0x109cb7700, {{32.0, 355.3}, {338.0, 44.0}}, identifier: 'nativePlain', label: 'Anything', placeholderValue: 'Anything'
+                          Other, 0x109cb75c0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x109cb7840, {{396.0, 524.7}, {3.0, 284.3}}
+                          Other, 0x109cb7980, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x109cb7c00, {{396.0, 524.7}, {3.0, 284.3}}
+                Toolbar, 0x109cb7ac0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x112cac000, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112cac140, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x112cac280, {{-402.0, -874.0}, {1206.0, 2622.0}}
+        Other, 0x112cac3c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x112cac500, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x112cac640, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x112cac780, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x112cac8c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x112caca00, {{0.0, 0.0}, {804.0, 1748.0}}
+                    Other, 0x112cacb40, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x112cacc80, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x112cacdc0, {{0.0, 62.0}, {402.0, 812.0}}
+                          Image, 0x112cacf00, {{-150.0, -88.0}, {702.0, 1112.0}}
+                          Other, 0x112cad040, {{0.0, 62.0}, {402.0, 812.0}}
+                            Other, 0x112cad180, {{0.0, 62.0}, {402.0, 812.0}}
+                              Other, 0x112cad2c0, {{0.0, 62.0}, {402.0, 812.0}}
+                                Other, 0x112cad400, {{0.0, 62.0}, {402.0, 812.0}}
+                                  NavigationBar, 0x112cad540, {{0.0, 78.0}, {402.0, 54.0}}, identifier: 'Contacts'
+                                    Button, 0x112cad680, {{16.0, 78.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Back'
+                                    Button, 0x112cad7c0, {{346.0, 82.0}, {36.0, 36.0}}, label: 'Cancel'
+                                  Other, 0x112cad900, {{0.0, 62.0}, {402.0, 812.0}}
+                                    Other, 0x112cada40, {{0.0, 62.0}, {402.0, 812.0}}
+                                      Other, 0x112cadb80, {{0.0, 62.0}, {402.0, 812.0}}, identifier: 'ContactsListView'
+                                        CollectionView, 0x112cadcc0, {{0.0, 62.0}, {402.0, 812.0}}
+                                          Other, 0x112cade00, {{-2.0, -1492.0}, {420.0, 1727.3}}
+                                          Other, 0x112cadf40, {{0.0, 62.0}, {402.0, 812.0}}
+                                            Other, 0x112cae080, {{0.0, 62.0}, {402.0, 110.0}}
+                                            Other, 0x112cae1c0, {{0.0, 810.0}, {402.0, 64.0}}
+                                          Other, 0x112cae300, {{0.0, 62.0}, {402.0, 812.0}}
+                                            Other, 0x112cae440, {{0.0, 810.0}, {402.0, 64.0}}
+                                          Cell, 0x112cae580, {{2.0, 132.0}, {384.0, 103.3}}
+                                            Other, 0x112cae6c0, {{2.0, 132.0}, {384.0, 103.3}}
+                                              Other, 0x112cae800, {{2.0, 132.0}, {384.0, 103.3}}
+                                            Other, 0x112cae940, {{2.0, 132.0}, {384.0, 103.3}}
+                                              Other, 0x112caea80, {{25.0, 132.0}, {338.0, 103.3}}
+                                                Other, 0x112caebc0, {{37.0, 144.0}, {314.0, 79.3}}
+                                                  Image, 0x112caed00, {{37.0, 144.0}, {38.0, 38.0}}
+                                                  Other, 0x112caee40, {{86.0, 144.0}, {265.0, 79.3}}
+                                                    StaticText, 0x112caef80, {{86.0, 144.0}, {265.0, 20.3}}, label: 'Private Access to Contacts'
+                                                    StaticText, 0x112caf0c0, {{86.0, 169.3}, {265.0, 54.0}}, label: 'Your contacts are shown here, but “Prefill Spike” can only access the contacts you select.'
+                                                Button, 0x112caf200, {{327.3, 140.0}, {23.7, 22.0}}, label: 'Close'
+                                          Other, 0x112caf340, {{387.0, 132.0}, {15.0, 656.0}}, label: 'Section index'
+                                          Other, 0x112caf480, {{-2.0, 235.3}, {420.0, 103.0}}
+                                          Cell, 0x112caf5c0, {{0.0, 235.3}, {402.0, 38.0}}, label: 'a'
+                                            Other, 0x112caf700, {{0.0, 235.3}, {402.0, 38.0}}
+                                            Other, 0x112caf840, {{0.0, 235.3}, {402.0, 38.0}}
+                                              StaticText, 0x112caf980, {{18.0, 245.3}, {10.0, 18.0}}, label: 'A'
+                                          Cell, 0x112cafac0, {{2.0, 273.3}, {384.0, 65.0}}, label: 'John Appleseed'
+                                            Other, 0x112cafc00, {{2.0, 273.3}, {384.0, 65.0}}
+                                              Other, 0x112cafd40, {{2.0, 273.3}, {384.0, 65.0}}
+                                            Other, 0x112cafe80, {{18.0, 273.3}, {45.0, 65.0}}
+                                              Button, 0x112cb4000, {{18.0, 283.3}, {45.0, 45.0}}, label: 'Contact photo for John Appleseed'
+                                                Image, 0x112cb4140, {{18.0, 283.3}, {45.0, 45.0}}
+                                            Other, 0x112cb4280, {{63.0, 273.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cb43c0, {{73.0, 296.3}, {122.0, 19.3}}, label: 'John Appleseed'
+                                          Other, 0x112cb4500, {{18.0, 273.3}, {368.0, 1.0}}
+                                          Other, 0x112cb4640, {{-2.0, 338.3}, {420.0, 103.0}}
+                                          Cell, 0x112cb4780, {{0.0, 338.3}, {402.0, 38.0}}, label: 'b'
+                                            Other, 0x112cb48c0, {{0.0, 338.3}, {402.0, 38.0}}
+                                            Other, 0x112cb4a00, {{0.0, 338.3}, {402.0, 38.0}}
+                                              StaticText, 0x112cb4b40, {{18.0, 348.3}, {9.7, 18.0}}, label: 'B'
+                                          Cell, 0x112cb4c80, {{2.0, 376.3}, {384.0, 65.0}}, label: 'Kate Bell, Creative Consulting'
+                                            Other, 0x112cb4dc0, {{2.0, 376.3}, {384.0, 65.0}}
+                                              Other, 0x112cb4f00, {{2.0, 376.3}, {384.0, 65.0}}
+                                            Other, 0x112cb5040, {{18.0, 376.3}, {45.0, 65.0}}
+                                              Button, 0x112cb5180, {{18.0, 386.3}, {45.0, 45.0}}, label: 'Contact photo for Kate Bell'
+                                                Image, 0x112cb52c0, {{18.0, 386.3}, {45.0, 45.0}}
+                                            Other, 0x112cb5400, {{63.0, 376.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cb5540, {{73.0, 388.3}, {66.7, 19.3}}, label: 'Kate Bell'
+                                              StaticText, 0x112cb5680, {{73.0, 411.7}, {134.3, 18.0}}, label: 'Creative Consulting'
+                                          Other, 0x112cb57c0, {{18.0, 376.3}, {368.0, 1.0}}
+                                          Other, 0x112cb5900, {{-2.0, 441.3}, {420.0, 168.0}}
+                                          Cell, 0x112cb5a40, {{0.0, 441.3}, {402.0, 38.0}}, label: 'h'
+                                            Other, 0x112cb5b80, {{0.0, 441.3}, {402.0, 38.0}}
+                                            Other, 0x112cb5cc0, {{0.0, 441.3}, {402.0, 38.0}}
+                                              StaticText, 0x112cb5e00, {{18.0, 451.3}, {11.0, 18.0}}, label: 'H'
+                                          Cell, 0x112cb5f40, {{2.0, 479.3}, {384.0, 65.0}}, label: 'Anna Haro'
+                                            Other, 0x112cb6080, {{2.0, 479.3}, {384.0, 65.0}}
+                                              Other, 0x112cb61c0, {{2.0, 479.3}, {384.0, 65.0}}
+                                            Other, 0x112cb6300, {{18.0, 479.3}, {45.0, 65.0}}
+                                              Button, 0x112cb6440, {{18.0, 489.3}, {45.0, 45.0}}, label: 'Contact photo for Anna Haro'
+                                                Image, 0x112cb6580, {{18.0, 489.3}, {45.0, 45.0}}
+                                            Other, 0x112cb66c0, {{63.0, 479.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cb6800, {{73.0, 502.3}, {79.3, 19.3}}, label: 'Anna Haro'
+                                          Other, 0x112cb6940, {{18.0, 479.3}, {368.0, 1.0}}
+                                          Cell, 0x112cb6a80, {{2.0, 544.3}, {384.0, 65.0}}, label: 'Daniel Higgins Jr.'
+                                            Other, 0x112cb6bc0, {{2.0, 544.3}, {384.0, 65.0}}
+                                              Other, 0x112cb6d00, {{2.0, 544.3}, {384.0, 65.0}}
+                                            Other, 0x112cb6e40, {{18.0, 544.3}, {45.0, 65.0}}
+                                              Button, 0x112cb6f80, {{18.0, 554.3}, {45.0, 45.0}}, label: 'Contact photo for Daniel Higgins Jr.'
+                                                Image, 0x112cb70c0, {{18.0, 554.3}, {45.0, 45.0}}
+                                            Other, 0x112cb7200, {{63.0, 544.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cb7340, {{73.0, 567.3}, {132.0, 19.3}}, label: 'Daniel Higgins Jr.'
+                                          Other, 0x112cb7480, {{73.0, 543.3}, {313.0, 1.0}}
+                                          Other, 0x112cb75c0, {{-2.0, 609.3}, {420.0, 103.0}}
+                                          Cell, 0x112cb7700, {{0.0, 609.3}, {402.0, 38.0}}, label: 'r'
+                                            Other, 0x112cb7840, {{0.0, 609.3}, {402.0, 38.0}}
+                                            Other, 0x112cb7980, {{0.0, 609.3}, {402.0, 38.0}}
+                                              StaticText, 0x112cb7ac0, {{18.0, 619.3}, {9.7, 18.0}}, label: 'R'
+                                          StaticText, 0x112cb7c00, {{2.0, 647.3}, {384.0, 65.0}}, label: 'Alex Rivera, Prefill Test Co', value: me
+                                            Other, 0x112cb7d40, {{2.0, 647.3}, {384.0, 65.0}}
+                                              Other, 0x112cb7e80, {{2.0, 647.3}, {384.0, 65.0}}
+                                            Other, 0x112cb8000, {{18.0, 647.3}, {45.0, 65.0}}
+                                              Button, 0x112cb8140, {{18.0, 657.3}, {45.0, 45.0}}, label: 'Contact photo for Alex Rivera'
+                                                Image, 0x112cb8280, {{18.0, 657.3}, {45.0, 45.0}}
+                                            Other, 0x112cb83c0, {{63.0, 647.3}, {283.3, 65.0}}
+                                              StaticText, 0x112cb8500, {{73.0, 659.3}, {84.0, 19.3}}, label: 'Alex Rivera'
+                                              StaticText, 0x112cb8640, {{73.0, 682.7}, {95.0, 18.0}}, label: 'Prefill Test Co'
+                                            StaticText, 0x112cb8780, {{346.3, 669.3}, {23.7, 20.3}}, label: 'me'
+                                          Other, 0x112cb88c0, {{18.0, 647.3}, {368.0, 1.0}}
+                                          Other, 0x112cb8a00, {{-2.0, 712.3}, {420.0, 103.0}}
+                                          Cell, 0x112cb8b40, {{0.0, 712.3}, {402.0, 38.0}}, label: 't'
+                                            Other, 0x112cb8c80, {{0.0, 712.3}, {402.0, 38.0}}
+                                            Other, 0x112cb8dc0, {{0.0, 712.3}, {402.0, 38.0}}
+                                              StaticText, 0x112cb8f00, {{18.0, 722.3}, {9.3, 18.0}}, label: 'T'
+                                          Cell, 0x112cb9040, {{2.0, 750.3}, {384.0, 65.0}}, label: 'David Taylor'
+                                            Other, 0x112cb9180, {{2.0, 750.3}, {384.0, 65.0}}
+                                              Other, 0x112cb92c0, {{2.0, 750.3}, {384.0, 65.0}}
+                                            Other, 0x112cb9400, {{18.0, 750.3}, {45.0, 65.0}}
+                                              Button, 0x112cb9540, {{18.0, 760.3}, {45.0, 45.0}}, label: 'Contact photo for David Taylor'
+                                                Image, 0x112cb9680, {{18.0, 760.3}, {45.0, 45.0}}
+                                            Other, 0x112cb97c0, {{63.0, 750.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cb9900, {{73.0, 773.3}, {93.0, 19.3}}, label: 'David Taylor'
+                                          Other, 0x112cb9a40, {{18.0, 750.3}, {368.0, 1.0}}
+                                          Other, 0x112cb9b80, {{-2.0, 815.3}, {420.0, 1727.0}}
+                                          Cell, 0x112cb9cc0, {{0.0, 815.3}, {402.0, 38.0}}, label: 'z'
+                                            Other, 0x112cb9e00, {{0.0, 815.3}, {402.0, 38.0}}
+                                            Other, 0x112cb9f40, {{0.0, 815.3}, {402.0, 38.0}}
+                                              StaticText, 0x112cba080, {{18.0, 825.3}, {10.0, 18.0}}, label: 'Z'
+                                          Cell, 0x112cba1c0, {{2.0, 853.3}, {384.0, 65.0}}, label: 'Hank M. Zakroff, Financial Services Inc.'
+                                            Other, 0x112cba300, {{2.0, 853.3}, {384.0, 65.0}}
+                                              Other, 0x112cba440, {{2.0, 853.3}, {384.0, 65.0}}
+                                            Other, 0x112cba580, {{18.0, 853.3}, {45.0, 65.0}}
+                                              Button, 0x112cba6c0, {{18.0, 863.3}, {45.0, 45.0}}, label: 'Contact photo for Hank M. Zakroff'
+                                                Image, 0x112cba800, {{18.0, 863.3}, {45.0, 45.0}}
+                                            Other, 0x112cba940, {{63.0, 853.3}, {323.0, 65.0}}
+                                              StaticText, 0x112cbaa80, {{73.0, 865.3}, {122.0, 19.3}}, label: 'Hank M. Zakroff'
+                                              StaticText, 0x112cbabc0, {{73.0, 888.7}, {151.7, 18.0}}, label: 'Financial Services Inc.'
+                                          Other, 0x112cbad00, {{18.0, 853.3}, {368.0, 1.0}}
+                                          Other, 0x112cbae40, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                            Other, 0x112cbaf80, {{60.7, 868.0}, {280.7, 3.0}}
+                                          Other, 0x112cbb0c0, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                            Other, 0x112cbb200, {{60.7, 868.0}, {280.7, 3.0}}
+                                  Toolbar, 0x112cbb340, {{0.0, 62.0}, {402.0, 812.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                    Other, 0x112cbb480, {{0.0, 62.0}, {402.0, 812.0}}
+                                      Other, 0x112cbb5c0, {{0.0, 62.0}, {402.0, 812.0}}
+                                        Other, 0x112cbb700, {{0.0, 62.0}, {402.0, 812.0}}
+                                          Other, 0x112cbb840, {{0.0, 62.0}, {0.0, 0.0}}
+                                            Other, 0x112cbb980, {{28.0, 798.0}, {346.0, 48.0}}
+                                              Other, 0x112cbbac0, {{28.0, 798.0}, {346.0, 48.0}}
+                                                Other, 0x112cbbc00, {{28.0, 808.0}, {346.0, 28.0}}
+                                                  SearchField, 0x112cbbd40, {{28.0, 808.0}, {346.0, 28.0}}, label: 'Search', placeholderValue: 'Search'
+                                                    Image, 0x112cbbe80, {{40.0, 812.0}, {20.7, 19.3}}, identifier: 'magnifyingglass', label: 'Search'
+    Window, 0x112cc0000, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112cc0140, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x112cc0280, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10a62b5c0, pid: 49174, label: 'Prefill Spike'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.textinsert'
+  Output: {
+    Application, 0x112cc03c0, pid: 49174, label: 'Prefill Spike'
+  }

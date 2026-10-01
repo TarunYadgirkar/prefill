@@ -1,0 +1,4 @@
+t5d-on-tagged-tapdropdown-two {'src': 'page', 'event': 'focus', 'field': 'email', 'value': '', 'isTrusted': True}
+t5d-on-tagged-tapdropdown-two {'src': 'uitest', 'event': 'tap-candidate', 'found': '9 dl-two@example.net (76.0, 382.3333333333333, 250.0, 42.0)'}
+t5d-on-tagged-tapdropdown-two {'src': 'page', 'event': 'input', 'field': 'email', 'value': 'dl-two@example.net', 'isTrusted': True}
+t5d-on-tagged-tapdropdown-two {'src': 'page', 'event': 'change', 'field': 'email', 'value': 'dl-two@example.net', 'isTrusted': True}

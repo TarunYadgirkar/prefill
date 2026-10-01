@@ -1,0 +1,197 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/EnableTests/testExploreSettings"
+
+2026-09-30 23:50:31.226500-0700 CaptureUITests-Runner[47418:13091502] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:50:33.107.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:50:33.107.
+Test Suite 'EnableTests' started at 2026-09-30 23:50:33.107.
+Test Case '-[CaptureUITests.EnableTests testExploreSettings]' started.
+    t =     0.00s Start Test at 2026-09-30 23:50:33.109
+    t =     0.02s Set Up
+    t =     0.02s Terminate com.apple.Preferences:11418
+objc[47418]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1047e4398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107ce4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.05s Open com.apple.Preferences
+    t =     1.05s     Launch com.apple.Preferences
+    t =     1.08s         Wait for accessibility to load
+    t =     1.09s         Setting up automation session
+    t =     2.90s         Wait for com.apple.Preferences to idle
+    t =     5.00s Checking existence of `"Apps" StaticText`
+    t =     5.12s Swipe up Application 'com.apple.Preferences'
+    t =     5.12s     Wait for com.apple.Preferences to idle
+    t =     5.13s     Find the Application 'com.apple.Preferences'
+    t =     5.15s     Check for interrupting elements affecting "Settings" Application
+    t =     5.17s     Synthesize event
+    t =     5.66s     Wait for com.apple.Preferences to idle
+    t =     7.60s Checking existence of `"Apps" StaticText`
+    t =     7.63s Find the "Apps" StaticText
+    t =     7.67s Find the "Apps" StaticText
+    t =     7.69s Find the Application 'com.apple.Preferences'
+    t =     7.71s Swipe up Application 'com.apple.Preferences'
+    t =     7.71s     Wait for com.apple.Preferences to idle
+    t =     7.71s     Find the Application 'com.apple.Preferences'
+    t =     7.73s     Check for interrupting elements affecting "Settings" Application
+    t =     7.76s     Synthesize event
+    t =     8.24s     Wait for com.apple.Preferences to idle
+    t =     8.70s Checking existence of `"Apps" StaticText`
+    t =     8.73s Find the "Apps" StaticText
+    t =     8.76s Find the "Apps" StaticText
+    t =     8.79s Find the Application 'com.apple.Preferences'
+    t =     8.80s Swipe up Application 'com.apple.Preferences'
+    t =     8.80s     Wait for com.apple.Preferences to idle
+    t =     8.80s     Find the Application 'com.apple.Preferences'
+    t =     8.82s     Check for interrupting elements affecting "Settings" Application
+    t =     8.84s     Synthesize event
+    t =     9.32s     Wait for com.apple.Preferences to idle
+    t =     9.79s Checking existence of `"Apps" StaticText`
+    t =     9.83s Find the "Apps" StaticText
+    t =     9.86s Find the "Apps" StaticText
+    t =     9.88s Find the Application 'com.apple.Preferences'
+    t =     9.90s Swipe up Application 'com.apple.Preferences'
+    t =     9.90s     Wait for com.apple.Preferences to idle
+    t =     9.90s     Find the Application 'com.apple.Preferences'
+    t =     9.92s     Check for interrupting elements affecting "Settings" Application
+    t =     9.94s     Synthesize event
+    t =    10.43s     Wait for com.apple.Preferences to idle
+    t =    10.89s Checking existence of `"Apps" StaticText`
+    t =    10.92s Find the "Apps" StaticText
+    t =    10.95s Find the "Apps" StaticText
+    t =    10.98s Find the Application 'com.apple.Preferences'
+    t =    11.00s Swipe up Application 'com.apple.Preferences'
+    t =    11.00s     Wait for com.apple.Preferences to idle
+    t =    11.00s     Find the Application 'com.apple.Preferences'
+    t =    11.02s     Check for interrupting elements affecting "Settings" Application
+    t =    11.04s     Synthesize event
+    t =    11.53s     Wait for com.apple.Preferences to idle
+    t =    11.99s Checking existence of `"Apps" StaticText`
+    t =    12.01s Find the "Apps" StaticText
+    t =    12.04s Find the "Apps" StaticText
+    t =    12.06s Find the Application 'com.apple.Preferences'
+    t =    12.08s Swipe up Application 'com.apple.Preferences'
+    t =    12.08s     Wait for com.apple.Preferences to idle
+    t =    12.08s     Find the Application 'com.apple.Preferences'
+    t =    12.10s     Check for interrupting elements affecting "Settings" Application
+    t =    12.12s     Synthesize event
+    t =    12.61s     Wait for com.apple.Preferences to idle
+    t =    13.06s Checking existence of `"Apps" StaticText`
+    t =    13.08s Find the "Apps" StaticText
+    t =    13.11s Find the "Apps" StaticText
+    t =    13.14s Find the Application 'com.apple.Preferences'
+    t =    13.15s Swipe up Application 'com.apple.Preferences'
+    t =    13.15s     Wait for com.apple.Preferences to idle
+    t =    13.16s     Find the Application 'com.apple.Preferences'
+    t =    13.17s     Check for interrupting elements affecting "Settings" Application
+    t =    13.20s     Synthesize event
+    t =    13.69s     Wait for com.apple.Preferences to idle
+    t =    14.15s Checking existence of `"Apps" StaticText`
+    t =    14.18s Find the "Apps" StaticText
+    t =    14.21s Find the "Apps" StaticText
+    t =    14.23s Find the Application 'com.apple.Preferences'
+    t =    14.25s Swipe up Application 'com.apple.Preferences'
+    t =    14.25s     Wait for com.apple.Preferences to idle
+    t =    14.25s     Find the Application 'com.apple.Preferences'
+    t =    14.27s     Check for interrupting elements affecting "Settings" Application
+    t =    14.29s     Synthesize event
+    t =    14.78s     Wait for com.apple.Preferences to idle
+    t =    15.24s Checking existence of `"Apps" StaticText`
+    t =    15.28s Find the "Apps" StaticText
+    t =    15.31s Find the "Apps" StaticText
+    t =    15.33s Find the Application 'com.apple.Preferences'
+    t =    15.35s Swipe up Application 'com.apple.Preferences'
+    t =    15.35s     Wait for com.apple.Preferences to idle
+    t =    15.35s     Find the Application 'com.apple.Preferences'
+    t =    15.37s     Check for interrupting elements affecting "Settings" Application
+    t =    15.39s     Synthesize event
+    t =    15.88s     Wait for com.apple.Preferences to idle
+    t =    16.34s Checking existence of `"Apps" StaticText`
+    t =    16.38s Find the "Apps" StaticText
+    t =    16.41s Find the "Apps" StaticText
+    t =    16.43s Find the Application 'com.apple.Preferences'
+    t =    16.45s Swipe up Application 'com.apple.Preferences'
+    t =    16.45s     Wait for com.apple.Preferences to idle
+    t =    16.45s     Find the Application 'com.apple.Preferences'
+    t =    16.47s     Check for interrupting elements affecting "Settings" Application
+    t =    16.49s     Synthesize event
+    t =    16.98s     Wait for com.apple.Preferences to idle
+    t =    17.44s Tap "Apps" StaticText
+    t =    17.44s     Wait for com.apple.Preferences to idle
+    t =    17.45s     Find the "Apps" StaticText
+    t =    17.48s     Check for interrupting elements affecting "Apps" StaticText
+    t =    17.51s     Synthesize event
+    t =    17.79s     Wait for com.apple.Preferences to idle
+2026-09-30 23:50:52.287072-0700 CaptureUITests-Runner[47418:13091502] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-apps should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    19.66s Requesting snapshot of accessibility hierarchy for app with pid 47439
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.EnableTests testExploreSettings] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-apps should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    19.85s Requesting snapshot of accessibility hierarchy for app with pid 47439
+    t =    19.89s Checking existence of `"Safari" StaticText`
+    t =    19.92s Swipe up Application 'com.apple.Preferences'
+    t =    19.92s     Wait for com.apple.Preferences to idle
+    t =    19.92s     Find the Application 'com.apple.Preferences'
+    t =    19.94s     Check for interrupting elements affecting "Settings" Application
+    t =    19.96s     Synthesize event
+    t =    20.45s     Wait for com.apple.Preferences to idle
+    t =    22.39s Checking existence of `"Safari" StaticText`
+    t =    22.42s Swipe up Application 'com.apple.Preferences'
+    t =    22.42s     Wait for com.apple.Preferences to idle
+    t =    22.43s     Find the Application 'com.apple.Preferences'
+    t =    22.45s     Check for interrupting elements affecting "Settings" Application
+    t =    22.48s     Synthesize event
+    t =    22.96s     Wait for com.apple.Preferences to idle
+    t =    24.06s Checking existence of `"Safari" StaticText`
+    t =    24.08s Find the "Safari" StaticText
+    t =    24.12s Find the "Safari" StaticText
+    t =    24.14s Find the Application 'com.apple.Preferences'
+    t =    24.16s Tap "Safari" StaticText
+    t =    24.16s     Wait for com.apple.Preferences to idle
+    t =    24.16s     Find the "Safari" StaticText
+    t =    24.19s     Check for interrupting elements affecting "Safari" StaticText
+    t =    24.21s     Synthesize event
+    t =    24.50s     Wait for com.apple.Preferences to idle
+2026-09-30 23:51:01.379532-0700 CaptureUITests-Runner[47418:13091502] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-safari should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    28.75s Requesting snapshot of accessibility hierarchy for app with pid 47439
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.EnableTests testExploreSettings] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-safari should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    29.64s Requesting snapshot of accessibility hierarchy for app with pid 47439
+    t =    29.79s Checking existence of `"Extensions" StaticText`
+    t =    29.89s Find the "Extensions" StaticText
+    t =    29.96s Swipe up Application 'com.apple.Preferences'
+    t =    29.96s     Wait for com.apple.Preferences to idle
+    t =    29.96s     Find the Application 'com.apple.Preferences'
+    t =    30.01s     Check for interrupting elements affecting "Settings" Application
+    t =    30.12s     Synthesize event
+    t =    30.63s     Wait for com.apple.Preferences to idle
+    t =    32.58s Checking existence of `"Extensions" StaticText`
+    t =    32.72s Find the "Extensions" StaticText
+    t =    32.81s Find the "Extensions" StaticText
+    t =    32.88s Find the Application 'com.apple.Preferences'
+    t =    32.92s Tap "Extensions" StaticText
+    t =    32.92s     Wait for com.apple.Preferences to idle
+    t =    32.92s     Find the "Extensions" StaticText
+    t =    32.99s     Check for interrupting elements affecting "Extensions" StaticText
+    t =    33.04s     Synthesize event
+    t =    33.34s     Wait for com.apple.Preferences to idle
+2026-09-30 23:51:07.526434-0700 CaptureUITests-Runner[47418:13091502] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-extensions should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    34.90s Requesting snapshot of accessibility hierarchy for app with pid 47439
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.EnableTests testExploreSettings] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-extensions should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    34.99s Requesting snapshot of accessibility hierarchy for app with pid 47439
+    t =    35.01s Waiting 5.0s for "Prefill Capture" StaticText to exist
+    t =    36.03s     Checking `Expect predicate `existsNoRetry == 1` for object "Prefill Capture" StaticText`
+    t =    36.04s         Checking existence of `"Prefill Capture" StaticText`
+    t =    36.06s Tap "Prefill Capture" StaticText
+    t =    36.06s     Wait for com.apple.Preferences to idle
+    t =    36.06s     Find the "Prefill Capture" StaticText
+    t =    36.08s     Check for interrupting elements affecting "Prefill Capture" StaticText
+    t =    36.10s     Synthesize event
+    t =    36.39s     Wait for com.apple.Preferences to idle
+2026-09-30 23:51:10.822685-0700 CaptureUITests-Runner[47418:13091502] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-extension-detail should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    38.15s Requesting snapshot of accessibility hierarchy for app with pid 47439
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.EnableTests testExploreSettings] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=settings-extension-detail should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    38.25s Requesting snapshot of accessibility hierarchy for app with pid 47439
+    t =    38.28s Tear Down
+Test Case '-[CaptureUITests.EnableTests testExploreSettings]' passed (38.594 seconds).
+Test Suite 'EnableTests' passed at 2026-09-30 23:51:11.704.
+	 Executed 1 test, with 0 failures (0 unexpected) in 38.594 (38.596) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:51:11.707.
+	 Executed 1 test, with 0 failures (0 unexpected) in 38.594 (38.600) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:51:11.708.
+	 Executed 1 test, with 0 failures (0 unexpected) in 38.594 (38.602) seconds
+** BUILD INTERRUPTED **

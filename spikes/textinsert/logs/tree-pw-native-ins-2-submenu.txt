@@ -1,0 +1,156 @@
+Attributes: Application, 0x10622e940, pid: 45836, label: 'Prefill Spike'
+Element subtree:
+ →Application, 0x10622e940, pid: 45836, label: 'Prefill Spike'
+    Window (Main), 0x10622ea80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10622ebc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10622ed00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10622ee40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10622ef80, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10622f0c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10622f700, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10622d2c0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Native fields'
+                  Button, 0x10622d400, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Prefill Spike'
+                  StaticText, 0x102e5b200, {{16.0, 119.7}, {196.0, 40.7}}, label: 'Native fields'
+                Other, 0x102e5b480, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x102e5b700, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x102e5b840, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x102e5b980, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x102e5bc00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x102e5bac0, {{-16.0, -1580.0}, {434.0, 1880.0}}
+                          Other, 0x105c6c500, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x105c6d040, {{0.0, 0.0}, {402.0, 156.0}}
+                          Other, 0x105c6ca00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x105c6fe80, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x105c6d2c0, {{16.0, 168.0}, {370.0, 40.3}}
+                            Other, 0x105c6d400, {{16.0, 168.0}, {370.0, 40.3}}
+                              Other, 0x105c6d180, {{16.0, 168.0}, {370.0, 40.3}}
+                                Other, 0x105c6d900, {{16.0, 168.0}, {370.0, 40.3}}
+                                  StaticText, 0x105c6d540, {{16.0, 168.0}, {370.0, 40.3}}, label: 'UITextField, textContentType email'
+                          Cell, 0x105c6da40, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x105c6dcc0, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x105c6df40, {{16.0, 208.3}, {370.0, 74.0}}
+                            Other, 0x105c6e080, {{16.0, 208.3}, {370.0, 74.0}}
+                              Other, 0x105c6de00, {{16.0, 208.3}, {370.0, 74.0}}
+                                Other, 0x105c6e1c0, {{16.0, 208.3}, {370.0, 74.0}}
+                                  TextField, 0x105c6e440, {{32.0, 223.3}, {338.0, 44.0}}, identifier: 'nativeEmail', label: 'Email', placeholderValue: 'Email', Keyboard Focused
+                          Other, 0x105c6e300, {{-16.0, 300.0}, {434.0, 1882.3}}
+                          Cell, 0x105c6e580, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x105c6fd40, {{16.0, 300.0}, {370.0, 40.3}}
+                            Other, 0x105c6fc00, {{16.0, 300.0}, {370.0, 40.3}}
+                              Other, 0x105c6e800, {{16.0, 300.0}, {370.0, 40.3}}
+                                Other, 0x105c6e940, {{16.0, 300.0}, {370.0, 40.3}}
+                                  StaticText, 0x105c6ebc0, {{16.0, 300.0}, {370.0, 40.3}}, label: 'UITextField, no content type'
+                          Cell, 0x105c6ea80, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x105c6ed00, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x105c6ee40, {{16.0, 340.3}, {370.0, 74.0}}
+                            Other, 0x105c6f0c0, {{16.0, 340.3}, {370.0, 74.0}}
+                              Other, 0x105c6ef80, {{16.0, 340.3}, {370.0, 74.0}}
+                                Other, 0x105c6f200, {{16.0, 340.3}, {370.0, 74.0}}
+                                  TextField, 0x105c6f340, {{32.0, 355.3}, {338.0, 44.0}}, identifier: 'nativePlain', label: 'Anything', placeholderValue: 'Anything'
+                          Other, 0x105c6f5c0, {{369.0, 116.0}, {30.0, 457.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x105c6f480, {{396.0, 257.7}, {3.0, 312.3}}
+                          Other, 0x105c6f700, {{369.0, 116.0}, {30.0, 457.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x105c6f840, {{396.0, 257.7}, {3.0, 312.3}}
+                Toolbar, 0x105c6fac0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x105c6f980, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10ece8000, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10ece8140, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10ece8280, {{16.0, 268.3}, {250.0, 186.3}}
+            Other, 0x10ece83c0, {{16.0, 268.3}, {250.0, 186.3}}
+              Other, 0x10ece8500, {{16.0, 268.3}, {250.0, 186.3}}
+                Other, 0x10ece8640, {{16.0, 268.3}, {250.0, 186.3}}
+                CollectionView, 0x10ece8780, {{16.0, 268.3}, {250.0, 874.0}}
+                  Other, 0x10ece88c0, {{16.0, 268.3}, {250.0, 40.3}}
+                    Other, 0x10ece8a00, {{16.0, 268.3}, {250.0, 40.3}}
+                    StaticText, 0x10ece8b40, {{44.0, 288.3}, {194.0, 15.7}}, label: 'AutoFill'
+                  Cell, 0x10ece8c80, {{16.0, 318.7}, {250.0, 42.0}}
+                    Button, 0x10ece8dc0, {{16.0, 318.7}, {250.0, 42.0}}, label: 'Contact'
+                      Image, 0x10ece8f00, {{46.3, 330.0}, {19.7, 19.7}}, identifier: 'person.crop.circle', label: 'account'
+                  Cell, 0x10ece9040, {{16.0, 360.7}, {250.0, 42.0}}
+                    Button, 0x10ece9180, {{16.0, 360.7}, {250.0, 42.0}}, label: 'Passwords'
+                      Image, 0x10ece92c0, {{46.0, 370.7}, {20.0, 21.3}}, identifier: 'key.dots', label: 'Key with dots'
+                  Cell, 0x10ece9400, {{16.0, 402.7}, {250.0, 42.0}}
+                    Button, 0x10ece9540, {{16.0, 402.7}, {250.0, 42.0}}, label: 'Credit Card'
+                      Image, 0x10ece9680, {{44.3, 415.3}, {23.7, 17.0}}, identifier: 'creditcard', label: 'card'
+                  Other, 0x10ece97c0, {{233.0, 298.3}, {30.0, 126.3}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                    Other, 0x10ece9900, {{260.0, 301.3}, {3.0, 120.3}}
+                  Other, 0x10ece9a40, {{62.0, 391.7}, {204.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x10ece9b80, {{65.0, 418.7}, {198.0, 3.0}}
+                  Other, 0x10ece9cc0, {{233.0, 298.3}, {30.0, 126.3}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                    Other, 0x10ece9e00, {{260.0, 301.3}, {3.0, 120.3}}
+                  Other, 0x10ece9f40, {{62.0, 391.7}, {204.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x10ecea080, {{65.0, 418.7}, {198.0, 3.0}}
+              Other, 0x10ecea1c0, {{16.0, 268.3}, {250.0, 186.3}}
+                Other, 0x10ecea300, {{16.0, 268.3}, {250.0, 186.3}}
+                  Other, 0x10ecea440, {{16.0, 268.3}, {250.0, 186.3}}
+                    Other, 0x10ecea580, {{16.0, 268.3}, {250.0, 186.3}}
+                      Other, 0x10ecea6c0, {{16.0, 268.3}, {250.0, 186.3}}
+                        Other, 0x10ecea800, {{16.0, 268.3}, {250.0, 44.0}}
+                    Other, 0x10ecea940, {{16.0, 268.3}, {250.0, 186.3}}
+                      Other, 0x10eceaa80, {{16.0, 268.3}, {250.0, 44.0}}
+    Window, 0x10eceabc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10ecead00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eceae40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eceaf80, {{0.0, 573.0}, {402.0, 301.0}}
+          Other, 0x10eceb0c0, {{0.0, 573.0}, {402.0, 301.0}}, identifier: 'inputView'
+    Window, 0x10eceb200, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10eceb340, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10eceb480, {{0.0, 573.0}, {402.0, 301.0}}
+          Other, 0x10eceb5c0, {{0.0, 573.0}, {402.0, 302.0}}
+            Other, 0x10eceb700, {{0.0, 573.0}, {402.0, 302.0}}
+              Other, 0x10eceb840, {{0.0, 573.0}, {402.0, 302.0}}
+          Other, 0x10eceb980, {{0.0, 590.0}, {402.0, 226.0}}
+            Keyboard, 0x10ecebac0, {{0.0, 590.0}, {402.0, 226.0}}
+              Other, 0x10ecebc00, {{0.0, 590.0}, {402.0, 226.0}}
+                Other, 0x10ecebd40, {{0.0, 590.0}, {402.0, 226.0}}, identifier: 'UIKeyboardLayoutStar Preview'
+                  Key, 0x10ecebe80, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10ecec000, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10ecec140, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10ecec280, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10ecec3c0, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x10ecec500, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x10ecec640, {{4.7, 597.0}, {39.3, 54.0}}, label: 'q'
+                  Key, 0x10ecec780, {{44.0, 597.0}, {39.7, 54.0}}, label: 'w'
+                  Key, 0x10ecec8c0, {{83.7, 597.0}, {39.3, 54.0}}, label: 'e'
+                  Key, 0x10ececa00, {{123.0, 597.0}, {39.7, 54.0}}, label: 'r'
+                  Key, 0x10ececb40, {{162.7, 597.0}, {39.3, 54.0}}, label: 't'
+                  Key, 0x10ececc80, {{202.0, 597.0}, {39.7, 54.0}}, label: 'y'
+                  Key, 0x10ececdc0, {{241.7, 597.0}, {39.3, 54.0}}, label: 'u'
+                  Key, 0x10ececf00, {{281.0, 597.0}, {39.7, 54.0}}, label: 'i'
+                  Key, 0x10eced040, {{320.7, 597.0}, {39.3, 54.0}}, label: 'o'
+                  Key, 0x10eced180, {{360.0, 597.0}, {39.7, 54.0}}, label: 'p'
+                  Key, 0x10eced2c0, {{24.3, 651.0}, {39.3, 54.0}}, label: 'a'
+                  Key, 0x10eced400, {{63.7, 651.0}, {39.7, 54.0}}, label: 's'
+                  Key, 0x10eced540, {{103.3, 651.0}, {39.3, 54.0}}, label: 'd'
+                  Key, 0x10eced680, {{142.7, 651.0}, {39.7, 54.0}}, label: 'f'
+                  Key, 0x10eced7c0, {{182.3, 651.0}, {39.3, 54.0}}, label: 'g'
+                  Key, 0x10eced900, {{221.7, 651.0}, {39.7, 54.0}}, label: 'h'
+                  Key, 0x10eceda40, {{261.3, 651.0}, {39.3, 54.0}}, label: 'j'
+                  Key, 0x10ecedb80, {{300.7, 651.0}, {39.7, 54.0}}, label: 'k'
+                  Key, 0x10ecedcc0, {{340.3, 651.0}, {39.3, 54.0}}, label: 'l'
+                  Button, 0x10ecede00, {{4.7, 705.0}, {51.3, 54.0}}, identifier: 'shift', label: 'shift'
+                  Key, 0x10ecedf40, {{63.7, 705.0}, {39.7, 54.0}}, label: 'z'
+                  Key, 0x10ecee080, {{103.3, 705.0}, {39.3, 54.0}}, label: 'x'
+                  Key, 0x10ecee1c0, {{142.7, 705.0}, {39.7, 54.0}}, label: 'c'
+                  Key, 0x10ecee300, {{182.3, 705.0}, {39.3, 54.0}}, label: 'v'
+                  Key, 0x10ecee440, {{221.7, 705.0}, {39.7, 54.0}}, label: 'b'
+                  Key, 0x10ecee580, {{261.3, 705.0}, {39.3, 54.0}}, label: 'n'
+                  Key, 0x10ecee6c0, {{300.7, 705.0}, {39.7, 54.0}}, label: 'm'
+                  Key, 0x10ecee800, {{348.0, 705.0}, {51.7, 54.0}}, identifier: 'delete', label: 'delete'
+                  Key, 0x10ecee940, {{4.7, 759.0}, {98.7, 54.0}}, identifier: 'more', label: 'numbers'
+                  Key, 0x10eceea80, {{103.3, 759.0}, {197.3, 54.0}}, identifier: 'space', label: 'space'
+                  Button, 0x10eceebc0, {{300.7, 759.0}, {99.0, 54.0}}, identifier: 'Return', label: 'return'
+          Other, 0x10eceed00, {{0.0, 590.0}, {402.0, 284.0}}
+            Button, 0x10eceee40, {{8.5, 805.7}, {68.1, 68.7}}, label: 'Emoji'
+              StaticText, 0x10eceef80, {{8.5, 805.7}, {0.0, 0.0}}
+            Button, 0x10ecef0c0, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x10ecef200, {{325.4, 805.4}, {0.0, 0.0}}
+            Button, 0x10ecef340, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x10ecef480, {{325.4, 805.4}, {0.0, 0.0}}
+Path to element:
+ →Application, 0x10622e940, pid: 45836, label: 'Prefill Spike'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.textinsert'
+  Output: {
+    Application, 0x10ecef5c0, pid: 45836, label: 'Prefill Spike'
+  }

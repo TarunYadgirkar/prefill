@@ -1,0 +1,4 @@
+Kate DB guid: 177C371E-701D-42F8-A03B-C61CA31627F6
+picker returned: 177C371E-701D-42F8-A03B-C61CA31627F6
+BundleID|guid|SequenceNumber|IsActive
+com.tarunyadgirkar.prefill.spike.contacts.probe|CE06AC49-D37D-4D59-BBFD-46E6553656F2:ABPerson|2|1

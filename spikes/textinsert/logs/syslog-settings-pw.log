@@ -1,0 +1,267 @@
+2026-09-30 23:37:05.786 Df MobileSafari[26454:c65b6e] [com.apple.PlugInKit:discovery] [d 146B98AA-C3D1-4479-B685-D583F230AE47] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:05.787 Df Preferences[90646:c6787d] [com.apple.PlugInKit:discovery] [d E744D8DE-B535-4872-9C2F-A82F0E0BE720] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aec380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:05.795 Df Preferences[90646:c6787f] [com.apple.PlugInKit:discovery] [d 778D9050-8468-4F11-9FE1-0227171606F3] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:05.823 Df MobileSafari[26454:c67cce] [com.apple.PlugInKit:discovery] [d 07A5E513-4194-455E-B18F-26CF84411D4F] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:05.824 Df Preferences[90646:c6787f] [com.apple.PlugInKit:discovery] [d ACDA6F28-BEBB-485B-96EA-6602FECEFEEE] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aec380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:05.830 Df Preferences[90646:c6787d] [com.apple.PlugInKit:discovery] [d 1AFC3472-8602-4EB8-9F7E-3468E6E699CD] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:05.851 Df MobileSafari[26454:c65b6e] [com.apple.PlugInKit:discovery] [d 721B8A9F-B77A-4C42-8E31-0B5BA65BD6CD] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:05.855 Df Preferences[90646:c6787d] [com.apple.PlugInKit:discovery] [d FFB7D331-A3E7-4517-B858-E3429B2E6ABD] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:05.859 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:05.860 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aec380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:05.867 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:05.867 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:37:05.940 Df MobileSafari[26454:c67cce] [com.apple.PlugInKit:discovery] [d 20551B8E-D85F-47CF-8B18-36BFA0F96DCF] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:05.941 Df Preferences[90646:c6787f] [com.apple.PlugInKit:discovery] [d C475DFC1-ACAA-437C-B4BE-84AC83F9F271] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894380> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:05.957 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:05.957 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:37:05.999 Df SpringBoard[86754:c67d6d] [com.apple.UserNotifications:DataProviderFactory] Getting all section infos possible default data providers
+2026-09-30 23:37:06.006 Df SpringBoard[86754:c60afb] [com.apple.UserNotifications:DataProviderFactory] Got 0 section infos for default data providers with visible settings
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aed420> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:06.196 Df Preferences[90646:c67d71] [com.apple.PlugInKit:discovery] [d 708D072E-305D-4ECE-A2AE-55A9E6178D6D] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:06.196 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d F15F45AC-60E2-40ED-818D-F580F361B42D] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:13.286 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:observing] TKToolkitDatabaseChanged: rebuilding provider list
+            ASCredentialProviderExtensionCapabilities =             {
+        NSExtensionPointIdentifier = "com.apple.authentication-services-credential-provider-ui";
+    "<IXSPlaceholder(0x105579180) Name:PlugInKit Placeholder: Prefill Spike (com.tarunyadgirkar.prefill.spike.textinsert.provider) Creator:InstallCoordination Simple SPI UUID:429B04F3-6786-4600-83C7-7A83B05E3495 Location:[system-defined]>"
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+2026-09-30 23:37:14.160 Df pkd[86982:c67cdc] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: requesting termination from launchd, version [1]
+2026-09-30 23:37:14.161 Df MobileSafari[26454:c67ce2] [com.apple.PlugInKit:discovery] [d 11B5AD93-E017-4E61-BA0B-4688F2E13194] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.161 Df Preferences[90646:c6787f] [com.apple.PlugInKit:discovery] [d 7B51CEC4-30D0-45B4-A969-9B188A2F7BF3] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.162 Df pkd[86982:c67cdb] [com.apple.PlugInKit:discovery] [d 11B5AD93-E017-4E61-BA0B-4688F2E13194] [u C9F9E934-081C-4A24-A2AF-BC6E859EBDB6] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)] rejecting; plugin has an active hold by pid 86757 taken at Wed Sep 30 23:37:14 2026 (<PKDPlugInHold: 
+    <[u C9F9E934-081C-4A24-A2AF-BC6E859EBDB6] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)],[d 9982DCD1-BEFE-45C6-A5DD-6D35C45CFF5E] [/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/CF361191-F960-4212-)
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:14.162 Df pkd[86982:c68142] [com.apple.PlugInKit:discovery] [d 7B51CEC4-30D0-45B4-A969-9B188A2F7BF3] [u C9F9E934-081C-4A24-A2AF-BC6E859EBDB6] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)] rejecting; plugin has an active hold by pid 86757 taken at Wed Sep 30 23:37:14 2026 (<PKDPlugInHold: 
+    <[u C9F9E934-081C-4A24-A2AF-BC6E859EBDB6] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)],[d 9982DCD1-BEFE-45C6-A5DD-6D35C45CFF5E] [/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/CF361191-F960-4212-)
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:14.165 Df launchd_sim[86751:c680e8] [system:] remove all extension instances: caller = pkd.86982, extension = com.tarunyadgirkar.prefill.spike.textinsert.provider
+2026-09-30 23:37:14.165 Df launchd_sim[86751:c680e8] [system:] total of 0 extension (com.tarunyadgirkar.prefill.spike.textinsert.provider) instances were found to remove, of which 0 were removed instantly
+2026-09-30 23:37:14.165 Df pkd[86982:c68142] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: launchd reported no running plugins on record
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+2026-09-30 23:37:14.191 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.191 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (2
+2026-09-30 23:37:14.191 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.192 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (2
+2026-09-30 23:37:14.192 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.192 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.193 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.193 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.193 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.193 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.200 Df containermanagerd[86809:c35626] [com.apple.containermanager:codesignmapping] Reconciled [com.tarunyadgirkar.prefill.spike.textinsert.provider]; old app groups: (null), new app groups: (null), old system groups: (null), new system groups: (null)
+2026-09-30 23:37:14.201 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.201 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x103868700; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.201 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.201 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x103868700; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.216 Df containermanagerd[86809:c35626] [com.apple.containermanager:schema] [u 67AF832C-1443-45A7-B466-8C98010376FD:p 🔒9DFC107F-4DDD-42BE-B848-81DF0F9BF076:c com.tarunyadgirkar.prefill.spike.textinsert.provider(pluginData):i0] Successfully updated schema from (0) → (1), actions count = 6
+2026-09-30 23:37:14.219 Df containermanagerd[86809:c35626] [com.apple.containermanager:codesignmapping] Reconciled [com.tarunyadgirkar.prefill.spike.textinsert.provider]; old app groups: (null), new app groups: (null), old system groups: (null), new system groups: (null)
+2026-09-30 23:37:14.219 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 7, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.220 Df MobileSafari[26454:c65b6e] [com.apple.PlugInKit:discovery] [d D615C9E9-4A68-438C-A339-00148B97DDEB] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.221 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d F1423956-5FAD-4455-929A-731AC7DDE172] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894620> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aed420> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+2026-09-30 23:37:14.248 Df pkd[86982:c6814f] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: requesting termination from launchd, version [1]
+2026-09-30 23:37:14.248 Df launchd_sim[86751:c680d1] [system:] remove all extension instances: caller = pkd.86982, extension = com.tarunyadgirkar.prefill.spike.textinsert.provider
+2026-09-30 23:37:14.248 Df launchd_sim[86751:c680d1] [system:] total of 0 extension (com.tarunyadgirkar.prefill.spike.textinsert.provider) instances were found to remove, of which 0 were removed instantly
+2026-09-30 23:37:14.248 Df MobileSafari[26454:c67cce] [com.apple.PlugInKit:discovery] [d 209AB8F2-0899-4C09-A501-433A084D2B9B] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.248 Df Preferences[90646:c67d71] [com.apple.PlugInKit:discovery] [d AAB9EFC5-20A1-4A89-AC7D-9D1A73FCA0C1] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.248 Df pkd[86982:c6814e] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: launchd reported no running plugins on record
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+    "com.tarunyadgirkar.prefill.spike.textinsert.provider"
+2026-09-30 23:37:14.253 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:14.253 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:14.259 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:14.259 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+        CFBundleIdentifier = "com.tarunyadgirkar.prefill.spike.textinsert.provider";
+        NSExtensionIdentifier = "com.tarunyadgirkar.prefill.spike.textinsert.provider";
+2026-09-30 23:37:14.288 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.288 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a5c0; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (2
+2026-09-30 23:37:14.288 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 2, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.288 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a5c0; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (2
+2026-09-30 23:37:14.288 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.288 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a5c0; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.289 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.289 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a5c0; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.290 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.290 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a5c0; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.298 Df containermanagerd[86809:c35626] [com.apple.containermanager:codesignmapping] Reconciled [com.tarunyadgirkar.prefill.spike.textinsert.provider]; old app groups: (null), new app groups: (null), old system groups: (null), new system groups: (null)
+2026-09-30 23:37:14.299 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.299 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.299 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 4, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.300 Df containermanagerd[86809:c35626] [com.apple.containermanager:query] Selected query plan; plan = <MCMCommandQueryPlanWithIdentities; identities = [<MCMContainerIdentity: 0x10386a140; userIdentity = <502/20/502/2/502>, identifier = com.tarunyadgirkar.prefill.spike.textinsert.provider, class = (4
+2026-09-30 23:37:14.315 Df installd[87431:c67cee] (MobileSystemServices) 0x16ef8f000 -[MIInstallationJournalEntry _refreshUUIDForContainer:withError:]: Data container for com.tarunyadgirkar.prefill.spike.textinsert.provider is now at /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/CF361191-F960-4212-9B76-
+2026-09-30 23:37:14.316 Df containermanagerd[86809:c35626] [com.apple.containermanager:schema] [u 67AF832C-1443-45A7-B466-8C98010376FD:p 🔒CF36F846-C7B4-4108-878E-DBBA74CC8B8E:c com.tarunyadgirkar.prefill.spike.textinsert.provider(pluginData):i0] Successfully updated schema from (0) → (1), actions count = 6
+2026-09-30 23:37:14.328 Df containermanagerd[86809:c35626] [com.apple.containermanager:codesignmapping] Reconciled [com.tarunyadgirkar.prefill.spike.textinsert.provider]; old app groups: (null), new app groups: (null), old system groups: (null), new system groups: (null)
+2026-09-30 23:37:14.329 Df installd[87431:c67cee] [com.apple.containermanager:query] Query; personaid = 4294967295, type = NOPERSONA, name = <unknown>, origin [pid = 0, personaid = 0], proximate [pid = 0, personaid = 0], euid = 502, uid = 502, class = 7, identifier = [com.tarunyadgirkar.prefill.spike.textinsert.provide
+2026-09-30 23:37:14.330 Df MobileSafari[26454:c65b6e] [com.apple.PlugInKit:discovery] [d 23B4FFFC-C17B-47D9-9F6E-4BE17B4311CD] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.331 Df Preferences[90646:c67d71] [com.apple.PlugInKit:discovery] [d DA0ED047-6FAB-4520-8B07-7BD2922E9737] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    "<LSPlugInKitProxy: 0x101df0600> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1037c4e00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1024e0100> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x101fbcc00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x104ff0a00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1024e0100> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x104ff0a00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x101fbcc00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x104ff0a00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x106d00500> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+2026-09-30 23:37:14.346 Df pkd[86982:c68142] [com.apple.PlugInKit:ls] [u C9F9E934-081C-4A24-A2AF-BC6E859EBDB6] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)] plugin UNINSTALLED; bundleID: [com.tarunyadgirkar.prefill.spike.textinsert.provider], path: [/Users/tarunyadgirkar/Library/Developer/CoreSimulator/De
+2026-09-30 23:37:14.350 Df pkd[86982:c68142] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: requesting termination from launchd, version [1]
+2026-09-30 23:37:14.350 Df launchd_sim[86751:c680e8] [system:] remove all extension instances: caller = pkd.86982, extension = com.tarunyadgirkar.prefill.spike.textinsert.provider
+2026-09-30 23:37:14.350 Df launchd_sim[86751:c680e8] [system:] total of 0 extension (com.tarunyadgirkar.prefill.spike.textinsert.provider) instances were found to remove, of which 0 were removed instantly
+2026-09-30 23:37:14.350 Df pkd[86982:c6814d] [com.apple.PlugInKit:holds] com.tarunyadgirkar.prefill.spike.textinsert.provider: launchd reported no running plugins on record
+    "<LSPlugInKitProxy: 0x106d00500> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+2026-09-30 23:37:14.360 Df pkd[86982:c68142] [com.apple.PlugInKit:ls] [u B51BC714-AC15-4290-9573-FAFA762F0AC3] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)] plugin INSTALLED; bundleID: [com.tarunyadgirkar.prefill.spike.textinsert.provider], path: [/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devi
+2026-09-30 23:37:14.360 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:14.360 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+    "<LSPlugInKitProxy: 0x1034f8100> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1034f8200> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x1040f8000> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1064ec000> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1040f8200> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x1064ec200> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x13dbf4f00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x13dbf4f00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+2026-09-30 23:37:14.422 Df MobileSafari[26454:c67cce] [com.apple.PlugInKit:discovery] [d 055657AB-64C8-4CA9-9175-3DF6DCE79AFE] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:14.423 Df pkd[86982:c68142] [com.apple.PlugInKit:discovery] [d 055657AB-64C8-4CA9-9175-3DF6DCE79AFE] [u B51BC714-AC15-4290-9573-FAFA762F0AC3] [com.tarunyadgirkar.prefill.spike.textinsert.provider(0.1)] Created plugin
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x13d894700> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:14.496 Df SpringBoard[86754:c6658b] [com.apple.UserNotifications:DataProviderFactory] Getting all section infos possible default data providers
+2026-09-30 23:37:14.534 Df SpringBoard[86754:c66630] [com.apple.UserNotifications:DataProviderFactory] Got 0 section infos for default data providers with visible settings
+    "<LSPlugInKitProxy: 0x10ce1aa00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x10ce1a800> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+    "<LSPlugInKitProxy: 0x1029dc000> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    "<LSPlugInKitProxy: 0x1029dc000> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+2026-09-30 23:37:18.682 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] Failed to read blocked data from Model Catalog: ModelCatalog.CatalogErrors.AssetErrors.failedToFindAsset("com.apple.gm.vip_and_blocked_provider.generic - no asset")
+2026-09-30 23:37:18.682 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] ExternalProviderService: configuration changed, refreshing cache
+2026-09-30 23:37:18.688 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:18.688 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:37:18.693 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d 0148B611-D772-4338-B68E-D2E55DA9F2EF] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:18.694 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d B9A0DFA2-A536-4224-85F8-E2A3C6E42842] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:18.694 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d B82BB25D-2754-4D51-BD11-6C458C0E7631] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:18.694 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d 54526677-18A1-4BA3-BD39-38085B3EADA2] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    "<LSPlugInKitProxy: 0x118b32c00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=C9F9E934-081C-4A24-A2AF-BC6E859EBDB6 version=0.1"
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    "<LSPlugInKitProxy: 0x118b32c00> pluginID=com.tarunyadgirkar.prefill.spike.textinsert.provider UUID=B51BC714-AC15-4290-9573-FAFA762F0AC3 version=0.1"
+2026-09-30 23:37:18.804 Df Preferences[90646:c67da2] [com.apple.PlugInKit:discovery] [d 4DAA11C9-8B2C-456F-BFD0-6A3E3EAA0ECD] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x118aed420> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:18.807 Df Preferences[90646:c67ad4] [com.apple.PlugInKit:discovery] [d 650FC24F-02D0-4BBD-BE22-5D8AB458D1B1] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:37:19.446 Df generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:observing] TKToolkitDatabaseChanged: rebuilding provider list
+2026-09-30 23:37:19.452 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:General] Failed to read blocked data from Model Catalog: ModelCatalog.CatalogErrors.AssetErrors.failedToFindAsset("com.apple.gm.vip_and_blocked_provider.generic - no asset")
+2026-09-30 23:37:19.452 Df generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:General] ExternalProviderService: configuration changed, refreshing cache
+2026-09-30 23:37:19.452 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:37:19.452 E  generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:37:20.213 Df AuthenticationServicesAgent[88774:c660d5] [com.apple.PlugInKit:discovery] [d 8E461AAC-31F2-4E87-8BF2-60ED3C30956A] <PKHost:0x1014ed200> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:20.214 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.PlugInKit:discovery] [d B8F9AFF8-51D6-4913-A095-8479F523B862] <PKHost:0x1014ed200> Beginning discovery for flags: 1024, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1016600e0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:37:20.535 Df generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:General] Adding AgentIntent provider: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvail
+2026-09-30 23:37:22.003 Df generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:General] installedExternalProviders: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvaila
+2026-09-30 23:37:22.085 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] Adding AgentIntent provider: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvail
+2026-09-30 23:37:22.090 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] installedExternalProviders: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvaila
+2026-09-30 23:37:22.605 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:observing] No reportable changes found for external providers list
+2026-09-30 23:37:22.605 Df generativeexperiencesd[87173:c67d4b] [com.apple.externalproviderservice:observing] No reportable changes found for external providers list
+2026-09-30 23:37:25.054 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.PlugInKit:discovery] [d E5D37EE8-2D49-4E4F-8F1F-B479211479F9] <PKHost:0x1014ed200> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:25.054 Df AuthenticationServicesAgent[88774:c684e7] [com.apple.PlugInKit:discovery] [d FF9AB2BE-124B-4776-80B4-8927D8245699] <PKHost:0x1014ed200> Beginning discovery for flags: 1024, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1016600e0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.208 Df Preferences[90646:c6956f] [com.apple.PlugInKit:discovery] [d 6E1567D3-620F-452D-BB3D-EC2A9F96E966] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:38:08.210 Df MobileSafari[26454:c69ac2] [com.apple.PlugInKit:discovery] [d 00A2DE52-4B4D-45B5-8FDC-8FF8804CEBB0] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x117aea5a0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.214 Df Preferences[90646:c69572] [com.apple.PlugInKit:discovery] [d 6F504F12-E875-482A-B3F6-0DE05B6BA66A] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1743f9ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.277 Df MobileSafari[26454:c69ede] [com.apple.PlugInKit:discovery] [d 4C8C296F-7D2E-4B64-BCBE-7C454995277F] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:38:08.277 Df Preferences[90646:c6956f] [com.apple.PlugInKit:discovery] [d 4995D140-FA1F-4643-A725-D36E32827FEF] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x117aea5a0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1743f9ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.280 Df Preferences[90646:c69efa] [com.apple.PlugInKit:discovery] [d B9BBFF68-E1C4-4483-BBE6-339E43136FE2] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:38:08.303 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:38:08.328 Df Preferences[90646:c69572] [com.apple.PlugInKit:discovery] [d 38EB2932-3937-41C7-9B66-009A76D4FA29] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:38:08.329 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:38:08.329 E  generativeexperiencesd[87173:c69f48] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:38:08.329 E  generativeexperiencesd[87173:c69f48] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x117aeaae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.338 Df MobileSafari[26454:c69ede] [com.apple.PlugInKit:discovery] [d 22198019-54E3-4ECA-8665-DFF37089E2F7] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1743f9ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.381 Df MobileSafari[26454:c69ede] [com.apple.PlugInKit:discovery] [d CF04690E-4C3E-4CC4-933F-115BBE8FC25E] <PKHost:0x107680780> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:38:08.381 Df Preferences[90646:c69572] [com.apple.PlugInKit:discovery] [d AFED115B-E57D-424E-A0DC-FB764BB62606] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x1743f9ce0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:08.396 E  generativeexperiencesd[87173:c69f48] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:38:08.403 E  generativeexperiencesd[87173:c69f48] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:38:08.422 Df SpringBoard[86754:c68a88] [com.apple.UserNotifications:DataProviderFactory] Getting all section infos possible default data providers
+2026-09-30 23:38:08.423 Df SpringBoard[86754:c6819a] [com.apple.UserNotifications:DataProviderFactory] Got 0 section infos for default data providers with visible settings
+2026-09-30 23:38:09.609 Df Preferences[90646:c6956f] [com.apple.PlugInKit:discovery] [d E76D362D-4D2E-486F-90BE-E934E85F1001] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x117aeaae0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+2026-09-30 23:38:09.641 Df Preferences[90646:c69572] [com.apple.PlugInKit:discovery] [d E55DF9F7-79EA-4C05-A627-73267A0759AD] <PKHost:0x10a451640> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:38:14.641 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:observing] TKToolkitDatabaseChanged: rebuilding provider list
+2026-09-30 23:38:15.632 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] Failed to read blocked data from Model Catalog: ModelCatalog.CatalogErrors.AssetErrors.failedToFindAsset("com.apple.gm.vip_and_blocked_provider.generic - no asset")
+2026-09-30 23:38:15.632 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] ExternalProviderService: configuration changed, refreshing cache
+2026-09-30 23:38:15.718 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received nil from UserDefaults for externalProviderMetadata
+2026-09-30 23:38:15.719 E  generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:Metadata] received an empty metadata for external providers
+2026-09-30 23:38:19.162 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] Adding AgentIntent provider: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvail
+2026-09-30 23:38:19.163 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:General] installedExternalProviders: ChatGPT providerID=com.apple.gms.GenerativePartnerPrototypeExtension.GenerativePartnerPrototypeIntentChatGPT bundleID=com.openai.chat isVip=false implementsAgentIntent=true isAppAvaila
+2026-09-30 23:38:19.250 Df generativeexperiencesd[87173:c661c6] [com.apple.externalproviderservice:observing] No reportable changes found for external providers list
+2026-09-30 23:38:21.240 Df Preferences[31260:c6a38d] [com.apple.VideoSubscriberAccount:Default] Will fetch developer identity providers.
+2026-09-30 23:38:21.243 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c6a593] [com.apple.VideoSubscriberAccount:Default] Entering -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]
+2026-09-30 23:38:21.244 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Will call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke
+2026-09-30 23:38:21.244 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Did call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke_2
+2026-09-30 23:38:21.244 Df Preferences[31260:c6a38d] [com.apple.VideoSubscriberAccount:Default] Will fetch developer identity providers.
+2026-09-30 23:38:21.245 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c6a592] [com.apple.VideoSubscriberAccount:Default] Entering -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]
+2026-09-30 23:38:21.246 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Will call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke
+2026-09-30 23:38:21.246 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Did call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke_2
+2026-09-30 23:38:21.246 Df Preferences[31260:c6a362] [com.apple.VideoSubscriberAccount:Default] Did fetch developer 0 identity providers.
+2026-09-30 23:38:21.247 Df Preferences[31260:c6a364] [com.apple.VideoSubscriberAccount:Default] Will fetch developer identity providers.
+2026-09-30 23:38:21.248 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c6a592] [com.apple.VideoSubscriberAccount:Default] Entering -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]
+2026-09-30 23:38:21.249 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Will call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke
+2026-09-30 23:38:21.249 Df com.apple.VideoSubscriberAccount.DeveloperService[90843:c39aa2] [com.apple.VideoSubscriberAccount:Default] Did call completion handler passed to -[VSDeveloperModeStore fetchDeveloperIdentityProvidersWithCompletionHandler:]_block_invoke_2
+2026-09-30 23:38:21.249 Df Preferences[31260:c6a362] [com.apple.VideoSubscriberAccount:Default] Did fetch developer 0 identity providers.
+2026-09-30 23:38:22.596 Df Preferences[31260:c6a35e] [com.apple.PlugInKit:discovery] [d 38950761-CA30-4642-8C27-A3195ED34C57] <PKHost:0x1125d51c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:38:22.596 Df Preferences[31260:c6a35e] [com.apple.PlugInKit:discovery] [d 26EFDDED-11BB-4DD1-87D6-B9B67B02AA1A] <PKHost:0x1125d51c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+    <EXConcreteExtension: 0x112586760> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+2026-09-30 23:38:22.599 Df Preferences[31260:c6a35e] [com.apple.PlugInKit:discovery] [d 2480591D-93F6-42DD-90A4-F5861083F90D] <PKHost:0x1125d51c0> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";

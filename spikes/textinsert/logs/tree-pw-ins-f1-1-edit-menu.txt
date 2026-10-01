@@ -1,0 +1,206 @@
+Attributes: Application, 0x107880640, pid: 42063, label: 'Safari'
+Element subtree:
+ →Application, 0x107880640, pid: 42063, label: 'Safari'
+    Window (Main), 0x107883d40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x107883e80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x107882940, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x107882d00, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x107882bc0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+            Other, 0x1078835c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x107883980, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1078826c0, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x107883840, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x108a20000, {{0.0, 0.0}, {402.0, 49.0}}
+                Other, 0x108a20140, {{0.0, 0.0}, {402.0, 62.0}}
+                ScrollView, 0x108a20280, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108a203c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108a20500, {{0.0, 0.0}, {402.0, 102.0}}
+                  Other, 0x108a20640, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108a20780, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=51D90385-4DF4-476C-A380-18E41DEA0202&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=42128'
+                    WebView, 0x108a208c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+                      WebView, 0x108a20a00, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x108a20b40, {{-0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108a20c80, {{-0.0, 0.0}, {402.0, 89.0}}
+                          Other, 0x108a20dc0, {{-0.0, 406.0}, {402.0, 80.0}}
+                        Other, 0x108a20f00, {{-0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108a21040, {{-0.0, 0.0}, {402.0, 89.0}}
+                        WebView, 0x108a21180, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108a212c0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x108a21400, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x108a21540, {{0.0, 62.0}, {402.0, 874.0}}
+                                Other, 0x108a21680, {{0.0, 62.0}, {429.3, 762.6}}, label: 'Text insert spike'
+                                  Other, 0x108a217c0, {{3.1, 79.1}, {395.2, 68.4}}, label: 'form'
+                                    Other, 0x108a21900, {{3.1, 79.1}, {395.2, 68.4}}
+                                      StaticText, 0x108a21a40, {{3.1, 79.1}, {39.5, 20.3}}, label: 'Email', value: Email
+                                      TextField, 0x108a21b80, {{3.1, 103.7}, {395.2, 43.8}}, label: 'Email'
+                                  Other, 0x108a21cc0, {{3.1, 160.3}, {395.2, 68.4}}, label: 'form'
+                                    Other, 0x108a21e00, {{3.1, 160.3}, {395.2, 68.4}}
+                                      StaticText, 0x108a21f40, {{3.1, 160.3}, {84.4, 20.3}}, label: 'Your e-mail', value: Your e-mail
+                                      TextField, 0x108a22080, {{3.1, 184.8}, {395.2, 43.8}}, label: 'Your e-mail', Keyboard Focused, Focused
+                                  Other, 0x108a221c0, {{3.1, 241.4}, {395.2, 68.4}}, label: 'form'
+                                    Other, 0x108a22300, {{3.1, 241.4}, {395.2, 68.4}}
+                                      StaticText, 0x108a22440, {{3.1, 241.4}, {47.0, 20.3}}, label: 'Phone', value: Phone
+                                      TextField, 0x108a22580, {{3.1, 266.0}, {395.2, 43.8}}, label: 'Phone'
+                                  Other, 0x108a226c0, {{3.1, 321.5}, {395.2, 15.0}}
+                                    StaticText, 0x108a22800, {{3.1, 321.5}, {149.5, 15.0}}, label: 'usr_contact focus  v=', value: usr_contact focus ...
+                        Other, 0x108a22940, {{369.0, 62.0}, {30.0, 384.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x108a22a80, {{396.0, 65.0}, {3.0, 244.7}}
+                        Other, 0x108a22bc0, {{62.0, 413.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 2 pages', value: 51%
+                          Other, 0x108a22d00, {{73.7, 440.0}, {255.0, 3.0}}
+                        Other, 0x108a22e40, {{369.0, 62.0}, {30.0, 384.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                          Other, 0x108a22f80, {{396.0, 65.0}, {3.0, 244.7}}
+                        Other, 0x108a230c0, {{62.0, 413.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 2 pages', value: 51%
+                          Other, 0x108a23200, {{73.7, 440.0}, {255.0, 3.0}}
+                  Other, 0x108a23340, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x108a23480, {{334.3, 868.0}, {7.0, 3.0}}
+                  Other, 0x108a235c0, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x108a23700, {{334.3, 868.0}, {7.0, 3.0}}
+            Other, 0x108a23840, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'CapsuleViewController'
+              Other, 0x108a23980, {{0.0, 446.0}, {402.0, 428.0}}
+                Other, 0x108a23ac0, {{0.0, 446.0}, {402.0, 428.0}}
+                  Other, 0x108a23c00, {{0.0, 446.0}, {402.0, 428.0}}
+                    Other, 0x108a23d40, {{0.0, 446.0}, {402.0, 428.0}}
+                      Other, 0x108a23e80, {{0.0, 446.0}, {402.0, 428.0}}
+                        Other, 0x110cf8000, {{0.0, 446.0}, {402.0, 428.0}}
+                          Other, 0x110cf8140, {{0.0, 446.0}, {402.0, 98.0}}
+                      Other, 0x110cf8280, {{0.0, 446.0}, {402.0, 428.0}}
+                        Other, 0x110cf83c0, {{0.0, 446.0}, {402.0, 98.0}}
+                Other, 0x110cf8500, {{156.7, 446.0}, {89.0, 32.0}}
+                  Other, 0x110cf8640, {{156.7, 446.0}, {89.0, 32.0}}
+                    Other, 0x110cf8780, {{156.7, 446.0}, {89.0, 32.0}}
+                      Other, 0x110cf88c0, {{156.7, 446.0}, {89.0, 32.0}}, identifier: 'CapsuleNavigationBar?isSelected=true&isDistractionControlOverlayUp=false', Selected
+      Other, 0x110cf8a00, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x110cf8b40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x110cf8c80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x110cf8dc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x110cf8f00, {{0.0, 446.0}, {402.0, 428.0}}
+          Other, 0x110cf9040, {{0.0, 446.0}, {402.0, 100.0}}
+            Other, 0x110cf9180, {{0.0, 478.0}, {402.0, 68.0}}
+              Other, 0x110cf92c0, {{0.0, 478.0}, {402.0, 68.0}}
+                Toolbar, 0x110cf9400, {{0.0, 488.0}, {402.0, 48.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x110cf9540, {{0.0, 488.0}, {402.0, 48.0}}
+                    Other, 0x110cf9680, {{16.0, 488.0}, {370.0, 48.0}}
+                      Other, 0x110cf97c0, {{16.0, 488.0}, {370.0, 48.0}}
+                        Other, 0x110cf9a40, {{16.0, 488.0}, {0.0, 0.0}}
+                          Other, 0x110cf9b80, {{16.0, 488.0}, {370.0, 48.0}}
+                            Other, 0x110cf9cc0, {{16.0, 488.0}, {50.0, 48.0}}
+                              Other, 0x110cf9900, {{21.0, 493.0}, {40.0, 38.0}}
+                                Other, 0x110cf9e00, {{21.0, 493.0}, {40.0, 38.0}}
+                                  Button, 0x110cf9f40, {{21.0, 493.0}, {40.0, 38.0}}, label: 'Previous'
+                            Other, 0x110cfa080, {{70.0, 488.0}, {50.0, 48.0}}
+                              Other, 0x110cfa1c0, {{75.0, 493.0}, {40.0, 38.0}}
+                                Other, 0x110cfa300, {{75.0, 493.0}, {40.0, 38.0}}
+                                  Button, 0x110cfa440, {{75.0, 493.0}, {40.0, 38.0}}, label: 'Next'
+                            Other, 0x110cfa580, {{130.0, 488.0}, {120.0, 48.0}}
+                              Other, 0x110cfa6c0, {{135.0, 497.0}, {110.0, 30.0}}
+                                Other, 0x110cfa800, {{135.0, 497.0}, {110.0, 30.0}}
+                                  Button, 0x110cfa940, {{135.0, 497.0}, {110.0, 30.0}}, label: 'AutoFill Contact'
+                                    StaticText, 0x110cfaa80, {{135.0, 503.0}, {110.0, 18.0}}, label: 'AutoFill Contact'
+                            Other, 0x110cfabc0, {{336.0, 488.0}, {50.0, 48.0}}
+                              Other, 0x110cfad00, {{341.0, 493.0}, {40.0, 38.0}}
+                                Other, 0x110cfae40, {{341.0, 493.0}, {40.0, 38.0}}
+                                  Button, 0x110cfaf80, {{341.0, 493.0}, {40.0, 38.0}}, label: 'Done'
+          Other, 0x110cfb0c0, {{0.0, 546.0}, {402.0, 328.0}}, identifier: 'inputView'
+      Other, 0x110cfb200, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x110cfb340, {{16.0, 231.7}, {153.3, 44.0}}
+          Other, 0x110cfb480, {{16.0, 231.7}, {161.3, 44.0}}
+            Other, 0x110cfb5c0, {{16.0, 231.7}, {153.3, 44.0}}
+              Other, 0x110cfb700, {{20.0, 231.7}, {153.3, 44.0}}
+                CollectionView, 0x110cfb840, {{16.0, 231.7}, {161.3, 44.0}}
+                  MenuItem, 0x110cfb980, {{20.0, 231.7}, {70.3, 44.0}}, label: 'Paste'
+                    Other, 0x110cfbac0, {{36.0, 244.7}, {38.3, 18.0}}
+                      Image, 0x110cfbc00, {{36.0, 243.0}, {0.0, 21.3}}, identifier: 'document.on.clipboard', label: 'Document on a clipboard'
+                      StaticText, 0x110cfbd40, {{36.0, 244.7}, {38.3, 18.0}}, label: 'Paste'
+                  Other, 0x110cfbe80, {{90.3, 231.7}, {1.0, 44.0}}
+                    Other, 0x110cfc000, {{90.3, 244.7}, {1.0, 18.0}}
+                  MenuItem, 0x110cfc140, {{90.3, 231.7}, {83.0, 44.0}}, label: 'AutoFill'
+                    Other, 0x110cfc280, {{106.3, 244.7}, {51.0, 18.0}}
+                      StaticText, 0x110cfc3c0, {{106.3, 244.7}, {51.0, 18.0}}, label: 'AutoFill'
+              Button, 0x110cfc500, {{-15.0, 235.7}, {36.0, 36.0}}, label: 'Previous Page'
+              Button, 0x110cfc640, {{173.3, 235.7}, {36.0, 36.0}}, label: 'Next Page'
+              Other, 0x110cfc780, {{16.0, 231.7}, {0.0, 0.0}}
+                Other, 0x110cfc8c0, {{16.0, 231.7}, {0.0, 0.0}}
+            Other, 0x110cfca00, {{16.0, 231.7}, {161.3, 44.0}}
+              Other, 0x110cfcb40, {{16.0, 231.7}, {161.3, 44.0}}
+                Other, 0x110cfcc80, {{16.0, 231.7}, {161.3, 44.0}}
+                  Other, 0x110cfcdc0, {{16.0, 231.7}, {161.3, 44.0}}
+                    Other, 0x110cfcf00, {{16.0, 231.7}, {161.3, 44.0}}
+                      Other, 0x110cfd040, {{16.0, 231.7}, {161.3, 44.0}}
+                  Other, 0x110cfd180, {{16.0, 231.7}, {161.3, 44.0}}
+                    Other, 0x110cfd2c0, {{16.0, 231.7}, {161.3, 44.0}}
+    Window, 0x110cfd400, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x110cfd540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x110cfd680, {{0.0, 446.0}, {402.0, 428.0}}
+          Other, 0x110cfd7c0, {{0.0, 446.0}, {402.0, 100.0}}
+          Other, 0x110cfd900, {{0.0, 546.0}, {402.0, 44.0}}, identifier: 'SystemInputAssistantView'
+            Other, 0x110cfda40, {{0.0, 546.0}, {402.0, 44.0}}
+              Other, 0x110cfdb80, {{0.0, 546.0}, {402.0, 44.0}}, identifier: 'CenterPageView'
+                Other, 0x110cfdcc0, {{0.0, -54.0}, {402.0, 1244.0}}
+                  ScrollView, 0x110cfde00, {{0.0, 546.0}, {402.0, 44.0}}
+                Other, 0x110cfdf40, {{0.0, 546.0}, {402.0, 44.0}}
+                  Other, 0x110cfe080, {{0.0, 546.0}, {402.0, 44.0}}
+                    Other, 0x110cfe1c0, {{0.0, 546.0}, {402.0, 44.0}}, label: 'Typing Predictions'
+                      Other, 0x110cfe300, {{0.0, 546.0}, {402.0, 44.0}}
+                        Other, 0x110cfe440, {{0.0, 546.0}, {402.0, 44.0}}
+                          Button, 0x110cfe580, {{0.0, 546.0}, {201.0, 44.0}}, label: 'home
+alex.rivera@example.com'
+                          Button, 0x110cfe6c0, {{201.0, 546.0}, {201.0, 44.0}}, label: 'work
+alex@work.example.org'
+          Other, 0x110cfe800, {{0.0, 546.0}, {402.0, 329.0}}
+            Other, 0x110cfe940, {{0.0, 546.0}, {402.0, 329.0}}
+              Other, 0x110cfea80, {{0.0, 546.0}, {402.0, 329.0}}
+          Other, 0x110cfebc0, {{0.0, 590.0}, {402.0, 226.0}}
+            Keyboard, 0x110cfed00, {{0.0, 590.0}, {402.0, 226.0}}
+              Other, 0x110cfee40, {{0.0, 590.0}, {402.0, 226.0}}
+                Other, 0x110cfef80, {{0.0, 590.0}, {402.0, 226.0}}, identifier: 'UIKeyboardLayoutStar Preview'
+                  Key, 0x110cff0c0, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x110cff200, {{4.7, 597.0}, {39.3, 54.0}}, label: 'Q'
+                  Key, 0x110cff340, {{44.0, 597.0}, {39.7, 54.0}}, label: 'W'
+                  Key, 0x110cff480, {{83.7, 597.0}, {39.3, 54.0}}, label: 'E'
+                  Key, 0x110cff5c0, {{123.0, 597.0}, {39.7, 54.0}}, label: 'R'
+                  Key, 0x110cff700, {{162.7, 597.0}, {39.3, 54.0}}, label: 'T'
+                  Key, 0x110cff840, {{202.0, 597.0}, {39.7, 54.0}}, label: 'Y'
+                  Key, 0x110cff980, {{241.7, 597.0}, {39.3, 54.0}}, label: 'U'
+                  Key, 0x110cffac0, {{281.0, 597.0}, {39.7, 54.0}}, label: 'I'
+                  Key, 0x110cffc00, {{320.7, 597.0}, {39.3, 54.0}}, label: 'O'
+                  Key, 0x110cffd40, {{360.0, 597.0}, {39.7, 54.0}}, label: 'P'
+                  Key, 0x110cffe80, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x110d00000, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x110d00140, {{24.3, 651.0}, {39.3, 54.0}}, label: 'A'
+                  Key, 0x110d00280, {{63.7, 651.0}, {39.7, 54.0}}, label: 'S'
+                  Key, 0x110d003c0, {{103.3, 651.0}, {39.3, 54.0}}, label: 'D'
+                  Key, 0x110d00500, {{142.7, 651.0}, {39.7, 54.0}}, label: 'F'
+                  Key, 0x110d00640, {{182.3, 651.0}, {39.3, 54.0}}, label: 'G'
+                  Key, 0x110d00780, {{221.7, 651.0}, {39.7, 54.0}}, label: 'H'
+                  Key, 0x110d008c0, {{261.3, 651.0}, {39.3, 54.0}}, label: 'J'
+                  Key, 0x110d00a00, {{300.7, 651.0}, {39.7, 54.0}}, label: 'K'
+                  Key, 0x110d00b40, {{340.3, 651.0}, {39.3, 54.0}}, label: 'L'
+                  Key, 0x110d00c80, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Button, 0x110d00dc0, {{4.7, 705.0}, {51.3, 54.0}}, identifier: 'shift', label: 'shift', Selected
+                  Key, 0x110d00f00, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Left'
+                  Key, 0x110d01040, {{63.7, 705.0}, {39.7, 54.0}}, label: 'Z'
+                  Key, 0x110d01180, {{103.3, 705.0}, {39.3, 54.0}}, label: 'X'
+                  Key, 0x110d012c0, {{142.7, 705.0}, {39.7, 54.0}}, label: 'C'
+                  Key, 0x110d01400, {{182.3, 705.0}, {39.3, 54.0}}, label: 'V'
+                  Key, 0x110d01540, {{221.7, 705.0}, {39.7, 54.0}}, label: 'B'
+                  Key, 0x110d01680, {{261.3, 705.0}, {39.3, 54.0}}, label: 'N'
+                  Key, 0x110d017c0, {{300.7, 705.0}, {39.7, 54.0}}, label: 'M'
+                  Key, 0x110d01900, {{0.0, 590.0}, {0.0, 0.0}}, label: 'Padding-Right'
+                  Key, 0x110d01a40, {{348.0, 705.0}, {51.7, 54.0}}, identifier: 'delete', label: 'delete'
+                  Key, 0x110d01b80, {{4.7, 759.0}, {98.7, 54.0}}, identifier: 'more', label: 'numbers'
+                  Key, 0x110d01cc0, {{103.3, 759.0}, {197.3, 54.0}}, identifier: 'space', label: 'space'
+                  Button, 0x110d01e00, {{300.7, 759.0}, {99.0, 54.0}}, identifier: 'Return', label: 'return'
+          Other, 0x110d01f40, {{0.0, 590.0}, {402.0, 284.0}}
+            Button, 0x110d02080, {{8.5, 805.7}, {68.1, 68.7}}, label: 'Emoji'
+              StaticText, 0x110d021c0, {{8.5, 805.7}, {0.0, 0.0}}
+            Button, 0x110d02300, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x110d02440, {{325.4, 805.4}, {0.0, 0.0}}
+            Button, 0x110d02580, {{325.4, 805.4}, {68.1, 68.7}}, identifier: 'dictation', label: 'Dictate'
+              StaticText, 0x110d026c0, {{325.4, 805.4}, {0.0, 0.0}}
+Path to element:
+ →Application, 0x107880640, pid: 42063, label: 'Safari'
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x110d02800, pid: 42063, label: 'Safari'
+  }

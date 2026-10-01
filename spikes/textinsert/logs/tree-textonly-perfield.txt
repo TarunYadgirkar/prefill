@@ -1,0 +1,6 @@
+tagged menu: app=["Paste", "AutoFill"] springboard=[]
+tagged after AutoFill: app=[] springboard=[] buttons=[]
+untagged menu: app=["Paste", "AutoFill"] springboard=[]
+untagged after AutoFill: app=[] springboard=[] buttons=["Contact", "Passwords", "Credit Card"]
+tel menu: app=["Paste", "AutoFill"] springboard=[]
+tel after AutoFill: app=[] springboard=[] buttons=[]

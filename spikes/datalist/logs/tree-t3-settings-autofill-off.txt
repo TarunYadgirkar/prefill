@@ -1,0 +1,77 @@
+Attributes: Application, 0x106461540, pid: 4400, label: 'Settings'
+Element subtree:
+ →Application, 0x106461540, pid: 4400, label: 'Settings'
+    Window (Main), 0x106461b80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x106461e00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x106463e80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x106460640, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1064621c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x106462080, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x106461f40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x106463ac0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1064626c0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x106462440, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x106462580, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'AutoFill'
+                          Button, 0x106462940, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Safari'
+                          StaticText, 0x106462bc0, {{171.0, 73.7}, {59.7, 20.7}}, label: 'AutoFill'
+                        Other, 0x106462d00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x106462a80, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x106462e40, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x106461180, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x106461a40, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Table, 0x106463200, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x1064630c0, {{0.0, 116.0}, {402.0, 17.7}}
+                                    Other, 0x106463d40, {{0.0, 133.7}, {402.0, 46.0}}, identifier: 'Automatically fill out web forms using your contact or credit card info.'
+                                      Other, 0x106460dc0, {{20.0, 133.7}, {362.0, 46.0}}, label: 'Automatically fill out web forms using your contact or credit card info.'
+                                    Other, 0x106461cc0, {{0.0, 179.7}, {402.0, 17.7}}
+                                    Cell, 0x106461040, {{20.0, 197.3}, {362.0, 53.0}}, identifier: 'ContactInfoEnableSwitch'
+                                      Other, 0x106461400, {{20.0, 197.3}, {362.0, 53.0}}
+                                        Other, 0x1064612c0, {{20.0, 197.3}, {362.0, 53.0}}
+                                          Switch, 0x106462f80, {{36.0, 210.0}, {330.0, 28.0}}, identifier: 'ContactInfoEnableSwitch', label: 'Use Contact Info', value: 0
+                                            Button, 0x1064635c0, {{36.0, 213.7}, {127.7, 20.3}}, identifier: 'ContactInfoEnableSwitch', label: 'Use Contact Info'
+                                            Switch, 0x106463700, {{305.0, 210.0}, {63.0, 28.0}}, value: 0
+                                    Cell, 0x106463480, {{20.0, 250.3}, {362.0, 53.0}}, identifier: 'My Info', label: 'My Info, Alex Rivera'
+                                      Other, 0x106463c00, {{20.0, 250.3}, {331.7, 53.0}}
+                                        Other, 0x106463980, {{20.0, 250.3}, {331.7, 53.0}}
+                                          Button, 0x106463340, {{36.0, 266.7}, {307.7, 20.3}}, identifier: 'My Info', label: 'My Info, Alex Rivera'
+                                            StaticText, 0x106463840, {{36.0, 266.7}, {56.3, 20.3}}, label: 'My Info'
+                                            StaticText, 0x106460a00, {{259.7, 266.7}, {84.0, 20.3}}, label: 'Alex Rivera'
+                                      Other, 0x103619540, {{20.0, 250.3}, {362.0, 53.0}}
+                                        Other, 0x10361b980, {{20.0, 250.3}, {362.0, 53.0}}
+                                      Other, 0x10361bac0, {{20.0, 302.3}, {362.0, 1.0}}
+                                      Button, 0x10361bd40, {{351.7, 269.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x10361b200, {{0.0, 303.3}, {402.0, 17.3}}
+                                    Other, 0x10361b700, {{0.0, 320.7}, {402.0, 17.7}}
+                                    Cell, 0x10361b340, {{20.0, 338.3}, {362.0, 53.0}}, identifier: 'CreditCardEnableSwitch'
+                                      Other, 0x10361b840, {{20.0, 338.3}, {362.0, 53.0}}
+                                        Other, 0x10361bc00, {{20.0, 338.3}, {362.0, 53.0}}
+                                          Switch, 0x103619400, {{36.0, 351.0}, {330.0, 28.0}}, identifier: 'CreditCardEnableSwitch', label: 'Credit Cards', value: 1
+                                            Button, 0x10f11c000, {{36.0, 354.7}, {95.7, 20.3}}, identifier: 'CreditCardEnableSwitch', label: 'Credit Cards'
+                                            Switch, 0x10f11c140, {{305.0, 351.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x10f11c280, {{20.0, 391.3}, {362.0, 53.0}}, identifier: 'CreditCardList', label: 'Saved Credit Cards'
+                                      Other, 0x10f11c3c0, {{20.0, 391.3}, {331.7, 53.0}}
+                                        Other, 0x10f11c500, {{20.0, 391.3}, {331.7, 53.0}}
+                                          StaticText, 0x10f11c640, {{36.0, 407.7}, {147.0, 20.3}}, label: 'Saved Credit Cards'
+                                      Other, 0x10f11c780, {{20.0, 391.3}, {362.0, 53.0}}
+                                        Other, 0x10f11c8c0, {{20.0, 391.3}, {362.0, 53.0}}
+                                      Other, 0x10f11ca00, {{20.0, 443.3}, {362.0, 1.0}}
+                                      Button, 0x10f11cb40, {{351.7, 410.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x10f11cc80, {{0.0, 444.3}, {402.0, 30.0}}, identifier: 'Manage cards in Wallet & Apple Pay Settings.'
+                                      Other, 0x10f11cdc0, {{20.0, 444.3}, {362.0, 30.0}}, label: 'Manage cards in Wallet & Apple Pay Settings.'
+                                    Other, 0x10f11cf00, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                      Other, 0x10f11d040, {{396.0, 464.7}, {3.0, 344.3}}
+                                    Other, 0x10f11d180, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x10f11d2c0, {{65.0, 868.0}, {272.0, 3.0}}
+                        Toolbar, 0x10f11d400, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x10f11d540, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x10f11d680, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10f11d7c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10f11d900, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10f11da40, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x106461540, pid: 4400, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x10f11db80, pid: 4400, label: 'Settings'
+  }

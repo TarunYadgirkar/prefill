@@ -1,0 +1,63 @@
+Attributes: Application, 0x1124c26c0, pid: 47439, label: 'Settings'
+Element subtree:
+ →Application, 0x1124c26c0, pid: 47439, label: 'Settings'
+    Window (Main), 0x1124c0c80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1124c0f00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1124c1040, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1124c1180, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1124c12c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1124c1400, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1124c1540, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1124c1680, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x1124c17c0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x1124c1900, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x1124c1a40, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Extensions'
+                          Button, 0x1124c1b80, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Safari'
+                          StaticText, 0x1124c1cc0, {{157.3, 73.7}, {87.0, 20.7}}, label: 'Extensions'
+                        Other, 0x1124c1e00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x1124c1f40, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x1124c2080, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1124c21c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x1124c2300, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Table, 0x1124c2440, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x1124c2580, {{0.0, 116.0}, {402.0, 55.3}}, identifier: 'Allow these extensions'
+                                      Other, 0x1124c2800, {{20.0, 116.0}, {362.0, 55.3}}, label: 'Allow these extensions'
+                                    Cell, 0x1124c3700, {{20.0, 171.3}, {362.0, 53.0}}, identifier: 'com.tarunyadgirkar.prefill.spike.capture.extension', label: 'Prefill Capture, On'
+                                      Other, 0x1124c3840, {{20.0, 171.3}, {331.7, 53.0}}
+                                        Other, 0x1124c3980, {{20.0, 171.3}, {331.7, 53.0}}
+                                          Button, 0x1124c3ac0, {{34.0, 184.0}, {309.7, 28.0}}, identifier: 'com.tarunyadgirkar.prefill.spike.capture.extension', label: 'Prefill Capture, On'
+                                            Image, 0x1124c3c00, {{34.0, 184.0}, {28.0, 28.0}}, label: 'Extensions customize the way Safari works. Extensions can change the appearance or behavior of web content, add buttons to Safari, and more., On, More Extensions'
+                                            StaticText, 0x1124c3d40, {{76.0, 187.7}, {108.0, 20.3}}, label: 'Prefill Capture'
+                                            StaticText, 0x1124c3e80, {{321.3, 187.7}, {22.3, 20.3}}, label: 'On'
+                                      Other, 0x1078ae080, {{20.0, 171.3}, {362.0, 53.0}}
+                                        Other, 0x1078adf40, {{20.0, 171.3}, {362.0, 53.0}}
+                                      Other, 0x1078ae1c0, {{20.0, 223.3}, {362.0, 1.0}}
+                                      Button, 0x1078aef80, {{351.7, 190.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x1078afc00, {{0.0, 224.3}, {402.0, 62.0}}, identifier: 'Extensions customize the way Safari works. Extensions can change the appearance or behavior of web content, add buttons to Safari, and more.'
+                                      Other, 0x1078afe80, {{20.0, 224.3}, {362.0, 62.0}}, label: 'Extensions customize the way Safari works. Extensions can change the appearance or behavior of web content, add buttons to Safari, and more.'
+                                    Other, 0x1078ad400, {{0.0, 286.3}, {402.0, 17.7}}
+                                    Cell, 0x1078ac640, {{20.0, 304.0}, {362.0, 53.0}}, identifier: 'More Extensions', label: 'More Extensions'
+                                      Other, 0x1078ae6c0, {{20.0, 304.0}, {362.0, 53.0}}
+                                        Other, 0x1078ade00, {{20.0, 304.0}, {362.0, 53.0}}
+                                          Button, 0x1078ae440, {{36.0, 320.3}, {126.0, 20.3}}, identifier: 'More Extensions', label: 'More Extensions'
+                                      Other, 0x1078ad2c0, {{20.0, 304.0}, {362.0, 53.0}}
+                                        Other, 0x1078ad040, {{20.0, 304.0}, {362.0, 53.0}}
+                                      Other, 0x1078ada40, {{20.0, 356.0}, {362.0, 1.0}}
+                                    Other, 0x1078adcc0, {{0.0, 357.0}, {402.0, 17.3}}
+                                    Other, 0x1078ad540, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                      Other, 0x1078ad180, {{396.0, 564.7}, {3.0, 244.3}}
+                                    Other, 0x1078af840, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x1078af200, {{65.0, 868.0}, {272.0, 3.0}}
+                        Toolbar, 0x1078af340, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x104a77840, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x111053980, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x111051cc0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x1110535c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x111053200, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x1124c26c0, pid: 47439, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x111053340, pid: 47439, label: 'Settings'
+  }

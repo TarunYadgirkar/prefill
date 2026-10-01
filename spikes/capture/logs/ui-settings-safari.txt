@@ -1,0 +1,385 @@
+Attributes: Application, 0x111053980, pid: 47439, label: 'Settings'
+Element subtree:
+ →Application, 0x111053980, pid: 47439, label: 'Settings'
+    Window (Main), 0x111051cc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1110535c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x111053200, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x111053340, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x111052300, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x111052440, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x111052580, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1110526c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x111052800, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x111052940, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x111052a80, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Safari'
+                          Button, 0x111052bc0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Apps'
+                          StaticText, 0x111052d00, {{177.7, 73.7}, {46.3, 20.7}}, label: 'Safari'
+                        Other, 0x1110530c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x111052f80, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x111052e40, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1110521c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x111051540, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Table, 0x111051900, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x111051a40, {{0.0, 116.0}, {402.0, 55.3}}, identifier: 'Allow Safari to Access'
+                                      Other, 0x111051b80, {{20.0, 116.0}, {362.0, 55.3}}, label: 'Allow Safari to Access'
+                                    Cell, 0x111050000, {{20.0, 171.3}, {362.0, 53.0}}, identifier: 'SIRI', label: 'Siri'
+                                      Other, 0x111053ac0, {{20.0, 171.3}, {331.7, 53.0}}
+                                        Other, 0x111053c00, {{20.0, 171.3}, {331.7, 53.0}}
+                                          Button, 0x111053d40, {{34.0, 184.0}, {66.0, 28.0}}, identifier: 'SIRI', label: 'Siri'
+                                            Image, 0x111053e80, {{34.0, 184.0}, {28.0, 28.0}}
+                                            StaticText, 0x104a77840, {{34.0, 184.0}, {66.0, 28.0}}, label: 'Siri'
+                                      Other, 0x1078af200, {{20.0, 171.3}, {362.0, 53.0}}
+                                        Other, 0x1078af340, {{20.0, 171.3}, {362.0, 53.0}}
+                                      Other, 0x1078af840, {{76.0, 223.3}, {290.0, 1.0}}
+                                      Button, 0x1078ad180, {{351.7, 190.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Cell, 0x1078ad400, {{20.0, 224.3}, {362.0, 53.0}}, identifier: 'SEARCH', label: 'Search'
+                                      Other, 0x1078ad2c0, {{20.0, 224.3}, {331.7, 53.0}}
+                                        Other, 0x1078ad040, {{20.0, 224.3}, {331.7, 53.0}}
+                                          Button, 0x1078ada40, {{34.0, 237.0}, {95.3, 28.0}}, identifier: 'SEARCH', label: 'Search'
+                                            Image, 0x1078ad540, {{34.0, 237.0}, {28.0, 28.0}}
+                                            StaticText, 0x1078adcc0, {{34.0, 237.0}, {95.3, 28.0}}, label: 'Search'
+                                      Other, 0x1078ade00, {{20.0, 224.3}, {362.0, 53.0}}
+                                        Other, 0x1078ae440, {{20.0, 224.3}, {362.0, 53.0}}
+                                      Other, 0x1078ae6c0, {{20.0, 276.3}, {362.0, 1.0}}
+                                      Button, 0x1078ac640, {{351.7, 243.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x1078afe80, {{0.0, 277.3}, {402.0, 17.3}}
+                                    Other, 0x1078afc00, {{0.0, 294.7}, {402.0, 17.7}}
+                                    Cell, 0x1078ae080, {{20.0, 312.3}, {362.0, 53.0}}, identifier: 'com.apple.settings.DefaultBrowser', label: 'Default Browser App, Safari'
+                                      Other, 0x1078adf40, {{20.0, 312.3}, {331.7, 53.0}}
+                                        Other, 0x1078ae1c0, {{20.0, 312.3}, {331.7, 53.0}}
+                                          Button, 0x1078aef80, {{36.0, 328.7}, {307.7, 20.3}}, identifier: 'com.apple.settings.DefaultBrowser', label: 'Default Browser App, Safari'
+                                            StaticText, 0x1117d8000, {{36.0, 328.7}, {156.7, 20.3}}, label: 'Default Browser App'
+                                            StaticText, 0x1117d8140, {{300.0, 328.7}, {43.7, 20.3}}, label: 'Safari'
+                                      Other, 0x1117d8280, {{20.0, 312.3}, {362.0, 53.0}}
+                                        Other, 0x1117d83c0, {{20.0, 312.3}, {362.0, 53.0}}
+                                      Other, 0x1117d8500, {{20.0, 364.3}, {362.0, 1.0}}
+                                      Button, 0x1117d8640, {{351.7, 331.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x1117d8780, {{0.0, 365.3}, {402.0, 17.3}}
+                                    Other, 0x1117d88c0, {{0.0, 382.7}, {402.0, 38.0}}, identifier: 'Search'
+                                      Other, 0x1117d8a00, {{20.0, 382.7}, {362.0, 38.0}}, label: 'Search'
+                                    Cell, 0x1117d8b40, {{20.0, 420.7}, {362.0, 53.0}}, identifier: 'SEARCH_ENGINE_SETTING', label: 'Search Engine, Google'
+                                      Other, 0x1117d8c80, {{20.0, 420.7}, {331.7, 53.0}}
+                                        Other, 0x1117d8dc0, {{20.0, 420.7}, {331.7, 53.0}}
+                                          Button, 0x1117d8f00, {{36.0, 437.0}, {307.7, 20.3}}, identifier: 'SEARCH_ENGINE_SETTING', label: 'Search Engine, Google'
+                                            StaticText, 0x1117d9040, {{36.0, 437.0}, {109.3, 20.3}}, label: 'Search Engine'
+                                            StaticText, 0x1117d9180, {{289.0, 437.0}, {54.7, 20.3}}, label: 'Google'
+                                      Other, 0x1117d92c0, {{20.0, 420.7}, {362.0, 53.0}}
+                                        Other, 0x1117d9400, {{20.0, 420.7}, {362.0, 53.0}}
+                                      Other, 0x1117d9540, {{36.0, 472.7}, {330.0, 1.0}}
+                                      Button, 0x1117d9680, {{351.7, 440.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Cell, 0x1117d97c0, {{20.0, 473.7}, {362.0, 53.0}}, identifier: 'PRIVATE_BROWSING_USES_NORMAL_BROWSING_SEARCH_ENGINE_SELECTION'
+                                      Other, 0x1117d9900, {{20.0, 473.7}, {362.0, 53.0}}
+                                        Other, 0x1117d9a40, {{20.0, 473.7}, {362.0, 53.0}}
+                                          Switch, 0x1117d9b80, {{36.0, 486.3}, {330.0, 28.0}}, identifier: 'PRIVATE_BROWSING_USES_NORMAL_BROWSING_SEARCH_ENGINE_SELECTION', label: 'Also Use in Private Browsing', value: 1
+                                            Button, 0x1117d9cc0, {{36.0, 490.0}, {216.0, 20.3}}, identifier: 'PRIVATE_BROWSING_USES_NORMAL_BROWSING_SEARCH_ENGINE_SELECTION', label: 'Also Use in Private Browsing'
+                                            Switch, 0x1117d9e00, {{305.0, 486.3}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117d9f40, {{20.0, 526.7}, {362.0, 53.0}}, identifier: 'SEARCH_SUGGESTION_SETTING'
+                                      Other, 0x1117da080, {{20.0, 526.7}, {362.0, 53.0}}
+                                        Other, 0x1117da1c0, {{20.0, 526.7}, {362.0, 53.0}}
+                                          Switch, 0x1117da300, {{36.0, 539.3}, {330.0, 28.0}}, identifier: 'SEARCH_SUGGESTION_SETTING', label: 'Search Engine Suggestions', value: 1
+                                            Button, 0x1117da440, {{36.0, 543.0}, {208.0, 20.3}}, identifier: 'SEARCH_SUGGESTION_SETTING', label: 'Search Engine Suggestions'
+                                            Switch, 0x1117da580, {{305.0, 539.3}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117da6c0, {{20.0, 579.7}, {362.0, 53.0}}, identifier: 'SIRI_SUGGESTIONS'
+                                      Other, 0x1117da800, {{20.0, 579.7}, {362.0, 53.0}}
+                                        Other, 0x1117da940, {{20.0, 579.7}, {362.0, 53.0}}
+                                          Switch, 0x1117daa80, {{36.0, 592.3}, {330.0, 28.0}}, identifier: 'SIRI_SUGGESTIONS', label: 'Safari Suggestions', value: 1
+                                            Button, 0x1117dabc0, {{36.0, 596.0}, {142.7, 20.3}}, identifier: 'SIRI_SUGGESTIONS', label: 'Safari Suggestions'
+                                            Switch, 0x1117dad00, {{305.0, 592.3}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117dae40, {{20.0, 632.7}, {362.0, 53.0}}, identifier: 'SHOW_RECENT_SEARCHES'
+                                      Other, 0x1117daf80, {{20.0, 632.7}, {362.0, 53.0}}
+                                        Other, 0x1117db0c0, {{20.0, 632.7}, {362.0, 53.0}}
+                                          Switch, 0x1117db200, {{36.0, 645.3}, {330.0, 28.0}}, identifier: 'SHOW_RECENT_SEARCHES', label: 'Show Recent Searches', value: 1
+                                            Button, 0x1117db340, {{36.0, 649.0}, {175.0, 20.3}}, identifier: 'SHOW_RECENT_SEARCHES', label: 'Show Recent Searches'
+                                            Switch, 0x1117db480, {{305.0, 645.3}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117db5c0, {{20.0, 685.7}, {362.0, 53.0}}, identifier: 'SITE_SPECIFIC_SEARCH', label: 'Quick Website Search, On'
+                                      Other, 0x1117db700, {{20.0, 685.7}, {331.7, 53.0}}
+                                        Other, 0x1117db840, {{20.0, 685.7}, {331.7, 53.0}}
+                                          Button, 0x1117db980, {{36.0, 702.0}, {307.7, 20.3}}, identifier: 'SITE_SPECIFIC_SEARCH', label: 'Quick Website Search, On'
+                                            StaticText, 0x1117dbac0, {{36.0, 702.0}, {167.3, 20.3}}, label: 'Quick Website Search'
+                                            StaticText, 0x1117dbc00, {{321.3, 702.0}, {22.3, 20.3}}, label: 'On'
+                                      Other, 0x1117dbd40, {{20.0, 685.7}, {362.0, 53.0}}
+                                        Other, 0x1117dbe80, {{20.0, 685.7}, {362.0, 53.0}}
+                                      Other, 0x1117dc000, {{36.0, 737.7}, {330.0, 1.0}}
+                                      Button, 0x1117dc140, {{351.7, 705.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Cell, 0x1117dc280, {{20.0, 738.7}, {362.0, 53.0}}, identifier: 'ENABLE_PREFETCHING'
+                                      Other, 0x1117dc3c0, {{20.0, 738.7}, {362.0, 53.0}}
+                                        Other, 0x1117dc500, {{20.0, 738.7}, {362.0, 53.0}}
+                                          Switch, 0x1117dc640, {{36.0, 751.3}, {330.0, 28.0}}, identifier: 'ENABLE_PREFETCHING', label: 'Preload Top Hit', value: 1
+                                            Button, 0x1117dc780, {{36.0, 755.0}, {116.7, 20.3}}, identifier: 'ENABLE_PREFETCHING', label: 'Preload Top Hit'
+                                            Switch, 0x1117dc8c0, {{305.0, 751.3}, {63.0, 28.0}}, value: 1
+                                    Other, 0x1117dca00, {{0.0, 776.0}, {402.0, 64.0}}
+                                      TextView, 0x1117dcb40, {{36.0, 799.7}, {330.0, 48.0}}, value: Private Browsing u...
+                                        TextView, 0x1117dcc80, {{36.0, 799.7}, {312.4, 48.0}}, label: 'Private Browsing uses on-device information to provide search suggestions. No data is shared with the service provider. About Search & Privacy…'
+                                          Link, 0x1117dcdc0, {{163.1, 831.7}, {152.0, 16.0}}, label: 'About Search & Privacy…'
+                                        Other, 0x1117dcf00, {{60.0, 820.7}, {282.0, 24.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                          Other, 0x1117dd040, {{-3.0, 841.7}, {36.0, 3.0}}
+                                    Other, 0x1117dd180, {{0.0, 855.7}, {402.0, 38.0}}, identifier: 'General'
+                                      Other, 0x1117dd2c0, {{20.0, 855.7}, {362.0, 38.0}}, label: 'General'
+                                    Cell, 0x1117dd400, {{20.0, 893.7}, {362.0, 53.0}}, identifier: 'AUTO_FILL', label: 'AutoFill'
+                                      Other, 0x1117dd540, {{20.0, 893.7}, {331.7, 53.0}}
+                                        Other, 0x1117dd680, {{20.0, 893.7}, {331.7, 53.0}}
+                                          StaticText, 0x1117dd7c0, {{36.0, 910.0}, {56.3, 20.3}}, label: 'AutoFill'
+                                      Other, 0x1117dd900, {{20.0, 893.7}, {362.0, 53.0}}
+                                        Other, 0x1117dda40, {{20.0, 893.7}, {362.0, 53.0}}
+                                      Other, 0x1117ddb80, {{36.0, 945.7}, {330.0, 1.0}}
+                                      Button, 0x1117ddcc0, {{351.7, 913.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Cell, 0x1117dde00, {{20.0, 946.7}, {362.0, 53.0}}, identifier: 'FAVORITES_FOLDER', label: 'Start Page Favorites, Favorites'
+                                      Other, 0x1117ddf40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117de080, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Button, 0x1117de1c0, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117de300, {{0.0, 116.0}, {330.0, 1.0}}
+                                      Other, 0x1117de440, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117de580, {{0.0, 116.0}, {331.7, 53.0}}
+                                          Button, 0x1117de6c0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'FAVORITES_FOLDER', label: 'Start Page Favorites, Favorites'
+                                            StaticText, 0x1117de800, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Favorites'
+                                            StaticText, 0x1117de940, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Start Page Favorites'
+                                    Cell, 0x1117dea80, {{20.0, 999.7}, {362.0, 53.0}}, identifier: 'BLOCK_POPUPS'
+                                      Other, 0x1117debc0, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117ded00, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x1117dee40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'BLOCK_POPUPS', label: 'Block Pop-ups', value: 1
+                                            Button, 0x1117def80, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'BLOCK_POPUPS', label: 'Block Pop-ups'
+                                            Switch, 0x1117df0c0, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117df200, {{20.0, 1052.7}, {362.0, 53.0}}, identifier: 'WEB_EXTENSIONS', label: 'Extensions'
+                                      Other, 0x1117df340, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117df480, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Button, 0x1117df5c0, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117df700, {{0.0, 116.0}, {330.0, 1.0}}
+                                      Other, 0x1117df840, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117df980, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117dfac0, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Extensions'
+                                    Cell, 0x1117dfc00, {{20.0, 1105.7}, {362.0, 53.0}}, identifier: 'DOWNLOADS', label: 'Downloads, On My iPhone'
+                                      Other, 0x1117dfd40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117dfe80, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Button, 0x1117e0000, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e0140, {{0.0, 116.0}, {362.0, 1.0}}
+                                      Other, 0x1117e0280, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e03c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                          Button, 0x1117e0500, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'DOWNLOADS', label: 'Downloads, On My iPhone'
+                                            StaticText, 0x1117e0640, {{0.0, 0.0}, {0.0, 0.0}}, label: 'On My iPhone'
+                                            StaticText, 0x1117e0780, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Downloads'
+                                    Other, 0x1117e08c0, {{0.0, 893.7}, {402.0, 17.3}}
+                                    Other, 0x1117e0a00, {{0.0, 1176.0}, {402.0, 45.3}}
+                                      StaticText, 0x1117e0b40, {{0.0, 1176.0}, {402.0, 45.3}}, label: 'Tabs'
+                                    Cell, 0x1117e0c80, {{20.0, 1221.3}, {362.0, 167.3}}, identifier: 'SEARCH_POSITION'
+                                      Button, 0x1117e0dc0, {{0.0, 116.0}, {62.7, 137.3}}
+                                        StaticText, 0x1117e0f00, {{0.0, 116.0}, {50.3, 19.0}}, label: 'Bottom'
+                                        StaticText, 0x1117e1040, {{0.0, 116.0}, {0.0, 0.0}}
+                                      Button, 0x1117e1180, {{0.0, 116.0}, {62.7, 137.3}}
+                                        StaticText, 0x1117e12c0, {{0.0, 116.0}, {25.7, 19.0}}, label: 'Top'
+                                        StaticText, 0x1117e1400, {{0.0, 116.0}, {0.0, 0.0}}
+                                      Other, 0x1117e1540, {{0.0, 116.0}, {330.0, 1.0}}
+                                      Button, 0x1117e1680, {{0.0, 116.0}, {62.7, 137.3}}, Selected
+                                        StaticText, 0x1117e17c0, {{0.0, 116.0}, {62.7, 19.0}}, label: 'Compact'
+                                        StaticText, 0x1117e1900, {{0.0, 116.0}, {0.0, 0.0}}
+                                    Cell, 0x1117e1a40, {{20.0, 1388.7}, {362.0, 53.0}}, identifier: 'SHOW_TAB_BAR'
+                                      Other, 0x1117e1b80, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e1cc0, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x1117e1e00, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'SHOW_TAB_BAR', label: 'Landscape Tab Bar', value: 1
+                                            Button, 0x1117e1f40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'SHOW_TAB_BAR', label: 'Landscape Tab Bar'
+                                            Switch, 0x1117e2080, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117e21c0, {{20.0, 1441.7}, {362.0, 53.0}}, identifier: 'NeverUseBackgroundColorInNavigationBar'
+                                      Other, 0x1117e2300, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e2440, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x1117e2580, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'NeverUseBackgroundColorInNavigationBar', label: 'Allow Website Tinting', value: 1
+                                            Button, 0x1117e26c0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'NeverUseBackgroundColorInNavigationBar', label: 'Allow Website Tinting'
+                                            Switch, 0x1117e2800, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x1117e2940, {{20.0, 1494.7}, {362.0, 53.0}}, identifier: 'OPEN_LINKS_IN_BACKGROUND_IPHONE', label: 'Open Links, In New Tab'
+                                      Other, 0x1117e2a80, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e2bc0, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Button, 0x1117e2d00, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e2e40, {{0.0, 116.0}, {330.0, 1.0}}
+                                      Other, 0x1117e2f80, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e30c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                          Button, 0x1117e3200, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'OPEN_LINKS_IN_BACKGROUND_IPHONE', label: 'Open Links, In New Tab'
+                                            StaticText, 0x1117e3340, {{0.0, 0.0}, {0.0, 0.0}}, label: 'In New Tab'
+                                            StaticText, 0x1117e3480, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Open Links'
+                                    Cell, 0x1117e35c0, {{20.0, 1547.7}, {362.0, 53.0}}, identifier: 'CLOSE_TABS', label: 'Close Tabs, Manually'
+                                      Other, 0x1117e3700, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e3840, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Button, 0x1117e3980, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e3ac0, {{0.0, 116.0}, {362.0, 1.0}}
+                                      Other, 0x1117e3c00, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e3d40, {{0.0, 116.0}, {331.7, 53.0}}
+                                          Button, 0x1117e3e80, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'CLOSE_TABS', label: 'Close Tabs, Manually'
+                                            StaticText, 0x111024000, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Manually'
+                                            StaticText, 0x111024140, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Close Tabs'
+                                    Other, 0x111024280, {{0.0, 1221.3}, {402.0, 46.0}}
+                                      StaticText, 0x1110243c0, {{0.0, 1221.3}, {402.0, 46.0}}, label: 'Allow Safari to automatically close tabs that haven’t recently been viewed.'
+                                    Other, 0x111024500, {{0.0, 1646.7}, {402.0, 45.3}}
+                                      StaticText, 0x111024640, {{0.0, 1646.7}, {402.0, 45.3}}, label: 'Profiles'
+                                    Cell, 0x111024780, {{20.0, 1692.0}, {362.0, 53.0}}, identifier: 'NEW_PROFILE', label: 'New Profile'
+                                      Other, 0x1110248c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111024a00, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111024b40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111024c80, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Button, 0x111024dc0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'NEW_PROFILE', label: 'New Profile'
+                                      Other, 0x111024f00, {{0.0, 116.0}, {362.0, 1.0}}
+                                    Other, 0x111025040, {{0.0, 1692.0}, {402.0, 174.0}}
+                                      StaticText, 0x111025180, {{0.0, 1692.0}, {402.0, 174.0}}, label: 'Profiles allow you to keep your browsing separated. You may want to set up a profile for work or school. Your history, cookies, and website data will be distinct per profile.
+
+When you start using profiles, a default Personal profile will automatically be created based on your current settings. You can create additional profiles, add a name and an icon to each, and also set custom Favorites to personalize the experience.'
+                                    Other, 0x1110252c0, {{0.0, 1919.0}, {402.0, 38.0}}
+                                      StaticText, 0x111025400, {{0.0, 1919.0}, {402.0, 38.0}}, label: 'Privacy & Security'
+                                    Cell, 0x111025540, {{20.0, 1957.0}, {362.0, 53.0}}, identifier: 'TRACKER_PROTECTION'
+                                      Other, 0x111025680, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1110257c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x111025900, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'TRACKER_PROTECTION', label: 'Prevent Cross-Site Tracking', value: 1
+                                            Button, 0x111025a40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'TRACKER_PROTECTION', label: 'Prevent Cross-Site Tracking'
+                                            Switch, 0x111025b80, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x111025cc0, {{20.0, 2010.0}, {362.0, 53.0}}, identifier: 'Hide IP Address', label: 'Hide IP Address, Off'
+                                      Other, 0x111025e00, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111025f40, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111026080, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1110261c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                          Button, 0x111026300, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Hide IP Address', label: 'Hide IP Address, Off'
+                                            StaticText, 0x111026440, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Off'
+                                            StaticText, 0x111026580, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Hide IP Address'
+                                      Button, 0x1110266c0, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x111026800, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x111026940, {{20.0, 2063.0}, {362.0, 73.3}}, identifier: 'PrivateBrowsingRequiresAuthentication'
+                                      Other, 0x111026a80, {{0.0, 116.0}, {362.0, 73.3}}
+                                        Other, 0x111026bc0, {{0.0, 116.0}, {362.0, 73.3}}
+                                          Switch, 0x111026d00, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'PrivateBrowsingRequiresAuthentication', label: 'Require Passcode to Unlock Private Browsing', value: 0
+                                            Button, 0x111026e40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'PrivateBrowsingRequiresAuthentication', label: 'Require Passcode to Unlock Private Browsing'
+                                            Switch, 0x111026f80, {{0.0, 116.0}, {63.0, 28.0}}, value: 0
+                                    Cell, 0x1110270c0, {{20.0, 2136.3}, {362.0, 53.0}}, identifier: 'WARN_ABOUT_FRAUDULENT_WEBSITES'
+                                      Other, 0x111027200, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111027340, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x111027480, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'WARN_ABOUT_FRAUDULENT_WEBSITES', label: 'Fraudulent Website Warning', value: 1
+                                            Button, 0x1110275c0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'WARN_ABOUT_FRAUDULENT_WEBSITES', label: 'Fraudulent Website Warning'
+                                            Switch, 0x111027700, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x111027840, {{20.0, 2189.3}, {362.0, 53.0}}, identifier: 'WARN_ABOUT_INSECURE_CONNECTIONS'
+                                      Other, 0x111027980, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111027ac0, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x111027c00, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'WARN_ABOUT_INSECURE_CONNECTIONS', label: 'Not Secure Connection Warning', value: 0
+                                            Button, 0x111027d40, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'WARN_ABOUT_INSECURE_CONNECTIONS', label: 'Not Secure Connection Warning'
+                                            Switch, 0x111027e80, {{0.0, 116.0}, {63.0, 28.0}}, value: 0
+                                    Cell, 0x111034000, {{20.0, 2242.3}, {362.0, 53.0}}, identifier: 'Highlights in Reader'
+                                      Other, 0x111034140, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111034280, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x1110343c0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Highlights in Reader', label: 'Highlights in Reader', value: 1
+                                            Button, 0x111034500, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'Highlights in Reader', label: 'Highlights in Reader'
+                                            Switch, 0x111034640, {{0.0, 116.0}, {63.0, 28.0}}, value: 1
+                                    Other, 0x111034780, {{0.0, 1957.0}, {402.0, 32.0}}
+                                      Link, 0x1110348c0, {{0.0, 1957.0}, {402.0, 32.0}}, label: 'About Safari & Privacy…'
+                                        Link, 0x111034a00, {{0.0, 115.0}, {0.0, 17.7}}, label: 'About Safari & Privacy…'
+                                    Other, 0x111034b40, {{0.0, 2327.3}, {402.0, 38.0}}
+                                      StaticText, 0x111034c80, {{0.0, 2327.3}, {402.0, 38.0}}, label: 'History and Website Data'
+                                    Cell, 0x111034dc0, {{20.0, 2365.3}, {362.0, 53.0}}, identifier: 'IMPORT_BUTTON', label: 'Import'
+                                      Other, 0x111034f00, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111035040, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111035180, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1110352c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Button, 0x111035400, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'IMPORT_BUTTON', label: 'Import'
+                                      Other, 0x111035540, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x111035680, {{20.0, 2418.3}, {362.0, 53.0}}, identifier: 'EXPORT_BUTTON', label: 'Export'
+                                      Other, 0x1110357c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111035900, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111035a40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111035b80, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Button, 0x111035cc0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'EXPORT_BUTTON', label: 'Export'
+                                      Other, 0x111035e00, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x111035f40, {{20.0, 2471.3}, {362.0, 53.0}}, identifier: 'CLEAR_HISTORY_AND_DATA', label: 'Clear History and Website Data'
+                                      Other, 0x111036080, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1110361c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111036300, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111036440, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Button, 0x111036580, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'CLEAR_HISTORY_AND_DATA', label: 'Clear History and Website Data'
+                                      Other, 0x1110366c0, {{0.0, 116.0}, {362.0, 1.0}}
+                                    Other, 0x111036800, {{0.0, 2365.3}, {402.0, 17.3}}
+                                    Other, 0x111036940, {{0.0, 2541.7}, {402.0, 38.0}}
+                                      StaticText, 0x111036a80, {{0.0, 2541.7}, {402.0, 38.0}}, label: 'Settings for Websites'
+                                    Cell, 0x111036bc0, {{20.0, 2579.7}, {362.0, 53.0}}, identifier: 'NOTIFY_ME_WHEN', label: 'Notify Me'
+                                      Other, 0x111036d00, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111036e40, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111036f80, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1110370c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x111037200, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Notify Me'
+                                      Button, 0x111037340, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x111037480, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1110375c0, {{20.0, 2632.7}, {362.0, 53.0}}, identifier: 'Page Zoom', label: 'Page Zoom'
+                                      Other, 0x111037700, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x111037840, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111037980, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x111037ac0, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x111037c00, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Page Zoom'
+                                      Button, 0x111037d40, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x111037e80, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1117e4000, {{20.0, 2685.7}, {362.0, 53.0}}, identifier: 'Request Desktop Website', label: 'Request Desktop Website'
+                                      Other, 0x1117e4140, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e4280, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x1117e43c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e4500, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117e4640, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Request Desktop Website'
+                                      Button, 0x1117e4780, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e48c0, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1117e4a00, {{20.0, 2738.7}, {362.0, 53.0}}, identifier: 'Reader', label: 'Reader'
+                                      Other, 0x1117e4b40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e4c80, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x1117e4dc0, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e4f00, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117e5040, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Reader'
+                                      Button, 0x1117e5180, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e52c0, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1117e5400, {{20.0, 2791.7}, {362.0, 53.0}}, identifier: 'Camera', label: 'Camera'
+                                      Other, 0x1117e5540, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e5680, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x1117e57c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e5900, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117e5a40, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Camera'
+                                      Button, 0x1117e5b80, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e5cc0, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1117e5e00, {{20.0, 2844.7}, {362.0, 53.0}}, identifier: 'Microphone', label: 'Microphone'
+                                      Other, 0x1117e5f40, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e6080, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x1117e61c0, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e6300, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117e6440, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Microphone'
+                                      Button, 0x1117e6580, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e66c0, {{0.0, 116.0}, {330.0, 1.0}}
+                                    Cell, 0x1117e6800, {{20.0, 2897.7}, {362.0, 53.0}}, identifier: 'Location', label: 'Location'
+                                      Other, 0x1117e6940, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e6a80, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x1117e6bc0, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x1117e6d00, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x1117e6e40, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Location'
+                                      Button, 0x1117e6f80, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x1117e70c0, {{0.0, 116.0}, {362.0, 1.0}}
+                                    Other, 0x1117e7200, {{0.0, 2579.7}, {402.0, 17.3}}
+                                    Other, 0x1117e7340, {{0.0, 2968.0}, {402.0, 45.3}}
+                                      StaticText, 0x1117e7480, {{0.0, 2968.0}, {402.0, 45.3}}, label: 'Reading List'
+                                    Cell, 0x1117e75c0, {{20.0, 3013.3}, {362.0, 53.0}}, identifier: 'OFFLINE_READING_LIST'
+                                      Other, 0x1117e7700, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1117e7840, {{0.0, 116.0}, {362.0, 53.0}}
+                                          Switch, 0x1117e7980, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'OFFLINE_READING_LIST', label: 'Automatically Save Offline', value: 0
+                                            Button, 0x1117e7ac0, {{0.0, 0.0}, {0.0, 0.0}}, identifier: 'OFFLINE_READING_LIST', label: 'Automatically Save Offline'
+                                            Switch, 0x1117e7c00, {{0.0, 116.0}, {63.0, 28.0}}, value: 0
+                                    Other, 0x1117e7d40, {{0.0, 3013.3}, {402.0, 46.0}}
+                                      StaticText, 0x1117e7e80, {{0.0, 3013.3}, {402.0, 46.0}}, label: 'Automatically save all Reading List items from iCloud for offline reading.'
+                                    Other, 0x111840000, {{0.0, 3112.3}, {402.0, 17.7}}
+                                    Cell, 0x111840140, {{20.0, 3130.0}, {362.0, 53.0}}, identifier: 'ADVANCED', label: 'Advanced'
+                                      Other, 0x111840280, {{0.0, 116.0}, {362.0, 53.0}}
+                                        Other, 0x1118403c0, {{0.0, 116.0}, {362.0, 53.0}}
+                                      Other, 0x111840500, {{0.0, 116.0}, {331.7, 53.0}}
+                                        Other, 0x111840640, {{0.0, 116.0}, {331.7, 53.0}}
+                                          StaticText, 0x111840780, {{0.0, 0.0}, {0.0, 0.0}}, label: 'Advanced'
+                                      Button, 0x1118408c0, {{0.0, 116.0}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                      Other, 0x111840a00, {{0.0, 116.0}, {362.0, 1.0}}
+                                    Other, 0x111840b40, {{0.0, 3130.0}, {402.0, 17.3}}
+                                    Other, 0x111840c80, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 5 pages', value: 0%
+                                      Other, 0x111840dc0, {{396.0, 119.0}, {3.0, 221.3}}
+                                    Other, 0x111840f00, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x111841040, {{65.0, 868.0}, {272.0, 3.0}}
+                        Toolbar, 0x111841180, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x1118412c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x111841400, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x111841540, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x111841680, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x1118417c0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x111053980, pid: 47439, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x111841900, pid: 47439, label: 'Settings'
+  }

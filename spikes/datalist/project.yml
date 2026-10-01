@@ -1,0 +1,59 @@
+name: DatalistSpike
+options:
+  bundleIdPrefix: com.tarunyadgirkar.prefill.spike.datalist
+  deploymentTarget:
+    iOS: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Manual
+    DEVELOPMENT_TEAM: ""
+    GENERATE_INFOPLIST_FILE: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+targets:
+  DatalistApp:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.spike.datalist
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Datalist Spike
+    dependencies:
+      - target: DatalistExtension
+        embed: true
+  DatalistExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Extension/SafariWebExtensionHandler.swift
+      - path: Extension/Resources
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.spike.datalist.extension
+        INFOPLIST_FILE: Extension/Info.plist
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Datalist Spike Extension
+  DatalistUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.spike.datalist.uitests
+        TEST_TARGET_NAME: DatalistApp
+        SWIFT_STRICT_CONCURRENCY: minimal
+    dependencies:
+      - target: DatalistApp
+schemes:
+  DatalistSpike:
+    build:
+      targets:
+        DatalistApp: all
+        DatalistUITests: [test]
+    test:
+      targets: [DatalistUITests]

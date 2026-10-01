@@ -1,0 +1,7 @@
+2026-09-30 23:59:39.066 Df TextInsertProvider[53667:c83be7] [com.tarunyadgirkar.prefill.spike.textinsert:provider] SPIKE completeRequest completion expired=false
+2026-10-01 00:00:26.907 Df TextInsertSpike[54296:c8478f] [com.tarunyadgirkar.prefill.spike.textinsert:app] SPIKE native Email editingDidBegin
+2026-10-01 00:00:36.525 Df TextInsertProvider[54388:c849c1] [com.tarunyadgirkar.prefill.spike.textinsert:provider] SPIKE prepareInterfaceForUserChoosingTextToInsert
+2026-10-01 00:00:36.525 Df TextInsertProvider[54388:c849c1] [com.tarunyadgirkar.prefill.spike.textinsert:provider] SPIKE using UIKit list
+2026-10-01 00:00:44.461 Df TextInsertProvider[54388:c849c1] [com.tarunyadgirkar.prefill.spike.textinsert:provider] SPIKE completeRequest(withTextToInsert:) value=ti-two@example.net
+2026-10-01 00:00:44.489 Df TextInsertSpike[54296:c8478f] [com.tarunyadgirkar.prefill.spike.textinsert:app] SPIKE native Email editingDidEnd
+2026-10-01 00:00:44.984 Df TextInsertProvider[54388:c84b04] [com.tarunyadgirkar.prefill.spike.textinsert:provider] SPIKE completeRequest completion expired=false

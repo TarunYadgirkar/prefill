@@ -1,0 +1,94 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-30 23:21:01.432 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.439 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.454 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.456 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.458 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:01.460 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.087 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Received action(s) in scene-update: <FBSceneSnapshotAction: 0x148ea0073>
+2026-09-30 23:21:02.098 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.101 Df Probe[99802:c4732c] [com.apple.BackBoard:EventDelivery] policyStatus:<0x109921960; _UIKeyboardFocusAssistant-0x106c734e0; fb/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB; <none; generation: 0>> was:<ancestor; generation: 388; finalStringToken>
+2026-09-30 23:21:02.101 Df Probe[99802:c4732c] [com.apple.BackBoard:EventDelivery] policyStatus:<0x109920310; _UIKeyWindowSceneObserver-0x109a269a0; fb/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB; <none; generation: 0>> was:<ancestor; generation: 388; finalStringToken>
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Will add backgroundTask with taskName: _UIRemoteKeyboard XPC disconnection, expirationHandler: (null)
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Created background task <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0).
+2026-09-30 23:21:02.101 Df Probe[99802:c472ff] [com.apple.KeyboardArbiter:Client] com.tarunyadgirkar.prefill.spike.contacts.probe(99802) invalidateConnection (appDidSuspend)
+2026-09-30 23:21:02.139 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Sending action(s): <FBSSceneSnapshotRequestAction: 0x185da0000>
+2026-09-30 23:21:02.178 Df Probe[99802:c472ff] [com.apple.FrontBoard:SceneClient] [(FBSceneManager):sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB] Sending action(s): <FBSSceneSnapshotRequestAction: 0x185da0001>
+2026-09-30 23:21:02.216 Df Probe[99802:c472ff] [com.apple.UIKit:KeyboardFocusAssistant] Event deferring policy changed: finalScene:Y->N (token: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB)
+2026-09-30 23:21:02.216 Df Probe[99802:c472ff] [com.apple.UIKit:KeyWindow] Scene target of keyboard event deferring environment did change: target=0; ancestor=0; scene: UIWindowScene: 0x1098e3c00; scene identity: com.apple.frontboard.systemappservices/FBSceneManager:sceneID%3Acom.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.218 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Ending task with identifier 2 and description: <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0), _expireHandler: (null)
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:BackgroundTask] Decrementing reference count for assertion <BKSProcessAssertion: 0x10ad94be0> (used by background task with identifier 2: <_UIBackgroundTaskInfo: 0x109810d40>: taskID = 2, taskName = _UIRemoteKeyboard XPC disconnection, creationTime = 516055 (elapsed = 0))
+2026-09-30 23:21:02.219 Df Probe[99802:c472ff] [com.apple.UIKit:AppLifecycle] sceneOfRecord: sceneID: sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB  persistentID: CFE98414-B93E-4DEA-A003-C9F5242856EB
+2026-09-30 23:21:02.664 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:AlertItems] Will deactivate alertItem: <SBUserNotificationAlert: 0x12137c280; title: Allow “Probe” to access your contacts?; source: tccd> for reason: Button Pressed
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, authValue=6, authReason=2, authVersion=2, desired_auth=6, error=(null),
+2026-09-30 23:21:02.665 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, service=kTCCServiceAddressBook, user wants to learn more, redoing prompt with secondary stage
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 2;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:21:02.666 Df tccd[84214:c46e83] [com.apple.TCC:events] Publishing <TCCDEvent: type=Create, service=kTCCServiceAddressBook, identifier_type=Bundle ID, identifier=com.tarunyadgirkar.prefill.spike.contacts.probe> to 5 subscribers: {
+    1512 = "<TCCDEventSubscriber: token=1512, state=Initial, csid=(null)>";
+    374 = "<TCCDEventSubscriber: token=374, state=Initial, csid=(null)>";
+    1521 = "<TCCDEventSubscriber: token=1521, state=Passed, csid=com.apple.chronod>";
+    1405 = "<TCCDEventSubscriber: token=1405, state=Passed, csid=com.apple.cloudd>";
+    1439 = "<TCCDEventSubscriber: token=1439, state=Passed, csid=com.apple.assetsd>";
+}
+2026-09-30 23:21:02.666 Df tccd[84214:c46777] [com.apple.TCC:access] got existing auth right: 6 with requested upgrade auth: 2
+2026-09-30 23:21:02.666 Df tccd[84214:c46777] [com.apple.TCC:access] attempting upgrade: currentAuth: 6 desiredAuth: 2
+2026-09-30 23:21:02.667 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=89270, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformation, msgID=89270.6
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] service not protected: kTCCServiceAddressBook
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_PROMPTING: msgID=99802.3, service=kTCCServiceAddressBook, subject=Sub:{com.tarunyadgirkar.prefill.spike.contacts.probe}Resp:{TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-8
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] got authorization choices for staged prompting request: legacy SPI: 0 service: kTCCServiceAddressBook currentAuth: 6 desiredAuth: 2
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] aButtonAuth: 2 bButtonAuth: 3 cButtonAuth: 1
+2026-09-30 23:21:02.668 Df tccd[84214:c46777] [com.apple.TCC:access] found usage string: Probe edits your My Info card to test Safari AutoFill.
+2026-09-30 23:21:02.669 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=88726, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersForService, msgID=88726.8
+2026-09-30 23:21:02.670 Df tccd[84214:c46777] [com.apple.TCC:access] acquired watchdog opt-out assertion for client with pid: 99802
+2026-09-30 23:21:02.670 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersForService, msgID=88726.8
+2026-09-30 23:21:02.671 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.72
+2026-09-30 23:21:02.671 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:TransientOverlay] <SBRemoteTransientOverlaySession: 0x116692f00>: activateWithContext: <SBSRemoteAlertActivationContext: 0x121390780; reason: Secondary Prompt for kTCCServiceAddressBook; actions: 0x0; presentationTarget: <SBSRemoteAlertPresentationTarget: 0x118431300; <SBSRemoteAlertPresentationTargetPredicate: 0x118430aa0
+    BundleRequestingSecondaryPrompt = "com.tarunyadgirkar.prefill.spike.contacts.probe";
+    ResponsiblePID = 99802;
+}>
+2026-09-30 23:21:02.672 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.72
+2026-09-30 23:21:02.674 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.73
+2026-09-30 23:21:02.675 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformation, msgID=89270.6
+2026-09-30 23:21:02.675 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.73
+2026-09-30 23:21:02.679 E  tccd[84214:c46ea7] [com.apple.TCC:access] Remote Alert: handle: <SBSRemoteAlertHandle: 0x103fd2670>, didInvalidateWithError: Error Domain=SBSRemoteAlertHandleInvalidationErrorDomain Code=6 "invalidated due to view service initialization failure" UserInfo={NSLocalizedDescription=invalidated due to view service initialization failure}
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] invalidated watchdog opt-out assertion for client with pid: 99802
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: Got 6 auth from db for client: Sub:{com.tarunyadgirkar.prefill.spike.contacts.probe}Resp:{TCCDProcess: identifier=com.tarunyadgirkar.prefill.spike.contacts.probe, pid=99802, auid=502, euid=502, binary_path=/Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/A53AB330-51D0-4F6A-88C2-83EDF2CA571D/data/Conta
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99802.3, authValue=6, authReason=2, authVersion=2, desired_auth=2, error=(null),
+2026-09-30 23:21:02.679 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99802.3
+2026-09-30 23:21:02.689 E  Probe[99802:c4735a] [com.apple.contacts:Contacts] Contacts TCC acccess request was denied
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=99421, sender_uid=502, sender_auid=502, function=TCCAccessRequest, msgID=99421.1
+    kTCCNotificationExtensionDaemonDataDesiredAuthKey = 0;
+    kTCCNotificationExtensionDaemonDataInfoString = "";
+    kTCCNotificationExtensionDaemonDataInitialPromptKey = 1;
+    kTCCNotificationExtensionDaemonDataSetPromptKey = 0;
+}
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] AUTHREQ_ATTRIBUTION: msgID=99421.1, attribution={requesting={TCCDProcess: identifier=com.apple.ContactsUI.LimitedAccessPromptView, pid=99421, auid=502, euid=502, binary_path=/private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] Granting TCCDProcess: identifier=com.apple.ContactsUI.LimitedAccessPromptView, pid=99421, auid=502, euid=502, binary_path=/private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/Appl
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] AUTHREQ_RESULT: msgID=99421.1, authValue=2, authReason=11, authVersion=2, desired_auth=0, error=(null),
+2026-09-30 23:21:02.910 E  tccd[84214:c46ea7] [com.apple.TCC:access] Failed to issue generic sandbox extension for class: com.apple.tcc.kTCCServiceAddressBook
+2026-09-30 23:21:02.910 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessRequest, msgID=99421.1
+2026-09-30 23:21:03.095 Df SpringBoard[84202:c2f3b0] [com.apple.SpringBoard:AlertItems] Deactivated alertItem: <SBUserNotificationAlert: 0x12137c280; title: Allow “Probe” to access your contacts?; source: tccd; pid: 84214>
+2026-09-30 23:21:03.152 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84317, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84317.12
+2026-09-30 23:21:03.153 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84317.12
+2026-09-30 23:21:03.157 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84347, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.20
+2026-09-30 23:21:03.161 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.20
+2026-09-30 23:21:03.161 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84347, sender_uid=502, sender_auid=502, function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.21
+2026-09-30 23:21:03.162 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyBundleIdentifiersDisabledForService, msgID=84347.21
+2026-09-30 23:21:03.166 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.74
+2026-09-30 23:21:03.166 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.75
+2026-09-30 23:21:03.166 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.75
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.74
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.76
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.77
+2026-09-30 23:21:03.167 Df tccd[84214:c46777] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.76
+2026-09-30 23:21:03.167 Df tccd[84214:c46ea7] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.77
+2026-09-30 23:21:03.181 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessCopyInformationForBundle, msgID=84212.78
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessCopyInformationForBundle, msgID=84212.78
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REQUEST: tccd_uid=502, sender_pid=84212, sender_uid=502, sender_auid=502, function=TCCAccessGetOverride, msgID=84212.79
+2026-09-30 23:21:03.182 Df tccd[84214:c46e83] [com.apple.TCC:access] REPLY: (502) function=TCCAccessGetOverride, msgID=84212.79

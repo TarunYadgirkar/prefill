@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text insert spike</title>
+<style>
+  :root { color-scheme: light; }
+  body { font: 17px -apple-system, system-ui, sans-serif; margin: 0; padding: 16px; background: #fff; }
+  form { display: grid; gap: 12px; max-width: 480px; }
+  label { display: grid; gap: 4px; font-size: 15px; }
+  input { font: inherit; padding: 10px 12px; border: 1px solid #8884; border-radius: 10px; }
+  pre { font-size: 11px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<form id="tagged" autocomplete="on">
+  <label>Email <input name="email" type="email" autocomplete="email"></label>
+</form>
+<form id="untagged" style="margin-top:12px">
+  <label>Your e-mail <input id="f_em" name="usr_contact"></label>
+</form>
+<form id="phone" style="margin-top:12px">
+  <label>Phone <input name="tel" type="tel" autocomplete="tel"></label>
+</form>
+<pre id="out"></pre>
+<script>
+  const out = document.getElementById('out');
+  const lines = [];
+  const types = ['focus', 'keydown', 'keyup', 'beforeinput', 'input', 'change', 'paste', 'blur'];
+  for (const el of document.querySelectorAll('input')) {
+    for (const t of types) {
+      el.addEventListener(t, e => {
+        const rec = { f: el.name, e: t, v: el.value, it: e.inputType || '', d: e.data ?? '', trusted: e.isTrusted };
+        const q = new URLSearchParams(rec).toString();
+        fetch('/log?' + q).catch(() => {});
+        lines.push(`${el.name} ${t} ${e.inputType || ''} v=${el.value}`);
+        out.textContent = lines.slice(-14).join('\n');
+      });
+    }
+  }
+</script>
+</body>
+</html>

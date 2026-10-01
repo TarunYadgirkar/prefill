@@ -1,0 +1,387 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath build
+
+2026-09-30 23:22:24.950474-0700 ProbeUITests-Runner[1774:12884005] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:22:29.090.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:22:29.090.
+Test Suite 'DriverTests' started at 2026-09-30 23:22:29.090.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.01s Start Test at 2026-09-30 23:22:29.097
+    t =     0.07s Set Up
+[driver] step probe request
+    t =     0.08s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.08s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+2026-09-30 23:22:29.578 xcodebuild[1765:12883714] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:22:29.578 xcodebuild[1765:12883714] [MT] IDELaunchParametersSnapshot: no debugger version
+objc[1774]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10b0e8398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10b220310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     0.90s         Setting up automation session
+    t =     2.84s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step use com.apple.springboard
+[driver] step tap Continue
+    t =     6.58s Waiting 10.0s for Any (First Match) to exist
+    t =     7.62s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.62s         Checking existence of `Any (First Match)`
+    t =     7.67s Tap Any (First Match)
+    t =     7.67s     Wait for com.apple.springboard to idle
+    t =     7.68s     Find the Any (First Match)
+    t =     7.71s     Check for interrupting elements affecting "Continue" Button
+    t =     7.76s     Synthesize event
+    t =     8.05s     Wait for com.apple.springboard to idle
+[driver] step wait 4
+[driver] step dump 
+    t =    12.32s Requesting snapshot of accessibility hierarchy for app with pid 84202
+    t =    12.57s Requesting snapshot of accessibility hierarchy for app with pid 84202
+[driver] tree
+Attributes: Application, 0x10a489400, pid: 84202, label: ' '
+Element subtree:
+ →Application, 0x10a489400, pid: 84202, label: ' '
+    Window, 0x10a489900, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a489a40, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10a489cc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a489e00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a48a080, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a489f40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a48a1c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a48a440, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x10a48a300, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x10a48a580, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a488c80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a489b80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10a488f00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a489180, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48a800, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48aa80, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x10a48abc0, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48a940, {{139.3, 15.0}, {123.3, 34.7}}
+          Other, 0x10a48ad00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a48af80, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48b0c0, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x10a48ae40, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48b200, {{139.0, 14.7}, {124.0, 35.3}}
+          Other, 0x10a48b340, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10a48b5c0, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x10a48b480, {{128.3, 10.0}, {145.3, 52.0}}
+              Other, 0x10a48b700, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x10a48b840, {{138.3, 14.0}, {125.3, 36.7}}
+                  Other, 0x10a48bac0, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x10a48b980, {{138.3, 14.0}, {125.3, 36.7}}
+          Other, 0x10a48bc00, {{218.0, 28.0}, {9.0, 9.0}}
+    Window, 0x10a48bd40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10a48be80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a488500, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10a488a00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10768f700, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10768f840, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10768f980, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10768fc00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SBSwitcherWindow:Main'
+      Other, 0x10768fac0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10768d2c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10768d400, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10aeb8000, {{0.0, 0.0}, {402.0, 874.0}}
+              ScrollView, 0x10aeb8140, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10aeb8280, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'AppSwitcherContentView'
+                Other, 0x10aeb83c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10aeb8500, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10aeb8640, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10aeb8780, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'card:com.tarunyadgirkar.prefill.spike.contacts.probe:sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB', label: 'Probe'
+                  Other, 0x10aeb88c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10aeb8a00, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10aeb8b40, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10aeb8c80, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10aeb8dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                            ScrollView, 0x10aeb8f00, {{0.0, -437.0}, {402.0, 1311.0}}
+                              Other, 0x10aeb9040, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x10aeb9180, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x10aeb92c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x10aeb9400, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x10aeb9540, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x10aeb9680, {{0.0, 0.0}, {402.0, 874.0}}
+                                          Other, 0x10aeb97c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x10aeb9900, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x10aeb9a40, {{0.0, 0.0}, {402.0, 874.0}}
+                                                StatusBar, 0x10aeb9b80, {{0.0, 0.0}, {402.0, 54.0}}
+                                                  Other, 0x10aeb9cc0, {{0.0, 0.0}, {402.0, 54.0}}
+                                                    Other, 0x10aeb9e00, {{0.0, 0.0}, {402.0, 54.0}}
+                                                      StaticText, 0x10aeb9f40, {{52.0, 21.7}, {44.3, 21.7}}, label: '11:22 PM'
+                                                      Other, 0x10aeba080, {{55.7, 14.3}, {36.7, 36.7}}
+                                                      Other, 0x10aeba1c0, {{309.0, 14.3}, {36.7, 36.7}}
+                                                      Other, 0x10aeba300, {{284.7, 25.0}, {20.3, 13.7}}, label: 'Cellular', value: No signal
+                                                      Other, 0x10aeba440, {{314.0, 26.0}, {17.7, 12.7}}, identifier: '3 of 3 Wi-Fi bars', value: SSID, 3 of 3 Wi-Fi...
+                                                        Image, 0x10aeba580, {{311.3, 23.7}, {23.0, 17.7}}, identifier: 'wifi', label: 'Wi-Fi'
+                                                      Other, 0x10aeba6c0, {{340.7, 25.3}, {29.0, 13.7}}, label: '100% battery power', value: Not charging
+                                          Other, 0x10aeba800, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x10aeba940, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x10aebaa80, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x10aebabc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x10aebad00, {{0.0, 0.0}, {402.0, 874.0}}
+                                                Other, 0x10aebae40, {{0.0, 0.0}, {402.0, 874.0}}
+                                                  Other, 0x10aebaf80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                    Other, 0x10aebb0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                    Other, 0x10aebb200, {{0.0, 0.0}, {402.0, 874.0}}
+                                                      Other, 0x10aebb340, {{0.0, 0.0}, {402.0, 874.0}}
+                                                        Other, 0x10aebb480, {{0.0, 0.0}, {402.0, 874.0}}
+                                                          Other, 0x10aebb5c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                            Other, 0x10aebb700, {{0.0, 0.0}, {402.0, 874.0}}
+                                                              Other, 0x10aebb840, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                Other, 0x10aebb980, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                  Other, 0x10aebbac0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                    Other, 0x10aebbc00, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                      Other, 0x10aebbd40, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                        Other, 0x10aebbe80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                          Other, 0x10aec8000, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                            Other, 0x10aec8140, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                              ScrollView, 0x10aec8280, {{0.0, 0.0}, {402.0, 693.0}}
+                                                                                Other, 0x10aec83c0, {{0.0, 0.0}, {402.0, 693.0}}
+                                                                                  Other, 0x10aec8500, {{0.0, 0.0}, {402.0, 102.0}}
+                                                                                Other, 0x10aec8640, {{0.0, 0.0}, {402.0, 693.0}}
+                                                                                Other, 0x10aec8780, {{0.0, 62.0}, {402.0, 664.3}}
+                                                                                  Other, 0x10aec88c0, {{44.0, 94.7}, {314.0, 272.3}}
+                                                                                    Button, 0x10aec8a00, {{44.0, 94.7}, {74.0, 74.0}}, label: 'Contact photo for Kate Bell'
+                                                                                      Image, 0x10aec8b40, {{44.0, 94.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec8c80, {{44.0, 102.0}, {74.0, 74.0}}, label: 'Contact photo for Kate Bell'
+                                                                                      Image, 0x10aec8dc0, {{44.0, 102.0}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec8f00, {{164.0, 94.7}, {74.0, 74.0}}, label: 'Contact photo for David Taylor'
+                                                                                      Image, 0x10aec9040, {{164.0, 94.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9180, {{164.0, 102.0}, {74.0, 74.0}}, label: 'Contact photo for David Taylor'
+                                                                                      Image, 0x10aec92c0, {{164.0, 102.0}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9400, {{284.0, 94.7}, {74.0, 74.0}}, label: 'Contact photo for Hank M. Zakroff'
+                                                                                      Image, 0x10aec9540, {{284.0, 94.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9680, {{284.0, 102.0}, {74.0, 74.0}}, label: 'Contact photo for Hank M. Zakroff'
+                                                                                      Image, 0x10aec97c0, {{284.0, 102.0}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9900, {{44.0, 190.3}, {74.0, 74.0}}, label: 'Contact photo for Daniel Higgins Jr.'
+                                                                                      Image, 0x10aec9a40, {{44.0, 190.3}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9b80, {{44.0, 197.7}, {74.0, 74.0}}, label: 'Contact photo for Daniel Higgins Jr.'
+                                                                                      Image, 0x10aec9cc0, {{44.0, 197.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aec9e00, {{164.0, 190.3}, {74.0, 74.0}}, label: 'Contact photo for John Appleseed'
+                                                                                      Image, 0x10aec9f40, {{164.0, 190.3}, {74.0, 74.0}}
+                                                                                    Button, 0x10aeca080, {{164.0, 197.7}, {74.0, 74.0}}, label: 'Contact photo for John Appleseed'
+                                                                                      Image, 0x10aeca1c0, {{164.0, 197.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aeca300, {{284.0, 190.3}, {74.0, 74.0}}, label: 'Contact photo for Anna Haro'
+                                                                                      Image, 0x10aeca440, {{284.0, 190.3}, {74.0, 74.0}}
+                                                                                    Button, 0x10aeca580, {{284.0, 197.7}, {74.0, 74.0}}, label: 'Contact photo for Anna Haro'
+                                                                                      Image, 0x10aeca6c0, {{284.0, 197.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aeca800, {{44.0, 285.7}, {74.0, 74.0}}, label: 'Contact photo for Alex Rivera'
+                                                                                      Image, 0x10aeca940, {{44.0, 285.7}, {74.0, 74.0}}
+                                                                                    Button, 0x10aecaa80, {{44.0, 293.0}, {74.0, 74.0}}, label: 'Contact photo for Alex Rivera'
+                                                                                      Image, 0x10aecabc0, {{44.0, 293.0}, {74.0, 74.0}}
+                                                                                  StaticText, 0x10aecad00, {{40.5, 403.0}, {156.0, 19.3}}, label: 'You have 7 contacts.'
+                                                                                  StaticText, 0x10aecae40, {{40.5, 422.3}, {321.0, 31.3}}, label: 'Contact information includes names, emails, photos, phone numbers, addresses, and more.'
+                                                                                  StaticText, 0x10aecaf80, {{42.0, 501.7}, {205.7, 54.3}}, label: 'How do you want to share contacts?'
+                                                                                  StaticText, 0x10aecb0c0, {{42.0, 558.0}, {318.0, 138.3}}, label: 'Selecting contacts lets you pick the ones you want to add right now. You can always add more later. Allowing full access will add all of your contacts.'
+                                                                                Other, 0x10aecb200, {{369.0, 62.0}, {30.0, 631.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                                                  Other, 0x10aecb340, {{396.0, 65.0}, {3.0, 596.3}}
+                                                                                Other, 0x10aecb480, {{369.0, 62.0}, {30.0, 631.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                                                  Other, 0x10aecb5c0, {{396.0, 65.0}, {3.0, 596.3}}
+                                                                              Button, 0x10aecb700, {{35.0, 711.7}, {332.0, 51.0}}, label: 'Select Contacts'
+                                                                              Button, 0x10aecb840, {{35.0, 778.7}, {332.0, 51.0}}, label: 'Share All 7 Contacts'
+                                                    Other, 0x10aecb980, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x10aecbac0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x10aecbc00, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10aecbd40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10aecbe80, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10aecc000, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10aecc140, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x10aecc280, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Home Grabber'
+                          Other, 0x10aecc3c0, {{129.0, 861.0}, {144.0, 5.0}}
+                            Other, 0x10aecc500, {{129.0, 861.0}, {144.0, 5.0}}
+                              Other, 0x10aecc640, {{129.0, 861.0}, {144.0, 5.0}}
+                                Other, 0x10aecc780, {{129.0, 861.0}, {144.0, 5.0}}
+    Window, 0x10aecc8c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aecca00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10aeccb40, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10aeccc80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aeccdc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10aeccf00, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10aecd040, {{0.0, 0.0}, {134.0, 291.3}}
+      Other, 0x10aecd180, {{0.0, 0.0}, {134.0, 291.3}}
+        Other, 0x10aecd2c0, {{0.0, 0.0}, {134.0, 291.3}}
+    Window, 0x10aecd400, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aecd540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10aecd680, {{0.0, 0.0}, {402.0, 874.0}}
+    Window (Main), 0x10aecd7c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aecd900, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x10aecda40, {{0.0, 0.0}, {402.0, 874.0}}
+      StatusBar, 0x10aecdb80, {{0.0, 0.0}, {402.0, 54.0}}
+    Window, 0x10aecdcc0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aecde00, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10aecdf40, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10aece080, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10a489400, pid: 84202, label: ' '
+Query chain:
+ →Find: Application 'com.apple.springboard'
+  Output: {
+    Application, 0x10aece1c0, pid: 84202, label: ' '
+  }
+
+[driver] step use com.tarunyadgirkar.prefill.spike.contacts.probe
+[driver] step dump 
+    t =    12.60s Requesting snapshot of accessibility hierarchy for app with pid 2008
+    t =    12.77s Requesting snapshot of accessibility hierarchy for app with pid 2008
+[driver] tree
+Attributes: Application, 0x10768fc00, pid: 2008, label: 'Probe'
+Element subtree:
+ →Application, 0x10768fc00, pid: 2008, label: 'Probe'
+    Window (Main), 0x10768fac0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10768d2c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10768d400, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x10768f840, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x10768f980, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x10768f700, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x10a489400, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Contacts probe'
+                  StaticText, 0x10a48bd40, {{16.0, 119.7}, {244.7, 40.7}}, label: 'Contacts probe'
+                Other, 0x10a48be80, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10a488a00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x10a488500, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x10a48a580, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x10a488c80, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10a489b80, {{-16.0, -1580.0}, {434.0, 4244.0}}
+                          Other, 0x10a48bc00, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10a48b340, {{0.0, 0.0}, {402.0, 102.0}}
+                          Other, 0x10a48b5c0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x10a48b700, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x10a48b980, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x10a48b840, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x10a48bac0, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x10a48b480, {{16.0, 168.0}, {370.0, 52.0}}
+                                Other, 0x10a48ad00, {{16.0, 168.0}, {370.0, 52.0}}
+                                  StaticText, 0x10a48ae40, {{32.0, 187.0}, {0.0, 14.0}}, identifier: 'last'
+                          Cell, 0x10a48b200, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x10a48af80, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x10a48b0c0, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x10a488f00, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x10a489180, {{16.0, 220.0}, {370.0, 52.0}}
+                                Other, 0x10a48a940, {{16.0, 220.0}, {370.0, 52.0}}
+                                  Button, 0x10a48aa80, {{16.0, 220.0}, {370.0, 52.0}}, identifier: 'action.status', label: 'status'
+                          Other, 0x10a48abc0, {{32.0, 219.0}, {338.0, 1.0}}
+                          Cell, 0x10a48a800, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x10a489cc0, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x10a489e00, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x10a48a080, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x10a48a440, {{16.0, 272.0}, {370.0, 52.0}}
+                                Other, 0x10a48a300, {{16.0, 272.0}, {370.0, 52.0}}
+                                  Button, 0x10a48a1c0, {{16.0, 272.0}, {370.0, 52.0}}, identifier: 'action.request', label: 'request'
+                          Other, 0x10a489f40, {{32.0, 271.0}, {338.0, 1.0}}
+                          Cell, 0x10a489900, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x10a489a40, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x10aecc000, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x10aecc140, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x10aecc280, {{16.0, 324.0}, {370.0, 52.0}}
+                                Other, 0x10aecc3c0, {{16.0, 324.0}, {370.0, 52.0}}
+                                  Button, 0x10aecc500, {{16.0, 324.0}, {370.0, 52.0}}, identifier: 'action.dump', label: 'dump'
+                          Other, 0x10aecc640, {{32.0, 323.0}, {338.0, 1.0}}
+                          Cell, 0x10aecc780, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x10aecc8c0, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x10aecca00, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x10aeccb40, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x10aeccc80, {{16.0, 376.0}, {370.0, 52.0}}
+                                Other, 0x10aeccdc0, {{16.0, 376.0}, {370.0, 52.0}}
+                                  Button, 0x10aeccf00, {{16.0, 376.0}, {370.0, 52.0}}, identifier: 'action.listAll', label: 'listAll'
+                          Other, 0x10aecd040, {{32.0, 375.0}, {338.0, 1.0}}
+                          Cell, 0x10aecd180, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x10aecd2c0, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x10aecd400, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x10aecd540, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x10aecd680, {{16.0, 428.0}, {370.0, 52.0}}
+                                Other, 0x10aecd7c0, {{16.0, 428.0}, {370.0, 52.0}}
+                                  Button, 0x10aecd900, {{16.0, 428.0}, {370.0, 52.0}}, identifier: 'action.reorder', label: 'reorder'
+                          Other, 0x10aecda40, {{32.0, 427.0}, {338.0, 1.0}}
+                          Cell, 0x10aecdb80, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x10aecdcc0, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x10aecde00, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x10aecdf40, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x10aece080, {{16.0, 480.0}, {370.0, 52.0}}
+                                Other, 0x10aece1c0, {{16.0, 480.0}, {370.0, 52.0}}
+                                  Button, 0x10aece300, {{16.0, 480.0}, {370.0, 52.0}}, identifier: 'action.add', label: 'add'
+                          Other, 0x10aece440, {{32.0, 479.0}, {338.0, 1.0}}
+                          Cell, 0x10aece580, {{16.0, 532.0}, {370.0, 52.0}}
+                            Other, 0x10aece6c0, {{16.0, 532.0}, {370.0, 52.0}}
+                              Other, 0x10aece800, {{16.0, 532.0}, {370.0, 52.0}}
+                            Other, 0x10aece940, {{16.0, 532.0}, {370.0, 52.0}}
+                              Other, 0x10aecea80, {{16.0, 532.0}, {370.0, 52.0}}
+                                Other, 0x10aecebc0, {{16.0, 532.0}, {370.0, 52.0}}
+                                  Button, 0x10aeced00, {{16.0, 532.0}, {370.0, 52.0}}, identifier: 'action.reset', label: 'reset'
+                          Other, 0x10aecee40, {{32.0, 531.0}, {338.0, 1.0}}
+                          Cell, 0x10aecef80, {{16.0, 584.0}, {370.0, 52.0}}
+                            Other, 0x10aecf0c0, {{16.0, 584.0}, {370.0, 52.0}}
+                              Other, 0x10aecf200, {{16.0, 584.0}, {370.0, 52.0}}
+                            Other, 0x10aecf340, {{16.0, 584.0}, {370.0, 52.0}}
+                              Other, 0x10aecf480, {{16.0, 584.0}, {370.0, 52.0}}
+                                Other, 0x10aecf5c0, {{16.0, 584.0}, {370.0, 52.0}}
+                                  Button, 0x10aecf700, {{16.0, 584.0}, {370.0, 52.0}}, identifier: 'action.picker', label: 'picker'
+                          Other, 0x10aecf840, {{32.0, 583.0}, {338.0, 1.0}}
+                          Cell, 0x10aecf980, {{16.0, 636.0}, {370.0, 52.0}}
+                            Other, 0x10aecfac0, {{16.0, 636.0}, {370.0, 52.0}}
+                              Other, 0x10aecfc00, {{16.0, 636.0}, {370.0, 52.0}}
+                            Other, 0x10aecfd40, {{16.0, 636.0}, {370.0, 52.0}}
+                              Other, 0x10aecfe80, {{16.0, 636.0}, {370.0, 52.0}}
+                                Other, 0x113a50000, {{16.0, 636.0}, {370.0, 52.0}}
+                                  Button, 0x113a50140, {{16.0, 636.0}, {370.0, 52.0}}, identifier: 'action.fetchId', label: 'fetchId'
+                          Other, 0x113a50280, {{32.0, 635.0}, {338.0, 1.0}}
+                          Cell, 0x113a503c0, {{16.0, 688.0}, {370.0, 52.0}}
+                            Other, 0x113a50500, {{16.0, 688.0}, {370.0, 52.0}}
+                              Other, 0x113a50640, {{16.0, 688.0}, {370.0, 52.0}}
+                            Other, 0x113a50780, {{16.0, 688.0}, {370.0, 52.0}}
+                              Other, 0x113a508c0, {{16.0, 688.0}, {370.0, 52.0}}
+                                Other, 0x113a50a00, {{16.0, 688.0}, {370.0, 52.0}}
+                                  Button, 0x113a50b40, {{16.0, 688.0}, {370.0, 52.0}}, identifier: 'action.saveId', label: 'saveId'
+                          Other, 0x113a50c80, {{32.0, 687.0}, {338.0, 1.0}}
+                          Cell, 0x113a50dc0, {{16.0, 740.0}, {370.0, 52.0}}
+                            Other, 0x113a50f00, {{16.0, 740.0}, {370.0, 52.0}}
+                              Other, 0x113a51040, {{16.0, 740.0}, {370.0, 52.0}}
+                            Other, 0x113a51180, {{16.0, 740.0}, {370.0, 52.0}}
+                              Other, 0x113a512c0, {{16.0, 740.0}, {370.0, 52.0}}
+                                Other, 0x113a51400, {{16.0, 740.0}, {370.0, 52.0}}
+                                  Button, 0x113a51540, {{16.0, 740.0}, {370.0, 52.0}}, identifier: 'action.promoteFresh', label: 'promoteFresh'
+                          Other, 0x113a51680, {{32.0, 739.0}, {338.0, 1.0}}
+                          Cell, 0x113a517c0, {{16.0, 792.0}, {370.0, 52.0}}
+                            Other, 0x113a51900, {{16.0, 792.0}, {370.0, 52.0}}
+                              Other, 0x113a51a40, {{16.0, 792.0}, {370.0, 52.0}}
+                            Other, 0x113a51b80, {{16.0, 792.0}, {370.0, 52.0}}
+                              Other, 0x113a51cc0, {{16.0, 792.0}, {370.0, 52.0}}
+                                Other, 0x113a51e00, {{16.0, 792.0}, {370.0, 52.0}}
+                                  Button, 0x113a51f40, {{16.0, 792.0}, {370.0, 52.0}}, identifier: 'action.promoteTwoSaves', label: 'promoteTwoSaves'
+                          Other, 0x113a52080, {{32.0, 791.0}, {338.0, 1.0}}
+                          Cell, 0x113a521c0, {{16.0, 844.0}, {370.0, 52.0}}
+                            Other, 0x113a52300, {{16.0, 844.0}, {370.0, 52.0}}
+                              Other, 0x113a52440, {{16.0, 844.0}, {370.0, 52.0}}
+                            Other, 0x113a52580, {{16.0, 844.0}, {370.0, 52.0}}
+                              Other, 0x113a526c0, {{16.0, 844.0}, {370.0, 52.0}}
+                                Other, 0x113a52800, {{16.0, 844.0}, {370.0, 52.0}}
+                                  Button, 0x113a52940, {{16.0, 844.0}, {370.0, 52.0}}, identifier: 'action.accessPicker', label: 'accessPicker'
+                          Other, 0x113a52a80, {{32.0, 843.0}, {338.0, 1.0}}
+                          Other, 0x113a52bc0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x113a52d00, {{396.0, 802.0}, {3.0, 7.0}}
+                          Other, 0x113a52e40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x113a52f80, {{396.0, 802.0}, {3.0, 7.0}}
+                Toolbar, 0x113a530c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x113a53200, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x10768fc00, pid: 2008, label: 'Probe'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.contacts.probe'
+  Output: {
+    Application, 0x113a53340, pid: 2008, label: 'Probe'
+  }
+
+[driver] step wait 30
+    t =    42.81s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (43.019 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:23:12.116.
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.019 (43.026) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:23:12.117.
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.019 (43.027) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:23:12.119.
+	 Executed 1 test, with 0 failures (0 unexpected) in 43.019 (43.029) seconds
+2026-09-30 23:23:12.436 xcodebuild[1765:12883714] [MT] IDETestOperationsObserverDebug: 48.519 elapsed -- Testing started completed.
+2026-09-30 23:23:12.436 xcodebuild[1765:12883714] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:23:12.436 xcodebuild[1765:12883714] [MT] IDETestOperationsObserverDebug: 48.519 sec, +48.519 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-22-23--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

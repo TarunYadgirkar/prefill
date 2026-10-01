@@ -1,0 +1,66 @@
+Attributes: Application, 0x112e43840, pid: 54587, label: 'Prefill Spike'
+Element subtree:
+ →Application, 0x112e43840, pid: 54587, label: 'Prefill Spike'
+    Window (Main), 0x112e43980, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112e43ac0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x112e43d40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x112e43c00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x112e43480, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x112e435c0, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x112e43200, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Prefill Spike'
+                  StaticText, 0x112e43340, {{16.0, 119.7}, {186.3, 40.7}}, label: 'Prefill Spike'
+                Other, 0x112e42f80, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x112e430c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x112e42d00, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x112e42e40, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x112e42940, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x112e42a80, {{-16.0, -1580.0}, {434.0, 1869.7}}
+                          Other, 0x112e42bc0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x112e42580, {{0.0, 0.0}, {402.0, 102.0}}
+                          Other, 0x112e41680, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x112e417c0, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x112e41900, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x112e40dc0, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x112e40c80, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x112e408c0, {{16.0, 168.0}, {370.0, 52.0}}
+                                Other, 0x112e40a00, {{16.0, 168.0}, {370.0, 52.0}}
+                                  Button, 0x112e40b40, {{16.0, 168.0}, {370.0, 52.0}}, identifier: 'turnOn', label: 'Turn on Prefill AutoFill'
+                          Cell, 0x112e40780, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x112e40500, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x112e40640, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x112e403c0, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x112e40280, {{16.0, 220.0}, {370.0, 52.0}}
+                                Other, 0x112e40140, {{16.0, 220.0}, {370.0, 52.0}}
+                                  StaticText, 0x112e40000, {{16.0, 220.0}, {370.0, 52.0}}, identifier: 'status', label: 'Enabled: true'
+                          Other, 0x112aae940, {{32.0, 219.0}, {338.0, 1.0}}
+                          Other, 0x112aaf5c0, {{-16.0, 289.7}, {434.0, 1889.7}}
+                          Cell, 0x112aaf700, {{16.0, 307.0}, {370.0, 52.0}}
+                            Other, 0x112aaf840, {{16.0, 307.0}, {370.0, 52.0}}
+                              Other, 0x112aaf980, {{16.0, 307.0}, {370.0, 52.0}}
+                            Other, 0x112aafac0, {{16.0, 307.0}, {370.0, 52.0}}
+                              Other, 0x112aafd40, {{16.0, 307.0}, {370.0, 52.0}}
+                                Other, 0x112aafe80, {{16.0, 307.0}, {370.0, 52.0}}
+                                  Button, 0x112aafc00, {{16.0, 307.0}, {370.0, 52.0}}, identifier: 'openSettings', label: 'Open AutoFill provider settings'
+                          Cell, 0x112aaed00, {{16.0, 359.0}, {370.0, 52.0}}
+                            Other, 0x112aaee40, {{16.0, 359.0}, {370.0, 52.0}}
+                              Other, 0x112aaef80, {{16.0, 359.0}, {370.0, 52.0}}
+                            Other, 0x112aaf340, {{16.0, 359.0}, {370.0, 52.0}}
+                              Other, 0x112aaf480, {{16.0, 359.0}, {370.0, 52.0}}
+                                Other, 0x112aaf200, {{16.0, 359.0}, {370.0, 52.0}}
+                                  Button, 0x112aaf0c0, {{16.0, 359.0}, {370.0, 52.0}}, identifier: 'nativeFields', label: 'Native text fields'
+                                    StaticText, 0x112aaea80, {{32.0, 374.8}, {127.0, 20.3}}, label: 'Native text fields'
+                                    Image, 0x112aaebc0, {{360.7, 379.0}, {7.0, 12.0}}, identifier: 'chevron.forward'
+                          Other, 0x112e3c000, {{32.0, 358.0}, {338.0, 1.0}}
+                          Other, 0x112e3c140, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x112e3c280, {{396.0, 528.0}, {3.0, 281.0}}
+                          Other, 0x112e3c3c0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                            Other, 0x112e3c500, {{396.0, 528.0}, {3.0, 281.0}}
+                Toolbar, 0x112e3c640, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x112e3c780, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x112e43840, pid: 54587, label: 'Prefill Spike'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.textinsert'
+  Output: {
+    Application, 0x112e3c8c0, pid: 54587, label: 'Prefill Spike'
+  }

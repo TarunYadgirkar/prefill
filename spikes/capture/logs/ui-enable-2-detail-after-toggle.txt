@@ -1,0 +1,98 @@
+Attributes: Application, 0x112060640, pid: 11418, label: 'Settings'
+Element subtree:
+ →Application, 0x112060640, pid: 11418, label: 'Settings'
+    Window (Main), 0x112063e80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x112060780, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1120608c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x112060a00, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x112060b40, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x112060c80, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x112060dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x112060f00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x112061040, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x112061180, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x1120612c0, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'Prefill Capture'
+                          Button, 0x1120617c0, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Extensions'
+                          StaticText, 0x112061900, {{144.0, 73.7}, {114.0, 20.7}}, label: 'Prefill Capture'
+                        Other, 0x112061a40, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x112061b80, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x112061cc0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x112061e00, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x112062440, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Table, 0x1120626c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x112062580, {{0.0, 116.0}, {402.0, 17.7}}
+                                    Cell, 0x112061f40, {{20.0, 133.7}, {362.0, 53.0}}, identifier: 'Prefill Capture', label: 'Prefill Capture'
+                                      Other, 0x112061400, {{20.0, 133.7}, {362.0, 53.0}}
+                                        Other, 0x112061680, {{20.0, 133.7}, {362.0, 53.0}}
+                                          Button, 0x112061540, {{34.0, 146.3}, {150.0, 28.0}}, identifier: 'Prefill Capture', label: 'Prefill Capture'
+                                            StaticText, 0x104e77980, {{34.0, 146.3}, {150.0, 28.0}}, label: 'Prefill Capture'
+                                            Image, 0x107cbdf40, {{34.0, 146.3}, {28.0, 28.0}}, identifier: 'FD914E18-F316-416F-AE6F-171308D355C4'
+                                      Other, 0x107cbef80, {{20.0, 133.7}, {362.0, 53.0}}
+                                        Other, 0x107cbe1c0, {{20.0, 133.7}, {362.0, 53.0}}
+                                      Other, 0x107cbfc00, {{76.0, 185.7}, {290.0, 1.0}}
+                                    Cell, 0x107cbfe80, {{20.0, 186.7}, {362.0, 53.0}}, identifier: 'App', label: 'App, Prefill Capture'
+                                      Other, 0x107cbe440, {{20.0, 186.7}, {362.0, 53.0}}
+                                        Other, 0x107cbd2c0, {{20.0, 186.7}, {362.0, 53.0}}
+                                          Button, 0x107cbe6c0, {{36.0, 203.0}, {330.0, 20.3}}, identifier: 'App', label: 'App, Prefill Capture'
+                                            StaticText, 0x107cbde00, {{36.0, 203.0}, {31.0, 20.3}}, label: 'App'
+                                            StaticText, 0x107cbd040, {{258.0, 203.0}, {108.0, 20.3}}, label: 'Prefill Capture'
+                                      Other, 0x107cbd180, {{20.0, 186.7}, {362.0, 53.0}}
+                                        Other, 0x107cbd400, {{20.0, 186.7}, {362.0, 53.0}}
+                                      Other, 0x107cbda40, {{36.0, 238.7}, {330.0, 1.0}}
+                                    Cell, 0x107cbc640, {{20.0, 239.7}, {362.0, 95.7}}, identifier: 'DESCRIPTION', Disabled
+                                      StaticText, 0x107cbdcc0, {{36.0, 254.7}, {330.0, 21.3}}, label: 'Description'
+                                      StaticText, 0x107cbf200, {{36.0, 278.0}, {330.0, 42.3}}, label: 'Captures contact values you submit in web forms and queues them for Prefill.'
+                                      Image, 0x107cbd540, {{28.0, 287.7}, {0.0, 0.0}}
+                                      Other, 0x107cbf840, {{20.0, 334.3}, {362.0, 1.0}}
+                                    Other, 0x107cbf340, {{0.0, 335.3}, {402.0, 17.3}}
+                                    Other, 0x111865cc0, {{0.0, 352.7}, {402.0, 17.7}}
+                                    Cell, 0x111867980, {{20.0, 370.3}, {362.0, 53.0}}, identifier: 'Allow Extension'
+                                      Other, 0x1118675c0, {{20.0, 370.3}, {362.0, 53.0}}
+                                        Other, 0x111867200, {{20.0, 370.3}, {362.0, 53.0}}
+                                          Switch, 0x112cda6c0, {{36.0, 383.0}, {330.0, 28.0}}, identifier: 'Allow Extension', label: 'Allow Extension', value: 1
+                                            Button, 0x112cd8c80, {{36.0, 386.7}, {119.3, 20.3}}, identifier: 'Allow Extension', label: 'Allow Extension'
+                                            Switch, 0x112cd8f00, {{305.0, 383.0}, {63.0, 28.0}}, value: 1
+                                    Cell, 0x112cd9040, {{20.0, 423.3}, {362.0, 53.0}}, identifier: 'Allow in Private Browsing'
+                                      Other, 0x112cd9180, {{20.0, 423.3}, {362.0, 53.0}}
+                                        Other, 0x112cd92c0, {{20.0, 423.3}, {362.0, 53.0}}
+                                          Switch, 0x112cd9400, {{36.0, 436.0}, {330.0, 28.0}}, identifier: 'Allow in Private Browsing', label: 'Allow in Private Browsing', value: 0
+                                            Button, 0x112cd9540, {{36.0, 439.7}, {189.7, 20.3}}, identifier: 'Allow in Private Browsing', label: 'Allow in Private Browsing'
+                                            Switch, 0x112cd9680, {{305.0, 436.0}, {63.0, 28.0}}, value: 0
+                                    Other, 0x112cd97c0, {{0.0, 476.3}, {402.0, 17.3}}
+                                    Other, 0x112cd9900, {{0.0, 493.7}, {402.0, 38.0}}, identifier: 'Permissions'
+                                      Other, 0x112cd9e00, {{20.0, 493.7}, {362.0, 38.0}}, label: 'Permissions'
+                                    Cell, 0x112cd9f40, {{20.0, 531.7}, {362.0, 227.7}}, identifier: '8', Disabled
+                                      StaticText, 0x112cda080, {{36.0, 546.7}, {330.0, 20.3}}, label: 'Webpage Contents and Browsing History'
+                                      StaticText, 0x112cda1c0, {{36.0, 569.0}, {330.0, 175.3}}, label: 'When you use the “Prefill Capture” button, the extension may request access to read and alter webpages and to see your browsing history. Granting access may be required for the extension to function.
+
+You have not allowed this extension on any websites yet.'
+                                      Image, 0x112cda300, {{28.0, 645.7}, {0.0, 0.0}}
+                                      Other, 0x112cda440, {{36.0, 758.3}, {330.0, 1.0}}
+                                    Cell, 0x112cdb700, {{20.0, 759.3}, {362.0, 53.0}}, identifier: 'All Websites', label: 'All Websites, Ask'
+                                      Other, 0x112cdb840, {{20.0, 759.3}, {331.7, 53.0}}
+                                        Other, 0x112cdb980, {{20.0, 759.3}, {331.7, 53.0}}
+                                          Button, 0x112cdbac0, {{36.0, 775.7}, {307.7, 20.3}}, identifier: 'All Websites', label: 'All Websites, Ask'
+                                            StaticText, 0x112cdbe80, {{36.0, 775.7}, {93.3, 20.3}}, label: 'All Websites'
+                                            StaticText, 0x112cdbd40, {{315.3, 775.7}, {28.3, 20.3}}, label: 'Ask'
+                                      Other, 0x112cdbc00, {{20.0, 759.3}, {362.0, 53.0}}
+                                        Other, 0x112cda580, {{20.0, 759.3}, {362.0, 53.0}}
+                                      Other, 0x112cda800, {{20.0, 811.3}, {362.0, 1.0}}
+                                      Button, 0x112cd9a40, {{351.7, 778.7}, {10.3, 14.0}}, label: 'chevron', Disabled
+                                    Other, 0x112cd9cc0, {{0.0, 812.3}, {402.0, 17.3}}
+                                    Other, 0x112cd9b80, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                      Other, 0x111fe4000, {{396.0, 215.3}, {3.0, 593.7}}
+                                    Other, 0x111fe4140, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x111fe4280, {{65.0, 868.0}, {272.0, 3.0}}
+                        Toolbar, 0x111fe43c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x111fe4500, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x111fe4640, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x111fe4780, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x111fe48c0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x111fe4a00, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x112060640, pid: 11418, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x111fe4b40, pid: 11418, label: 'Settings'
+  }

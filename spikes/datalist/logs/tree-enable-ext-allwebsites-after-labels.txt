@@ -1,0 +1,63 @@
+Attributes: Application, 0x107693200, pid: 89262, label: 'Settings'
+Element subtree:
+ →Application, 0x107693200, pid: 89262, label: 'Settings'
+    Window (Main), 0x1076930c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x107693480, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x107693340, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x107693700, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x107693840, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x107693980, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x107693c00, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x107693d40, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x107693ac0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x107691400, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x107691540, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'All Websites'
+                          Button, 0x10a490640, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'Datalist Spike'
+                          StaticText, 0x10a490780, {{152.0, 73.7}, {98.0, 20.7}}, label: 'All Websites'
+                        Other, 0x10a493200, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x10a490dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x10a491b80, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x10a491180, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x10a4912c0, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Table, 0x10a491400, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x10a491040, {{0.0, 116.0}, {402.0, 17.7}}
+                                    Cell, 0x10a492f80, {{20.0, 133.7}, {362.0, 53.0}}, identifier: '0', label: 'Ask', Selected
+                                      Other, 0x10a493340, {{20.0, 133.7}, {318.0, 53.0}}
+                                        Other, 0x10a493480, {{20.0, 133.7}, {318.0, 53.0}}
+                                          StaticText, 0x10a493700, {{36.0, 150.0}, {28.3, 20.3}}, label: 'Ask'
+                                      Other, 0x10a4935c0, {{20.0, 133.7}, {362.0, 53.0}}
+                                        Other, 0x10a493840, {{20.0, 133.7}, {362.0, 53.0}}
+                                      Other, 0x10a493980, {{36.0, 185.7}, {330.0, 1.0}}
+                                      Button, 0x10a493ac0, {{340.5, 151.3}, {19.0, 17.3}}, label: 'checkmark', Disabled
+                                    Cell, 0x10a491a40, {{20.0, 186.7}, {362.0, 53.0}}, identifier: '-1', label: 'Deny'
+                                      Other, 0x10a491540, {{20.0, 186.7}, {362.0, 53.0}}
+                                        Other, 0x10a491cc0, {{20.0, 186.7}, {362.0, 53.0}}
+                                          StaticText, 0x10a491e00, {{36.0, 203.0}, {39.3, 20.3}}, label: 'Deny'
+                                      Other, 0x10a491f40, {{20.0, 186.7}, {362.0, 53.0}}
+                                        Other, 0x10a4921c0, {{20.0, 186.7}, {362.0, 53.0}}
+                                      Other, 0x10a492080, {{36.0, 238.7}, {330.0, 1.0}}
+                                    Cell, 0x10a492440, {{20.0, 239.7}, {362.0, 53.0}}, identifier: '1', label: 'Allow'
+                                      Other, 0x10a4926c0, {{20.0, 239.7}, {362.0, 53.0}}
+                                        Other, 0x10a492300, {{20.0, 239.7}, {362.0, 53.0}}
+                                          StaticText, 0x10a492580, {{36.0, 256.0}, {41.0, 20.3}}, label: 'Allow'
+                                      Other, 0x10a492940, {{20.0, 239.7}, {362.0, 53.0}}
+                                        Other, 0x10a492bc0, {{20.0, 239.7}, {362.0, 53.0}}
+                                      Other, 0x10a492d00, {{20.0, 291.7}, {362.0, 1.0}}
+                                    Other, 0x10a492a80, {{0.0, 292.7}, {402.0, 17.3}}
+                                    Other, 0x10a492e40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                      Other, 0x10a4930c0, {{396.0, 629.0}, {3.0, 180.0}}
+                                    Other, 0x10a493c00, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x10ab5c000, {{65.0, 868.0}, {272.0, 3.0}}
+                        Toolbar, 0x10ab5c140, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x10ab5c280, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x10ab5c3c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10ab5c500, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10ab5c640, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10ab5c780, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x107693200, pid: 89262, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x10ab5c8c0, pid: 89262, label: 'Settings'
+  }

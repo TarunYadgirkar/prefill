@@ -1,0 +1,210 @@
+2026-09-30 23:56:17.897 Df MobileSafari[50308:c807b5] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:17.898 Df MobileSafari[50308:c807b5] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:17.898 Df MobileSafari[50308:c807b5] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:18.328 Df MobileSafari[50308:c8073b] [com.apple.xpc:connection] [0x103267840] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:56:18.354 Df MobileSafari[50308:c807a7] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:56:18.405 Df MobileSafari[50308:c8073b] [com.apple.xpc:connection] [0x13ff7c8c0] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:56:18.619 Df MobileSafari[50308:c807b5] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, criteria: dictionary
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] _xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 0
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), dict
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] xpc_activity_set_criteria, lower half: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), dict
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), dict
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: xpc_set_event com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, 1
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), setting state now to 1
+2026-09-30 23:56:18.854 Df MobileSafari[50308:c807b4] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 1
+2026-09-30 23:56:20.008 Df MobileSafari[50308:c8073b] [com.apple.xpc:connection] [0x13ff8b980] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: beginning dispatch, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, seqno 1
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700): found an activity with matching seqno 1
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_begin_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700) seqno: 1.
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: lower half, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), seqno from top half was 1
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: created connection 0x13ff8b480 for activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), seqno 1
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 2
+2026-09-30 23:56:20.937 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 2
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a7] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), set activity state to 2
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), current state 2, pending state 0
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 4
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__ returned from handler: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), current state 2, pending state 4
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a5] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 4
+2026-09-30 23:56:20.938 Df MobileSafari[50308:c807a5] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:20.939 Df MobileSafari[50308:c807a5] [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/67D26F69-0444-498D-ADEE-F687E565B7CB/data/Containers/Data/Application/940B
+2026-09-30 23:56:20.944 Df MobileSafari[50308:c807a5] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:56:20.946 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 5
+2026-09-30 23:56:20.946 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), 5
+2026-09-30 23:56:20.947 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700), set activity state to 1
+2026-09-30 23:56:20.947 Df MobileSafari[50308:c807a5] [com.apple.xpc.activity:Client] _xpc_activity_end_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x162003700) seqno: 1.
+2026-09-30 23:56:23.069 Df MobileSafari[50308:c807f9] [com.apple.mobilesafari:AutoFill] WebContent[50321] Will not inject JavaScript in injected bundle
+2026-09-30 23:56:23.113 Df MobileSafari[50308:c8073b] [com.apple.mobilesafari:AutoFill] Creating EMOneTimeCodeAccelerator for SFAppAutoFillOneTimeCodeProvider 0x103437980
+2026-09-30 23:56:23.117 Df MobileSafari[50308:c807a7] [com.apple.mobilesafari:AutoFill] SFAppAutoFillOneTimeCodeProvider 0x103437980 added observer <SFFormAutocompleteState: 0x13f1b1c00>; 1 observer remain
+2026-09-30 23:56:23.119 Df MobileSafari[50308:c8073b] [com.apple.xpc:connection] [0x10325b0c0] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x16570f2a0> (error: (null))
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x13fd70bd0> (error: (null))
+    "<_UIEditMenuBridgedContextMenuInteraction 0x13f17e580>"
+2026-09-30 23:56:29.857 Df MobileSafari[50308:c8073b] [com.apple.UIKit:UIFocusSystemSceneComponent] Override focusSystemState: (DISABLED) for reason(s): <_UIEditMenuBridgedContextMenuInteraction: 0x13f17e580>
+2026-09-30 23:56:29.860 Df MobileSafari[50308:c8073b] [com.apple.UIKit:UICMILifecycle] performAllAnimations for animator: <_UIContextMenuAnimator: 0x162225020>
+2026-09-30 23:56:29.861 Df MobileSafari[50308:c8073b] [com.apple.UIKit:UICMILifecycle] performAllCompletions for animator: <_UIContextMenuAnimator: 0x162225020>
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+2026-09-30 23:57:02.989 Df MobileSafari[50903:c81576] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:02.989 Df MobileSafari[50903:c81576] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:02.990 Df MobileSafari[50903:c81576] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:03.354 Df MobileSafari[50903:c8144e] [com.apple.xpc:connection] [0x13eed6a80] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:57:03.378 Df MobileSafari[50903:c8157e] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:57:03.422 Df MobileSafari[50903:c8144e] [com.apple.xpc:connection] [0x13eed7e80] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:57:03.674 Df MobileSafari[50903:c8157d] [com.apple.mobilesafari:Passwords] Skipping fetching of Sign in with Apple accounts since the bundle identifier (com.apple.mobilesafari) doesn't match Passwords app or Passwords menu bar app.
+2026-09-30 23:57:03.727 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, criteria: dictionary
+2026-09-30 23:57:03.728 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] _xpc_activity_register: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 0
+2026-09-30 23:57:03.728 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), dict
+2026-09-30 23:57:03.728 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] xpc_activity_set_criteria, lower half: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), dict
+2026-09-30 23:57:03.728 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), dict
+2026-09-30 23:57:03.728 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] _xpc_activity_set_criteria: xpc_set_event com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, 1
+2026-09-30 23:57:03.729 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] xpc_activity_set_criteria: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), setting state now to 1
+2026-09-30 23:57:03.729 Df MobileSafari[50903:c81576] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 1
+2026-09-30 23:57:05.083 Df MobileSafari[50903:c8144e] [com.apple.xpc:connection] [0x13efaaa80] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: beginning dispatch, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate, seqno 1
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0): found an activity with matching seqno 1
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_begin_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0) seqno: 1.
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: lower half, activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), seqno from top half was 1
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_dispatch: created connection 0x13efbf480 for activity name com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), seqno 1
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 2
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 2
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), set activity state to 2
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), current state 2, pending state 0
+2026-09-30 23:57:05.274 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 4
+2026-09-30 23:57:05.275 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] __XPC_ACTIVITY_CALLING_HANDLER__ returned from handler: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), current state 2, pending state 4
+2026-09-30 23:57:05.275 Df MobileSafari[50903:c8157d] [com.apple.mobilesafari:SuddenTerminationDisabler] Beginning new task assertion with reason: com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:05.275 Df MobileSafari[50903:c815d7] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 4
+2026-09-30 23:57:05.275 Df MobileSafari[50903:c8157d] [com.apple.mobilesafari:SuddenTerminationDisabler] Did begin task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:05.275 Df MobileSafari[50903:c8157d] [com.apple.FileURL:default] kExcludedFromBackupXattrName set on path: /Users/tarunyadgirkar/Library/Developer/CoreSimulator/Devices/67D26F69-0444-498D-ADEE-F687E565B7CB/data/Containers/Data/Application/940B
+2026-09-30 23:57:05.278 Df MobileSafari[50903:c8157d] [com.apple.mobilesafari:SuddenTerminationDisabler] Ending task assertion with reason com.apple.SafariShared.WBSFormAutoFillCorrectionsSQLiteStore
+2026-09-30 23:57:05.279 Df MobileSafari[50903:c8157d] [com.apple.xpc.activity:Client] _xpc_activity_set_state: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 5
+2026-09-30 23:57:05.279 Df MobileSafari[50903:c8157d] [com.apple.xpc.activity:Client] _xpc_activity_set_state: send new state to CTS: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), 5
+2026-09-30 23:57:05.280 Df MobileSafari[50903:c8157d] [com.apple.xpc.activity:Client] _xpc_activity_set_state_from_cts: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0), set activity state to 1
+2026-09-30 23:57:05.280 Df MobileSafari[50903:c8157d] [com.apple.xpc.activity:Client] _xpc_activity_end_running: com.apple.safarishared.WBSParsecDSession.autoFillDataUpdate (0x13fd7d2c0) seqno: 1.
+2026-09-30 23:57:08.117 Df MobileSafari[50903:c815e6] [com.apple.mobilesafari:AutoFill] WebContent[51003] Will not inject JavaScript in injected bundle
+2026-09-30 23:57:08.172 Df MobileSafari[50903:c8144e] [com.apple.mobilesafari:AutoFill] Creating EMOneTimeCodeAccelerator for SFAppAutoFillOneTimeCodeProvider 0x10330d880
+2026-09-30 23:57:08.176 Df MobileSafari[50903:c8157d] [com.apple.mobilesafari:AutoFill] SFAppAutoFillOneTimeCodeProvider 0x10330d880 added observer <SFFormAutocompleteState: 0x1383f2600>; 1 observer remain
+2026-09-30 23:57:08.176 Df MobileSafari[50903:c8144e] [com.apple.xpc:connection] [0x13eed4f00] activating connection: mach=true listener=false peer=false name=com.apple.AuthenticationServices.AutoFill
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x16349f4b0> (error: (null))
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+ ↪︎ Descendants matching type MenuItem
+↪︎ Descendants matching type MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem,
+    MenuItem
+    MenuItem
+    MenuItem
+    MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+ ↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+↪︎ Descendants matching type MenuItem
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'Paste',
+    MenuItem, label: 'AutoFill'
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' found matching snapshots: {(
+    MenuItem, label: 'AutoFill'
+    ↪︎ Elements matching predicate '"AutoFill" IN identifiers' with results: <XCTElementQueryResults: 0x1634916e0> (error: (null))
+    "<_UIEditMenuBridgedContextMenuInteraction 0x13fd75180>"
+2026-09-30 23:57:15.024 Df MobileSafari[50903:c8144e] [com.apple.UIKit:UIFocusSystemSceneComponent] Override focusSystemState: (DISABLED) for reason(s): <_UIEditMenuBridgedContextMenuInteraction: 0x13fd75180>
+2026-09-30 23:57:15.027 Df MobileSafari[50903:c8144e] [com.apple.UIKit:UICMILifecycle] performAllAnimations for animator: <_UIContextMenuAnimator: 0x166087cc0>
+2026-09-30 23:57:15.028 Df MobileSafari[50903:c8144e] [com.apple.UIKit:UICMILifecycle] performAllCompletions for animator: <_UIContextMenuAnimator: 0x166087cc0>
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',
+    Button, label: 'AutoFill Contact',

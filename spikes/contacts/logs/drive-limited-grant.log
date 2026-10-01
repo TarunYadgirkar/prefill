@@ -1,0 +1,258 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:28:18.795627-0700 ProbeUITests-Runner[9311:12923192] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:28:23.272.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:28:23.275.
+Test Suite 'DriverTests' started at 2026-09-30 23:28:23.275.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.00s Start Test at 2026-09-30 23:28:23.279
+    t =     0.03s Set Up
+[driver] step probe request
+    t =     0.03s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.03s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+2026-09-30 23:28:23.599 xcodebuild[9298:12922884] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:28:23.599 xcodebuild[9298:12922884] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     0.97s         Setting up automation session
+objc[9311]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1083d4398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x109124310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     3.22s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step use com.apple.springboard
+[driver] step tap Continue
+    t =     6.71s Waiting 10.0s for Any (First Match) to exist
+    t =     7.75s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.75s         Checking existence of `Any (First Match)`
+    t =     7.81s Tap Any (First Match)
+    t =     7.81s     Wait for com.apple.springboard to idle
+    t =     7.82s     Find the Any (First Match)
+    t =     7.85s     Check for interrupting elements affecting "Continue" Button
+    t =     7.89s     Synthesize event
+    t =     8.19s     Wait for com.apple.springboard to idle
+[driver] step wait 4
+[driver] step tap Select Contacts
+    t =    12.45s Waiting 10.0s for Any (First Match) to exist
+    t =    13.49s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    13.49s         Checking existence of `Any (First Match)`
+    t =    13.59s Tap Any (First Match)
+    t =    13.59s     Wait for com.apple.springboard to idle
+    t =    13.60s     Find the Any (First Match)
+    t =    13.68s     Check for interrupting elements affecting "Select Contacts" Button
+    t =    13.74s     Synthesize event
+    t =    14.07s     Wait for com.apple.springboard to idle
+[driver] step wait 3
+[driver] step tap Alex Rivera
+    t =    17.08s Waiting 10.0s for Any (First Match) to exist
+    t =    18.11s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    18.11s         Checking existence of `Any (First Match)`
+    t =    18.22s Tap Any (First Match)
+    t =    18.22s     Wait for com.apple.springboard to idle
+    t =    18.22s     Find the Any (First Match)
+    t =    18.29s     Check for interrupting elements affecting "Alex Rivera" StaticText
+    t =    18.36s     Synthesize event
+    t =    18.65s     Wait for com.apple.springboard to idle
+[driver] step wait 1
+[driver] step tap Continue
+    t =    19.66s Waiting 10.0s for Any (First Match) to exist
+    t =    20.69s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    20.69s         Checking existence of `Any (First Match)`
+    t =    20.76s Tap Any (First Match)
+    t =    20.76s     Wait for com.apple.springboard to idle
+    t =    20.76s     Find the Any (First Match)
+    t =    20.81s     Check for interrupting elements affecting "Continue" Button
+    t =    20.87s     Synthesize event
+    t =    21.16s     Wait for com.apple.springboard to idle
+[driver] step wait 3
+[driver] step dump 
+    t =    24.17s Requesting snapshot of accessibility hierarchy for app with pid 84202
+    t =    24.41s Requesting snapshot of accessibility hierarchy for app with pid 84202
+[driver] tree
+Attributes: Application, 0x1057ef0c0, pid: 84202, label: ' '
+Element subtree:
+ →Application, 0x1057ef0c0, pid: 84202, label: ' '
+    Window, 0x1057efe80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1057eea80, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x1057eed00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1057ee940, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1057eee40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1057eebc0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1057ecdc0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1057ecf00, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x1057edf40, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x1057ed180, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1057ee800, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1057ecc80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x1057ee6c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1057ee440, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057ee300, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057edcc0, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1057ede00, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057ee080, {{139.3, 15.0}, {123.3, 34.7}}
+          Other, 0x1057edb80, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1057ef5c0, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057eef80, {{138.3, 14.0}, {125.3, 36.7}}
+            Other, 0x1057ef200, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057eda40, {{139.0, 14.7}, {124.0, 35.3}}
+          Other, 0x1057ef340, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x1057ee1c0, {{138.3, 14.0}, {125.3, 36.7}}
+              Other, 0x1057efd40, {{128.3, 10.0}, {145.3, 52.0}}
+              Other, 0x1057ef480, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1057ef700, {{138.3, 14.0}, {125.3, 36.7}}
+                  Other, 0x1057ef980, {{138.3, 14.0}, {125.3, 36.7}}
+                Other, 0x1057efac0, {{138.3, 14.0}, {125.3, 36.7}}
+          Other, 0x1057ee580, {{218.0, 28.0}, {9.0, 9.0}}
+    Window, 0x1057ef840, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1057efc00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1057ec500, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10568d040, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10568f700, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10568f980, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x10568f480, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x10568f840, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SBSwitcherWindow:Main'
+      Other, 0x10568c8c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10568f5c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x108ff0000, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x108ff0140, {{0.0, 0.0}, {402.0, 874.0}}
+              ScrollView, 0x108ff0280, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x108ff03c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'AppSwitcherContentView'
+                Other, 0x108ff0500, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108ff0640, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108ff0780, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x108ff08c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'card:com.tarunyadgirkar.prefill.spike.contacts.probe:sceneID:com.tarunyadgirkar.prefill.spike.contacts.probe-CFE98414-B93E-4DEA-A003-C9F5242856EB', label: 'Probe'
+                  Other, 0x108ff0a00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108ff0b40, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x108ff0c80, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x108ff0dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x108ff0f00, {{0.0, 0.0}, {402.0, 874.0}}
+                            ScrollView, 0x108ff1040, {{0.0, -437.0}, {402.0, 1311.0}}
+                              Other, 0x108ff1180, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x108ff12c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x108ff1400, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x108ff1540, {{0.0, 0.0}, {402.0, 874.0}}
+                                      Other, 0x108ff1680, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x108ff17c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                          Other, 0x108ff1900, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x108ff1a40, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x108ff1b80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                StatusBar, 0x108ff1cc0, {{0.0, 0.0}, {402.0, 54.0}}
+                                                  Other, 0x108ff1e00, {{0.0, 0.0}, {402.0, 54.0}}
+                                                    Other, 0x108ff1f40, {{0.0, 0.0}, {402.0, 54.0}}
+                                                      StaticText, 0x108ff2080, {{51.7, 21.7}, {45.0, 21.7}}, label: '11:28 PM'
+                                                      Other, 0x108ff21c0, {{55.7, 14.3}, {36.7, 36.7}}
+                                                      Other, 0x108ff2300, {{309.0, 14.3}, {36.7, 36.7}}
+                                                      Other, 0x108ff2440, {{284.7, 25.0}, {20.3, 13.7}}, label: 'Cellular', value: No signal
+                                                      Other, 0x108ff2580, {{314.0, 26.0}, {17.7, 12.7}}, identifier: '3 of 3 Wi-Fi bars', value: SSID, 3 of 3 Wi-Fi...
+                                                        Image, 0x108ff26c0, {{311.3, 23.7}, {23.0, 17.7}}, identifier: 'wifi', label: 'Wi-Fi'
+                                                      Other, 0x108ff2800, {{340.7, 25.3}, {29.0, 13.7}}, label: '100% battery power', value: Not charging
+                                          Other, 0x108ff2940, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x108ff2a80, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x108ff2bc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                            Other, 0x108ff2d00, {{0.0, 0.0}, {402.0, 874.0}}
+                                              Other, 0x108ff2e40, {{0.0, 0.0}, {402.0, 874.0}}
+                                                Other, 0x108ff2f80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                  Other, 0x108ff30c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                    Other, 0x108ff3200, {{0.0, 0.0}, {402.0, 874.0}}
+                                                    Other, 0x108ff3340, {{0.0, 0.0}, {402.0, 874.0}}
+                                                      Other, 0x108ff3480, {{0.0, 0.0}, {402.0, 874.0}}
+                                                        Other, 0x108ff35c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                          Other, 0x108ff3700, {{0.0, 0.0}, {402.0, 874.0}}
+                                                            Other, 0x108ff3840, {{0.0, 0.0}, {402.0, 874.0}}
+                                                              Other, 0x108ff3980, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                Other, 0x108ff3ac0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                  Other, 0x108ff3c00, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                    Other, 0x108ff3d40, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                      Other, 0x108ff3e80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                        Other, 0x108ed8000, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                          Other, 0x108ed8140, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                            Other, 0x108ed8280, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                              Other, 0x108ed83c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                                NavigationBar, 0x108ed8500, {{0.0, 62.0}, {402.0, 54.0}}, identifier: '_TtGC7SwiftUI32NavigationStackHosting'
+                                                                                  Other, 0x108ed8640, {{20.0, 66.0}, {36.0, 36.0}}
+                                                                                    Other, 0x108ed8780, {{20.0, 66.0}, {36.0, 36.0}}
+                                                                                      Button, 0x108ed88c0, {{24.0, 66.0}, {28.0, 36.0}}, identifier: 'chevron.backward', label: 'Back'
+                                                                                  Other, 0x108ed8a00, {{240.7, 66.0}, {141.3, 36.0}}
+                                                                                    Other, 0x108ed8b40, {{240.7, 66.0}, {141.3, 36.0}}
+                                                                                      Button, 0x108ed8c80, {{240.7, 66.0}, {141.3, 36.0}}, label: 'Show Selected'
+                                                                                Other, 0x108ed8dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                                  Other, 0x108ed8f00, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                                    Other, 0x108ed9040, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                                      Other, 0x108ed9180, {{0.0, 0.0}, {402.0, 874.0}}
+                                                                                        ScrollView, 0x108ed92c0, {{0.0, 0.0}, {402.0, 702.0}}
+                                                                                          Other, 0x108ed9400, {{0.0, 0.0}, {402.0, 702.0}}
+                                                                                            Other, 0x108ed9540, {{0.0, 0.0}, {402.0, 156.0}}
+                                                                                          Other, 0x108ed9680, {{0.0, 0.0}, {402.0, 702.0}}
+                                                                                          Other, 0x108ed97c0, {{0.0, 116.0}, {402.0, 600.7}}
+                                                                                            Other, 0x108ed9900, {{89.0, 169.3}, {224.0, 246.3}}
+                                                                                              Button, 0x108ed9a40, {{89.0, 169.3}, {224.0, 224.0}}, label: 'Contact photo for Alex Rivera'
+                                                                                                Image, 0x108ed9b80, {{89.0, 169.3}, {224.0, 224.0}}
+                                                                                              Button, 0x108ed9cc0, {{89.0, 191.7}, {224.0, 224.0}}, label: 'Contact photo for Alex Rivera'
+                                                                                                Image, 0x108ed9e00, {{89.0, 191.7}, {224.0, 224.0}}
+                                                                                            StaticText, 0x108ed9f40, {{47.0, 502.0}, {270.0, 26.3}}, label: 'Allow access to 1 contact?'
+                                                                                            StaticText, 0x108eda080, {{47.0, 530.3}, {308.0, 166.3}}, label: '“Probe” will only have access to contact information for the contacts you selected. This includes names, emails, photos, phone numbers, addresses, and more.'
+                                                                                          Other, 0x108eda1c0, {{369.0, 116.0}, {30.0, 586.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                                                            Other, 0x108eda300, {{396.0, 119.0}, {3.0, 568.0}}
+                                                                                          Other, 0x108eda440, {{369.0, 116.0}, {30.0, 586.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                                                                                            Other, 0x108eda580, {{396.0, 119.0}, {3.0, 568.0}}
+                                                                                        Button, 0x108eda6c0, {{35.0, 721.7}, {332.0, 51.0}}, label: 'Allow Selected Contact'
+                                                                                        Button, 0x108eda800, {{35.0, 788.7}, {332.0, 51.0}}, label: 'Not Now'
+                                                                                Toolbar, 0x108eda940, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                                                                  Other, 0x108edaa80, {{0.0, 0.0}, {402.0, 874.0}}
+                                                    Other, 0x108edabc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x108edad00, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x108edae40, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x108edaf80, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x108edb0c0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x108edb200, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x108edb340, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x108edb480, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Home Grabber'
+                          Other, 0x108edb5c0, {{129.0, 861.0}, {144.0, 5.0}}
+                            Other, 0x108edb700, {{129.0, 861.0}, {144.0, 5.0}}
+                              Other, 0x108edb840, {{129.0, 861.0}, {144.0, 5.0}}
+                                Other, 0x108edb980, {{129.0, 861.0}, {144.0, 5.0}}
+    Window, 0x108edbac0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108edbc00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x108edbd40, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x108edbe80, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108f24000, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x108f24140, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x108f24280, {{0.0, 0.0}, {134.0, 291.3}}
+      Other, 0x108f243c0, {{0.0, 0.0}, {134.0, 291.3}}
+        Other, 0x108f24500, {{0.0, 0.0}, {134.0, 291.3}}
+    Window, 0x108f24640, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108f24780, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x108f248c0, {{0.0, 0.0}, {402.0, 874.0}}
+    Window (Main), 0x108f24a00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108f24b40, {{138.3, 14.0}, {125.3, 36.7}}
+    Window, 0x108f24c80, {{0.0, 0.0}, {402.0, 874.0}}
+      StatusBar, 0x108f24dc0, {{0.0, 0.0}, {402.0, 54.0}}
+    Window, 0x108f24f00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108f25040, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x108f25180, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x108f252c0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x1057ef0c0, pid: 84202, label: ' '
+Query chain:
+ →Find: Application 'com.apple.springboard'
+  Output: {
+    Application, 0x108f25400, pid: 84202, label: ' '
+  }
+
+[driver] step wait 8
+    t =    32.46s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (32.699 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:28:55.981.
+	 Executed 1 test, with 0 failures (0 unexpected) in 32.699 (32.706) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:28:55.984.
+	 Executed 1 test, with 0 failures (0 unexpected) in 32.699 (32.709) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:28:55.984.
+	 Executed 1 test, with 0 failures (0 unexpected) in 32.699 (32.712) seconds
+2026-09-30 23:28:56.312 xcodebuild[9298:12922884] [MT] IDETestOperationsObserverDebug: 38.544 elapsed -- Testing started completed.
+2026-09-30 23:28:56.312 xcodebuild[9298:12922884] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:28:56.312 xcodebuild[9298:12922884] [MT] IDETestOperationsObserverDebug: 38.544 sec, +38.544 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-28-17--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

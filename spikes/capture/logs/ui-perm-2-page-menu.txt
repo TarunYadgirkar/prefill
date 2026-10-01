@@ -1,0 +1,146 @@
+Attributes: Application, 0x104673200, pid: 23688, label: 'Safari'
+Element subtree:
+ →Application, 0x104673200, pid: 23688, label: 'Safari'
+    Window (Main), 0x110c2fc00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x110fa5400, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x110fa5540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x110fa5680, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x110fa57c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+            Other, 0x110fa4780, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x110fa5cc0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x110fa5e00, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x110fa5f40, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x110fa6080, {{0.0, 0.0}, {402.0, 49.0}}
+                Other, 0x110fa7980, {{0.0, 0.0}, {402.0, 62.0}}
+                ScrollView, 0x110fa7ac0, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x110fa7c00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x110fa48c0, {{0.0, 0.0}, {402.0, 102.0}}
+                  Other, 0x110fa4a00, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x110fa4b40, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=BDDE5508-07D1-47FD-9939-0D9BEAA09043&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=23746'
+                    WebView, 0x110fa4c80, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+                      WebView, 0x110fa4dc0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x110fa4f00, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x110fa5a40, {{0.0, 0.0}, {402.0, 89.0}}
+                          Other, 0x110fa7d40, {{0.0, 736.0}, {402.0, 138.0}}
+                        WebView, 0x110fa7e80, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x110fa5b80, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x110fb0000, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x110fb0140, {{0.0, 62.0}, {402.0, 874.0}}
+                                Other, 0x110fb0280, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Away', Focused
+                                  Other, 0x110fb03c0, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Another page', value: 1, Focused
+                                    StaticText, 0x110fb0500, {{16.0, 84.0}, {215.0, 43.0}}, label: 'Another page', value: Another page, Focused
+                        Other, 0x110fb0640, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x110fb0780, {{0.0, 0.0}, {402.0, 89.0}}
+                        Other, 0x110fb08c0, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x110fb0a00, {{396.0, 779.0}, {3.0, 46.0}}
+                        Other, 0x110fb0b40, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                          Other, 0x110fb0c80, {{346.0, 868.0}, {7.0, 3.0}}
+                        Other, 0x110fb0dc0, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x110fb0f00, {{396.0, 779.0}, {3.0, 46.0}}
+                        Other, 0x110fb1040, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                          Other, 0x110fb1180, {{346.0, 868.0}, {7.0, 3.0}}
+                  Other, 0x110fb12c0, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x110fb1400, {{334.3, 868.0}, {7.0, 3.0}}
+                  Other, 0x110fb1540, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x110fb1680, {{334.3, 868.0}, {7.0, 3.0}}
+            Other, 0x110fb17c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'CapsuleViewController'
+              Other, 0x110fb1900, {{0.0, 776.0}, {402.0, 98.0}}
+                Other, 0x110fb1a40, {{0.0, 776.0}, {402.0, 98.0}}
+                Other, 0x110fb1b80, {{90.0, 792.0}, {222.0, 48.0}}
+                  Other, 0x110fb1cc0, {{90.0, 792.0}, {222.0, 48.0}}
+                    Other, 0x110fb1e00, {{90.0, 792.0}, {222.0, 48.0}}
+                      Other, 0x110fb1f40, {{90.0, 792.0}, {222.0, 48.0}}, identifier: 'CapsuleNavigationBar?isSelected=true&isDistractionControlOverlayUp=false', Selected
+                        Button, 0x110fb2080, {{90.0, 792.0}, {48.0, 48.0}}, identifier: 'MoreMenuButton', label: 'Page Menu'
+                          StaticText, 0x110fb21c0, {{90.0, 792.0}, {0.0, 0.0}}
+                        TextField, 0x110fb2300, {{168.0, 806.0}, {66.0, 20.3}}, identifier: 'TabBarItemTitle', label: 'Address', value: ‎127.0.0.1
+                        Button, 0x110fb2440, {{281.3, 805.7}, {17.7, 21.0}}, identifier: 'ReloadButton', label: 'refresh'
+      Other, 0x110fb2580, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabBarMoreMenu'
+        Other, 0x110fb26c0, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x110fb2800, {{82.3, 320.0}, {250.0, 520.0}}
+            Other, 0x110fb2940, {{82.3, 320.0}, {250.0, 520.0}}
+              Other, 0x110fb2a80, {{82.3, 320.0}, {250.0, 520.0}}
+                Other, 0x110fb2bc0, {{82.3, 320.0}, {250.0, 520.0}}
+                CollectionView, 0x110fb2d00, {{82.3, 320.0}, {250.0, 874.0}}
+                  Cell, 0x110fb2e40, {{82.3, 330.0}, {250.0, 42.0}}
+                    Button, 0x110fb2f80, {{82.3, 330.0}, {250.0, 42.0}}, identifier: 'Translate-en_US', label: 'Translate to English', Disabled
+                      Image, 0x110fb30c0, {{107.3, 340.3}, {30.3, 21.7}}, identifier: 'translate', label: 'Translate'
+                  Other, 0x110fb3200, {{106.3, 382.0}, {202.0, 1.0}}
+                  Cell, 0x110fb3340, {{82.3, 393.0}, {250.0, 42.0}}
+                    Button, 0x110fb3480, {{82.3, 393.0}, {250.0, 42.0}}, identifier: 'ShareButton', label: 'Share'
+                      Image, 0x110fb35c0, {{113.0, 401.7}, {19.0, 22.7}}, identifier: 'square.and.arrow.up', label: 'Share'
+                  Cell, 0x110fb3700, {{82.3, 435.0}, {250.0, 42.0}}
+                    Button, 0x110fb3840, {{82.3, 435.0}, {250.0, 42.0}}, identifier: 'FastAddBookmark', label: 'Add to Bookmarks'
+                      Image, 0x110fb3980, {{113.7, 446.0}, {17.3, 20.7}}, identifier: 'bookmark', label: 'bookmark'
+                  Cell, 0x110fb3ac0, {{82.3, 477.0}, {250.0, 42.0}}
+                    Button, 0x110fb3c00, {{82.3, 477.0}, {250.0, 42.0}}, label: 'Add Bookmark to…'
+                      Image, 0x110fb3d40, {{111.0, 489.0}, {25.3, 21.0}}, identifier: 'book.badge.plus', label: 'Book with a plus badge'
+                  Other, 0x110fb3e80, {{106.3, 529.0}, {202.0, 1.0}}
+                  Cell, 0x111018000, {{82.3, 540.0}, {250.0, 42.0}}
+                    Button, 0x111018140, {{82.3, 540.0}, {250.0, 42.0}}, identifier: 'FindOnPage', label: 'Find on Page'
+                      Image, 0x111018280, {{113.3, 550.7}, {18.7, 23.0}}, identifier: 'doc.text.magnifyingglass', label: 'search document'
+                  Cell, 0x1110183c0, {{82.3, 582.0}, {250.0, 42.0}}
+                    Button, 0x111018500, {{82.3, 582.0}, {250.0, 42.0}}, label: 'Page Zoom'
+                      Image, 0x111018640, {{112.3, 593.7}, {20.3, 19.3}}, identifier: 'plus.magnifyingglass', label: 'zoom in'
+                  Cell, 0x111018780, {{82.3, 624.0}, {250.0, 42.0}}
+                    Button, 0x1110188c0, {{82.3, 624.0}, {250.0, 42.0}}, identifier: 'NotifyMeWhenButton', label: 'Notify Me'
+                      Image, 0x111018a00, {{113.0, 635.3}, {19.0, 20.0}}, identifier: 'bell', label: 'notifications'
+                  Cell, 0x111018b40, {{82.3, 666.0}, {250.0, 62.0}}
+                    Button, 0x111018c80, {{82.3, 666.0}, {250.0, 62.0}}, identifier: 'Scribble', label: 'Hide Distracting Items'
+                      Image, 0x111018dc0, {{109.3, 686.7}, {26.3, 20.7}}, identifier: 'eye.slash', label: 'hide'
+                  Other, 0x111018f00, {{106.3, 738.0}, {202.0, 1.0}}
+                  Cell, 0x111019040, {{82.3, 749.0}, {250.0, 60.0}}
+                    Button, 0x111019180, {{82.3, 749.0}, {250.0, 60.0}}, label: 'Prefill Capture'
+                      Image, 0x1110192c0, {{112.3, 769.0}, {20.0, 20.0}}, identifier: '58AE7017-2478-46E8-BC6F-CD983710AE10'
+                  Cell, 0x111019400, {{82.3, 809.0}, {250.0, 42.0}}
+                    Button, 0x111019540, {{82.3, 809.0}, {250.0, 42.0}}, identifier: 'MagicExtensionsEntryPageMenuButton', label: 'Describe Extension'
+                      Image, 0x111019680, {{112.7, 821.3}, {19.3, 18.0}}, identifier: 'plus.app', label: 'Add to home screen'
+                  Cell, 0x1110197c0, {{82.3, 851.0}, {250.0, 42.0}}
+                    Button, 0x111019900, {{82.3, 851.0}, {250.0, 42.0}}, identifier: 'ManageExtensions', label: 'Manage Extensions'
+                      Image, 0x111019a40, {{110.7, 862.7}, {23.7, 19.0}}, identifier: 'puzzlepiece.extension', label: 'Puzzle piece extension'
+                  Other, 0x111019b80, {{106.3, 903.0}, {202.0, 1.0}}
+                  Cell, 0x111019cc0, {{82.3, 914.0}, {250.0, 42.0}}
+                    Button, 0x111019e00, {{82.3, 914.0}, {250.0, 42.0}}, label: 'Tab Actions'
+                      Image, 0x111019f40, {{296.7, 928.7}, {9.3, 12.7}}, identifier: 'chevron.forward', label: 'Forward'
+                      Image, 0x11101a080, {{112.7, 926.3}, {19.3, 18.0}}, identifier: 'arrow.up.right.square', label: 'Up-right arrow in a square'
+                  Cell, 0x11101a1c0, {{82.3, 956.0}, {250.0, 42.0}}
+                    Button, 0x11101a300, {{82.3, 956.0}, {250.0, 42.0}}, label: 'Privacy & Security'
+                      Image, 0x11101a440, {{296.7, 970.7}, {9.3, 12.7}}, identifier: 'chevron.forward', label: 'Forward'
+                      Image, 0x11101a580, {{113.3, 967.7}, {18.0, 19.7}}, identifier: 'shield.lefthalf.filled', label: 'Shield with the left half filled'
+                  Cell, 0x11101a6c0, {{82.3, 998.0}, {250.0, 62.0}}
+                    Button, 0x11101a800, {{82.3, 998.0}, {250.0, 62.0}}, identifier: 'ToggleDesktopMobileWebsite', label: 'Request Desktop Website'
+                      Image, 0x11101a940, {{110.3, 1019.7}, {24.0, 19.7}}, identifier: 'desktopcomputer', label: 'Computer'
+                  Cell, 0x11101aa80, {{82.3, 1060.0}, {250.0, 42.0}}
+                    Button, 0x11101abc0, {{82.3, 1060.0}, {250.0, 42.0}}, identifier: 'HideToolbar', label: 'Hide Toolbar'
+                      Image, 0x11101ad00, {{112.3, 1072.0}, {20.0, 18.7}}, identifier: 'arrow.up.left.and.arrow.down.right', label: 'enter full screen'
+                  Cell, 0x11101ae40, {{82.3, 1102.0}, {250.0, 42.0}}
+                    Button, 0x11101af80, {{82.3, 1102.0}, {250.0, 42.0}}, identifier: 'WebsiteSettings', label: 'Website Settings…'
+                      Image, 0x11101b0c0, {{111.3, 1112.3}, {22.0, 22.0}}, identifier: 'gear', label: 'settings'
+                  Cell, 0x11101b200, {{82.3, 1144.0}, {250.0, 62.0}}
+                    Button, 0x11101b340, {{82.3, 1144.0}, {250.0, 62.0}}, identifier: 'ReportWebCompatibilityIssue', label: 'Report Website Issue'
+                      Image, 0x11101b480, {{111.3, 1165.7}, {22.3, 20.0}}, identifier: 'exclamationmark.bubble', label: 'Alert'
+                  Other, 0x11101b5c0, {{299.3, 350.0}, {30.0, 460.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                    Other, 0x11101b700, {{326.3, 353.0}, {3.0, 302.3}}
+                  Other, 0x11101b840, {{82.3, 777.0}, {250.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x11101b980, {{85.3, 804.0}, {241.0, 3.0}}
+                  Other, 0x11101bac0, {{299.3, 350.0}, {30.0, 460.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                    Other, 0x11101bc00, {{326.3, 353.0}, {3.0, 302.3}}
+                  Other, 0x11101bd40, {{82.3, 777.0}, {250.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x11101be80, {{85.3, 804.0}, {241.0, 3.0}}
+              Other, 0x111020000, {{82.3, 320.0}, {250.0, 520.0}}
+                Other, 0x111020140, {{82.3, 320.0}, {250.0, 520.0}}
+                  Other, 0x111020280, {{82.3, 320.0}, {250.0, 520.0}}
+                    Other, 0x1110203c0, {{82.3, 320.0}, {250.0, 520.0}}
+                      Other, 0x111020500, {{82.3, 320.0}, {250.0, 520.0}}
+                        Other, 0x111020640, {{82.3, 320.0}, {250.0, 44.0}}
+                    Other, 0x111020780, {{82.3, 320.0}, {250.0, 520.0}}
+                      Other, 0x1110208c0, {{82.3, 320.0}, {250.0, 44.0}}
+    Window, 0x111020a00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x111020b40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x111020c80, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x104673200, pid: 23688, label: 'Safari'
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x111020dc0, pid: 23688, label: 'Safari'
+  }

@@ -1,0 +1,2 @@
+native edit menu: app=["AutoFill"]
+native autofill submenu: app=[]

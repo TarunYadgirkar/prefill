@@ -1,0 +1,55 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/DatalistSpike.xcodeproj -scheme DatalistSpike -destination "platform=iOS Simulator,id=47A4C2A7-9518-49BF-92C1-D602AAE4E6D9" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build "-only-testing:DatalistUITests/DriverTests/testTapLabels"
+
+2026-09-30 23:15:16.955515-0700 DatalistUITests-Runner[91074:12820752] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:15:18.775.
+Test Suite 'DatalistUITests.xctest' started at 2026-09-30 23:15:18.775.
+Test Suite 'DriverTests' started at 2026-09-30 23:15:18.776.
+Test Case '-[DatalistUITests.DriverTests testTapLabels]' started.
+    t =     0.00s Start Test at 2026-09-30 23:15:18.778
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.Preferences
+    t =     0.02s     Activate com.apple.Preferences
+    t =     0.03s         Wait for com.apple.Preferences to idle
+objc[91074]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106470398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1072fc310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.05s Checking existence of `"All Websites" Any`
+    t =     1.07s Find the "All Websites" Any
+    t =     1.10s Checking existence of `"All Websites" Cell`
+    t =     1.11s Find the "All Websites" Cell
+    t =     1.14s Checking existence of `"All Websites" Cell`
+    t =     1.15s Find the "All Websites" Cell
+    t =     1.18s Checking existence of `"All Websites" Cell`
+    t =     1.20s Find the "All Websites" Cell
+    t =     1.22s Checking existence of `"All Websites" Cell`
+    t =     1.24s Find the "All Websites" Cell
+    t =     1.27s Checking existence of `"All Websites" Cell`
+    t =     1.28s Find the "All Websites" Cell
+    t =     1.31s Checking existence of `"All Websites" Cell`
+    t =     1.33s Checking existence of `"All Websites" Cell`
+    t =     1.34s Tap "All Websites" Cell
+    t =     1.34s     Wait for com.apple.Preferences to idle
+    t =     1.35s     Find the "All Websites" Cell
+    t =     1.37s     Check for interrupting elements affecting "All Websites" Cell
+    t =     1.40s     Synthesize event
+    t =     1.68s     Wait for com.apple.Preferences to idle
+    t =     4.02s Requesting snapshot of accessibility hierarchy for app with pid 89262
+    t =     4.16s Requesting snapshot of accessibility hierarchy for app with pid 89262
+    t =     7.30s Tear Down
+Test Case '-[DatalistUITests.DriverTests testTapLabels]' passed (7.319 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:15:26.097.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.319 (7.321) seconds
+Test Suite 'DatalistUITests.xctest' passed at 2026-09-30 23:15:26.097.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.319 (7.322) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:15:26.097.
+	 Executed 1 test, with 0 failures (0 unexpected) in 7.319 (7.322) seconds
+2026-09-30 23:15:29.437 xcodebuild[91060:12820541] [MT] IDETestOperationsObserverDebug: 13.344 elapsed -- Testing started completed.
+2026-09-30 23:15:29.437 xcodebuild[91060:12820541] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:15:29.437 xcodebuild[91060:12820541] [MT] IDETestOperationsObserverDebug: 13.344 sec, +13.344 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Logs/Test/Test-DatalistSpike-2026.09.30_23-15-16--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

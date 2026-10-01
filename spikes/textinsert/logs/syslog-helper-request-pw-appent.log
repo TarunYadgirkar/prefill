@@ -1,0 +1,20 @@
+2026-09-30 23:40:21.008 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.mobilesafari:Authorization] Initializing ASCAgent 0x101532080.
+2026-09-30 23:40:21.008 A  AuthenticationServicesAgent[88774:c6da3b] (PlugInKit) continuous-discovery
+2026-09-30 23:40:21.008 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.mobilesafari:Authorization] Received connection from 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert
+2026-09-30 23:40:21.008 Df AuthenticationServicesAgent[88774:c6da3b] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> created discovery driver
+2026-09-30 23:40:21.008 Df AuthenticationServicesAgent[88774:c6da3b] [com.apple.PlugInKit:discovery] [d 0BCD608D-79E7-4FD0-A193-4F2E8F03D9D6] <PKHost:0x1014ed200> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:40:21.009 A  AuthenticationServicesAgent[88774:c688b7] (PlugInKit) discovery
+2026-09-30 23:40:21.009 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] [d E1EAC6DB-1DB8-4E07-9BE8-C4313F65F531] <PKHost:0x1014ed200> Beginning discovery for flags: 1024, point: com.apple.authentication-services-credential-provider
+2026-09-30 23:40:21.009 Df pkd[86982:c6d9a6] [com.apple.PlugInKit:discovery] [d 0BCD608D-79E7-4FD0-A193-4F2E8F03D9D6] Final plugin count: 1
+2026-09-30 23:40:21.009 Df AuthenticationServicesAgent[88774:c6da3b] [com.apple.PlugInKit:discovery] [d 0BCD608D-79E7-4FD0-A193-4F2E8F03D9D6] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 1
+2026-09-30 23:40:21.009 Df AuthenticationServicesAgent[88774:c6de06] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> delivering update to host (1 plugins)
+2026-09-30 23:40:21.010 Df pkd[86982:c6d9a6] [com.apple.PlugInKit:discovery] [d E1EAC6DB-1DB8-4E07-9BE8-C4313F65F531] Final plugin count: 0
+2026-09-30 23:40:21.010 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] [d E1EAC6DB-1DB8-4E07-9BE8-C4313F65F531] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 0
+2026-09-30 23:40:21.010 Df AuthenticationServicesAgent[88774:c6de06] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> installing watchers for continuous discovery
+2026-09-30 23:40:21.015 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.mobilesafari:Authorization] 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert disconnected.
+2026-09-30 23:40:21.015 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.mobilesafari:Authorization] Completing authorization: 0x101532080 (null) Error Domain=com.apple.AuthenticationServicesCore.AuthorizationError Code=2 "(null)" (null)
+2026-09-30 23:40:21.015 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.mobilesafari:Authorization] Dealloc for 0x101532080. Cancelling any outstanding requests.
+2026-09-30 23:40:21.016 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> explicit cancellation for discovery
+2026-09-30 23:40:21.016 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> removing watchers for continous discovery
+2026-09-30 23:40:21.016 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> destroying discovery driver
+2026-09-30 23:40:21.016 Df AuthenticationServicesAgent[88774:c688b7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> removing watchers for continous discovery

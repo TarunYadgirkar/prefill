@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Datalist spike</title>
+<style>
+  body { font: 17px -apple-system, system-ui, sans-serif; margin: 0; padding: 150px 16px 16px; }
+  #log { position: fixed; top: 0; left: 0; right: 0; height: 130px; overflow: hidden; margin: 0; padding: 6px 8px; font: 11px ui-monospace, monospace; background: #ffe; border-bottom: 1px solid #999; white-space: pre-wrap; z-index: 9; }
+  #cs { font-size: 13px; color: #a00; }
+  form { display: grid; gap: 12px; }
+  label { display: grid; gap: 4px; font-size: 15px; }
+  input { font: inherit; padding: 10px 12px; border: 1px solid #888; }
+</style>
+</head>
+<body>
+<pre id="log"></pre>
+<div id="cs">content script: not detected</div>
+<form id="f" action="/submitted" method="get">
+  <label>Email <input id="email" name="email" type="email" autocomplete="email"></label>
+  <label>Your e-mail <input id="f_em" name="usr_contact"></label>
+  <label>Phone <input id="tel" name="tel" type="tel" autocomplete="tel"></label>
+  <label>Company <input id="company" name="company_x" type="text"></label>
+  <label>Favorite color <input id="color" name="fav_color" type="text"></label>
+</form>
+<script>
+  if (new URLSearchParams(location.search).get('plain') === '1') document.querySelector('style').textContent = '#log{position:fixed;top:0;left:0;right:0;height:130px;overflow:hidden;margin:0;font-size:11px;background:#ffe}body{padding-top:150px}';
+  const pane = document.getElementById('log');
+  const post = (entry) => fetch('/log', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) }).catch(() => {});
+  const record = (e) => {
+    const el = e.target;
+    if (!(el instanceof HTMLInputElement)) return;
+    const entry = { src: 'page', event: e.type, field: el.id, value: el.value, isTrusted: e.isTrusted, inputType: e.inputType ?? null, key: e.key ?? null, list: el.getAttribute('list'), t: Date.now() };
+    pane.textContent = `${entry.event} ${entry.field} "${entry.value}" ${entry.inputType ?? entry.key ?? ''} trusted=${entry.isTrusted}\n` + pane.textContent;
+    post(entry);
+  };
+  ['input', 'change', 'keydown', 'focus'].forEach((t) => document.addEventListener(t, record, true));
+  if (new URLSearchParams(location.search).get('pagedl') === '1') {
+    const dl = document.createElement('datalist');
+    dl.id = 'page-dl';
+    dl.innerHTML = ['one', 'two', 'three', 'four', 'five'].map((w) => `<option value="pg-${w}@example.net">`).join('');
+    document.body.appendChild(dl);
+    document.querySelectorAll('input').forEach((i) => i.setAttribute('list', 'page-dl'));
+  }
+  setTimeout(() => {
+    const active = document.documentElement.dataset.prefillCs === 'active';
+    document.getElementById('cs').textContent = `content script: ${active ? 'ACTIVE' : 'not detected'}; ` + [...document.querySelectorAll('input')].map((i) => `${i.id}[ac=${i.getAttribute('autocomplete')},list=${i.getAttribute('list')}]`).join(' ');
+    post({ src: 'page', event: 'loaded', url: location.href, cs: active, fields: [...document.querySelectorAll('input')].map((i) => ({ id: i.id, name: i.name, ac: i.getAttribute('autocomplete'), list: i.getAttribute('list') })) });
+  }, 500);
+</script>
+</body>
+</html>

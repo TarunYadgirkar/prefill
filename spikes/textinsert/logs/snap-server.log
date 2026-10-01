@@ -1,0 +1,836 @@
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png
+127.0.0.1 - - [30/Sep/2026 23:13:29] "GET /snap?name=app-home HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png
+127.0.0.1 - - [30/Sep/2026 23:13:34] "GET /snap?name=helper-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-app.txt
+127.0.0.1 - - [30/Sep/2026 23:13:34] "POST /tree?name=helper-prompt-app HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:13:34] "POST /tree?name=helper-prompt-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png
+127.0.0.1 - - [30/Sep/2026 23:13:39] "GET /snap?name=helper-after-accept HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-after-accept-app.txt
+127.0.0.1 - - [30/Sep/2026 23:13:39] "POST /tree?name=helper-after-accept-app HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png
+127.0.0.1 - - [30/Sep/2026 23:15:02] "GET /snap?name=settings-root HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-autofill-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-autofill-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:15:07] "GET /snap?name=settings-autofill-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-settings-autofill-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:15:08] "POST /tree?name=settings-autofill-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-from-helper.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-from-helper.png
+127.0.0.1 - - [30/Sep/2026 23:15:16] "GET /snap?name=settings-from-helper HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-settings-from-helper.txt
+127.0.0.1 - - [30/Sep/2026 23:15:16] "POST /tree?name=settings-from-helper HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-page.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-page.png
+127.0.0.1 - - [30/Sep/2026 23:16:33] "GET /snap?name=textonly-page HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-page.txt
+127.0.0.1 - - [30/Sep/2026 23:16:33] "POST /tree?name=textonly-page HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-focused.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-focused.png
+127.0.0.1 - - [30/Sep/2026 23:16:35] "GET /snap?name=textonly-email-focused HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-email-focused.txt
+127.0.0.1 - - [30/Sep/2026 23:16:36] "POST /tree?name=textonly-email-focused HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-tap-again.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-tap-again.png
+127.0.0.1 - - [30/Sep/2026 23:16:38] "GET /snap?name=textonly-email-tap-again HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-email-tap-again.txt
+127.0.0.1 - - [30/Sep/2026 23:16:38] "POST /tree?name=textonly-email-tap-again HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:16:41] "GET /snap?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:16:41] "POST /tree?name=textonly-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-page.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-page.png
+127.0.0.1 - - [30/Sep/2026 23:17:33] "GET /snap?name=textonly-page HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-page.txt
+127.0.0.1 - - [30/Sep/2026 23:17:33] "POST /tree?name=textonly-page HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-focused.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-focused.png
+127.0.0.1 - - [30/Sep/2026 23:17:36] "GET /snap?name=textonly-email-focused HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-email-focused.txt
+127.0.0.1 - - [30/Sep/2026 23:17:36] "POST /tree?name=textonly-email-focused HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-tap-again.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-tap-again.png
+127.0.0.1 - - [30/Sep/2026 23:17:38] "GET /snap?name=textonly-email-tap-again HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-email-tap-again.txt
+127.0.0.1 - - [30/Sep/2026 23:17:38] "POST /tree?name=textonly-email-tap-again HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-longpress.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-email-longpress.png
+127.0.0.1 - - [30/Sep/2026 23:17:41] "GET /snap?name=textonly-email-longpress HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-email-longpress.txt
+127.0.0.1 - - [30/Sep/2026 23:17:42] "POST /tree?name=textonly-email-longpress HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantA-longpress-unfocused.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantA-longpress-unfocused.png
+127.0.0.1 - - [30/Sep/2026 23:18:33] "GET /snap?name=textonly-variantA-longpress-unfocused HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-variantA-longpress-unfocused.txt
+127.0.0.1 - - [30/Sep/2026 23:18:34] "POST /tree?name=textonly-variantA-longpress-unfocused HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantB-tap-caret.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantB-tap-caret.png
+127.0.0.1 - - [30/Sep/2026 23:18:47] "GET /snap?name=textonly-variantB-tap-caret HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-variantB-tap-caret.txt
+127.0.0.1 - - [30/Sep/2026 23:18:48] "POST /tree?name=textonly-variantB-tap-caret HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantC-longpress-caret.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantC-longpress-caret.png
+127.0.0.1 - - [30/Sep/2026 23:18:51] "GET /snap?name=textonly-variantC-longpress-caret HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-variantC-longpress-caret.txt
+127.0.0.1 - - [30/Sep/2026 23:18:52] "POST /tree?name=textonly-variantC-longpress-caret HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantD-doubletap.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-variantD-doubletap.png
+127.0.0.1 - - [30/Sep/2026 23:18:55] "GET /snap?name=textonly-variantD-doubletap HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-variantD-doubletap.txt
+127.0.0.1 - - [30/Sep/2026 23:18:56] "POST /tree?name=textonly-variantD-doubletap HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-menu-variants.txt
+127.0.0.1 - - [30/Sep/2026 23:18:56] "POST /tree?name=textonly-menu-variants HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:29:11] "GET /snap?name=textonly-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:29:11] "POST /tree?name=textonly-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:29:14] "GET /snap?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:29:14] "POST /tree?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-explore.txt
+127.0.0.1 - - [30/Sep/2026 23:29:14] "POST /tree?name=textonly-explore HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:30:08] "GET /snap?name=textonly-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:30:08] "POST /tree?name=textonly-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t03.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t03.png
+127.0.0.1 - - [30/Sep/2026 23:30:10] "GET /snap?name=textonly-autofill-t03 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t1.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t1.png
+127.0.0.1 - - [30/Sep/2026 23:30:11] "GET /snap?name=textonly-autofill-t1 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:30:13] "GET /snap?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:30:14] "POST /tree?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:30:14] "POST /tree?name=textonly-autofill-submenu-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-explore.txt
+127.0.0.1 - - [30/Sep/2026 23:30:14] "POST /tree?name=textonly-explore HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-focused.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-focused.png
+127.0.0.1 - - [30/Sep/2026 23:31:23] "GET /snap?name=textonly-native-focused HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-native-focused.txt
+127.0.0.1 - - [30/Sep/2026 23:31:23] "POST /tree?name=textonly-native-focused HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:31:27] "GET /snap?name=textonly-native-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-native-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:31:27] "POST /tree?name=textonly-native-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-autofill-t03.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-autofill-t03.png
+127.0.0.1 - - [30/Sep/2026 23:31:29] "GET /snap?name=textonly-native-autofill-t03 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-native-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:31:31] "GET /snap?name=textonly-native-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-native-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:31:32] "POST /tree?name=textonly-native-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-native.txt
+127.0.0.1 - - [30/Sep/2026 23:31:32] "POST /tree?name=textonly-native HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:31:46] "GET /snap?name=textonly-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:31:46] "POST /tree?name=textonly-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t03.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t03.png
+127.0.0.1 - - [30/Sep/2026 23:31:49] "GET /snap?name=textonly-autofill-t03 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t1.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-t1.png
+127.0.0.1 - - [30/Sep/2026 23:31:50] "GET /snap?name=textonly-autofill-t1 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:31:53] "GET /snap?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:31:53] "POST /tree?name=textonly-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-autofill-submenu-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:31:53] "POST /tree?name=textonly-autofill-submenu-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-explore.txt
+127.0.0.1 - - [30/Sep/2026 23:31:53] "POST /tree?name=textonly-explore HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tagged-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tagged-menu.png
+127.0.0.1 - - [30/Sep/2026 23:33:09] "GET /snap?name=textonly-perfield-tagged-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tagged-after-autofill.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tagged-after-autofill.png
+127.0.0.1 - - [30/Sep/2026 23:33:10] "GET /snap?name=textonly-perfield-tagged-after-autofill HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-perfield-tagged-after-autofill.txt
+127.0.0.1 - - [30/Sep/2026 23:33:11] "POST /tree?name=textonly-perfield-tagged-after-autofill HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-untagged-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-untagged-menu.png
+127.0.0.1 - - [30/Sep/2026 23:33:25] "GET /snap?name=textonly-perfield-untagged-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-untagged-after-autofill.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-untagged-after-autofill.png
+127.0.0.1 - - [30/Sep/2026 23:33:28] "GET /snap?name=textonly-perfield-untagged-after-autofill HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-perfield-untagged-after-autofill.txt
+127.0.0.1 - - [30/Sep/2026 23:33:28] "POST /tree?name=textonly-perfield-untagged-after-autofill HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tel-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tel-menu.png
+127.0.0.1 - - [30/Sep/2026 23:33:43] "GET /snap?name=textonly-perfield-tel-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tel-after-autofill.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-perfield-tel-after-autofill.png
+127.0.0.1 - - [30/Sep/2026 23:33:45] "GET /snap?name=textonly-perfield-tel-after-autofill HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-perfield-tel-after-autofill.txt
+127.0.0.1 - - [30/Sep/2026 23:33:45] "POST /tree?name=textonly-perfield-tel-after-autofill HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-perfield.txt
+127.0.0.1 - - [30/Sep/2026 23:33:45] "POST /tree?name=textonly-perfield HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:34:44] "GET /snap?name=textonly-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:34:44] "POST /tree?name=textonly-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:34:47] "GET /snap?name=textonly-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:34:48] "POST /tree?name=textonly-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-t05.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-t05.png
+127.0.0.1 - - [30/Sep/2026 23:34:50] "GET /snap?name=textonly-f1-3-after-passwords-t05 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:34:53] "GET /snap?name=textonly-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-3-after-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:34:54] "POST /tree?name=textonly-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-3-after-passwords-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:34:54] "POST /tree?name=textonly-f1-3-after-passwords-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-explore.txt
+127.0.0.1 - - [30/Sep/2026 23:34:54] "POST /tree?name=textonly-f1-explore HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:35:58] "GET /snap?name=textonly-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:35:59] "POST /tree?name=textonly-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:36:01] "GET /snap?name=textonly-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:36:02] "POST /tree?name=textonly-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq1.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq1.png
+127.0.0.1 - - [30/Sep/2026 23:36:04] "GET /snap?name=textonly-f1-3-after-passwords-seq1 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq2.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq2.png
+127.0.0.1 - - [30/Sep/2026 23:36:05] "GET /snap?name=textonly-f1-3-after-passwords-seq2 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq3.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq3.png
+127.0.0.1 - - [30/Sep/2026 23:36:06] "GET /snap?name=textonly-f1-3-after-passwords-seq3 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq4.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq4.png
+127.0.0.1 - - [30/Sep/2026 23:36:06] "GET /snap?name=textonly-f1-3-after-passwords-seq4 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq5.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq5.png
+127.0.0.1 - - [30/Sep/2026 23:36:07] "GET /snap?name=textonly-f1-3-after-passwords-seq5 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq6.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords-seq6.png
+127.0.0.1 - - [30/Sep/2026 23:36:08] "GET /snap?name=textonly-f1-3-after-passwords-seq6 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-f1-3-after-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:36:10] "GET /snap?name=textonly-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-3-after-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:36:11] "POST /tree?name=textonly-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-3-after-passwords-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:36:11] "POST /tree?name=textonly-f1-3-after-passwords-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-f1-explore.txt
+127.0.0.1 - - [30/Sep/2026 23:36:11] "POST /tree?name=textonly-f1-explore HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png
+127.0.0.1 - - [30/Sep/2026 23:37:19] "GET /snap?name=app-home HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png
+127.0.0.1 - - [30/Sep/2026 23:37:24] "GET /snap?name=helper-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-app.txt
+127.0.0.1 - - [30/Sep/2026 23:37:24] "POST /tree?name=helper-prompt-app HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:37:24] "POST /tree?name=helper-prompt-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png
+127.0.0.1 - - [30/Sep/2026 23:37:28] "GET /snap?name=helper-after-accept HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-after-accept-app.txt
+127.0.0.1 - - [30/Sep/2026 23:37:29] "POST /tree?name=helper-after-accept-app HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png
+127.0.0.1 - - [30/Sep/2026 23:38:20] "GET /snap?name=settings-root HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-settings-autofill-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-settings-autofill-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:38:25] "GET /snap?name=pw-settings-autofill-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-settings-autofill-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:38:25] "POST /tree?name=pw-settings-autofill-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png
+127.0.0.1 - - [30/Sep/2026 23:40:20] "GET /snap?name=app-home HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png
+127.0.0.1 - - [30/Sep/2026 23:40:24] "GET /snap?name=helper-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-app.txt
+127.0.0.1 - - [30/Sep/2026 23:40:25] "POST /tree?name=helper-prompt-app HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:40:25] "POST /tree?name=helper-prompt-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png
+127.0.0.1 - - [30/Sep/2026 23:40:29] "GET /snap?name=helper-after-accept HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-after-accept-app.txt
+127.0.0.1 - - [30/Sep/2026 23:40:29] "POST /tree?name=helper-after-accept-app HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png
+127.0.0.1 - - [30/Sep/2026 23:40:38] "GET /snap?name=settings-root HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-autofill-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-autofill-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:40:42] "GET /snap?name=pw-appent-settings-autofill-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-appent-settings-autofill-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:40:43] "POST /tree?name=pw-appent-settings-autofill-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-before-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-before-toggle.png
+127.0.0.1 - - [30/Sep/2026 23:41:57] "GET /snap?name=pw-appent-settings-before-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-after-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-appent-settings-after-toggle.png
+127.0.0.1 - - [30/Sep/2026 23:42:01] "GET /snap?name=pw-appent-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-appent-settings-after-toggle.txt
+127.0.0.1 - - [30/Sep/2026 23:42:01] "POST /tree?name=pw-appent-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-appent-settings-after-toggle-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:42:01] "POST /tree?name=pw-appent-settings-after-toggle-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-appent-settings-toggle.txt
+127.0.0.1 - - [30/Sep/2026 23:42:01] "POST /tree?name=pw-appent-settings-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:42:48] "GET /snap?name=pw-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:42:49] "POST /tree?name=pw-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:42:52] "GET /snap?name=pw-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:42:52] "POST /tree?name=pw-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq1.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq1.png
+127.0.0.1 - - [30/Sep/2026 23:42:54] "GET /snap?name=pw-f1-3-after-passwords-seq1 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq2.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq2.png
+127.0.0.1 - - [30/Sep/2026 23:42:55] "GET /snap?name=pw-f1-3-after-passwords-seq2 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq3.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq3.png
+127.0.0.1 - - [30/Sep/2026 23:42:56] "GET /snap?name=pw-f1-3-after-passwords-seq3 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq4.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq4.png
+127.0.0.1 - - [30/Sep/2026 23:42:56] "GET /snap?name=pw-f1-3-after-passwords-seq4 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq5.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq5.png
+127.0.0.1 - - [30/Sep/2026 23:42:57] "GET /snap?name=pw-f1-3-after-passwords-seq5 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq6.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords-seq6.png
+127.0.0.1 - - [30/Sep/2026 23:42:58] "GET /snap?name=pw-f1-3-after-passwords-seq6 HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-f1-3-after-passwords.png
+127.0.0.1 - - [30/Sep/2026 23:43:01] "GET /snap?name=pw-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-f1-3-after-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:43:01] "POST /tree?name=pw-f1-3-after-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-f1-3-after-passwords-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:43:01] "POST /tree?name=pw-f1-3-after-passwords-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:44:12] "GET /snap?name=pw-ins-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:44:12] "POST /tree?name=pw-ins-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:44:15] "GET /snap?name=pw-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:44:16] "POST /tree?name=pw-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-3-provider-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-3-provider-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:44:20] "GET /snap?name=pw-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-3-provider-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:44:20] "POST /tree?name=pw-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:45:13] "GET /snap?name=pw-ins-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:45:14] "POST /tree?name=pw-ins-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:45:17] "GET /snap?name=pw-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:45:17] "POST /tree?name=pw-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-3-provider-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-3-provider-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:45:21] "GET /snap?name=pw-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-3-provider-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:45:22] "POST /tree?name=pw-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-4-provider-ui.png
+127.0.0.1 - - [30/Sep/2026 23:45:26] "GET /snap?name=pw-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-4-provider-ui.txt
+127.0.0.1 - - [30/Sep/2026 23:45:26] "POST /tree?name=pw-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-4-provider-ui-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:45:26] "POST /tree?name=pw-ins-f1-4-provider-ui-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-ins-f1-5-after-insert.png
+127.0.0.1 - - [30/Sep/2026 23:45:29] "GET /snap?name=pw-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-5-after-insert.txt
+127.0.0.1 - - [30/Sep/2026 23:45:29] "POST /tree?name=pw-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-ins-f1-flow.txt
+127.0.0.1 - - [30/Sep/2026 23:45:29] "POST /tree?name=pw-ins-f1-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:46:56] "GET /snap?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:46:56] "POST /tree?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:47:00] "GET /snap?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-3-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:47:00] "POST /tree?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:47:55] "GET /snap?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:47:55] "POST /tree?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:47:59] "GET /snap?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-3-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:47:59] "POST /tree?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:48:55] "GET /snap?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:48:55] "POST /tree?name=pw-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-3-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:48:59] "GET /snap?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-3-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:48:59] "POST /tree?name=pw-native-ins-3-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-4-provider-ui.png
+127.0.0.1 - - [30/Sep/2026 23:49:03] "GET /snap?name=pw-native-ins-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-4-provider-ui.txt
+127.0.0.1 - - [30/Sep/2026 23:49:03] "POST /tree?name=pw-native-ins-4-provider-ui HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pw-native-ins-5-after-insert.png
+127.0.0.1 - - [30/Sep/2026 23:49:06] "GET /snap?name=pw-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins-5-after-insert.txt
+127.0.0.1 - - [30/Sep/2026 23:49:06] "POST /tree?name=pw-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pw-native-ins.txt
+127.0.0.1 - - [30/Sep/2026 23:49:06] "POST /tree?name=pw-native-ins HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-settings-apple-passwords-toggled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-settings-apple-passwords-toggled.png
+127.0.0.1 - - [30/Sep/2026 23:49:59] "GET /snap?name=pwonly-settings-apple-passwords-toggled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-settings-apple-passwords-toggled.txt
+127.0.0.1 - - [30/Sep/2026 23:49:59] "POST /tree?name=pwonly-settings-apple-passwords-toggled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-settings-apple-passwords.txt
+127.0.0.1 - - [30/Sep/2026 23:49:59] "POST /tree?name=pwonly-settings-apple-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:50:43] "GET /snap?name=pwonly-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:50:44] "POST /tree?name=pwonly-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-3-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-3-chooser.png
+127.0.0.1 - - [30/Sep/2026 23:50:48] "GET /snap?name=pwonly-native-ins-3-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins-3-chooser.txt
+127.0.0.1 - - [30/Sep/2026 23:50:48] "POST /tree?name=pwonly-native-ins-3-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:51:45] "GET /snap?name=pwonly-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:51:45] "POST /tree?name=pwonly-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-4-provider-ui.png
+127.0.0.1 - - [30/Sep/2026 23:51:55] "GET /snap?name=pwonly-native-ins-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins-4-provider-ui.txt
+127.0.0.1 - - [30/Sep/2026 23:51:55] "POST /tree?name=pwonly-native-ins-4-provider-ui HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-ins-5-after-insert.png
+127.0.0.1 - - [30/Sep/2026 23:51:58] "GET /snap?name=pwonly-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins-5-after-insert.txt
+127.0.0.1 - - [30/Sep/2026 23:51:58] "POST /tree?name=pwonly-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-ins.txt
+127.0.0.1 - - [30/Sep/2026 23:51:58] "POST /tree?name=pwonly-native-ins HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-1-after-contact.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-1-after-contact.png
+127.0.0.1 - - [30/Sep/2026 23:53:34] "GET /snap?name=pwonly-native-contact-1-after-contact HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-1-after-contact.txt
+127.0.0.1 - - [30/Sep/2026 23:53:34] "POST /tree?name=pwonly-native-contact-1-after-contact HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-1-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:53:34] "POST /tree?name=pwonly-native-contact-1-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact.txt
+127.0.0.1 - - [30/Sep/2026 23:53:34] "POST /tree?name=pwonly-native-contact HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-1-after-contact.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-1-after-contact.png
+127.0.0.1 - - [30/Sep/2026 23:54:29] "GET /snap?name=pwonly-native-contact-1-after-contact HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-1-after-contact.txt
+127.0.0.1 - - [30/Sep/2026 23:54:29] "POST /tree?name=pwonly-native-contact-1-after-contact HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-1-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:54:29] "POST /tree?name=pwonly-native-contact-1-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-2-card.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-2-card.png
+127.0.0.1 - - [30/Sep/2026 23:54:33] "GET /snap?name=pwonly-native-contact-2-card HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-2-card.txt
+127.0.0.1 - - [30/Sep/2026 23:54:34] "POST /tree?name=pwonly-native-contact-2-card HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-3-after-pick.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-native-contact-3-after-pick.png
+127.0.0.1 - - [30/Sep/2026 23:54:38] "GET /snap?name=pwonly-native-contact-3-after-pick HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact-3-after-pick.txt
+127.0.0.1 - - [30/Sep/2026 23:54:38] "POST /tree?name=pwonly-native-contact-3-after-pick HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-native-contact.txt
+127.0.0.1 - - [30/Sep/2026 23:54:38] "POST /tree?name=pwonly-native-contact HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:55:33] "GET /snap?name=pwonly-ins-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:55:34] "POST /tree?name=pwonly-ins-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-2-autofill-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:55:37] "GET /snap?name=pwonly-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-2-autofill-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:55:37] "POST /tree?name=pwonly-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-4-provider-ui.png
+127.0.0.1 - - [30/Sep/2026 23:55:47] "GET /snap?name=pwonly-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-4-provider-ui.txt
+127.0.0.1 - - [30/Sep/2026 23:55:47] "POST /tree?name=pwonly-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-4-provider-ui-springboard.txt
+127.0.0.1 - - [30/Sep/2026 23:55:47] "POST /tree?name=pwonly-ins-f1-4-provider-ui-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f1-5-after-insert.png
+127.0.0.1 - - [30/Sep/2026 23:55:50] "GET /snap?name=pwonly-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-5-after-insert.txt
+127.0.0.1 - - [30/Sep/2026 23:55:50] "POST /tree?name=pwonly-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f1-flow.txt
+127.0.0.1 - - [30/Sep/2026 23:55:50] "POST /tree?name=pwonly-ins-f1-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f0-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f0-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:56:29] "GET /snap?name=pwonly-ins-f0-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f0-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:56:29] "POST /tree?name=pwonly-ins-f0-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f0-2-no-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f0-2-no-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:56:34] "GET /snap?name=pwonly-ins-f0-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f0-2-no-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:56:35] "POST /tree?name=pwonly-ins-f0-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f0-flow.txt
+127.0.0.1 - - [30/Sep/2026 23:56:35] "POST /tree?name=pwonly-ins-f0-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f2-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f2-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:57:14] "GET /snap?name=pwonly-ins-f2-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f2-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:57:14] "POST /tree?name=pwonly-ins-f2-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f2-2-no-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-ins-f2-2-no-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:57:20] "GET /snap?name=pwonly-ins-f2-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f2-2-no-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:57:20] "POST /tree?name=pwonly-ins-f2-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-ins-f2-flow.txt
+127.0.0.1 - - [30/Sep/2026 23:57:20] "POST /tree?name=pwonly-ins-f2-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-padded-ins-f0-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-padded-ins-f0-1-edit-menu.png
+127.0.0.1 - - [30/Sep/2026 23:58:21] "GET /snap?name=pwonly-padded-ins-f0-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-padded-ins-f0-1-edit-menu.txt
+127.0.0.1 - - [30/Sep/2026 23:58:21] "POST /tree?name=pwonly-padded-ins-f0-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-padded-ins-f0-2-no-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-padded-ins-f0-2-no-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:58:26] "GET /snap?name=pwonly-padded-ins-f0-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-padded-ins-f0-2-no-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:58:27] "POST /tree?name=pwonly-padded-ins-f0-2-no-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-padded-ins-f0-flow.txt
+127.0.0.1 - - [30/Sep/2026 23:58:27] "POST /tree?name=pwonly-padded-ins-f0-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-2-submenu.png
+127.0.0.1 - - [30/Sep/2026 23:59:28] "GET /snap?name=pwonly-uikit-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit-native-ins-2-submenu.txt
+127.0.0.1 - - [30/Sep/2026 23:59:28] "POST /tree?name=pwonly-uikit-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-4-provider-ui.png
+127.0.0.1 - - [30/Sep/2026 23:59:38] "GET /snap?name=pwonly-uikit-native-ins-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit-native-ins-4-provider-ui.txt
+127.0.0.1 - - [30/Sep/2026 23:59:38] "POST /tree?name=pwonly-uikit-native-ins-4-provider-ui HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit-native-ins-5-after-insert.png
+127.0.0.1 - - [30/Sep/2026 23:59:41] "GET /snap?name=pwonly-uikit-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit-native-ins-5-after-insert.txt
+127.0.0.1 - - [30/Sep/2026 23:59:41] "POST /tree?name=pwonly-uikit-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit-native-ins.txt
+127.0.0.1 - - [30/Sep/2026 23:59:41] "POST /tree?name=pwonly-uikit-native-ins HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-2-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-2-submenu.png
+127.0.0.1 - - [01/Oct/2026 00:00:34] "GET /snap?name=pwonly-uikit2-native-ins-2-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit2-native-ins-2-submenu.txt
+127.0.0.1 - - [01/Oct/2026 00:00:34] "POST /tree?name=pwonly-uikit2-native-ins-2-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-4-provider-ui.png
+127.0.0.1 - - [01/Oct/2026 00:00:44] "GET /snap?name=pwonly-uikit2-native-ins-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit2-native-ins-4-provider-ui.txt
+127.0.0.1 - - [01/Oct/2026 00:00:44] "POST /tree?name=pwonly-uikit2-native-ins-4-provider-ui HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-pwonly-uikit2-native-ins-5-after-insert.png
+127.0.0.1 - - [01/Oct/2026 00:00:47] "GET /snap?name=pwonly-uikit2-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit2-native-ins-5-after-insert.txt
+127.0.0.1 - - [01/Oct/2026 00:00:47] "POST /tree?name=pwonly-uikit2-native-ins-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-pwonly-uikit2-native-ins.txt
+127.0.0.1 - - [01/Oct/2026 00:00:47] "POST /tree?name=pwonly-uikit2-native-ins HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-app-home.png
+127.0.0.1 - - [01/Oct/2026 00:01:27] "GET /snap?name=app-home HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-prompt.png
+127.0.0.1 - - [01/Oct/2026 00:01:31] "GET /snap?name=helper-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-app.txt
+127.0.0.1 - - [01/Oct/2026 00:01:31] "POST /tree?name=helper-prompt-app HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-prompt-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:01:31] "POST /tree?name=helper-prompt-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-helper-after-accept.png
+127.0.0.1 - - [01/Oct/2026 00:01:35] "GET /snap?name=helper-after-accept HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-helper-after-accept-app.txt
+127.0.0.1 - - [01/Oct/2026 00:01:36] "POST /tree?name=helper-after-accept-app HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-settings-root.png
+127.0.0.1 - - [01/Oct/2026 00:01:45] "GET /snap?name=settings-root HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-appent-settings-autofill-passwords.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-appent-settings-autofill-passwords.png
+127.0.0.1 - - [01/Oct/2026 00:01:50] "GET /snap?name=textonly-appent-settings-autofill-passwords HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-appent-settings-autofill-passwords.txt
+127.0.0.1 - - [01/Oct/2026 00:01:50] "POST /tree?name=textonly-appent-settings-autofill-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-off-settings-before-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-off-settings-before-toggle.png
+127.0.0.1 - - [01/Oct/2026 00:02:38] "GET /snap?name=textonly-off-settings-before-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-off-settings-after-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-off-settings-after-toggle.png
+127.0.0.1 - - [01/Oct/2026 00:02:42] "GET /snap?name=textonly-off-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-off-settings-after-toggle.txt
+127.0.0.1 - - [01/Oct/2026 00:02:42] "POST /tree?name=textonly-off-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-off-settings-after-toggle-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:02:42] "POST /tree?name=textonly-off-settings-after-toggle-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-off-settings-toggle.txt
+127.0.0.1 - - [01/Oct/2026 00:02:42] "POST /tree?name=textonly-off-settings-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-helper-app-home.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-helper-app-home.png
+127.0.0.1 - - [01/Oct/2026 00:03:16] "GET /snap?name=textonly-helper-app-home HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-helper-helper-prompt.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-helper-helper-prompt.png
+127.0.0.1 - - [01/Oct/2026 00:03:20] "GET /snap?name=textonly-helper-helper-prompt HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-helper-helper-prompt-app.txt
+127.0.0.1 - - [01/Oct/2026 00:03:20] "POST /tree?name=textonly-helper-helper-prompt-app HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-helper-helper-prompt-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:03:20] "POST /tree?name=textonly-helper-helper-prompt-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-helper-helper.txt
+127.0.0.1 - - [01/Oct/2026 00:03:20] "POST /tree?name=textonly-helper-helper HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-settings-before-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-settings-before-toggle.png
+127.0.0.1 - - [01/Oct/2026 00:04:12] "GET /snap?name=textonly-on-settings-before-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-settings-after-toggle.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-settings-after-toggle.png
+127.0.0.1 - - [01/Oct/2026 00:04:16] "GET /snap?name=textonly-on-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-settings-after-toggle.txt
+127.0.0.1 - - [01/Oct/2026 00:04:16] "POST /tree?name=textonly-on-settings-after-toggle HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-settings-after-toggle-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:04:16] "POST /tree?name=textonly-on-settings-after-toggle-springboard HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-settings-toggle.txt
+127.0.0.1 - - [01/Oct/2026 00:04:16] "POST /tree?name=textonly-on-settings-toggle HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-1-edit-menu.png
+127.0.0.1 - - [01/Oct/2026 00:04:57] "GET /snap?name=textonly-on-ins-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-1-edit-menu.txt
+127.0.0.1 - - [01/Oct/2026 00:04:57] "POST /tree?name=textonly-on-ins-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-2-autofill-submenu.png
+127.0.0.1 - - [01/Oct/2026 00:05:00] "GET /snap?name=textonly-on-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-2-autofill-submenu.txt
+127.0.0.1 - - [01/Oct/2026 00:05:01] "POST /tree?name=textonly-on-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-4-provider-ui.png
+127.0.0.1 - - [01/Oct/2026 00:05:10] "GET /snap?name=textonly-on-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-4-provider-ui.txt
+127.0.0.1 - - [01/Oct/2026 00:05:10] "POST /tree?name=textonly-on-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-4-provider-ui-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:05:10] "POST /tree?name=textonly-on-ins-f1-4-provider-ui-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-on-ins-f1-5-after-insert.png
+127.0.0.1 - - [01/Oct/2026 00:05:13] "GET /snap?name=textonly-on-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-5-after-insert.txt
+127.0.0.1 - - [01/Oct/2026 00:05:13] "POST /tree?name=textonly-on-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-on-ins-f1-flow.txt
+127.0.0.1 - - [01/Oct/2026 00:05:13] "POST /tree?name=textonly-on-ins-f1-flow HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-applepw-on-settings-apple-passwords-toggled.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-applepw-on-settings-apple-passwords-toggled.png
+127.0.0.1 - - [01/Oct/2026 00:05:59] "GET /snap?name=textonly-applepw-on-settings-apple-passwords-toggled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-applepw-on-settings-apple-passwords-toggled.txt
+127.0.0.1 - - [01/Oct/2026 00:06:00] "POST /tree?name=textonly-applepw-on-settings-apple-passwords-toggled HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-applepw-on-settings-apple-passwords.txt
+127.0.0.1 - - [01/Oct/2026 00:06:00] "POST /tree?name=textonly-applepw-on-settings-apple-passwords HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-1-edit-menu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-1-edit-menu.png
+127.0.0.1 - - [01/Oct/2026 00:06:41] "GET /snap?name=textonly-both-ins-f1-1-edit-menu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-1-edit-menu.txt
+127.0.0.1 - - [01/Oct/2026 00:06:41] "POST /tree?name=textonly-both-ins-f1-1-edit-menu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-2-autofill-submenu.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-2-autofill-submenu.png
+127.0.0.1 - - [01/Oct/2026 00:06:45] "GET /snap?name=textonly-both-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-2-autofill-submenu.txt
+127.0.0.1 - - [01/Oct/2026 00:06:45] "POST /tree?name=textonly-both-ins-f1-2-autofill-submenu HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-3-provider-chooser.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-3-provider-chooser.png
+127.0.0.1 - - [01/Oct/2026 00:06:49] "GET /snap?name=textonly-both-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-3-provider-chooser.txt
+127.0.0.1 - - [01/Oct/2026 00:06:49] "POST /tree?name=textonly-both-ins-f1-3-provider-chooser HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-4-provider-ui.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-4-provider-ui.png
+127.0.0.1 - - [01/Oct/2026 00:06:52] "GET /snap?name=textonly-both-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-4-provider-ui.txt
+127.0.0.1 - - [01/Oct/2026 00:06:52] "POST /tree?name=textonly-both-ins-f1-4-provider-ui HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-4-provider-ui-springboard.txt
+127.0.0.1 - - [01/Oct/2026 00:06:52] "POST /tree?name=textonly-both-ins-f1-4-provider-ui-springboard HTTP/1.1" 200 -
+SNAP /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-5-after-insert.png rc=0 Detected file type from extension: PNG
+Note: No display specified. Defaulting to display: E586D25A-B5D0-4045-A7AE-B37F7AE805E0 (screenID: 1, name: LCD)
+Wrote screenshot to: /Users/tarunyadgirkar/TarunsCode/prefill/assets/generated/spike-textinsert-textonly-both-ins-f1-5-after-insert.png
+127.0.0.1 - - [01/Oct/2026 00:06:55] "GET /snap?name=textonly-both-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-5-after-insert.txt
+127.0.0.1 - - [01/Oct/2026 00:06:55] "POST /tree?name=textonly-both-ins-f1-5-after-insert HTTP/1.1" 200 -
+TREE /Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/logs/tree-textonly-both-ins-f1-flow.txt
+127.0.0.1 - - [01/Oct/2026 00:06:55] "POST /tree?name=textonly-both-ins-f1-flow HTTP/1.1" 200 -

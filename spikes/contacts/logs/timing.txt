@@ -1,0 +1,6 @@
+Timed run 2026-10-01 06:19 UTC (epoch seconds), driver log: logs/drive-timing.log, probe log: logs/probe.log
+save committed (probe.log "saved OK" 06:19:22.610Z)  1790835562.61
+Safari activated (driver stamp safari-front)         1790835566.27  (+3.66 s)
+email field focused (driver stamp focused)           1790835570.36  (+7.75 s)
+screenshot spike-contacts-timing-work-1.png          1790835571.20  (+8.59 s)  bar = work, email(school)  -> new order already live
+No Safari relaunch, no contactsd kill. Safari had been running since the earlier step.

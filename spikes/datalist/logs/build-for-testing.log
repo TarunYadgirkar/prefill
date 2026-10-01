@@ -1,0 +1,110 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild build-for-testing -project DatalistSpike.xcodeproj -scheme DatalistSpike -destination "platform=iOS Simulator,id=47A4C2A7-9518-49BF-92C1-D602AAE4E6D9" -derivedDataPath build
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'DatalistUITests' in project 'DatalistSpike'
+        ➜ Explicit dependency on target 'DatalistApp' in project 'DatalistSpike'
+    Target 'DatalistApp' in project 'DatalistSpike'
+        ➜ Explicit dependency on target 'DatalistExtension' in project 'DatalistSpike'
+    Target 'DatalistExtension' in project 'DatalistSpike' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/DatalistSpike.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/content.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/Extension/Resources/content.js (in target 'DatalistExtension' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/Extension/Resources/content.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/DatalistExtension.debug.dylib (in target 'DatalistExtension' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/DatalistExtension.debug.dylib
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/DatalistExtension.debug.dylib: replacing existing signature
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/__preview.dylib (in target 'DatalistExtension' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/__preview.dylib
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex/__preview.dylib: replacing existing signature
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex (in target 'DatalistExtension' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex: replacing existing signature
+
+Copy /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns/DatalistExtension.appex /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -exclude Headers -exclude PrivateHeaders -exclude Modules -exclude \*.tbd -resolve-src-symlinks -remove-static-executable /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistExtension.appex /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns
+
+ProcessInfoPlistFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Info.plist /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Intermediates.noindex/DatalistSpike.build/Debug-iphonesimulator/DatalistApp.build/empty-DatalistApp.plist (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    builtin-infoPlistUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Intermediates.noindex/DatalistSpike.build/Debug-iphonesimulator/DatalistApp.build/empty-DatalistApp.plist -producttype com.apple.product-type.application -genpkginfo /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -scanforprivacyfile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns/DatalistExtension.appex -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Info.plist
+
+CopySwiftLibs /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    builtin-swiftStdLibTool --copy --verbose --sign - --scan-executable /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/DatalistApp.debug.dylib --scan-folder /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Frameworks --scan-folder /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns --scan-folder /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/SystemExtensions --scan-folder /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Extensions --platform iphonesimulator --toolchain /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain --destination /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Frameworks --strip-bitcode --strip-bitcode-tool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/bitcode_strip --emit-dependency-info /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Intermediates.noindex/DatalistSpike.build/Debug-iphonesimulator/DatalistApp.build/SwiftStdLibToolInputDependencies.dep --filter-for-swift-os
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/DatalistApp.debug.dylib (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/DatalistApp.debug.dylib
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/DatalistApp.debug.dylib: replacing existing signature
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/__preview.dylib (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/__preview.dylib
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/__preview.dylib: replacing existing signature
+
+CodeSign /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    
+    Signing Identity:     "Sign to Run Locally"
+    
+    /usr/bin/codesign --force --sign - --timestamp\=none --generate-entitlement-der /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app: replacing existing signature
+
+ValidateEmbeddedBinary /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns/DatalistExtension.appex (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    /Applications/Xcode.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/PlugIns/DatalistExtension.appex -signing-cert - -info-plist-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app/Info.plist
+
+Validate /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app (in target 'DatalistApp' from project 'DatalistSpike')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist
+    builtin-validationUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Products/Debug-iphonesimulator/DatalistApp.app -shallow-bundle -infoplist-subpath Info.plist
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+** TEST BUILD SUCCEEDED **
+

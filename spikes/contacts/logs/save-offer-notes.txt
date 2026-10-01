@@ -1,0 +1,2 @@
+
+Thu Oct  1 06:37:20 UTC 2026 grep for typed values in sim data: 'nenwe.wf' found only in Library/Safari/SafariTabs.db(+wal) and unified log; 'typed.new@example' only in SafariTabs.db-wal. No AutoFill/contacts store holds them.

@@ -1,0 +1,107 @@
+127.0.0.1 - - [30/Sep/2026 23:13:03] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:16:30] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:16:30] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:16:30] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:16:33] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:16:33] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:17:28] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:17:28] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:17:28] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:17:33] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:17:33] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:18:27] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:18:27] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:18:27] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:18:39] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:18:39] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:18:39] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:18:42] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:18:42] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:18:52] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:18:52] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:18:52] "GET /log?f=email&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:18:52] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:29:02] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:29:02] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:29:02] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:29:05] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:29:05] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:29:59] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:29:59] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:30:02] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:30:02] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:31:18] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:31:18] "GET /log?f=email&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:31:38] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:31:38] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:31:38] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:31:41] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:31:41] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:32:59] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:32:59] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:33:02] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:33:02] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:33:16] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:33:16] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:33:19] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:33:19] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:33:33] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:33:33] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:33:36] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:33:36] "GET /log?f=tel&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:34:35] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:34:35] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:34:35] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:34:39] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:34:39] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:35:49] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:35:49] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:35:52] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:35:52] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:37:18] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:37:18] "GET /log?f=usr_contact&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:42:39] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:42:39] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:42:39] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:42:42] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:42:42] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:44:03] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:44:03] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:44:06] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:44:06] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:45:04] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:45:04] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:45:04] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:45:08] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:45:08] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:45:22] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:45:22] "GET /log?f=usr_contact&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:55:25] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [30/Sep/2026 23:55:25] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:55:25] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:55:28] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:55:28] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:55:47] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:55:47] "GET /log?f=usr_contact&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:56:19] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:56:23] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:56:23] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:57:04] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:57:04] "GET /favicon.ico HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:57:08] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:57:08] "GET /log?f=tel&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:58:12] "GET /form-padded.html HTTP/1.1" 200 -
+127.0.0.1 - - [30/Sep/2026 23:58:14] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:58:14] "GET /log?f=email&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [30/Sep/2026 23:59:18] code 404, message File not found
+127.0.0.1 - - [30/Sep/2026 23:59:18] "GET /log?f=email&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [01/Oct/2026 00:04:47] "GET /form.html HTTP/1.1" 304 -
+127.0.0.1 - - [01/Oct/2026 00:04:50] code 404, message File not found
+127.0.0.1 - - [01/Oct/2026 00:04:50] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [01/Oct/2026 00:05:11] code 404, message File not found
+127.0.0.1 - - [01/Oct/2026 00:05:11] "GET /log?f=usr_contact&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [01/Oct/2026 00:06:31] "GET /form.html HTTP/1.1" 200 -
+127.0.0.1 - - [01/Oct/2026 00:06:35] code 404, message File not found
+127.0.0.1 - - [01/Oct/2026 00:06:35] "GET /log?f=usr_contact&e=focus&v=&it=&d=&trusted=true HTTP/1.1" 404 -
+127.0.0.1 - - [01/Oct/2026 00:06:49] code 404, message File not found
+127.0.0.1 - - [01/Oct/2026 00:06:49] "GET /log?f=usr_contact&e=blur&v=&it=&d=&trusted=true HTTP/1.1" 404 -

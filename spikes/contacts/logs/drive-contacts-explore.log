@@ -1,0 +1,314 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:37:22.055247-0700 ProbeUITests-Runner[29508:13010511] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:37:25.307.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:37:25.316.
+Test Suite 'DriverTests' started at 2026-09-30 23:37:25.317.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.00s Start Test at 2026-09-30 23:37:25.321
+    t =     0.03s Set Up
+[driver] step launch com.apple.MobileAddressBook
+    t =     0.03s Open com.apple.MobileAddressBook
+    t =     0.03s     Launch com.apple.MobileAddressBook
+    t =     0.24s         Setting up automation session
+objc[29508]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x108840398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108934310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.00s         Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step tap Alex Rivera
+    t =     6.33s Waiting 10.0s for Any (First Match) to exist
+    t =     7.36s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.36s         Checking existence of `Any (First Match)`
+    t =     7.43s Tap Any (First Match)
+    t =     7.43s     Wait for com.apple.MobileAddressBook to idle
+    t =     7.43s     Find the Any (First Match)
+    t =     7.47s     Check for interrupting elements affecting "Alex Rivera" StaticText
+    t =     7.52s     Synthesize event
+    t =     7.81s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step tap Edit
+    t =    11.08s Waiting 10.0s for Any (First Match) to exist
+    t =    12.11s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    12.11s         Checking existence of `Any (First Match)`
+    t =    12.12s Tap Any (First Match)
+    t =    12.12s     Wait for com.apple.MobileAddressBook to idle
+    t =    12.13s     Find the Any (First Match)
+    t =    12.13s     Check for interrupting elements affecting "Edit" Button
+    t =    12.23s     Synthesize event
+    t =    12.52s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step dump 
+    t =    14.52s Requesting snapshot of accessibility hierarchy for app with pid 29677
+    t =    14.94s Requesting snapshot of accessibility hierarchy for app with pid 29677
+[driver] tree
+Attributes: Application, 0x104e9f840, pid: 29677, label: 'Contacts'
+Element subtree:
+ →Application, 0x104e9f840, pid: 29677, label: 'Contacts'
+    Window (Main), 0x104e9d540, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x104e9fc00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x104e9fd40, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x104e9fac0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x104e9d400, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x104e9f5c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x104e9f980, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x107c8ef80, {{0.0, 0.0}, {402.0, 874.0}}
+                    NavigationBar, 0x107c8f340, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'CNContactView'
+                      Button, 0x107c8f5c0, {{20.0, 66.0}, {36.0, 36.0}}, label: 'close'
+                      Button, 0x107c8f700, {{346.0, 66.0}, {36.0, 36.0}}, label: 'Done', Disabled
+                    Other, 0x107c8f480, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x107c8f840, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x107c8fac0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x107c8fc00, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x107c8cdc0, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x107c8db80, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x107c8d180, {{0.0, 0.0}, {402.0, 874.0}}
+                                  Other, 0x107c8e440, {{0.0, 0.0}, {402.0, 116.0}}
+                                  Table, 0x107c8e6c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Button, 0x107c8e300, {{113.7, 116.0}, {175.0, 175.0}}, label: 'Add photo'
+                                    Button, 0x107c8e580, {{137.7, 303.0}, {127.0, 48.0}}, label: 'Add Photo'
+                                      StaticText, 0x107c8e940, {{161.7, 317.3}, {79.0, 19.3}}, label: 'Add Photo'
+                                    Image, 0x107c8ebc0, {{0.0, 0.0}, {10.0, 24.0}}, label: 'Poster'
+                                    Other, 0x107c8ed00, {{0.0, 362.0}, {402.0, 0.3}}
+                                    Button, 0x107c8ea80, {{235.0, 113.0}, {44.0, 44.0}}, identifier: 'RemoveAvatarPosterButton', label: 'Remove photo'
+                                    Other, 0x107c8ee40, {{0.0, 362.3}, {402.0, 12.0}}
+                                    Cell, 0x107c8f0c0, {{20.0, 374.3}, {362.0, 53.0}}
+                                      TextField, 0x107c8f200, {{36.0, 390.0}, {330.0, 22.0}}, identifier: 'First name', label: 'First name', placeholderValue: 'First name', value: Alex
+                                      Other, 0x107c8d2c0, {{36.0, 426.3}, {346.0, 1.0}}
+                                    Cell, 0x107c8d400, {{20.0, 427.3}, {362.0, 53.0}}
+                                      TextField, 0x107c8d040, {{36.0, 443.0}, {330.0, 22.0}}, identifier: 'Last name', label: 'Last name', placeholderValue: 'Last name', value: Rivera
+                                      Other, 0x107c8d540, {{36.0, 479.3}, {346.0, 1.0}}
+                                    Cell, 0x107c8da40, {{20.0, 480.3}, {362.0, 53.0}}
+                                      TextField, 0x107c8dcc0, {{36.0, 496.0}, {330.0, 22.0}}, identifier: 'Company', label: 'Company', placeholderValue: 'Company', value: Prefill Test Co
+                                      Other, 0x107c8de00, {{20.0, 532.3}, {362.0, 1.0}}
+                                    Other, 0x107c8e080, {{0.0, 533.3}, {402.0, 16.0}}
+                                    Cell, 0x107c8f980, {{20.0, 549.3}, {362.0, 53.0}}, label: 'mobile'
+                                      TextField, 0x107c8fd40, {{180.7, 565.0}, {185.3, 22.0}}, identifier: 'mobile', placeholderValue: 'Phone', value: +1 (510) 555-0134
+                                      Button, 0x107c8fe80, {{39.2, 561.7}, {25.7, 25.7}}, label: 'Remove mobile'
+                                        Image, 0x107c8c640, {{39.2, 562.7}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x107c8c780, {{80.0, 549.3}, {76.0, 53.0}}, label: 'mobile'
+                                        StaticText, 0x108704000, {{94.0, 549.3}, {46.0, 53.0}}, label: 'mobile'
+                                      Other, 0x108704140, {{80.0, 601.3}, {302.0, 1.0}}
+                                      Other, 0x108704280, {{164.0, 549.3}, {0.7, 53.0}}
+                                      Image, 0x1087043c0, {{145.3, 568.7}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Cell, 0x108704500, {{20.0, 602.3}, {362.0, 53.0}}, label: 'work'
+                                      TextField, 0x108704640, {{180.7, 618.0}, {185.3, 22.0}}, identifier: 'work', placeholderValue: 'Phone', value: +1 (415) 555-0199
+                                      Button, 0x108704780, {{39.2, 614.7}, {25.7, 25.7}}, label: 'Remove work'
+                                        Image, 0x1087048c0, {{39.2, 615.7}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x108704a00, {{80.0, 602.3}, {76.0, 53.0}}, label: 'work'
+                                        StaticText, 0x108704b40, {{106.7, 602.3}, {33.3, 53.0}}, label: 'work'
+                                      Other, 0x108704c80, {{80.0, 654.3}, {302.0, 1.0}}
+                                      Other, 0x108704dc0, {{164.0, 602.3}, {0.7, 53.0}}
+                                      Image, 0x108704f00, {{145.3, 621.7}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Cell, 0x108705040, {{20.0, 655.3}, {362.0, 51.3}}, label: 'add phone'
+                                      Button, 0x108705180, {{39.2, 667.0}, {25.7, 25.7}}, label: 'Insert add phone'
+                                        Image, 0x1087052c0, {{39.2, 668.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108705400, {{20.0, 705.7}, {362.0, 1.0}}
+                                      StaticText, 0x108705540, {{80.0, 670.3}, {286.0, 21.3}}, label: 'add phone'
+                                    Other, 0x108705680, {{0.0, 706.7}, {402.0, 16.0}}
+                                    Cell, 0x1087057c0, {{20.0, 722.7}, {362.0, 53.0}}, label: 'Personal'
+                                      TextField, 0x108705900, {{180.7, 738.3}, {185.3, 22.0}}, identifier: 'Personal', placeholderValue: 'Email', value: new.first@example....
+                                      Button, 0x108705a40, {{39.2, 735.0}, {25.7, 25.7}}, label: 'Remove Personal'
+                                        Image, 0x108705b80, {{39.2, 736.0}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x108705cc0, {{80.0, 722.7}, {76.0, 53.0}}, label: 'Personal'
+                                        StaticText, 0x108705e00, {{80.7, 722.7}, {59.3, 53.0}}, label: 'Personal'
+                                      Other, 0x108705f40, {{80.0, 774.7}, {302.0, 1.0}}
+                                      Other, 0x108706080, {{164.0, 722.7}, {0.7, 53.0}}
+                                      Image, 0x1087061c0, {{145.3, 742.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Cell, 0x108706300, {{20.0, 775.7}, {362.0, 53.0}}, label: 'email'
+                                      TextField, 0x108706440, {{180.7, 791.3}, {185.3, 22.0}}, identifier: 'email', placeholderValue: 'Email', value: alex.school@exampl...
+                                      Button, 0x108706580, {{39.2, 788.0}, {25.7, 25.7}}, label: 'Remove email'
+                                        Image, 0x1087066c0, {{39.2, 789.0}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x108706800, {{80.0, 775.7}, {76.0, 53.0}}, label: 'email'
+                                        StaticText, 0x108706940, {{103.7, 775.7}, {36.3, 53.0}}, label: 'email'
+                                      Other, 0x108706a80, {{80.0, 827.7}, {302.0, 1.0}}
+                                      Other, 0x108706bc0, {{164.0, 775.7}, {0.7, 53.0}}
+                                      Image, 0x108706d00, {{145.3, 795.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Cell, 0x108706e40, {{20.0, 828.7}, {362.0, 53.0}}, label: 'home'
+                                      TextField, 0x108706f80, {{180.7, 844.3}, {185.3, 22.0}}, identifier: 'home', placeholderValue: 'Email', value: alex.rivera@exampl...
+                                      Button, 0x1087070c0, {{39.2, 841.0}, {25.7, 25.7}}, label: 'Remove home'
+                                        Image, 0x108707200, {{39.2, 842.0}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x108707340, {{80.0, 828.7}, {76.0, 53.0}}, label: 'home'
+                                        StaticText, 0x108707480, {{101.3, 828.7}, {38.7, 53.0}}, label: 'home'
+                                      Other, 0x1087075c0, {{80.0, 880.7}, {302.0, 1.0}}
+                                      Other, 0x108707700, {{164.0, 828.7}, {0.7, 53.0}}
+                                      Image, 0x108707840, {{145.3, 848.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Cell, 0x108707980, {{20.0, 881.7}, {362.0, 53.0}}, label: 'work'
+                                      Button, 0x108707ac0, {{39.2, 531.7}, {25.7, 25.7}}, label: 'Remove work'
+                                        Image, 0x108707c00, {{39.2, 532.7}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Button, 0x108707d40, {{80.0, 519.3}, {76.0, 53.0}}, label: 'work'
+                                        StaticText, 0x108707e80, {{106.7, 519.3}, {33.3, 53.0}}, label: 'work'
+                                      Other, 0x10871c000, {{80.0, 571.3}, {302.0, 1.0}}
+                                      Other, 0x10871c140, {{164.0, 519.3}, {0.7, 53.0}}
+                                      Image, 0x10871c280, {{145.3, 538.7}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                      TextField, 0x10871c3c0, {{180.7, 535.0}, {185.3, 22.0}}, identifier: 'work', placeholderValue: 'Email', value: alex@work.example....
+                                    Cell, 0x10871c500, {{20.0, 934.7}, {362.0, 51.3}}, label: 'add email'
+                                      Button, 0x10871c640, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x10871c780, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x10871c8c0, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x10871ca00, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add email'
+                                    Other, 0x10871cb40, {{0.0, 986.0}, {402.0, 16.0}}
+                                    Cell, 0x10871cc80, {{20.0, 1002.0}, {362.0, 51.3}}, label: 'add pronouns'
+                                      Button, 0x10871cdc0, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x10871cf00, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x10871d040, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x10871d180, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add pronouns'
+                                    Other, 0x10871d2c0, {{0.0, 1053.3}, {402.0, 16.0}}
+                                    Cell, 0x10871d400, {{20.0, 1069.3}, {362.0, 51.3}}, label: 'Ringtone', value: Default
+                                      Other, 0x10871d540, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x10871d680, {{0.0, 0.0}, {61.3, 19.7}}, label: 'Ringtone'
+                                      StaticText, 0x10871d7c0, {{0.0, 0.0}, {55.0, 20.3}}, label: 'Default'
+                                      Image, 0x10871d900, {{0.0, 0.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Other, 0x10871da40, {{0.0, 1120.7}, {402.0, 16.0}}
+                                    Cell, 0x10871db80, {{20.0, 1136.7}, {362.0, 51.3}}, label: 'Text Tone', value: Default
+                                      Other, 0x10871dcc0, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x10871de00, {{0.0, 0.0}, {66.0, 19.7}}, label: 'Text Tone'
+                                      StaticText, 0x10871df40, {{0.0, 0.0}, {55.0, 20.3}}, label: 'Default'
+                                      Image, 0x10871e080, {{0.0, 0.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                    Other, 0x10871e1c0, {{0.0, 1188.0}, {402.0, 16.0}}
+                                    Cell, 0x10871e300, {{20.0, 1204.0}, {362.0, 51.3}}, label: 'add url'
+                                      Button, 0x10871e440, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x10871e580, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x10871e6c0, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x10871e800, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add url'
+                                    Other, 0x10871e940, {{0.0, 1255.3}, {402.0, 16.0}}
+                                    Cell, 0x10871ea80, {{20.0, 1271.3}, {362.0, 221.0}}
+                                      Button, 0x10871ebc0, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Remove'
+                                        Image, 0x10871ed00, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Other, 0x10871ee40, {{0.0, 0.0}, {302.0, 1.0}}
+                                      Button, 0x10871ef80, {{0.0, 0.0}, {76.0, 221.0}}, label: 'home'
+                                        StaticText, 0x10871f0c0, {{0.0, 0.0}, {38.7, 221.0}}, label: 'home'
+                                      TextField, 0x10871f200, {{0.0, 0.0}, {177.3, 28.0}}, label: 'Street', placeholderValue: 'Street', value: 2400 Durant Ave
+                                      Image, 0x10871f340, {{0.0, 0.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                      Other, 0x10871f480, {{0.0, 0.0}, {0.7, 221.0}}
+                                    Cell, 0x10871f5c0, {{20.0, 1492.3}, {362.0, 221.0}}
+                                      Button, 0x10871f700, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Remove'
+                                        Image, 0x10871f840, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'minus.circle.fill', label: 'remove'
+                                      Other, 0x10871f980, {{0.0, 0.0}, {302.0, 1.0}}
+                                      Button, 0x10871fac0, {{0.0, 0.0}, {76.0, 221.0}}, label: 'work'
+                                        StaticText, 0x10871fc00, {{0.0, 0.0}, {33.3, 221.0}}, label: 'work'
+                                      TextField, 0x10871fd40, {{0.0, 0.0}, {177.3, 28.0}}, label: 'Street', placeholderValue: 'Street', value: 1 Market St Suite ...
+                                      Image, 0x10871fe80, {{0.0, 0.0}, {10.7, 14.3}}, identifier: 'chevron.forward', label: 'Forward'
+                                      Other, 0x108720000, {{0.0, 0.0}, {0.7, 221.0}}
+                                    Cell, 0x108720140, {{20.0, 1713.3}, {362.0, 51.3}}, label: 'add address'
+                                      Button, 0x108720280, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x1087203c0, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108720500, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108720640, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add address'
+                                    Other, 0x108720780, {{0.0, 1764.7}, {402.0, 16.0}}
+                                    Cell, 0x1087208c0, {{20.0, 1780.7}, {362.0, 51.3}}, label: 'add birthday'
+                                      Button, 0x108720a00, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x108720b40, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108720c80, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108720dc0, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add birthday'
+                                    Other, 0x108720f00, {{0.0, 1832.0}, {402.0, 16.0}}
+                                    Cell, 0x108721040, {{20.0, 1848.0}, {362.0, 51.3}}, label: 'add date'
+                                      Button, 0x108721180, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x1087212c0, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108721400, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108721540, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add date'
+                                    Other, 0x108721680, {{0.0, 1899.3}, {402.0, 16.0}}
+                                    Cell, 0x1087217c0, {{20.0, 1915.3}, {362.0, 51.3}}, label: 'add related name'
+                                      Button, 0x108721900, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x108721a40, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108721b80, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108721cc0, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add related name'
+                                    Other, 0x108721e00, {{0.0, 1966.7}, {402.0, 16.0}}
+                                    Cell, 0x108721f40, {{20.0, 1982.7}, {362.0, 51.3}}, label: 'add social profile'
+                                      Button, 0x108722080, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x1087221c0, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108722300, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108722440, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add social profile'
+                                    Other, 0x108722580, {{0.0, 2034.0}, {402.0, 16.0}}
+                                    Cell, 0x1087226c0, {{20.0, 2050.0}, {362.0, 51.3}}, label: 'add instant message'
+                                      Button, 0x108722800, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x108722940, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108722a80, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108722bc0, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add instant message'
+                                    Other, 0x108722d00, {{0.0, 2101.3}, {402.0, 16.0}}
+                                    Cell, 0x108722e40, {{20.0, 2117.3}, {362.0, 106.3}}, label: 'Notes'
+                                      Other, 0x108722f80, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x1087230c0, {{0.0, 0.0}, {330.0, 20.3}}, label: 'Notes'
+                                      TextView, 0x108723200, {{0.0, 0.0}, {330.0, 22.0}}, label: 'Notes'
+                                        Other, 0x108723340, {{297.0, 0.0}, {30.0, 22.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                          Other, 0x108723480, {{0.0, 0.0}, {3.0, 36.0}}
+                                        Other, 0x1087235c0, {{0.0, 8.0}, {330.0, 11.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                          Other, 0x108723700, {{0.0, 0.0}, {36.0, 3.0}}
+                                    Other, 0x108723840, {{0.0, 2223.7}, {402.0, 16.0}}
+                                    Cell, 0x108723980, {{20.0, 2239.7}, {362.0, 51.3}}, label: 'add verification code'
+                                      Button, 0x108723ac0, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x108723c00, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108723d40, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108723e80, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add verification code'
+                                    Other, 0x108724000, {{0.0, 2291.0}, {402.0, 16.0}}
+                                    Cell, 0x108724140, {{20.0, 2307.0}, {362.0, 51.3}}
+                                      Other, 0x108724280, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x1087243c0, {{0.0, 0.0}, {330.0, 21.3}}, label: 'add field'
+                                    Other, 0x108724500, {{0.0, 2358.3}, {402.0, 16.0}}
+                                    Cell, 0x108724640, {{20.0, 2374.3}, {362.0, 51.3}}
+                                      Other, 0x108724780, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x1087248c0, {{0.0, 0.0}, {277.0, 21.3}}, label: 'Create Medical ID'
+                                      Button, 0x108724a00, {{0.0, 0.0}, {37.0, 37.0}}, label: 'Medical ID'
+                                    Other, 0x108724b40, {{0.0, 2425.7}, {402.0, 59.0}}
+                                      StaticText, 0x108724c80, {{0.0, 2425.7}, {402.0, 59.0}}, label: 'Linked Contacts'
+                                    Cell, 0x108724dc0, {{20.0, 2484.7}, {362.0, 51.3}}, label: 'link contacts…'
+                                      Button, 0x108724f00, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x108725040, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108725180, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x1087252c0, {{0.0, 0.0}, {286.0, 21.3}}, label: 'link contacts…'
+                                    Other, 0x108725400, {{0.0, 2536.0}, {402.0, 16.0}}
+                                    Cell, 0x108725540, {{20.0, 2552.0}, {362.0, 51.3}}, label: 'add to list'
+                                      Button, 0x108725680, {{0.0, 0.0}, {25.7, 25.7}}, label: 'Insert'
+                                        Image, 0x1087257c0, {{0.0, 0.0}, {25.7, 25.7}}, identifier: 'plus.circle.fill', label: 'add'
+                                      Other, 0x108725900, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108725a40, {{0.0, 0.0}, {286.0, 21.3}}, label: 'add to list'
+                                    Other, 0x108725b80, {{0.0, 2603.3}, {402.0, 16.0}}
+                                    Cell, 0x108725cc0, {{20.0, 2619.3}, {362.0, 51.3}}
+                                      Other, 0x108725e00, {{0.0, 0.0}, {362.0, 1.0}}
+                                      StaticText, 0x108725f40, {{0.0, 0.0}, {330.0, 21.3}}, label: 'Delete Contact'
+                                    Other, 0x108726080, {{0.0, 2619.3}, {402.0, 35.0}}
+                                    Other, 0x1087261c0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 4 pages', value: 0%
+                                      Other, 0x108726300, {{396.0, 119.0}, {3.0, 331.0}}
+                                    Other, 0x108726440, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                                      Other, 0x108726580, {{65.0, 868.0}, {272.0, 3.0}}
+                                    StaticText, 0x1087266c0, {{161.7, 317.3}, {79.0, 19.3}}, label: 'Add Photo'
+                                  Toolbar, 0x108726800, {{0.0, 21.0}, {402.0, 48.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                                    Other, 0x108726940, {{0.0, 21.0}, {402.0, 48.0}}
+                          Toolbar, 0x108726a80, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                            Other, 0x108726bc0, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x108726d00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x108726e40, {{0.0, 0.0}, {402.0, 874.0}}
+                Toolbar, 0x108726f80, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x1087270c0, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x108727200, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x108727340, {{0.0, 0.0}, {402.0, 874.0}}
+    Window, 0x108727480, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1087275c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x108727700, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x104e9f840, pid: 29677, label: 'Contacts'
+Query chain:
+ →Find: Application 'com.apple.MobileAddressBook'
+  Output: {
+    Application, 0x108727840, pid: 29677, label: 'Contacts'
+  }
+
+[driver] step wait 2
+    t =    17.01s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (17.232 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:37:42.554.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.232 (17.238) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:37:42.555.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.232 (17.238) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:37:42.556.
+	 Executed 1 test, with 0 failures (0 unexpected) in 17.232 (17.249) seconds
+2026-09-30 23:37:42.841 xcodebuild[29470:13010180] [MT] IDETestOperationsObserverDebug: 21.775 elapsed -- Testing started completed.
+2026-09-30 23:37:42.841 xcodebuild[29470:13010180] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:37:42.841 xcodebuild[29470:13010180] [MT] IDETestOperationsObserverDebug: 21.775 sec, +21.775 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-37-21--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

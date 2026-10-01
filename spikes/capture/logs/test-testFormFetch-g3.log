@@ -1,0 +1,118 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/FormTests/testFormFetch"
+
+2026-09-30 23:45:04.953401-0700 CaptureUITests-Runner[42183:13063152] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:45:06.823.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:45:06.824.
+Test Suite 'FormTests' started at 2026-09-30 23:45:06.824.
+Test Case '-[CaptureUITests.FormTests testFormFetch]' started.
+    t =     0.00s Start Test at 2026-09-30 23:45:06.826
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/form-fetch.html?r=1790837106
+    t =     0.02s     Launch com.apple.mobilesafari
+    t =     0.08s         Setting up automation session
+objc[42183]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x105fd4398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106558310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.78s         Wait for com.apple.mobilesafari to idle
+    t =     7.12s Waiting 10.0s for Any (First Match) to exist
+    t =     8.14s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     8.14s         Checking existence of `Any (First Match)`
+    t =     8.21s Tap Any (First Match)
+    t =     8.21s     Wait for com.apple.mobilesafari to idle
+    t =     8.22s     Find the Any (First Match)
+    t =     8.24s     Check for interrupting elements affecting "Email" TextField
+    t =     8.27s     Synthesize event
+    t =     8.56s     Wait for com.apple.mobilesafari to idle
+    t =    10.19s Type 'fetch.g3@newmail.e...' into "Email" TextField
+    t =    10.19s     Wait for com.apple.mobilesafari to idle
+    t =    10.19s     Find the "Email" TextField
+    t =    10.26s     Check for interrupting elements affecting "Email" TextField
+    t =    10.29s     Synthesize event
+    t =    10.90s     Wait for com.apple.mobilesafari to idle
+    t =    10.90s Checking existence of `"Done" Button`
+    t =    10.94s Find the "Done" Button
+    t =    10.97s Tap "Done" Button
+    t =    10.97s     Wait for com.apple.mobilesafari to idle
+    t =    10.98s     Find the "Done" Button
+    t =    11.00s     Check for interrupting elements affecting "Done" Button
+    t =    11.03s     Synthesize event
+    t =    11.32s     Wait for com.apple.mobilesafari to idle
+    t =    12.26s Waiting 10.0s for Any (First Match) to exist
+    t =    13.29s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    13.29s         Checking existence of `Any (First Match)`
+    t =    13.31s Tap Any (First Match)
+    t =    13.31s     Wait for com.apple.mobilesafari to idle
+    t =    13.32s     Find the Any (First Match)
+    t =    13.34s     Check for interrupting elements affecting "Phone" TextField
+    t =    13.36s     Synthesize event
+    t =    13.64s     Wait for com.apple.mobilesafari to idle
+    t =    14.94s Type '5105550122' into "Phone" TextField
+    t =    14.94s     Wait for com.apple.mobilesafari to idle
+    t =    14.95s     Find the "Phone" TextField
+    t =    15.01s     Check for interrupting elements affecting "Phone" TextField
+    t =    15.04s     Synthesize event
+    t =    15.41s     Wait for com.apple.mobilesafari to idle
+    t =    15.41s Checking existence of `"Done" Button`
+    t =    15.44s Find the "Done" Button
+    t =    15.47s Tap "Done" Button
+    t =    15.47s     Wait for com.apple.mobilesafari to idle
+    t =    15.47s     Find the "Done" Button
+    t =    15.50s     Check for interrupting elements affecting "Done" Button
+    t =    15.53s     Synthesize event
+    t =    15.82s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:45:24.520747-0700 CaptureUITests-Runner[42183:13063152] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-filled should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    18.13s Tap "Join waitlist" Button
+    t =    18.13s     Wait for com.apple.mobilesafari to idle
+    t =    18.14s     Find the "Join waitlist" Button
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.FormTests testFormFetch] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-filled should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    18.18s     Check for interrupting elements affecting "Join waitlist" Button
+    t =    18.21s     Synthesize event
+    t =    18.49s     Wait for com.apple.mobilesafari to idle
+    t =    18.49s Waiting 5.0s for "You are on the list" StaticText to exist
+    t =    19.50s     Checking `Expect predicate `existsNoRetry == 1` for object "You are on the list" StaticText`
+    t =    19.50s         Checking existence of `"You are on the list" StaticText`
+    t =    19.52s Waiting 6.0s for StaticText (First Match) to exist
+    t =    20.55s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    20.55s         Checking existence of `StaticText (First Match)`
+    t =    20.59s         Capturing element debug description
+    t =    21.62s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    21.62s         Checking existence of `StaticText (First Match)`
+    t =    21.65s         Capturing element debug description
+    t =    22.58s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    22.58s         Checking existence of `StaticText (First Match)`
+    t =    22.60s         Capturing element debug description
+    t =    23.53s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    23.53s         Checking existence of `StaticText (First Match)`
+    t =    23.55s         Capturing element debug description
+    t =    24.58s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    24.58s         Checking existence of `StaticText (First Match)`
+    t =    24.61s         Capturing element debug description
+    t =    25.53s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    25.53s         Checking existence of `StaticText (First Match)`
+    t =    25.56s         Capturing element debug description
+    t =    25.56s     Checking existence of `StaticText (First Match)`
+    t =    25.58s Collecting debug information to assist test failure triage
+    t =    25.58s     Requesting snapshot of accessibility hierarchy for app with pid 42232
+2026-09-30 23:45:33.451212-0700 CaptureUITests-Runner[42183:13063152] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    27.06s Requesting snapshot of accessibility hierarchy for app with pid 42232
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.FormTests testFormFetch] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    27.19s Requesting snapshot of accessibility hierarchy for app with pid 42232
+    t =    27.22s Tap "Continue to the next page" Link
+    t =    27.22s     Wait for com.apple.mobilesafari to idle
+    t =    27.22s     Find the "Continue to the next page" Link
+    t =    27.23s     Check for interrupting elements affecting "Continue to the next page" Link
+    t =    27.27s     Synthesize event
+    t =    27.55s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:45:37.575837-0700 CaptureUITests-Runner[42183:13063152] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-navigated-away should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    31.19s Requesting snapshot of accessibility hierarchy for app with pid 42232
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.FormTests testFormFetch] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=g3-fetch-navigated-away should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    31.29s Requesting snapshot of accessibility hierarchy for app with pid 42232
+    t =    31.31s Tear Down
+Test Case '-[CaptureUITests.FormTests testFormFetch]' passed (31.528 seconds).
+Test Suite 'FormTests' passed at 2026-09-30 23:45:38.354.
+	 Executed 1 test, with 0 failures (0 unexpected) in 31.528 (31.530) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:45:38.354.
+	 Executed 1 test, with 0 failures (0 unexpected) in 31.528 (31.531) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:45:38.355.
+	 Executed 1 test, with 0 failures (0 unexpected) in 31.528 (31.532) seconds
+** BUILD INTERRUPTED **

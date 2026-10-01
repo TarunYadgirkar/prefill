@@ -1,0 +1,119 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:39:32.233362-0700 ProbeUITests-Runner[34044:13027623] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:39:37.017.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:39:37.018.
+Test Suite 'DriverTests' started at 2026-09-30 23:39:37.019.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.01s Start Test at 2026-09-30 23:39:37.029
+    t =     0.05s Set Up
+[driver] step probe status
+    t =     0.05s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.06s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+2026-09-30 23:39:37.437 xcodebuild[33977:13027260] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:39:37.438 xcodebuild[33977:13027260] [MT] IDELaunchParametersSnapshot: no debugger version
+objc[34044]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1047dc398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107ce4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.05s         Setting up automation session
+    t =     3.70s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step stamp probe-up
+[driver] stamp probe-up 1790836784.70647
+[driver] step launch com.apple.MobileAddressBook
+    t =     7.69s Open com.apple.MobileAddressBook
+    t =     7.69s     Launch com.apple.MobileAddressBook
+    t =     7.69s         Terminate com.apple.MobileAddressBook:32797
+    t =     8.81s         Setting up automation session
+    t =    11.27s         Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step maybeTap BackButton
+    t =    17.12s Waiting 4.0s for Any (First Match) to exist
+    t =    18.16s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    18.16s         Checking existence of `Any (First Match)`
+    t =    18.18s Tap Any (First Match)
+    t =    18.18s     Wait for com.apple.MobileAddressBook to idle
+    t =    18.19s     Find the Any (First Match)
+    t =    18.20s     Check for interrupting elements affecting "BackButton" Button
+    t =    18.31s     Synthesize event
+    t =    18.62s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 1
+[driver] step tap Kate Bell
+    t =    20.14s Waiting 10.0s for Any (First Match) to exist
+    t =    21.18s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    21.18s         Checking existence of `Any (First Match)`
+    t =    21.25s Tap Any (First Match)
+    t =    21.25s     Wait for com.apple.MobileAddressBook to idle
+    t =    21.25s     Find the Any (First Match)
+    t =    21.31s     Check for interrupting elements affecting "Kate Bell" StaticText
+    t =    21.37s     Synthesize event
+    t =    21.66s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step tap Edit
+    t =    24.28s Waiting 10.0s for Any (First Match) to exist
+    t =    25.31s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    25.31s         Checking existence of `Any (First Match)`
+    t =    25.32s Tap Any (First Match)
+    t =    25.32s     Wait for com.apple.MobileAddressBook to idle
+    t =    25.33s     Find the Any (First Match)
+    t =    25.34s     Check for interrupting elements affecting "Edit" Button
+    t =    25.40s     Synthesize event
+    t =    25.70s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 2
+[driver] step tap Company
+    t =    27.70s Waiting 10.0s for Any (First Match) to exist
+    t =    28.74s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    28.74s         Checking existence of `Any (First Match)`
+    t =    28.83s Tap Any (First Match)
+    t =    28.83s     Wait for com.apple.MobileAddressBook to idle
+    t =    28.84s     Find the Any (First Match)
+    t =    28.88s     Check for interrupting elements affecting "Company" TextField
+    t =    28.93s     Synthesize event
+    t =    29.22s     Wait for com.apple.MobileAddressBook to idle
+[driver] step type  Edited
+    t =    29.29s Type ' Edited' into Application 'com.apple.MobileAddressBook'
+    t =    29.29s     Wait for com.apple.MobileAddressBook to idle
+    t =    29.66s     Find the Application 'com.apple.MobileAddressBook'
+    t =    29.69s     Check for interrupting elements affecting "Contacts" Application
+    t =    29.72s     Synthesize event
+    t =    29.72s         Get number of matches for: Elements containing elements matching predicate 'hasKeyboardFocus == 1'
+    t =    30.07s     Wait for com.apple.MobileAddressBook to idle
+[driver] step tap Done
+    t =    30.08s Waiting 10.0s for Any (First Match) to exist
+    t =    31.10s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    31.10s         Checking existence of `Any (First Match)`
+    t =    31.14s Tap Any (First Match)
+    t =    31.14s     Wait for com.apple.MobileAddressBook to idle
+    t =    31.14s     Find the Any (First Match)
+    t =    31.17s     Check for interrupting elements affecting "Done" Button
+    t =    31.20s     Synthesize event
+    t =    31.49s     Wait for com.apple.MobileAddressBook to idle
+[driver] step wait 1
+[driver] step stamp kate-edited
+[driver] stamp kate-edited 1790836809.645261
+[driver] step wait 3
+[driver] step app com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =    35.63s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =    35.63s     Activate com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =    35.78s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step stamp probe-front
+[driver] stamp probe-front 1790836812.9616761
+[driver] step wait 6
+    t =    41.95s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (42.203 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:40:19.232.
+	 Executed 1 test, with 0 failures (0 unexpected) in 42.203 (42.213) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:40:19.235.
+	 Executed 1 test, with 0 failures (0 unexpected) in 42.203 (42.216) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:40:19.236.
+	 Executed 1 test, with 0 failures (0 unexpected) in 42.203 (42.218) seconds
+2026-09-30 23:40:19.567 xcodebuild[33977:13027260] [MT] IDETestOperationsObserverDebug: 49.357 elapsed -- Testing started completed.
+2026-09-30 23:40:19.567 xcodebuild[33977:13027260] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:40:19.567 xcodebuild[33977:13027260] [MT] IDETestOperationsObserverDebug: 49.357 sec, +49.357 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-39-30--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

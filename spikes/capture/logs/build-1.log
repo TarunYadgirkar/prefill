@@ -1,0 +1,719 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild build-for-testing -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build
+
+ComputePackagePrebuildTargetDependencyGraph
+
+Prepare packages
+
+CreateBuildRequest
+
+SendProjectDescription
+
+CreateBuildOperation
+
+ComputeTargetDependencyGraph
+note: Building targets in dependency order
+note: Target dependency graph (3 targets)
+    Target 'CaptureUITests' in project 'PrefillCapture'
+        ➜ Explicit dependency on target 'CaptureApp' in project 'PrefillCapture'
+    Target 'CaptureApp' in project 'PrefillCapture'
+        ➜ Explicit dependency on target 'CaptureExtension' in project 'PrefillCapture'
+    Target 'CaptureExtension' in project 'PrefillCapture' (no dependencies)
+
+GatherProvisioningInputs
+
+CreateBuildDescription
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -v -E -dM -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -x c -c /dev/null
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc --version
+
+ExecuteExternalTool /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -version_details
+
+Build description signature: 6cc0eef7c262e932ba0493477326fcd3
+Build description path: /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/XCBuildData/6cc0eef7c262e932ba0493477326fcd3.xcbuilddata
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/CompilationCache.noindex
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/CompilationCache.noindex
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex
+
+ClangStatCache /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrecompiledHeaders
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrecompiledHeaders
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+CreateBuildDirectory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    builtin-create-build-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/EagerLinkingTBDs/Debug-iphonesimulator
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/PrefillCapture-62c5283503c1c1ee90b391ea1317f7e2-VFS-iphonesimulator/all-product-headers.yaml
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/PrefillCapture.xcodeproj
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/PrefillCapture-62c5283503c1c1ee90b391ea1317f7e2-VFS-iphonesimulator/all-product-headers.yaml
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/empty-CaptureUITests.plist (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/empty-CaptureUITests.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/ProductTypeInfoPlistAdditions.plist (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/ProductTypeInfoPlistAdditions.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.DependencyStaticMetadataFileList (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.DependencyMetadataFileList (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-project-headers.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-project-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.LinkFileList (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.LinkFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.SwiftConstValuesFileList (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-own-target-headers.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/DerivedSources/Entitlements-Simulated.plist (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/DerivedSources/Entitlements-Simulated.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests-OutputFileMap.json (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.SwiftFileList (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests.SwiftFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests_const_extract_protocols.json (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/Objects-normal/arm64/CaptureUITests_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-generated-files.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-generated-files.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-all-target-headers.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-all-non-framework-target-headers.hmap (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureUITests.build/CaptureUITests-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_const_extract_protocols.json (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftFileList (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftConstValuesFileList (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.LinkFileList (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.LinkFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-OutputFileMap.json (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/Entitlements-Simulated.plist (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/Entitlements-Simulated.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.DependencyStaticMetadataFileList (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.DependencyMetadataFileList (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-project-headers.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-project-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-own-target-headers.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-generated-files.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-generated-files.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-non-framework-target-headers.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-target-headers.hmap (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugEntryPoint-normal-arm64.txt (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugEntryPoint-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugDylibPath-normal-arm64.txt (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugDylibInstallName-normal-arm64.txt (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-DebugDylibInstallName-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/empty-CaptureApp.plist (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/empty-CaptureApp.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp_const_extract_protocols.json (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp_const_extract_protocols.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.SwiftFileList (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.SwiftFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.SwiftConstValuesFileList (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.SwiftConstValuesFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.LinkFileList (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.LinkFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp-OutputFileMap.json (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp-OutputFileMap.json
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/DerivedSources/Entitlements-Simulated.plist (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/DerivedSources/Entitlements-Simulated.plist
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.DependencyStaticMetadataFileList (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.DependencyStaticMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-project-headers.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-project-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.DependencyMetadataFileList (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.DependencyMetadataFileList
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-own-target-headers.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-own-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-generated-files.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-generated-files.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-all-target-headers.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-all-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-all-non-framework-target-headers.hmap (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-all-non-framework-target-headers.hmap
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-DebugDylibPath-normal-arm64.txt (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-DebugDylibPath-normal-arm64.txt
+
+WriteAuxiliaryFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-DebugDylibInstallName-normal-arm64.txt (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    write-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-DebugDylibInstallName-normal-arm64.txt
+
+MkDir /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /bin/mkdir -p /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+MkDir /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureUITests-Runner.app/PlugIns/CaptureUITests.xctest (in target 'CaptureUITests' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /bin/mkdir -p /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureUITests-Runner.app/PlugIns/CaptureUITests.xctest
+
+MkDir /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureApp.app (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /bin/mkdir -p /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureApp.app
+
+MkDir /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureApp.app/PlugIns (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /bin/mkdir -p /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureApp.app/PlugIns
+
+ProcessProductPackaging /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Extension.entitlements /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    
+    Entitlements:
+    
+    {
+}
+    
+    builtin-productPackagingUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Extension.entitlements -entitlements -format xml -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent
+
+ProcessProductPackaging /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Extension.entitlements /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.capture.extension";
+    "com.apple.security.application-groups" =     (
+        "group.com.tarunyadgirkar.prefill.spike.capture"
+    );
+}
+    
+    builtin-productPackagingUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Extension.entitlements -entitlements -format xml -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent
+
+ProcessProductPackagingDER /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent.der (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /usr/bin/derq query -f xml -i /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex.xcent.der --raw
+
+ProcessProductPackagingDER /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent.der (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /usr/bin/derq query -f xml -i /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent.der --raw
+
+Ld /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/__preview.dylib normal (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -Xlinker -reproducible -target arm64-apple-ios26.0-simulator -dynamiclib -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -O0 -Xlinker -no_warn_duplicate_libraries -L/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -F/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -install_name @rpath/CaptureExtension.debug.dylib -Xlinker -dead_strip -rdynamic -Xlinker -no_deduplicate -Xlinker -objc_abi_version -Xlinker 2 -Xlinker -dependency_info -Xlinker /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_dependency_info.dat -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __entitlements -Xlinker /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent -Xlinker -sectcreate -Xlinker __TEXT -Xlinker __ents_der -Xlinker /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension.appex-Simulated.xcent.der -Xlinker -no_adhoc_codesign -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/__preview.dylib
+
+ProcessInfoPlistFile /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/Info.plist /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Info.plist (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-infoPlistUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Info.plist -producttype com.apple.product-type.app-extension -expandbuildsettings -format binary -platform iphonesimulator -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/Info.plist
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/manifest.json /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/manifest.json (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/manifest.json /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/images /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/images (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/images /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/content.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/content.js (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/content.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/background.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/background.js (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/background.js /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+CpResource /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex/_locales /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/_locales (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/Resources/_locales /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.appex
+
+SwiftDriver CaptureExtension normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CaptureExtension -Onone @/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -F /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -c -j15 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -sdk-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_const_extract_protocols.json -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-generated-files.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-own-target-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-target-headers.hmap -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-project-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources-normal/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-Swift.h -working-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_AvailabilityInternal-2PQR8PV2MESZ2LU961BXN0MM5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdarg-3S7YBW7J1U0L8Y6RBMUJCB9RM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/SwiftShims-EJCHNXEKFQFWS9X8K2SL34MDQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ptrcheck-33Y3NDOHHVV8P1IL1QBI0GL8X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdbool-6EOUF85MM6OUNMCQ9T9SWEKJ5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ptrauth-GYG4GY1KPL9JYW2Q5HPG14TW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/DeveloperToolsSupport-E9SX3IY4JFC1IUIB4U1S94ZET.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-A6NNKGG8EIH8PXFEOK7EQ3XQS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stddef-3GW2SZVCLEPAK3EDR6JIFHPEF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_float-5TXCFYX2MPGQWI8YYZ4LRRIQV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation1-9G8E61Y12GPO76JSGRMHITR8F.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation2-PNJ0TZ2LZHMV54VFS471EUGG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_limits-830USVK3T8KOQI5PDUQYGNNVJ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_tgmath-1C2SGCO3RV0BKQUYEP5NELXYH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/string_h-56DWX7J5058AJI2CAD4PIATJI.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdint-3702JBIYRJRUUKAYKFBBA1QGX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/sys_types-DAI09ZZ8PW1A9BPP9JAOEOD3L.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdatomic-5L8VLE0Q0AWNYXQAO0ZMSS4BK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_intrinsics-94LCF79YSMCXR7W4KU9DATREU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation3-5VVJUVXTINVRZ40PQ7C1TDMQZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_inttypes-BLCDAMDNIPSZ3QVW0DAMP4AEQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Darwin-3ACL877KH021BEFGZSZGRDUER.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/simd-BFWYIA7LTCEOQAE9XQNB48YDX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ObjectiveC-7E02P4RFZ2QZRRZHN5VEAVA89.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/MachO-DBOWAUK89527BP5X5H56X4THX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Spatial-E7S0IH08QK8G4EX1DTP5C236R.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os_object-3AZQWQLTUD88B0SX79L9C2CAW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os_workgroup-3BZX1U7O9P657RQ19CUFA3YGV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Dispatch-DVFSM8UMQJ36LIMTHPTVQE62A.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreFoundation-A99RPH2TAFT65UILSZQ5UW3O1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/XPC-3PJAXETV52H6BVFJJLENBIZPN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os-5EVZN7LN927JP9GPZJ78GZ3AY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreGraphics-AJL54A5E9E3YTUVCEANKNQX41.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Security-FXYCQMDSOF6L9MG9XWOVT3W6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CFNetwork-1G5D5OCFKFI1IUUM8M2A1ON08.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Foundation-4E431PTITH8ZGH6XHUP6ZTPU4.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ImageIO-9R6CN69SXJM6AN4QIQ48D752Q.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreText-B04WSG9LAJ2N5Q2SIZZY41P9Y.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Contacts-6X2JNFWZ8JXUNCYVO7ZNOOEXC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Symbols-22J19ENZZO2FICIYNBKG5RFH3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/OpenGLES-CV175DL0Y9AN3LM6IPYX1S1Y5.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Accessibility-86J58YY240IKACUA6GP6V4LVV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/OSLog-3ZXWBMS54DRGEQXGQ91XE8WQS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/DataDetection-DTSAE0XIH2H4YX2C5OST979H9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UserNotifications-BL4GOWUW173G258GMLB647EAB.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/FileProvider-2968GKIVLS12A4YUNCEZX0YEM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/LocalAuthentication-2BKEWOVIEQXUBM9O1DOUZ5KS6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/IOSurface-DEC0EBTGNYND10CPSBPU9NT3O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UIUtilities-2VBGNJB5V15JDH6KB8I7OCYJK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_LocationEssentials-899DLB8BVVXS1Z4W227JLIKJO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-CVPNDPBCOF6OJMI3OT3320S3U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreTransferable-EILPZQT3DMRTN6VDW7O99W7OS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Metal-8KZRXAOFBVGS0VYW453HEB58R.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreLocation-B4ASOWSNV1ACLPP1MX2PJ8VM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreMotion-B0YPERQUOCYM2FDC3HPJQKQRX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreVideo-6LYD50DLOX6RQK7DL1O452GV8.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreImage-BWDUU8NE3XPO1PCPQZHF8I8SX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/QuartzCore-EMLLSTO89NUKZA82XKXCS5WX2.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/SwiftUICore-7T0LOM5Y6XK9LXQEC9ERFVLWQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UIKit-8RZCK9BURO7SGNILAY0XT18O6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/SafariServices-5543PZRCVGVCG3UESOE0VCG1X.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/AuthenticationServices-4MII4258BWWIXBWBD6PGN2V8F.pcm
+
+SwiftEmitModule normal arm64 Emitting\ module\ for\ CaptureExtension (in target 'CaptureExtension' from project 'PrefillCapture')
+
+SwiftCompile normal arm64 (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    
+
+SwiftCompile normal arm64 Compiling\ SafariWebExtensionHandler.swift /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+
+SwiftCompile normal arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-SwiftPerFileCompile SafariWebExtensionHandler.swift
+
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift:43:9: error: passing closure as a 'sending' parameter risks causing data races between code in the current isolation context and concurrent execution of the closure [#RegionIsolation::SendingClosureRisksDataRace]
+ 41 |             return
+ 42 |         }
+ 43 |         Task {
+    |         `- error: passing closure as a 'sending' parameter risks causing data races between code in the current isolation context and concurrent execution of the closure [#RegionIsolation::SendingClosureRisksDataRace]
+ 44 |             var r = box.value.1
+ 45 |             r["contacts_probe"] = await probeContacts()
+    |                                         `- note: closure captures 'self' which is accessible to code in the current isolation context
+ 46 |             finish(box.value.0, reply: r)
+ 47 |         }
+
+[#RegionIsolation]: <https://docs.swift.org/compiler/documentation/diagnostics/region-isolation>
+[#SendingClosureRisksDataRace]: <https://docs.swift.org/compiler/documentation/diagnostics/sending-closure-risks-data-race>
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Shared/CaptureStore.swift -primary-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift -emit-dependencies-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.d -emit-const-values-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.swiftconstvalues -emit-reference-dependencies-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.swiftdeps -serialize-diagnostics-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.dia -target arm64-apple-ios26.0-simulator -disable-cross-import-overlay-search -swift-module-cross-import Contacts /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Contacts.framework/Modules/Contacts.swiftcrossimport/AppIntents.swiftoverlay -swift-module-cross-import Contacts /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk/System/Library/Frameworks/Contacts.framework/Modules/Contacts.swiftcrossimport/AppIntents.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -I /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -F /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -application-extension -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=5 -swift-version 6 -Onone -D DEBUG -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture -enable-anonymous-context-mangled-names -file-compilation-dir /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-generated-files.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-own-target-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-target-headers.hmap -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-project-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources-normal/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources -Xcc -DDEBUG\=1 -no-auto-bridging-header-chaining -module-name CaptureExtension -const-gather-protocols-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-ios27.0-simulator -target-sdk-version 27.0 -target-sdk-name iphonesimulator27.0 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.o -debug-module-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftmodule -index-unit-output-path /PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/SafariWebExtensionHandler.o -index-store-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Index.noindex/DataStore -index-system-modules
+SwiftCompile normal arm64 Compiling\ CaptureStore.swift /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Shared/CaptureStore.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+
+SwiftCompile normal arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Shared/CaptureStore.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-SwiftPerFileCompile CaptureStore.swift
+
+SwiftDriverJobDiscovery normal arm64 Emitting module for CaptureExtension (in target 'CaptureExtension' from project 'PrefillCapture')
+
+SwiftDriver\ Compilation\ Requirements CaptureExtension normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-Swift-Compilation-Requirements -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CaptureExtension -Onone @/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -application-extension -enable-testing -index-store-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -F /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -c -j15 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -sdk-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension_const_extract_protocols.json -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-generated-files.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-own-target-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-all-target-headers.hmap -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/CaptureExtension-project-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources-normal/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-Swift.h -working-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture -experimental-emit-module-separately -disable-cmo
+
+SwiftMergeGeneratedHeaders /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/CaptureExtension-Swift.h /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-Swift.h (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-swiftHeaderTool -arch arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension-Swift.h -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/DerivedSources/CaptureExtension-Swift.h
+
+Copy /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.swiftmodule /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftmodule (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftmodule /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.swiftmodule
+
+Copy /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.swiftdoc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftdoc (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftdoc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.swiftdoc
+
+Copy /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.abi.json /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.abi.json (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.abi.json /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/arm64-apple-ios-simulator.abi.json
+
+Copy /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftsourceinfo (in target 'CaptureExtension' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks -rename /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureExtension.build/Objects-normal/arm64/CaptureExtension.swiftsourceinfo /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/CaptureExtension.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo
+
+ProcessProductPackaging /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/App/App.entitlements /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    
+    Entitlements:
+    
+    {
+}
+    
+    builtin-productPackagingUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/App/App.entitlements -entitlements -format xml -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent
+
+ProcessProductPackaging /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/App/App.entitlements /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    
+    Entitlements:
+    
+    {
+    "application-identifier" = "5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.capture";
+    "com.apple.security.application-groups" =     (
+        "group.com.tarunyadgirkar.prefill.spike.capture"
+    );
+}
+    
+    builtin-productPackagingUtility /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/App/App.entitlements -entitlements -format xml -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent
+
+ProcessProductPackagingDER /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent.der (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /usr/bin/derq query -f xml -i /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app.xcent.der --raw
+
+ProcessProductPackagingDER /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent.der (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    /usr/bin/derq query -f xml -i /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent -o /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp.app-Simulated.xcent.der --raw
+
+SwiftDriver CaptureApp normal arm64 com.apple.xcode.tools.swift.compiler (in target 'CaptureApp' from project 'PrefillCapture')
+    cd /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture
+    builtin-SwiftDriver -- /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc -module-name CaptureApp -Onone @/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.SwiftFileList -DDEBUG -enable-experimental-feature DebugDescriptionMacro -sdk /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.0.sdk -target arm64-apple-ios26.0-simulator -g -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -Xfrontend -serialize-debugging-options -enable-testing -index-store-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Index.noindex/DataStore -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -swift-version 6 -I /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -F /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator -c -j15 -enable-batch-mode -incremental -Xcc -ivfsstatcache -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKStatCaches.noindex/iphonesimulator27.0-24A430-8dc58220667be655e1bcc261a7455254.sdkstatcache -output-file-map /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp-OutputFileMap.json -save-temps -no-color-diagnostics -explicit-module-build -module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -clang-scanner-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex -sdk-module-cache-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules -emit-dependencies -emit-module -emit-module-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp.swiftmodule -serialize-diagnostics -dependency-scan-serialize-diagnostics-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp-dependency-scan.dia -validate-clang-modules-once -clang-build-session-file /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/ModuleCache.noindex/Session.modulevalidation -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -emit-const-values -const-gather-protocols-list /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp_const_extract_protocols.json -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-generated-files.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-own-target-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-all-target-headers.hmap -Xcc -iquote -Xcc /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/CaptureApp-project-headers.hmap -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Products/Debug-iphonesimulator/include -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/DerivedSources-normal/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/DerivedSources/arm64 -Xcc -I/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/DerivedSources -Xcc -DDEBUG\=1 -emit-objc-header -emit-objc-header-path /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/PrefillCapture.build/Debug-iphonesimulator/CaptureApp.build/Objects-normal/arm64/CaptureApp-Swift.h -working-directory /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture -experimental-emit-module-separately -disable-cmo
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdarg-ZXIV66H8QQYOUZLRBJJAH9HX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_SwiftConcurrencyShims-E2WG79EED33M3V9O9I5G8H62U.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ptrcheck-5KB418KAEKF2O5J0T5PDB3K11.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/DeveloperToolsSupport-7BZLUEIJHQLUPUJ40DIW156RO.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stddef-6TI30BJPXT06UJN1GQ6Z01FWQ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_AvailabilityInternal-COKVWYTFWFVISR5ZDX2X8Z51G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_float-F26LETCHSSBPA3EKEON0GWV7O.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/SwiftShims-9G09O8YF656OYVFS8V5BKPA78.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ptrauth-6NR8JGS1B8N4K6HW7EQFDGNEK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdbool-CPF2EZVUAL8A669YA96RO6HDX.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation1-74VM4P374EJ5DWRM1ZV1YEJPK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation2-DK0U9PY521P5Z9SIPX6JZDOLV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_limits-3JB7KAVJ1G6H0VH628F0RJRSG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdint-A9TE2YHATD1OOR7SJIBRFESZF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_tgmath-ED2C63MRW5PUENCCQ079BYV6V.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/sys_types-ERDPLA3CCFFQAIAHQBRAZGPZK.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/string_h-5SHIW9RSQPMM9U58WNF0L74XW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_stdatomic-7FQY03WX2JDC512Y5GLZQY9TF.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_DarwinFoundation3-ENO0F3FBAACM2227K37DVPK3E.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_intrinsics-6H9ZUUXU2T8C0S54WJ2U5CJVG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_Builtin_inttypes-4WV03HFAZRW6JP3FBAXJ5JFXH.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Darwin-33M3UG5VL0MBCWVV6YVMZQDA3.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/simd-3AZUPXZK45BMMHOV3ON0B2ANP.pcm
+
+SwiftDriverJobDiscovery normal arm64 Compiling CaptureStore.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ObjectiveC-1FGFFFY0SNOEMXF9N8VDXXV2Q.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/MachO-5BYFNNVUNJBZQEK5LE4WOIPUU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Spatial-D7S7K2BASMN16IMSG7NRVVKXY.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os_object-1MQUN3Y65Z3KMSHSXHHREYNWW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os_workgroup-ESLFNRQH5IJQC34IQ35YJEQSS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Dispatch-DVV54V54AZOKD4NWCB1HBWFYP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreFoundation-6DOW9PIMHT1FBE0CDRWQZJN2G.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/XPC-CIK4ASAOB5G5LPCJEHYIZQ5QP.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/os-2S4RDDX0R4UAQPFY5XVH2ZEY1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CFNetwork-1XM06FCCQ8J66J3215HXDL2H.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreGraphics-4L386NIJ5FA39W3JE4OJ5Z5WD.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreAudioTypes-8JXCHV8XRSVXH7A99F78NK7QT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Security-82OLWBE99KA498025RCZTT7JZ.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreAudio-7ZH0YUVHG6SALVKRUIMME4FF6.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Foundation-CTSA5DRJT01R4URUMQJBRJ6ZA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreText-6BCDEWPRYVVXNFM03CEHQNJYG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/ImageIO-2N7AXFEDK31D876F758BRUPGT.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/DataDetection-6SZTF1LX3339H560Y5I3WI8BW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/FileProvider-CFZ4NRUMW9RCO1J7OA2WXQREV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Accessibility-5INMUP9N6WAN5RQABXGXC6CII.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/OSLog-DUP7F01VE241WJU3ZLWTDDJUG.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/OpenGLES-2GFYL3LCYKIL329GXTZ4F4COW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Contacts-2LD5QFW7ACVL6RXIXOTHNH6IW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreData-B9BRDLA6EYDPSDR4O86K73M1T.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UIUtilities-6V2JUD16I5FA0ZWVXGA8ZIV5W.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/_LocationEssentials-BGWPMTUM9J9XBI1R72LXY4AM.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Symbols-14RVCQECCQ5KPTAMU5DKTY7D0.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UserNotifications-APQTNUCOUFIWGAIVTAWZY1DJV.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreTransferable-C5VRJ2XY31IAHDO6YP45NFWN9.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/IOSurface-QOOKN1NA867OSZWTQ2FQSVLA.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/UniformTypeIdentifiers-6IA6CFDIKP1MLUCHT91OP4QOU.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreLocation-5XB48OI9DR6R6H16QL67XT0T1.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/Metal-EIXT2SEQ1S54UAQ1KH92M0GRW.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreMotion-4CSY197V36C8082X65JY45E81.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreVideo-128BUUPPEC4SUN5DU76V4ZOHS.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/QuartzCore-DW07GHRV6SD6DRFO6QK0YCMQN.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreMedia-H1D8NYZXTTPUF00MCZU1L5XC.pcm
+
+SwiftExplicitDependencyGeneratePcm arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules/CoreImage-E2365Q2BA7X2FHPBM050QWLTW.pcm
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/build/SDKExplicitPrecompiledModules
+
+** TEST BUILD FAILED **
+
+
+The following build commands failed:
+	SwiftCompile normal arm64 /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+	SwiftCompile normal arm64 Compiling\ SafariWebExtensionHandler.swift /Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/Extension/SafariWebExtensionHandler.swift (in target 'CaptureExtension' from project 'PrefillCapture')
+	Building project PrefillCapture for testing with scheme PrefillCapture
+(3 failures)

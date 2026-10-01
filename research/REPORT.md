@@ -18,10 +18,22 @@ No public API lets a third-party app put its own suggestions into the QuickType 
 
 An app can still change what that bar shows, because the bar reads ordinary Contacts data that apps can write. The plan that follows from the evidence has two halves:
 
-1. **Steer the native bar through the card.** The bar shows the first two values on the My Info card for an empty field, in card order (Observed, iOS 27.0 and 26.5). An app with Contacts write access can add values to that card and reorder them, so it decides which two appear.
+1. **Steer the native bar through the card.** For an empty field the bar shows the card's primary value (stored identifier 0) and then the first other value in array order. Any card freshly written in one save gets identifiers 0..n in array order, so for a card the app rewrites, slot 1 and slot 2 are simply the first two values it wrote (Observed, iOS 27.0 and 26.5, see [Spike results](#spike-results)). An app with Contacts write access, even limited access to just this card, can rewrite the card, and Safari shows the change the next time a field is focused.
 2. **Capture what the user types, because Safari never will.** A Safari Web Extension can read form values on submit and pass them to the app, which adds them to the card after the user confirms.
 
 A third route may exist: a Safari Web Extension that injects a `<datalist>` into the focused field, which WebKit's source routes into the same bar. It is untested and is the first spike to run (see [Injected datalist](#injected-datalist-untested-highest-priority-spike)). Everything else (a custom keyboard, a credential provider's text-insert sheet, a ContactProvider extension) sits next to the bar rather than in it, and each has a hard limit described under [Surfaces](#surfaces-a-third-party-app-can-use).
+
+## Spike results
+
+Four hands-on spikes ran on cloned iOS 27.0 Simulators on 2026-10-01. Each spike's claims were checked against its own screenshots and logs by a separate reviewer. Code is in `spikes/`, evidence in `assets/generated/spike-*`.
+
+| Spike | Verdict | What it showed |
+| --- | --- | --- |
+| Contacts writes (`spikes/contacts`) | Pass | Rewriting the card through `CNSaveRequest.updateContact` changes Safari's bar. Slot 1 is the value whose stored identifier is 0, slot 2 the first other value in array order. Moving existing `CNLabeledValue` objects keeps their identifiers, so a plain move does not change slot 1. Writing every value as a fresh `CNLabeledValue(label:value:)` in ranked order, in one save, renumbers identifiers 0..n and the bar follows exactly. This works under iOS 18 limited access with only the person's card shared (the system picker even tags that card "me"). Safari shows the new order the next time the field is focused, with no relaunch. A contact picked through `CNContactPickerViewController` but not shared cannot be saved (CNError 200). |
+| Save offer (`spikes/contacts`) | Confirmed absent | Real GET and POST forms with a submit button, a new email and a new phone: Safari showed no save prompt, did not change the card, and did not offer the values later. |
+| Capture (`spikes/capture`) | Pass | An MV3 extension (content.js, background.js, `sendNativeMessage`, `SafariWebExtensionHandler`, App Group JSONL) captured button submits, Return submits and, through an input cache flushed on `pagehide` or `visibilitychange`, fetch-driven forms. Password and one-time-code fields were skipped. The handler inherits the containing app's Contacts grant and saved a reordered card itself. Calling `requestAccess` from the handler must never happen: its prompt names the app, Don't Allow denies the app permanently, and Continue dead-ends. Cold handler latency about 1.3 s, warm about 10 ms. Under the default "All Websites: Ask" the content script does not run and Safari shows no prompt, so onboarding must send the person to grant access. |
+| Datalist (`spikes/datalist`) | Pass, with costs | An injected `<datalist>` reaches the real QuickType bar (3 options, values only, labels ignored, long emails wrap after a hyphen). It wins only where Safari has no contact suggestion: with Use Contact Info off, on fields Safari does not classify, or after a typed prefix matches nothing on the card. Changing `autocomplete`, `name` or `id` does not help. Any `list=` also opens WebKit's in-page dropdown of all options on focus, which could not be suppressed, and sometimes an iOS 27 "Suggested" strip under the field. A tap fires one trusted `input` and one `change` event. |
+| Text insert (`spikes/textinsert`) | Partial | A provider declaring only `ProvidesTextToInsert` is listed (the containing app also needs the credential-provider entitlement) and appears under the field's edit menu: caret, AutoFill, Passwords, provider, value, 5 to 6 taps. The inserted text never landed in the Simulator, in Safari or in a native field (RTI "requires a valid sessionID"). `ASSettingsHelper.requestToTurnOnCredentialProviderExtension` never prompted. Needs a device run before any work depends on it. |
 
 ## What Safari's contact AutoFill does on iOS 27
 
@@ -38,7 +50,7 @@ Test setup: iPhone 17 Pro Simulator, iOS 27.0 (24A434), repeated on iOS 26.5 (23
 | Drew | custom "Personal", home, work | "Personal", home | `ios27-order-drew-custom-label-first.png` |
 | Blake (vCard had `OTHER;pref` last) | other, home, work after import | other, home | `ios27-order-blake-pref-import.png` |
 
-The rule these rows support is that **an empty field shows the first two values in card order, whatever their labels are.** A home or mobile label does not lift a value above position, an unlabeled value in slot 1 still shows (captioned with the generic word "email" or "phone"), and a custom label shows exactly as typed while system labels show in lowercase. The same rule holds for emails, phones and addresses, and iOS 26.5 behaves identically (`ios26_5-order-casey-email.png`, `ios26_5-order-avery-unlabeled-first.png`).
+The rule these rows support is that **an empty field shows the first two values in card order, whatever their labels are.** These cards were all imported from vCards, which number values 0..n in order. The contacts spike refined the rule for edited cards: slot 1 is the value with stored identifier 0, then slot 2 is the first other value in array order. See [Spike results](#spike-results). A home or mobile label does not lift a value above position, an unlabeled value in slot 1 still shows (captioned with the generic word "email" or "phone"), and a custom label shows exactly as typed while system labels show in lowercase. The same rule holds for emails, phones and addresses, and iOS 26.5 behaves identically (`ios26_5-order-casey-email.png`, `ios26_5-order-avery-unlabeled-first.png`).
 
 This corrects the first test. On the Alex card the missing school address was third, unlabeled and the only value without `pref`, so the original run could not tell those explanations apart. The variant cards separate them, and position is the only one that predicts every row.
 
@@ -56,11 +68,11 @@ Safari recognized an untagged input labeled "Your e-mail" (`name="usr_contact"`)
 
 ### Saving new values
 
-Safari's own UI never offers to save a contact value typed into a form, but **this was not actually tested**, so treat it as likely rather than observed. The testbed forms had no submit button and no action, and pressing Return in a multi-field form without a submit button does not submit it, so Safari never saw a submission. The claim is consistent with Apple's iOS 27 iPhone User Guide, which describes My Info as the only source of contact AutoFill and describes a save path for credit cards only (Doc, support.apple.com/guide/iphone/iphccfb450b7). That is evidence by absence. The test still to run is in [Open tests](#open-tests).
+Safari's own UI never offers to save a contact value typed into a form. The first runs could not show this because the testbed forms had no submit button; the contacts spike then submitted real GET and POST forms and saw no prompt, no card change and no later suggestion of the typed values (Observed). The claim is consistent with Apple's iOS 27 iPhone User Guide, which describes My Info as the only source of contact AutoFill and describes a save path for credit cards only (Doc, support.apple.com/guide/iphone/iphccfb450b7). That is evidence by absence. The test still to run is in [Open tests](#open-tests).
 
 ### When Safari notices card changes
 
-Switching My Info only showed up in Safari after Safari was relaunched and `contactsd` was killed (Observed, Simulator). Whether a value edit made through the Contacts framework reaches the bar without a relaunch has not been tested.
+Switching My Info only showed up in Safari after Safari was relaunched and `contactsd` was killed (Observed, Simulator). A value edit made through the Contacts framework is different: Safari showed it the next time the field was focused, with no relaunch (Observed, contacts spike).
 
 ## Common problems with contact AutoFill
 
@@ -89,9 +101,9 @@ Onboarding therefore has to ask the person to pick their own card. `CNContactPic
 
 In the Simulator's private database, My Info is a pointer stored per contacts account (`ABStore.MeIdentifier`) plus a global `MeSourceID`. On a phone with iCloud and Gmail accounts, each account may hold its own pointer. This is an inference from a private schema, it is unreachable from a sandboxed app, and it is only useful for understanding device behavior.
 
-### Limited Contacts access should be enough, but this is untested
+### Limited Contacts access is enough
 
-iOS 18 added `CNAuthorizationStatusLimited` (SDK, `CNContactStore.h:46-47`), where the person shares only chosen contacts. The headers say nothing about writes under limited access. Apple's WWDC24 session 10121 says "Just like Full access, your app can modify or create contacts" (Doc). If that holds, the least-permission onboarding is: request access, the person taps "Select contacts" and shares only their own card, and the app saves to it. `ContactAccessButton` and `contactAccessPicker` (SwiftUI, iOS 18) let the app add more cards to the shared set later. A card picked through `CNContactPickerViewController` probably does not join the limited set by itself (Unverified). The probe that settles this is in [Open tests](#open-tests).
+iOS 18 added `CNAuthorizationStatusLimited` (SDK, `CNContactStore.h:46-47`), where the person shares only chosen contacts. The headers say nothing about writes under limited access. Apple's WWDC24 session 10121 says "Just like Full access, your app can modify or create contacts" (Doc). The contacts spike confirmed it: reorder, add and full rewrite all saved under limited access with only the person's card shared. The least-permission onboarding is: request access, the person taps "Select contacts" and shares only their own card, and the app saves to it. `ContactAccessButton` and `contactAccessPicker` (SwiftUI, iOS 18) let the app add more cards to the shared set later. A card picked through `CNContactPickerViewController` probably does not join the limited set by itself (Unverified). The probe that settles this is in [Open tests](#open-tests).
 
 ### Edits go through ordered arrays
 

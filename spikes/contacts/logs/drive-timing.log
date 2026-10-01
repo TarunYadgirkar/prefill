@@ -1,0 +1,70 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath build
+
+2026-09-30 23:19:15.186515-0700 ProbeUITests-Runner[98010:12862845] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:19:18.488.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:19:18.489.
+Test Suite 'DriverTests' started at 2026-09-30 23:19:18.489.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.00s Start Test at 2026-09-30 23:19:18.493
+    t =     0.02s Set Up
+[driver] step probe promoteFresh -value alex@work.example.org
+    t =     0.04s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.04s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.04s         Terminate com.tarunyadgirkar.prefill.spike.contacts.probe:97065
+objc[98010]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1061d0398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106b88310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+2026-09-30 23:19:19.708 xcodebuild[97988:12862429] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:19:19.708 xcodebuild[97988:12862429] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.63s         Setting up automation session
+    t =     3.42s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step stamp saved
+[driver] stamp saved 1790835565.8957229
+[driver] step app com.apple.mobilesafari
+    t =     7.41s Open com.apple.mobilesafari
+    t =     7.41s     Activate com.apple.mobilesafari
+    t =     7.47s         Wait for com.apple.mobilesafari to idle
+[driver] step stamp safari-front
+[driver] stamp safari-front 1790835566.269033
+[driver] step tapWeb Phone
+    t =     7.78s Waiting 15.0s for TextField (First Match) to exist
+    t =     8.88s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =     8.88s         Checking existence of `TextField (First Match)`
+    t =     8.93s Tap TextField (First Match)
+    t =     8.93s     Wait for com.apple.mobilesafari to idle
+    t =     9.43s     Find the TextField (First Match)
+    t =     9.46s     Check for interrupting elements affecting "Phone" TextField
+    t =     9.49s     Synthesize event
+    t =     9.77s     Wait for com.apple.mobilesafari to idle
+[driver] step tapWeb Email
+    t =    10.07s Waiting 15.0s for TextField (First Match) to exist
+    t =    11.10s     Checking `Expect predicate `existsNoRetry == 1` for object TextField (First Match)`
+    t =    11.10s         Checking existence of `TextField (First Match)`
+    t =    11.13s Tap TextField (First Match)
+    t =    11.13s     Wait for com.apple.mobilesafari to idle
+    t =    11.13s     Find the TextField (First Match)
+    t =    11.15s     Check for interrupting elements affecting "Email" TextField
+    t =    11.17s     Synthesize event
+    t =    11.45s     Wait for com.apple.mobilesafari to idle
+[driver] step stamp focused
+[driver] stamp focused 1790835570.362299
+[driver] step wait 25
+    t =    36.88s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (37.113 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:19:55.607.
+	 Executed 1 test, with 0 failures (0 unexpected) in 37.113 (37.118) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:19:55.608.
+	 Executed 1 test, with 0 failures (0 unexpected) in 37.113 (37.119) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:19:55.608.
+	 Executed 1 test, with 0 failures (0 unexpected) in 37.113 (37.120) seconds
+2026-09-30 23:19:55.951 xcodebuild[97988:12862429] [MT] IDETestOperationsObserverDebug: 42.121 elapsed -- Testing started completed.
+2026-09-30 23:19:55.952 xcodebuild[97988:12862429] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:19:55.952 xcodebuild[97988:12862429] [MT] IDETestOperationsObserverDebug: 42.121 sec, +42.121 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-19-13--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

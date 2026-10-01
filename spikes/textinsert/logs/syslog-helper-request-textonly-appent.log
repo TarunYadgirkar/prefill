@@ -1,0 +1,12 @@
+2026-10-01 00:03:14.534 Df pkd[86982:c86712] [com.apple.PlugInKit:discovery] [d D7756615-8944-4768-A634-CB00BB6DFA91] Final plugin count: 24
+2026-10-01 00:03:16.341 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.mobilesafari:Authorization] Initializing ASCAgent 0x101533840.
+2026-10-01 00:03:16.341 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.mobilesafari:Authorization] Received connection from 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert
+2026-10-01 00:03:16.341 Df AuthenticationServicesAgent[88774:c86932] [com.apple.PlugInKit:discovery] [d D638400C-3C81-4249-895C-F6ECFB7015EC] <PKHost:0x1014ed200> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-p
+2026-10-01 00:03:16.341 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.PlugInKit:discovery] [d 4968FDE2-1C62-47BD-AD1B-06E89D61220A] <PKHost:0x1014ed200> Beginning discovery for flags: 1024, point: com.apple.authentication-services-credentia
+2026-10-01 00:03:16.342 Df pkd[86982:c86576] [com.apple.PlugInKit:discovery] [d D638400C-3C81-4249-895C-F6ECFB7015EC] Final plugin count: 1
+2026-10-01 00:03:16.342 Df AuthenticationServicesAgent[88774:c86932] [com.apple.PlugInKit:discovery] [d D638400C-3C81-4249-895C-F6ECFB7015EC] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 1
+2026-10-01 00:03:16.342 Df pkd[86982:c86576] [com.apple.PlugInKit:discovery] [d 4968FDE2-1C62-47BD-AD1B-06E89D61220A] Final plugin count: 0
+2026-10-01 00:03:16.342 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.PlugInKit:discovery] [d 4968FDE2-1C62-47BD-AD1B-06E89D61220A] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 0
+2026-10-01 00:03:16.361 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.mobilesafari:Authorization] 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert disconnected.
+2026-10-01 00:03:16.361 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.mobilesafari:Authorization] Completing authorization: 0x101533840 (null) Error Domain=com.apple.AuthenticationServicesCore.AuthorizationError Code=2 "(null)" (null)
+2026-10-01 00:03:16.361 Df AuthenticationServicesAgent[88774:c85a97] [com.apple.mobilesafari:Authorization] Dealloc for 0x101533840. Cancelling any outstanding requests.

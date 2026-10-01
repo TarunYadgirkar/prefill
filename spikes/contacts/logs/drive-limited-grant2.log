@@ -1,0 +1,248 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/ContactsProbe.xcodeproj -scheme Probe -destination "platform=iOS Simulator,id=A53AB330-51D0-4F6A-88C2-83EDF2CA571D" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build
+
+2026-09-30 23:29:16.684922-0700 ProbeUITests-Runner[11950:12934531] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'All tests' started at 2026-09-30 23:29:20.330.
+Test Suite 'ProbeUITests.xctest' started at 2026-09-30 23:29:20.332.
+Test Suite 'DriverTests' started at 2026-09-30 23:29:20.332.
+Test Case '-[ProbeUITests.DriverTests testScript]' started.
+    t =     0.01s Start Test at 2026-09-30 23:29:20.342
+    t =     0.03s Set Up
+[driver] step probe request
+    t =     0.03s Open com.tarunyadgirkar.prefill.spike.contacts.probe
+    t =     0.03s     Launch com.tarunyadgirkar.prefill.spike.contacts.probe
+2026-09-30 23:29:20.624 xcodebuild[11916:12934222] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:29:20.624 xcodebuild[11916:12934222] [MT] IDELaunchParametersSnapshot: no debugger version
+objc[11950]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10a2b0398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10ac28310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     0.71s         Setting up automation session
+    t =     2.47s         Wait for com.tarunyadgirkar.prefill.spike.contacts.probe to idle
+[driver] step wait 2
+[driver] step use com.apple.springboard
+[driver] step tap Continue
+    t =     6.02s Waiting 10.0s for Any (First Match) to exist
+    t =     7.04s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.04s         Checking existence of `Any (First Match)`
+    t =     7.13s Tap Any (First Match)
+    t =     7.13s     Wait for com.apple.springboard to idle
+    t =     7.13s     Find the Any (First Match)
+    t =     7.18s     Check for interrupting elements affecting "Continue" Button
+    t =     7.22s     Synthesize event
+    t =     7.51s     Wait for com.apple.springboard to idle
+[driver] step wait 4
+[driver] step tap Select Contacts
+    t =    11.76s Waiting 10.0s for Any (First Match) to exist
+    t =    12.80s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    12.80s         Checking existence of `Any (First Match)`
+    t =    12.88s Tap Any (First Match)
+    t =    12.88s     Wait for com.apple.springboard to idle
+    t =    12.89s     Find the Any (First Match)
+    t =    12.96s     Check for interrupting elements affecting "Select Contacts" Button
+    t =    13.15s     Synthesize event
+    t =    13.48s     Wait for com.apple.springboard to idle
+[driver] step wait 3
+[driver] step tap Alex Rivera
+    t =    16.49s Waiting 10.0s for Any (First Match) to exist
+    t =    17.53s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    17.53s         Checking existence of `Any (First Match)`
+    t =    17.66s Tap Any (First Match)
+    t =    17.66s     Wait for com.apple.springboard to idle
+    t =    17.66s     Find the Any (First Match)
+    t =    17.73s     Check for interrupting elements affecting "Alex Rivera" StaticText
+    t =    17.79s     Synthesize event
+    t =    18.08s     Wait for com.apple.springboard to idle
+[driver] step wait 1
+[driver] step tap Continue
+    t =    19.09s Waiting 10.0s for Any (First Match) to exist
+    t =    20.12s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    20.12s         Checking existence of `Any (First Match)`
+    t =    20.19s Tap Any (First Match)
+    t =    20.19s     Wait for com.apple.springboard to idle
+    t =    20.19s     Find the Any (First Match)
+    t =    20.26s     Check for interrupting elements affecting "Continue" Button
+    t =    20.31s     Synthesize event
+    t =    20.60s     Wait for com.apple.springboard to idle
+[driver] step wait 3
+[driver] step stamp confirm
+[driver] stamp confirm 1790836183.939791
+[driver] step wait 2
+[driver] step tap Allow Selected Contact
+    t =    25.61s Waiting 10.0s for Any (First Match) to exist
+    t =    26.64s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    26.64s         Checking existence of `Any (First Match)`
+    t =    26.71s Tap Any (First Match)
+    t =    26.71s     Wait for com.apple.springboard to idle
+    t =    26.72s     Find the Any (First Match)
+    t =    26.80s     Check for interrupting elements affecting "Allow Selected Contact" Button
+    t =    26.86s     Synthesize event
+    t =    27.15s     Wait for com.apple.springboard to idle
+[driver] step wait 4
+[driver] step use com.tarunyadgirkar.prefill.spike.contacts.probe
+[driver] step dump 
+    t =    31.16s Requesting snapshot of accessibility hierarchy for app with pid 12125
+    t =    31.50s Requesting snapshot of accessibility hierarchy for app with pid 12125
+[driver] tree
+Attributes: Application, 0x106e8d2c0, pid: 12125, label: 'Probe'
+Element subtree:
+ →Application, 0x106e8d2c0, pid: 12125, label: 'Probe'
+    Window (Main), 0x106e8fc00, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x106e8f700, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x106e8f840, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x106e8d400, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x106e8f980, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x106e8fac0, {{0.0, 0.0}, {402.0, 874.0}}
+                NavigationBar, 0x109c8c8c0, {{0.0, 62.0}, {402.0, 106.0}}, identifier: 'Contacts probe'
+                  StaticText, 0x109c8ea80, {{16.0, 119.7}, {244.7, 40.7}}, label: 'Contacts probe'
+                Other, 0x109c8e940, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x109c8ed00, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x109c8ebc0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x109c8d040, {{0.0, 0.0}, {402.0, 874.0}}
+                        CollectionView, 0x109c8d180, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x109c8e800, {{-16.0, -1580.0}, {434.0, 4244.0}}
+                          Other, 0x109c8da40, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x109c8fd40, {{0.0, 0.0}, {402.0, 102.0}}
+                          Other, 0x109c8c500, {{0.0, 0.0}, {402.0, 874.0}}
+                          Cell, 0x109c8f0c0, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x109c8e580, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x109c8e300, {{16.0, 168.0}, {370.0, 52.0}}
+                            Other, 0x109c8e1c0, {{16.0, 168.0}, {370.0, 52.0}}
+                              Other, 0x109c8e080, {{16.0, 168.0}, {370.0, 52.0}}
+                                Other, 0x109c8df40, {{16.0, 168.0}, {370.0, 52.0}}
+                                  StaticText, 0x109c8e440, {{16.0, 168.0}, {370.0, 52.0}}, identifier: 'last', label: 'request: granted=true status=limited'
+                          Cell, 0x109c8db80, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x109c8dcc0, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x109c8d900, {{16.0, 220.0}, {370.0, 52.0}}
+                            Other, 0x109c8ee40, {{16.0, 220.0}, {370.0, 52.0}}
+                              Other, 0x109c8f340, {{16.0, 220.0}, {370.0, 52.0}}
+                                Other, 0x109c8f200, {{16.0, 220.0}, {370.0, 52.0}}
+                                  Button, 0x109c8d400, {{16.0, 220.0}, {370.0, 52.0}}, identifier: 'action.status', label: 'status'
+                          Other, 0x109c8ef80, {{32.0, 219.0}, {338.0, 1.0}}
+                          Cell, 0x109c8de00, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x109c8f5c0, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x109c8f840, {{16.0, 272.0}, {370.0, 52.0}}
+                            Other, 0x109c8f480, {{16.0, 272.0}, {370.0, 52.0}}
+                              Other, 0x109c8fac0, {{16.0, 272.0}, {370.0, 52.0}}
+                                Other, 0x109c8f980, {{16.0, 272.0}, {370.0, 52.0}}
+                                  Button, 0x109c8c640, {{16.0, 272.0}, {370.0, 52.0}}, identifier: 'action.request', label: 'request'
+                          Other, 0x109c8f700, {{32.0, 271.0}, {338.0, 1.0}}
+                          Cell, 0x109c8fe80, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x109c8fc00, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x10aac8000, {{16.0, 324.0}, {370.0, 52.0}}
+                            Other, 0x10aac8140, {{16.0, 324.0}, {370.0, 52.0}}
+                              Other, 0x10aac8280, {{16.0, 324.0}, {370.0, 52.0}}
+                                Other, 0x10aac83c0, {{16.0, 324.0}, {370.0, 52.0}}
+                                  Button, 0x10aac8500, {{16.0, 324.0}, {370.0, 52.0}}, identifier: 'action.dump', label: 'dump'
+                          Other, 0x10aac8640, {{32.0, 323.0}, {338.0, 1.0}}
+                          Cell, 0x10aac8780, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x10aac88c0, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x10aac8a00, {{16.0, 376.0}, {370.0, 52.0}}
+                            Other, 0x10aac8b40, {{16.0, 376.0}, {370.0, 52.0}}
+                              Other, 0x10aac8c80, {{16.0, 376.0}, {370.0, 52.0}}
+                                Other, 0x10aac8dc0, {{16.0, 376.0}, {370.0, 52.0}}
+                                  Button, 0x10aac8f00, {{16.0, 376.0}, {370.0, 52.0}}, identifier: 'action.listAll', label: 'listAll'
+                          Other, 0x10aac9040, {{32.0, 375.0}, {338.0, 1.0}}
+                          Cell, 0x10aac9180, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x10aac92c0, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x10aac9400, {{16.0, 428.0}, {370.0, 52.0}}
+                            Other, 0x10aac9540, {{16.0, 428.0}, {370.0, 52.0}}
+                              Other, 0x10aac9680, {{16.0, 428.0}, {370.0, 52.0}}
+                                Other, 0x10aac97c0, {{16.0, 428.0}, {370.0, 52.0}}
+                                  Button, 0x10aac9900, {{16.0, 428.0}, {370.0, 52.0}}, identifier: 'action.reorder', label: 'reorder'
+                          Other, 0x10aac9a40, {{32.0, 427.0}, {338.0, 1.0}}
+                          Cell, 0x10aac9b80, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x10aac9cc0, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x10aac9e00, {{16.0, 480.0}, {370.0, 52.0}}
+                            Other, 0x10aac9f40, {{16.0, 480.0}, {370.0, 52.0}}
+                              Other, 0x10aaca080, {{16.0, 480.0}, {370.0, 52.0}}
+                                Other, 0x10aaca1c0, {{16.0, 480.0}, {370.0, 52.0}}
+                                  Button, 0x10aaca300, {{16.0, 480.0}, {370.0, 52.0}}, identifier: 'action.add', label: 'add'
+                          Other, 0x10aaca440, {{32.0, 479.0}, {338.0, 1.0}}
+                          Cell, 0x10aaca580, {{16.0, 532.0}, {370.0, 52.0}}
+                            Other, 0x10aaca6c0, {{16.0, 532.0}, {370.0, 52.0}}
+                              Other, 0x10aaca800, {{16.0, 532.0}, {370.0, 52.0}}
+                            Other, 0x10aaca940, {{16.0, 532.0}, {370.0, 52.0}}
+                              Other, 0x10aacaa80, {{16.0, 532.0}, {370.0, 52.0}}
+                                Other, 0x10aacabc0, {{16.0, 532.0}, {370.0, 52.0}}
+                                  Button, 0x10aacad00, {{16.0, 532.0}, {370.0, 52.0}}, identifier: 'action.reset', label: 'reset'
+                          Other, 0x10aacae40, {{32.0, 531.0}, {338.0, 1.0}}
+                          Cell, 0x10aacaf80, {{16.0, 584.0}, {370.0, 52.0}}
+                            Other, 0x10aacb0c0, {{16.0, 584.0}, {370.0, 52.0}}
+                              Other, 0x10aacb200, {{16.0, 584.0}, {370.0, 52.0}}
+                            Other, 0x10aacb340, {{16.0, 584.0}, {370.0, 52.0}}
+                              Other, 0x10aacb480, {{16.0, 584.0}, {370.0, 52.0}}
+                                Other, 0x10aacb5c0, {{16.0, 584.0}, {370.0, 52.0}}
+                                  Button, 0x10aacb700, {{16.0, 584.0}, {370.0, 52.0}}, identifier: 'action.picker', label: 'picker'
+                          Other, 0x10aacb840, {{32.0, 583.0}, {338.0, 1.0}}
+                          Cell, 0x10aacb980, {{16.0, 636.0}, {370.0, 52.0}}
+                            Other, 0x10aacbac0, {{16.0, 636.0}, {370.0, 52.0}}
+                              Other, 0x10aacbc00, {{16.0, 636.0}, {370.0, 52.0}}
+                            Other, 0x10aacbd40, {{16.0, 636.0}, {370.0, 52.0}}
+                              Other, 0x10aacbe80, {{16.0, 636.0}, {370.0, 52.0}}
+                                Other, 0x10abd8000, {{16.0, 636.0}, {370.0, 52.0}}
+                                  Button, 0x10abd8140, {{16.0, 636.0}, {370.0, 52.0}}, identifier: 'action.fetchId', label: 'fetchId'
+                          Other, 0x10abd8280, {{32.0, 635.0}, {338.0, 1.0}}
+                          Cell, 0x10abd83c0, {{16.0, 688.0}, {370.0, 52.0}}
+                            Other, 0x10abd8500, {{16.0, 688.0}, {370.0, 52.0}}
+                              Other, 0x10abd8640, {{16.0, 688.0}, {370.0, 52.0}}
+                            Other, 0x10abd8780, {{16.0, 688.0}, {370.0, 52.0}}
+                              Other, 0x10abd88c0, {{16.0, 688.0}, {370.0, 52.0}}
+                                Other, 0x10abd8a00, {{16.0, 688.0}, {370.0, 52.0}}
+                                  Button, 0x10abd8b40, {{16.0, 688.0}, {370.0, 52.0}}, identifier: 'action.saveId', label: 'saveId'
+                          Other, 0x10abd8c80, {{32.0, 687.0}, {338.0, 1.0}}
+                          Cell, 0x10abd8dc0, {{16.0, 740.0}, {370.0, 52.0}}
+                            Other, 0x10abd8f00, {{16.0, 740.0}, {370.0, 52.0}}
+                              Other, 0x10abd9040, {{16.0, 740.0}, {370.0, 52.0}}
+                            Other, 0x10abd9180, {{16.0, 740.0}, {370.0, 52.0}}
+                              Other, 0x10abd92c0, {{16.0, 740.0}, {370.0, 52.0}}
+                                Other, 0x10abd9400, {{16.0, 740.0}, {370.0, 52.0}}
+                                  Button, 0x10abd9540, {{16.0, 740.0}, {370.0, 52.0}}, identifier: 'action.promoteFresh', label: 'promoteFresh'
+                          Other, 0x10abd9680, {{32.0, 739.0}, {338.0, 1.0}}
+                          Cell, 0x10abd97c0, {{16.0, 792.0}, {370.0, 52.0}}
+                            Other, 0x10abd9900, {{16.0, 792.0}, {370.0, 52.0}}
+                              Other, 0x10abd9a40, {{16.0, 792.0}, {370.0, 52.0}}
+                            Other, 0x10abd9b80, {{16.0, 792.0}, {370.0, 52.0}}
+                              Other, 0x10abd9cc0, {{16.0, 792.0}, {370.0, 52.0}}
+                                Other, 0x10abd9e00, {{16.0, 792.0}, {370.0, 52.0}}
+                                  Button, 0x10abd9f40, {{16.0, 792.0}, {370.0, 52.0}}, identifier: 'action.promoteTwoSaves', label: 'promoteTwoSaves'
+                          Other, 0x10abda080, {{32.0, 791.0}, {338.0, 1.0}}
+                          Cell, 0x10abda1c0, {{16.0, 844.0}, {370.0, 52.0}}
+                            Other, 0x10abda300, {{16.0, 844.0}, {370.0, 52.0}}
+                              Other, 0x10abda440, {{16.0, 844.0}, {370.0, 52.0}}
+                            Other, 0x10abda580, {{16.0, 844.0}, {370.0, 52.0}}
+                              Other, 0x10abda6c0, {{16.0, 844.0}, {370.0, 52.0}}
+                                Other, 0x10abda800, {{16.0, 844.0}, {370.0, 52.0}}
+                                  Button, 0x10abda940, {{16.0, 844.0}, {370.0, 52.0}}, identifier: 'action.accessPicker', label: 'accessPicker'
+                          Other, 0x10abdaa80, {{32.0, 843.0}, {338.0, 1.0}}
+                          Other, 0x10abdabc0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x10abdad00, {{396.0, 802.0}, {3.0, 7.0}}
+                          Other, 0x10abdae40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                            Other, 0x10abdaf80, {{396.0, 802.0}, {3.0, 7.0}}
+                Toolbar, 0x10abdb0c0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                  Other, 0x10abdb200, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x106e8d2c0, pid: 12125, label: 'Probe'
+Query chain:
+ →Find: Target Application 'com.tarunyadgirkar.prefill.spike.contacts.probe'
+  Output: {
+    Application, 0x10abdb340, pid: 12125, label: 'Probe'
+  }
+
+[driver] step wait 3
+    t =    34.54s Tear Down
+Test Case '-[ProbeUITests.DriverTests testScript]' passed (34.784 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:29:55.127.
+	 Executed 1 test, with 0 failures (0 unexpected) in 34.784 (34.794) seconds
+Test Suite 'ProbeUITests.xctest' passed at 2026-09-30 23:29:55.127.
+	 Executed 1 test, with 0 failures (0 unexpected) in 34.784 (34.795) seconds
+Test Suite 'All tests' passed at 2026-09-30 23:29:55.128.
+	 Executed 1 test, with 0 failures (0 unexpected) in 34.784 (34.798) seconds
+2026-09-30 23:29:55.454 xcodebuild[11916:12934222] [MT] IDETestOperationsObserverDebug: 39.852 elapsed -- Testing started completed.
+2026-09-30 23:29:55.454 xcodebuild[11916:12934222] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:29:55.454 xcodebuild[11916:12934222] [MT] IDETestOperationsObserverDebug: 39.852 sec, +39.852 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/contacts/build/Logs/Test/Test-Probe-2026.09.30_23-29-15--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

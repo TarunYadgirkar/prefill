@@ -1,0 +1,1 @@
+alert after ~1s in springboard: Allow “Prefill Capture” to access your contacts? buttons=["Don’t Allow", "Continue"]

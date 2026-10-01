@@ -1,0 +1,4 @@
+A longpress unfocused: app=[] springboard=[]
+B tap caret: app=["Paste", "AutoFill"] springboard=[]
+C longpress caret focused: app=["Paste", "AutoFill"] springboard=[]
+D doubletap: app=["Paste", "AutoFill"] springboard=[]

@@ -1,0 +1,55 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/CaptureTests/testPermissionExplore"
+
+2026-09-30 23:34:35.301890-0700 CaptureUITests-Runner[23601:12988366] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:34:37.528.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:34:37.529.
+Test Suite 'CaptureTests' started at 2026-09-30 23:34:37.529.
+Test Case '-[CaptureUITests.CaptureTests testPermissionExplore]' started.
+    t =     0.00s Start Test at 2026-09-30 23:34:37.530
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/away.html
+    t =     0.02s     Launch com.apple.mobilesafari
+    t =     0.06s         Setting up automation session
+objc[23601]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x10791c398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107a54310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.44s         Wait for com.apple.mobilesafari to idle
+2026-09-30 23:34:45.343587-0700 CaptureUITests-Runner[23601:12988366] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-1-page-ask should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     8.48s Requesting snapshot of accessibility hierarchy for app with pid 23688
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.CaptureTests testPermissionExplore] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-1-page-ask should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     8.63s Requesting snapshot of accessibility hierarchy for app with pid 23688
+    t =     8.65s Get all elements bound by index for: Elements matching predicate 'label CONTAINS[c] "Page" OR label CONTAINS[c] "Extension" OR identifier CONTAINS[c] "Extension" OR label CONTAINS[c] "Menu"'
+    t =     8.66s Find the Button (Element at index 0)
+    t =     8.68s Find the "MoreMenuButton" Button
+    t =     8.69s Tap "MoreMenuButton" Button
+    t =     8.69s     Wait for com.apple.mobilesafari to idle
+    t =     8.69s     Find the "MoreMenuButton" Button
+    t =     8.71s     Check for interrupting elements affecting "MoreMenuButton" Button
+    t =     8.73s     Synthesize event
+    t =     9.03s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:34:49.174029-0700 CaptureUITests-Runner[23601:12988366] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-2-page-menu should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    12.05s Requesting snapshot of accessibility hierarchy for app with pid 23688
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.CaptureTests testPermissionExplore] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-2-page-menu should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    12.24s Requesting snapshot of accessibility hierarchy for app with pid 23688
+    t =    12.28s Waiting 3.0s for Any (First Match) to exist
+    t =    13.31s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    13.31s         Checking existence of `Any (First Match)`
+    t =    13.35s Tap Any (First Match)
+    t =    13.35s     Wait for com.apple.mobilesafari to idle
+    t =    13.35s     Find the Any (First Match)
+    t =    13.38s     Check for interrupting elements affecting "Prefill Capture" Button
+    t =    13.41s     Synthesize event
+    t =    13.71s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:34:53.383137-0700 CaptureUITests-Runner[23601:12988366] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-3-extension-item should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    16.27s Requesting snapshot of accessibility hierarchy for app with pid 23688
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.CaptureTests testPermissionExplore] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=perm-3-extension-item should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    16.48s Requesting snapshot of accessibility hierarchy for app with pid 23688
+    t =    16.51s Tear Down
+Test Case '-[CaptureUITests.CaptureTests testPermissionExplore]' passed (16.726 seconds).
+Test Suite 'CaptureTests' passed at 2026-09-30 23:34:54.257.
+	 Executed 1 test, with 0 failures (0 unexpected) in 16.726 (16.728) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:34:54.257.
+	 Executed 1 test, with 0 failures (0 unexpected) in 16.726 (16.728) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:34:54.257.
+	 Executed 1 test, with 0 failures (0 unexpected) in 16.726 (16.729) seconds
+** BUILD INTERRUPTED **

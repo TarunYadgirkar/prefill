@@ -1,0 +1,126 @@
+Attributes: Application, 0x11206e080, pid: 30376, label: 'Safari'
+Element subtree:
+ →Application, 0x11206e080, pid: 30376, label: 'Safari'
+    Window (Main), 0x11206e1c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x11206e300, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11206e440, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x11206e580, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+            Other, 0x11206e6c0, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x11206e800, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x11206e940, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x11206ea80, {{0.0, 0.0}, {402.0, 49.0}}
+                  Other, 0x11206ebc0, {{0.0, 0.0}, {402.0, 49.0}}
+                Other, 0x11206ed00, {{0.0, 0.0}, {402.0, 62.0}}
+                ScrollView, 0x11206ee40, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x11206ef80, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x11206f0c0, {{0.0, 0.0}, {402.0, 102.0}}
+                  Other, 0x11206f200, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x11206f340, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=EC868478-6EB5-4886-B92F-485846B9D0C8&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=30436'
+                    WebView, 0x11206f480, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+                      WebView, 0x11206f5c0, {{0.0, 0.0}, {402.0, 874.0}}
+                        Other, 0x11206f700, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x11206f840, {{0.0, 0.0}, {402.0, 89.0}}
+                          Other, 0x11206f980, {{0.0, 736.0}, {402.0, 138.0}}
+                        WebView, 0x11206fac0, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x11206fc00, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x11206fd40, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x11206fe80, {{0.0, 62.0}, {402.0, 874.0}}
+                                Other, 0x112065f40, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Thanks', Focused
+                                  Other, 0x112065040, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Thanks', value: 1, Focused
+                                    StaticText, 0x112065400, {{16.0, 84.0}, {117.0, 43.0}}, label: 'Thanks', value: Thanks, Focused
+                                  Other, 0x112065540, {{16.0, 149.0}, {370.0, 23.0}}, Focused
+                                    StaticText, 0x112065180, {{16.0, 149.0}, {190.0, 23.0}}, label: 'The form was submitted.', value: The form was submi..., Focused
+                        Other, 0x112066800, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x112065680, {{0.0, 0.0}, {402.0, 89.0}}
+                        Other, 0x1120657c0, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x112065900, {{396.0, 65.0}, {3.0, 744.0}}
+                        Other, 0x112064140, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                          Other, 0x1120643c0, {{65.0, 868.0}, {272.0, 3.0}}
+                        Other, 0x112065a40, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                          Other, 0x1120652c0, {{396.0, 65.0}, {3.0, 744.0}}
+                        Other, 0x112064500, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                          Other, 0x112064b40, {{65.0, 868.0}, {272.0, 3.0}}
+                  Other, 0x112064c80, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x1120648c0, {{334.3, 868.0}, {7.0, 3.0}}
+                  Other, 0x112064a00, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x112064640, {{334.3, 868.0}, {7.0, 3.0}}
+            Other, 0x112065b80, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'CapsuleViewController'
+              Other, 0x11166ae40, {{0.0, 776.0}, {402.0, 98.0}}
+                Other, 0x11166af80, {{0.0, 776.0}, {402.0, 98.0}}
+                  Other, 0x11166b0c0, {{0.0, 776.0}, {402.0, 98.0}}
+                    Other, 0x11166ad00, {{0.0, 776.0}, {402.0, 98.0}}
+                      Other, 0x11166abc0, {{0.0, 776.0}, {402.0, 98.0}}
+                        Other, 0x11166aa80, {{0.0, 776.0}, {402.0, 98.0}}
+                          Other, 0x11166a940, {{0.0, 776.0}, {402.0, 98.0}}
+                      Other, 0x11166a800, {{0.0, 776.0}, {402.0, 98.0}}
+                        Other, 0x11166a6c0, {{0.0, 776.0}, {402.0, 98.0}}
+                Other, 0x11166a580, {{34.0, 792.0}, {48.0, 48.0}}
+                  Other, 0x11166a440, {{34.0, 792.0}, {48.0, 48.0}}
+                    Button, 0x11166a300, {{34.0, 792.0}, {48.0, 48.0}}, identifier: 'BackButton', label: 'Back'
+                Other, 0x11166a1c0, {{90.0, 792.0}, {222.0, 48.0}}
+                  Other, 0x11166a080, {{90.0, 792.0}, {222.0, 48.0}}
+                    Other, 0x111669f40, {{90.0, 792.0}, {222.0, 48.0}}
+                      Other, 0x111669e00, {{90.0, 792.0}, {222.0, 48.0}}, identifier: 'CapsuleNavigationBar?isSelected=true&isDistractionControlOverlayUp=false', Selected
+                        Button, 0x111669cc0, {{90.0, 792.0}, {48.0, 48.0}}, identifier: 'MoreMenuButton', label: 'Page Menu'
+                          StaticText, 0x111669b80, {{90.0, 792.0}, {0.0, 0.0}}
+                        TextField, 0x111669a40, {{168.0, 806.0}, {66.0, 20.3}}, identifier: 'TabBarItemTitle', label: 'Address', value: ‎127.0.0.1
+                        Button, 0x111669900, {{281.3, 805.7}, {17.7, 21.0}}, identifier: 'ReloadButton', label: 'refresh'
+                Other, 0x1116697c0, {{320.0, 792.0}, {48.0, 48.0}}
+                  Other, 0x111669680, {{320.0, 792.0}, {48.0, 48.0}}
+                    Button, 0x111669540, {{320.0, 792.0}, {48.0, 48.0}}, identifier: 'TabOverviewButton', label: 'Tabs'
+      Other, 0x111669400, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1116692c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x111669180, {{0.0, 0.0}, {402.0, 874.0}}
+        Alert, 0x111669040, {{41.0, 259.0}, {320.0, 384.0}}, label: 'Save Password?'
+          Other, 0x111668f00, {{41.0, 259.0}, {320.0, 384.0}}
+            Other, 0x111668dc0, {{41.0, 259.0}, {320.0, 384.0}}
+              Other, 0x111668c80, {{41.0, 259.0}, {320.0, 384.0}}
+              Other, 0x111668b40, {{41.0, 259.0}, {320.0, 384.0}}
+                ScrollView, 0x111668a00, {{41.0, 259.0}, {320.0, 192.0}}
+                  Other, 0x1116688c0, {{41.0, 259.0}, {320.0, 192.0}}
+                    Other, 0x111668780, {{41.0, 259.0}, {320.0, 80.0}}
+                      Other, 0x111668640, {{41.0, 259.0}, {320.0, 80.0}}
+                        Image, 0x111668500, {{57.0, 279.0}, {80.0, 60.0}}
+                    StaticText, 0x1116683c0, {{71.0, 361.0}, {260.0, 20.3}}, label: 'Save Password?'
+                    StaticText, 0x111668280, {{71.0, 388.7}, {260.0, 58.0}}, label: 'Securely store your password so it’s filled automatically the next time you need it.'
+                  Other, 0x111668140, {{41.0, 449.0}, {320.0, 2.0}}
+                  Other, 0x111668000, {{328.0, 259.0}, {30.0, 192.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                    Other, 0x10528f980, {{355.0, 220.0}, {3.0, 36.0}}
+                  Other, 0x10528fd40, {{41.0, 418.0}, {320.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x10528d540, {{2.0, 445.0}, {36.0, 3.0}}
+                  Other, 0x10528f700, {{328.0, 259.0}, {30.0, 192.0}}, label: 'Vertical scroll bar, 2 pages', value: 0%
+                    Other, 0x10528f340, {{355.0, 220.0}, {3.0, 36.0}}
+                  Other, 0x10528fac0, {{41.0, 418.0}, {320.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x10528f0c0, {{2.0, 445.0}, {36.0, 3.0}}
+                ScrollView, 0x10528f480, {{41.0, 451.0}, {320.0, 192.0}}
+                  Other, 0x10528d400, {{41.0, 451.0}, {320.0, 192.0}}
+                    Other, 0x1080bf200, {{57.0, 467.0}, {288.0, 160.0}}
+                      Button, 0x1080bee40, {{57.0, 467.0}, {288.0, 48.0}}, label: 'Save'
+                      Button, 0x1080bd040, {{57.0, 523.0}, {288.0, 48.0}}, label: 'Never for This Website'
+                      Button, 0x1080bc780, {{57.0, 579.0}, {288.0, 48.0}}, label: 'Not Now'
+                  Other, 0x1080bcdc0, {{328.0, 451.0}, {30.0, 192.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                    Other, 0x1080bfe80, {{355.0, 541.0}, {3.0, 7.0}}
+                  Other, 0x1080bdcc0, {{41.0, 610.0}, {320.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x1080bde00, {{131.0, 637.0}, {7.0, 3.0}}
+                  Other, 0x1080bd540, {{328.0, 451.0}, {30.0, 192.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                    Other, 0x1080bc640, {{355.0, 541.0}, {3.0, 7.0}}
+                  Other, 0x1080bed00, {{41.0, 610.0}, {320.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+                    Other, 0x1080bfd40, {{131.0, 637.0}, {7.0, 3.0}}
+          Other, 0x1080bf480, {{41.0, 259.0}, {320.0, 384.0}}
+            Other, 0x1080bef80, {{41.0, 259.0}, {320.0, 384.0}}
+              Other, 0x1080bea80, {{41.0, 259.0}, {320.0, 384.0}}
+                Other, 0x1080be300, {{41.0, 259.0}, {320.0, 384.0}}
+                  Other, 0x1080bdf40, {{41.0, 259.0}, {320.0, 384.0}}
+                    Other, 0x1080be440, {{41.0, 259.0}, {402.0, 874.0}}
+                Other, 0x1080bf340, {{41.0, 259.0}, {320.0, 384.0}}
+                  Other, 0x1080be940, {{41.0, 259.0}, {402.0, 874.0}}
+    Window, 0x1080be580, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x1080bebc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x1080bf0c0, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x11206e080, pid: 30376, label: 'Safari'
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x1080bd2c0, pid: 30376, label: 'Safari'
+  }

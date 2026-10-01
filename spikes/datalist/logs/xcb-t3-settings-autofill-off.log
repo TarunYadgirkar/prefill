@@ -1,0 +1,117 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/DatalistSpike.xcodeproj -scheme DatalistSpike -destination "platform=iOS Simulator,id=47A4C2A7-9518-49BF-92C1-D602AAE4E6D9" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build "-only-testing:DatalistUITests/DriverTests/testEnableExtension"
+
+2026-09-30 23:25:03.770095-0700 DatalistUITests-Runner[4359:12900113] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:25:05.593.
+Test Suite 'DatalistUITests.xctest' started at 2026-09-30 23:25:05.593.
+Test Suite 'DriverTests' started at 2026-09-30 23:25:05.593.
+Test Case '-[DatalistUITests.DriverTests testEnableExtension]' started.
+    t =     0.00s Start Test at 2026-09-30 23:25:05.595
+    t =     0.02s Set Up
+    t =     0.02s Terminate com.apple.Preferences:89262
+objc[4359]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x106d0c398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106e18310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.10s Open com.apple.Preferences
+    t =     1.11s     Launch com.apple.Preferences
+    t =     1.17s         Setting up automation session
+    t =     4.14s         Wait for com.apple.Preferences to idle
+    t =     6.80s Wait for com.apple.Preferences to become Running Foreground
+    t =     6.80s Checking existence of `"Apps" Any`
+    t =     6.95s Swipe up Application 'com.apple.Preferences'
+    t =     6.95s     Wait for com.apple.Preferences to idle
+    t =     6.96s     Find the Application 'com.apple.Preferences'
+    t =     6.98s     Check for interrupting elements affecting "Settings" Application
+    t =     7.00s     Synthesize event
+    t =     7.42s     Wait for com.apple.Preferences to idle
+    t =     8.68s Checking existence of `"Apps" Any`
+    t =     8.73s Find the "Apps" Any
+    t =     8.78s Checking existence of `"com.apple.settings.apps" Button`
+    t =     8.82s Find the "com.apple.settings.apps" Button
+    t =     8.87s Checking existence of `"com.apple.settings.apps" Button`
+    t =     8.92s Find the "com.apple.settings.apps" Button
+    t =     8.97s Checking existence of `"com.apple.settings.apps" Button`
+    t =     9.01s Find the "com.apple.settings.apps" Button
+    t =     9.07s Checking existence of `"com.apple.settings.apps" Button`
+    t =     9.11s Find the "com.apple.settings.apps" Button
+    t =     9.17s Checking existence of `"com.apple.settings.apps" Button`
+    t =     9.21s Tap "com.apple.settings.apps" Button
+    t =     9.21s     Wait for com.apple.Preferences to idle
+    t =     9.21s     Find the "com.apple.settings.apps" Button
+    t =     9.26s     Check for interrupting elements affecting "com.apple.settings.apps" Button
+    t =     9.29s     Synthesize event
+    t =     9.58s     Wait for com.apple.Preferences to idle
+    t =    11.96s Checking existence of `"Safari" Any`
+    t =    12.05s Swipe up Application 'com.apple.Preferences'
+    t =    12.05s     Wait for com.apple.Preferences to idle
+    t =    12.05s     Find the Application 'com.apple.Preferences'
+    t =    12.07s     Check for interrupting elements affecting "Settings" Application
+    t =    12.09s     Synthesize event
+    t =    12.51s     Wait for com.apple.Preferences to idle
+    t =    14.61s Checking existence of `"Safari" Any`
+    t =    14.69s Find the "Safari" Any
+    t =    14.76s Swipe up Application 'com.apple.Preferences'
+    t =    14.76s     Wait for com.apple.Preferences to idle
+    t =    14.76s     Find the Application 'com.apple.Preferences'
+    t =    14.78s     Check for interrupting elements affecting "Settings" Application
+    t =    14.80s     Synthesize event
+    t =    15.22s     Wait for com.apple.Preferences to idle
+    t =    15.88s Checking existence of `"com.apple.mobilesafari" Button`
+    t =    15.95s Find the "com.apple.mobilesafari" Button
+    t =    16.00s Checking existence of `"com.apple.mobilesafari" Button`
+    t =    16.05s Find the "com.apple.mobilesafari" Button
+    t =    16.10s Checking existence of `"com.apple.mobilesafari" Button`
+    t =    16.14s Find the "com.apple.mobilesafari" Button
+    t =    16.19s Checking existence of `"com.apple.mobilesafari" Button`
+    t =    16.23s Find the "com.apple.mobilesafari" Button
+    t =    16.28s Checking existence of `"com.apple.mobilesafari" Button`
+    t =    16.32s Tap "com.apple.mobilesafari" Button
+    t =    16.32s     Wait for com.apple.Preferences to idle
+    t =    16.33s     Find the "com.apple.mobilesafari" Button
+    t =    16.37s     Check for interrupting elements affecting "com.apple.mobilesafari" Button
+    t =    16.40s     Synthesize event
+    t =    16.69s     Wait for com.apple.Preferences to idle
+    t =    20.21s Checking existence of `"AutoFill" Any`
+    t =    20.26s Find the "AutoFill" Any
+    t =    20.29s Swipe up Application 'com.apple.Preferences'
+    t =    20.29s     Wait for com.apple.Preferences to idle
+    t =    20.29s     Find the Application 'com.apple.Preferences'
+    t =    20.47s     Check for interrupting elements affecting "Settings" Application
+    t =    20.51s     Synthesize event
+    t =    20.93s     Wait for com.apple.Preferences to idle
+    t =    23.03s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.05s Find the "AUTO_FILL" Cell
+    t =    23.09s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.11s Find the "AUTO_FILL" Cell
+    t =    23.13s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.15s Find the "AUTO_FILL" Cell
+    t =    23.17s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.19s Find the "AUTO_FILL" Cell
+    t =    23.21s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.23s Find the "AUTO_FILL" Cell
+    t =    23.25s Checking existence of `"AUTO_FILL" Cell`
+    t =    23.27s Tap "AUTO_FILL" Cell
+    t =    23.27s     Wait for com.apple.Preferences to idle
+    t =    23.27s     Find the "AUTO_FILL" Cell
+    t =    23.29s     Check for interrupting elements affecting "AUTO_FILL" Cell
+    t =    23.37s     Synthesize event
+    t =    23.65s     Wait for com.apple.Preferences to idle
+    t =    26.09s Requesting snapshot of accessibility hierarchy for app with pid 4400
+    t =    26.22s Requesting snapshot of accessibility hierarchy for app with pid 4400
+    t =    29.31s Tear Down
+Test Case '-[DatalistUITests.DriverTests testEnableExtension]' passed (29.603 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:25:35.199.
+	 Executed 1 test, with 0 failures (0 unexpected) in 29.603 (29.606) seconds
+Test Suite 'DatalistUITests.xctest' passed at 2026-09-30 23:25:35.200.
+	 Executed 1 test, with 0 failures (0 unexpected) in 29.603 (29.607) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:25:35.200.
+	 Executed 1 test, with 0 failures (0 unexpected) in 29.603 (29.608) seconds
+2026-09-30 23:25:35.515 xcodebuild[4352:12899877] [MT] IDETestOperationsObserverDebug: 32.620 elapsed -- Testing started completed.
+2026-09-30 23:25:35.515 xcodebuild[4352:12899877] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:25:35.515 xcodebuild[4352:12899877] [MT] IDETestOperationsObserverDebug: 32.620 sec, +32.620 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Logs/Test/Test-DatalistSpike-2026.09.30_23-25-02--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

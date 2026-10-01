@@ -1,0 +1,5 @@
+edit menu: app=["Paste", "AutoFill"] springboard=[]
+no provider chooser shown
+provider value button visible in Safari tree: true
+field value after insert: Optional()
+user taps from unfocused field to inserted value: 5

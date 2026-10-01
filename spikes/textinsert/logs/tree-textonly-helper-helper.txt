@@ -1,0 +1,1 @@
+accept button in springboard: none; status before accept: Enabled: false

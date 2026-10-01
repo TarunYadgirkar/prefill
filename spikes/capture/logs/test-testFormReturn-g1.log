@@ -1,0 +1,462 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/FormTests/testFormReturn"
+
+2026-09-30 23:40:39.888821-0700 CaptureUITests-Runner[35520:13035680] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:40:42.016.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:40:42.016.
+Test Suite 'FormTests' started at 2026-09-30 23:40:42.017.
+Test Case '-[CaptureUITests.FormTests testFormReturn]' started.
+    t =     0.00s Start Test at 2026-09-30 23:40:42.019
+    t =     0.02s Set Up
+    t =     0.03s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/form-return.html
+    t =     0.04s     Launch com.apple.mobilesafari
+    t =     0.10s         Setting up automation session
+objc[35520]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x102698398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x106828310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.52s         Wait for com.apple.mobilesafari to idle
+    t =     6.85s Waiting 10.0s for Any (First Match) to exist
+    t =     7.88s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.88s         Checking existence of `Any (First Match)`
+    t =     7.95s Tap Any (First Match)
+    t =     7.95s     Wait for com.apple.mobilesafari to idle
+    t =     7.95s     Find the Any (First Match)
+    t =     7.98s     Check for interrupting elements affecting "Your name" TextField
+    t =     8.01s     Synthesize event
+    t =     8.29s     Wait for com.apple.mobilesafari to idle
+    t =     9.66s Type 'Jordan Return' into "Your name" TextField
+    t =     9.66s     Wait for com.apple.mobilesafari to idle
+    t =     9.66s     Find the "Your name" TextField
+    t =     9.72s     Check for interrupting elements affecting "Your name" TextField
+    t =     9.75s     Synthesize event
+    t =    10.17s     Wait for com.apple.mobilesafari to idle
+    t =    10.18s Checking existence of `"Done" Button`
+    t =    10.21s Find the "Done" Button
+    t =    10.25s Tap "Done" Button
+    t =    10.25s     Wait for com.apple.mobilesafari to idle
+    t =    10.25s     Find the "Done" Button
+    t =    10.28s     Check for interrupting elements affecting "Done" Button
+    t =    10.30s     Synthesize event
+    t =    10.59s     Wait for com.apple.mobilesafari to idle
+    t =    11.48s Waiting 10.0s for Any (First Match) to exist
+    t =    12.52s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =    12.52s         Checking existence of `Any (First Match)`
+    t =    12.56s Tap Any (First Match)
+    t =    12.56s     Wait for com.apple.mobilesafari to idle
+    t =    12.56s     Find the Any (First Match)
+    t =    12.59s     Check for interrupting elements affecting "Your e-mail" TextField
+    t =    12.62s     Synthesize event
+    t =    12.90s     Wait for com.apple.mobilesafari to idle
+    t =    14.08s Type 'return.g1@newmail....' into "Your e-mail" TextField
+    t =    14.08s     Wait for com.apple.mobilesafari to idle
+    t =    14.09s     Find the "Your e-mail" TextField
+    t =    14.15s     Check for interrupting elements affecting "Your e-mail" TextField
+    t =    14.18s     Synthesize event
+    t =    14.80s     Wait for com.apple.mobilesafari to idle
+    t =    14.80s Checking existence of `"Done" Button`
+    t =    14.83s Find the "Done" Button
+    t =    14.86s Tap "Done" Button
+    t =    14.86s     Wait for com.apple.mobilesafari to idle
+    t =    14.87s     Find the "Done" Button
+    t =    14.89s     Check for interrupting elements affecting "Done" Button
+    t =    14.92s     Synthesize event
+    t =    15.20s     Wait for com.apple.mobilesafari to idle
+2026-09-30 23:40:59.103792-0700 CaptureUITests-Runner[35520:13035680] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=g1-return-filled should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    17.60s Type '
+' into Any (First Match)
+    t =    17.60s     Wait for com.apple.mobilesafari to idle
+    t =    17.60s     Find the Any (First Match)
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.FormTests testFormReturn] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=g1-return-filled should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    17.64s     Check for interrupting elements affecting "Your e-mail" TextField
+    t =    17.68s     Synthesize event
+    t =    17.68s         Get number of matches for: Elements containing elements matching predicate 'hasKeyboardFocus == 1'
+    t =    17.71s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.78s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.80s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.82s         Find: Descendants matching type WebView
+    t =    17.82s         Find: Descendants matching type Any
+    t =    17.82s         Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    17.82s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.84s         Find: Descendants matching type WebView
+    t =    17.84s         Find: Descendants matching type Any
+    t =    17.84s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.85s         Find: Descendants matching type WebView
+    t =    17.86s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    17.98s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.05s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.07s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.09s         Find: Descendants matching type WebView
+    t =    18.09s         Find: Descendants matching type Any
+    t =    18.09s         Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    18.09s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.11s         Find: Descendants matching type WebView
+    t =    18.11s         Find: Descendants matching type Any
+    t =    18.11s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.12s         Find: Descendants matching type WebView
+    t =    18.13s         Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    18.25s         Failed: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: TextField, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail....
+Element debug description:
+Attributes: TextField, 0x107649900, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Element subtree:
+ →TextField, 0x107649900, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Path to element:
+ →Application, 0x1064bea80, pid: 35590, label: 'Safari'
+  ↳Window (Main), 0x1064bc640, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x1064bfc00, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x1064bf340, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x1064bf480, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+      ↳Other, 0x1064bf700, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x1064bd400, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳ScrollView, 0x1064bd180, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x107648140, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=06EEB1E2-EE76-43BA-99AA-92DE9FD388F0&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=35693'
+          ↳WebView, 0x107648280, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+           ↳WebView, 0x1076483c0, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳WebView, 0x1076488c0, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x107648a00, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x107648b40, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x107648c80, {{0.0, 62.0}, {402.0, 874.0}}
+                ↳Other, 0x107648dc0, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+                 ↳Other, 0x107649180, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+                  ↳Other, 0x107649680, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+                   ↳TextField, 0x107649900, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x10fbdb200, pid: 35590, label: 'Safari'
+  }
+  ↪︎Find: Descendants matching type WebView
+    Output: {
+      WebView, 0x10fbc6580, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+      WebView, 0x10fbc66c0, {{0.0, 0.0}, {402.0, 874.0}}
+      WebView, 0x10fbc6bc0, {{0.0, 0.0}, {402.0, 874.0}}
+    }
+    ↪︎Find: Descendants matching type Any
+      Output: {
+        WebView, 0x10fbb4640, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb4780, {{0.0, 0.0}, {402.0, 874.0}}
+        WebView, 0x10fbb4b40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb5e00, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb6080, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+        Other, 0x10fbb6300, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+        Other, 0x10fbb48c0, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x10fbb4a00, {{0.0, 736.0}, {402.0, 138.0}}
+        Other, 0x10fbb4c80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb5f40, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x10fbb61c0, {{396.0, 65.0}, {3.0, 744.0}}
+        Other, 0x10fbb6440, {{65.0, 868.0}, {272.0, 3.0}}
+        Other, 0x10fbb4dc0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb4f00, {{0.0, 62.0}, {402.0, 874.0}}
+        Other, 0x10fbb5040, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+        Other, 0x10fbb5180, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Newsletter', value: 1, Focused
+        Other, 0x10fbb5400, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+        StaticText, 0x10fbb52c0, {{16.0, 84.0}, {174.0, 43.0}}, label: 'Newsletter', value: Newsletter, Focused
+        Other, 0x10fbb5540, {{16.0, 149.0}, {384.0, 59.0}}, Focused
+        Other, 0x10fbb5900, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+        Button, 0x10fbb5cc0, {{16.0, 288.0}, {77.0, 21.0}}, label: 'Subscribe', Focused
+        StaticText, 0x10fbb5680, {{16.0, 149.0}, {81.0, 23.0}}, label: 'Your name', value: Your name, Focused
+        TextField, 0x10fbb57c0, {{16.0, 171.0}, {384.0, 37.0}}, label: 'Your name', value: Jordan Return, Focused
+        StaticText, 0x10fbb5a40, {{16.0, 217.0}, {87.0, 23.0}}, label: 'Your e-mail', value: Your e-mail, Focused
+        TextField, 0x10fbb5b80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+      }
+      ↪︎Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+        Output: {
+          TextField, 0x10fb63ac0, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+        }
+        ↪︎Find: First Match
+          Output: {
+            TextField, 0x10768f980, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+          }
+
+    t =    18.25s     Wait for com.apple.mobilesafari to idle
+    t =    19.26s     Retrying `Type '
+' into Any (First Match)` (attempt #2)
+    t =    19.26s         Wait for com.apple.mobilesafari to idle
+    t =    19.27s         Find the "Your e-mail" TextField
+    t =    19.31s         Check for interrupting elements affecting "Your e-mail" TextField
+    t =    19.33s         Synthesize event
+    t =    19.34s             Get number of matches for: Elements containing elements matching predicate 'hasKeyboardFocus == 1'
+    t =    19.36s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.43s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.45s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.47s             Find: Descendants matching type WebView
+    t =    19.47s             Find: Descendants matching type Any
+    t =    19.47s             Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    19.47s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.49s             Find: Descendants matching type WebView
+    t =    19.49s             Find: Descendants matching type Any
+    t =    19.49s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.51s             Find: Descendants matching type WebView
+    t =    19.51s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.63s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.70s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.72s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.73s             Find: Descendants matching type WebView
+    t =    19.73s             Find: Descendants matching type Any
+    t =    19.73s             Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    19.73s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.75s             Find: Descendants matching type WebView
+    t =    19.75s             Find: Descendants matching type Any
+    t =    19.75s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.77s             Find: Descendants matching type WebView
+    t =    19.77s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    19.89s             Failed: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: TextField, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail....
+Element debug description:
+Attributes: TextField, 0x10fb60c80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Element subtree:
+ →TextField, 0x10fb60c80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Path to element:
+ →Application, 0x10fbf9b80, pid: 35590, label: 'Safari'
+  ↳Window (Main), 0x10fbfb5c0, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x10fbfb200, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x10fbfb480, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x10fbfb340, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+      ↳Other, 0x10fbfaf80, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x10fbfb0c0, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳ScrollView, 0x10fbfbac0, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x1036abac0, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=06EEB1E2-EE76-43BA-99AA-92DE9FD388F0&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=35693'
+          ↳WebView, 0x1036a9400, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+           ↳WebView, 0x1036abc00, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳WebView, 0x1036ab340, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x1036ab480, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x1036ab0c0, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x11036c8c0, {{0.0, 62.0}, {402.0, 874.0}}
+                ↳Other, 0x11036ca00, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+                 ↳Other, 0x11036c780, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+                  ↳Other, 0x11036c500, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+                   ↳TextField, 0x10fb60c80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x10fbb6440, pid: 35590, label: 'Safari'
+  }
+  ↪︎Find: Descendants matching type WebView
+    Output: {
+      WebView, 0x10fbd9a40, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+      WebView, 0x10fbd9b80, {{0.0, 0.0}, {402.0, 874.0}}
+      WebView, 0x10fbd8f00, {{0.0, 0.0}, {402.0, 874.0}}
+    }
+    ↪︎Find: Descendants matching type Any
+      Output: {
+        WebView, 0x11036ef80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11036f840, {{0.0, 0.0}, {402.0, 874.0}}
+        WebView, 0x11036f5c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11036d680, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb4a00, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+        Other, 0x10fbb4500, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+        Other, 0x11036f480, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x11036f700, {{0.0, 736.0}, {402.0, 138.0}}
+        Other, 0x11036f0c0, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fbb48c0, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x10fbb4b40, {{396.0, 65.0}, {3.0, 744.0}}
+        Other, 0x10fbb4640, {{65.0, 868.0}, {272.0, 3.0}}
+        Other, 0x11036f340, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11036f200, {{0.0, 62.0}, {402.0, 874.0}}
+        Other, 0x11036ed00, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+        Other, 0x11036ee40, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Newsletter', value: 1, Focused
+        Other, 0x11036e580, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+        StaticText, 0x11036e300, {{16.0, 84.0}, {174.0, 43.0}}, label: 'Newsletter', value: Newsletter, Focused
+        Other, 0x11036e440, {{16.0, 149.0}, {384.0, 59.0}}, Focused
+        Other, 0x11036dcc0, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+        Button, 0x11036d7c0, {{16.0, 288.0}, {77.0, 21.0}}, label: 'Subscribe', Focused
+        StaticText, 0x11036de00, {{16.0, 149.0}, {81.0, 23.0}}, label: 'Your name', value: Your name, Focused
+        TextField, 0x11036db80, {{16.0, 171.0}, {384.0, 37.0}}, label: 'Your name', value: Jordan Return, Focused
+        StaticText, 0x11036d900, {{16.0, 217.0}, {87.0, 23.0}}, label: 'Your e-mail', value: Your e-mail, Focused
+        TextField, 0x11036d540, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+      }
+      ↪︎Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+        Output: {
+          TextField, 0x1100e7c00, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+        }
+        ↪︎Find: First Match
+          Output: {
+            TextField, 0x10fc02580, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+          }
+
+    t =    19.89s         Wait for com.apple.mobilesafari to idle
+    t =    20.90s     Retrying `Type '
+' into Any (First Match)` (attempt #3)
+    t =    20.90s         Wait for com.apple.mobilesafari to idle
+    t =    20.90s         Find the "Your e-mail" TextField
+    t =    20.94s         Check for interrupting elements affecting "Your e-mail" TextField
+    t =    20.97s         Synthesize event
+    t =    20.97s             Get number of matches for: Elements containing elements matching predicate 'hasKeyboardFocus == 1'
+    t =    20.99s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.07s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.09s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.10s             Find: Descendants matching type WebView
+    t =    21.10s             Find: Descendants matching type Any
+    t =    21.10s             Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    21.10s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.12s             Find: Descendants matching type WebView
+    t =    21.12s             Find: Descendants matching type Any
+    t =    21.12s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.14s             Find: Descendants matching type WebView
+    t =    21.14s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.26s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.33s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.35s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.36s             Find: Descendants matching type WebView
+    t =    21.36s             Find: Descendants matching type Any
+    t =    21.36s             Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+    t =    21.37s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.38s             Find: Descendants matching type WebView
+    t =    21.38s             Find: Descendants matching type Any
+    t =    21.38s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.40s             Find: Descendants matching type WebView
+    t =    21.40s             Requesting snapshot of accessibility hierarchy for app with pid 35590
+    t =    21.52s             Failed: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: TextField, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail....
+Element debug description:
+Attributes: TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Element subtree:
+ →TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Path to element:
+ →Application, 0x10fbfb700, pid: 35590, label: 'Safari'
+  ↳Window (Main), 0x10fbfa300, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x10fbfa1c0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x10fbfa940, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x10fbfad00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+      ↳Other, 0x10fbf9cc0, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x10fbf9900, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳ScrollView, 0x10fbf8780, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x10fbf9a40, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=06EEB1E2-EE76-43BA-99AA-92DE9FD388F0&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=35693'
+          ↳WebView, 0x10fbf9680, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+           ↳WebView, 0x10fbfa440, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳WebView, 0x11035c3c0, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x11035c640, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x11035c500, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x11035c780, {{0.0, 62.0}, {402.0, 874.0}}
+                ↳Other, 0x11035ca00, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+                 ↳Other, 0x11035c000, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+                  ↳Other, 0x10fb60640, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+                   ↳TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x10fb61180, pid: 35590, label: 'Safari'
+  }
+  ↪︎Find: Descendants matching type WebView
+    Output: {
+      WebView, 0x10fbb4f00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+      WebView, 0x10fbb52c0, {{0.0, 0.0}, {402.0, 874.0}}
+      WebView, 0x10fbb61c0, {{0.0, 0.0}, {402.0, 874.0}}
+    }
+    ↪︎Find: Descendants matching type Any
+      Output: {
+        WebView, 0x11035ee40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035f700, {{0.0, 0.0}, {402.0, 874.0}}
+        WebView, 0x11035f480, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035d540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fb961c0, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+        Other, 0x10fb94280, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+        Other, 0x11035f340, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x11035f5c0, {{0.0, 736.0}, {402.0, 138.0}}
+        Other, 0x11035ef80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fb96080, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x10fb94640, {{396.0, 65.0}, {3.0, 744.0}}
+        Other, 0x10fb94500, {{65.0, 868.0}, {272.0, 3.0}}
+        Other, 0x11035f200, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035f0c0, {{0.0, 62.0}, {402.0, 874.0}}
+        Other, 0x11035ebc0, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+        Other, 0x11035ed00, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Newsletter', value: 1, Focused
+        Other, 0x11035e440, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+        StaticText, 0x11035e1c0, {{16.0, 84.0}, {174.0, 43.0}}, label: 'Newsletter', value: Newsletter, Focused
+        Other, 0x11035e300, {{16.0, 149.0}, {384.0, 59.0}}, Focused
+        Other, 0x11035db80, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+        Button, 0x11035d680, {{16.0, 288.0}, {77.0, 21.0}}, label: 'Subscribe', Focused
+        StaticText, 0x11035dcc0, {{16.0, 149.0}, {81.0, 23.0}}, label: 'Your name', value: Your name, Focused
+        TextField, 0x11035da40, {{16.0, 171.0}, {384.0, 37.0}}, label: 'Your name', value: Jordan Return, Focused
+        StaticText, 0x11035d7c0, {{16.0, 217.0}, {87.0, 23.0}}, label: 'Your e-mail', value: Your e-mail, Focused
+        TextField, 0x11035d400, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+      }
+      ↪︎Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+        Output: {
+          TextField, 0x10fbc5b80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+        }
+        ↪︎Find: First Match
+          Output: {
+            TextField, 0x10fbf8dc0, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+          }
+
+    t =    21.52s         Wait for com.apple.mobilesafari to idle
+    t =    21.53s     Requesting snapshot of accessibility hierarchy for app with pid 35590
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/CaptureTests.swift:59: error: -[CaptureUITests.FormTests testFormReturn] : Failed to synthesize event: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: TextField, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail....
+Element debug description:
+Attributes: TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Element subtree:
+ →TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Path to element:
+ →Application, 0x10fbfb700, pid: 35590, label: 'Safari'
+  ↳Window (Main), 0x10fbfa300, {{0.0, 0.0}, {402.0, 874.0}}
+   ↳Other, 0x10fbfa1c0, {{0.0, 0.0}, {402.0, 874.0}}
+    ↳Other, 0x10fbfa940, {{0.0, 0.0}, {402.0, 874.0}}
+     ↳Other, 0x10fbfad00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'SafariWindow?View=Narrow&BarsKeptMinimized=false&UUID=E099565E-1415-4A1E-BC66-9B28868CD65D&UsingLoweredBar=true&IsSecure=false&IsTabBarAvailable=false'
+      ↳Other, 0x10fbf9cc0, {{0.0, 0.0}, {402.0, 874.0}}
+       ↳Other, 0x10fbf9900, {{0.0, 0.0}, {402.0, 874.0}}
+        ↳ScrollView, 0x10fbf8780, {{0.0, 0.0}, {402.0, 874.0}}
+         ↳Other, 0x10fbf9a40, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'TabDocument?IsLoadedUsingDesktopUserAgent=false&InReaderMode=false&UUID=06EEB1E2-EE76-43BA-99AA-92DE9FD388F0&IsPrivate=false&IsPageLoaded=true&WebViewProcessID=35693'
+          ↳WebView, 0x10fbf9680, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+           ↳WebView, 0x10fbfa440, {{0.0, 0.0}, {402.0, 874.0}}
+            ↳WebView, 0x11035c3c0, {{0.0, 0.0}, {402.0, 874.0}}
+             ↳Other, 0x11035c640, {{0.0, 0.0}, {402.0, 874.0}}
+              ↳Other, 0x11035c500, {{0.0, 0.0}, {402.0, 874.0}}
+               ↳Other, 0x11035c780, {{0.0, 62.0}, {402.0, 874.0}}
+                ↳Other, 0x11035ca00, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+                 ↳Other, 0x11035c000, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+                  ↳Other, 0x10fb60640, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+                   ↳TextField, 0x10fb60280, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+Query chain:
+ →Find: Application 'com.apple.mobilesafari'
+  Output: {
+    Application, 0x10fb61180, pid: 35590, label: 'Safari'
+  }
+  ↪︎Find: Descendants matching type WebView
+    Output: {
+      WebView, 0x10fbb4f00, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'WebView'
+      WebView, 0x10fbb52c0, {{0.0, 0.0}, {402.0, 874.0}}
+      WebView, 0x10fbb61c0, {{0.0, 0.0}, {402.0, 874.0}}
+    }
+    ↪︎Find: Descendants matching type Any
+      Output: {
+        WebView, 0x11035ee40, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035f700, {{0.0, 0.0}, {402.0, 874.0}}
+        WebView, 0x11035f480, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035d540, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fb961c0, {{369.0, 62.0}, {30.0, 750.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+        Other, 0x10fb94280, {{62.0, 841.0}, {278.0, 30.0}}, label: 'Horizontal scroll bar, 1 page', value: 0%
+        Other, 0x11035f340, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x11035f5c0, {{0.0, 736.0}, {402.0, 138.0}}
+        Other, 0x11035ef80, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x10fb96080, {{0.0, 0.0}, {402.0, 89.0}}
+        Other, 0x10fb94640, {{396.0, 65.0}, {3.0, 744.0}}
+        Other, 0x10fb94500, {{65.0, 868.0}, {272.0, 3.0}}
+        Other, 0x11035f200, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x11035f0c0, {{0.0, 62.0}, {402.0, 874.0}}
+        Other, 0x11035ebc0, {{0.0, 62.0}, {402.0, 714.0}}, label: 'Return form', Focused
+        Other, 0x11035ed00, {{16.0, 84.0}, {370.0, 43.0}}, label: 'Newsletter', value: 1, Focused
+        Other, 0x11035e440, {{16.0, 149.0}, {384.0, 160.0}}, label: 'form', Focused
+        StaticText, 0x11035e1c0, {{16.0, 84.0}, {174.0, 43.0}}, label: 'Newsletter', value: Newsletter, Focused
+        Other, 0x11035e300, {{16.0, 149.0}, {384.0, 59.0}}, Focused
+        Other, 0x11035db80, {{16.0, 217.0}, {384.0, 59.0}}, Focused
+        Button, 0x11035d680, {{16.0, 288.0}, {77.0, 21.0}}, label: 'Subscribe', Focused
+        StaticText, 0x11035dcc0, {{16.0, 149.0}, {81.0, 23.0}}, label: 'Your name', value: Your name, Focused
+        TextField, 0x11035da40, {{16.0, 171.0}, {384.0, 37.0}}, label: 'Your name', value: Jordan Return, Focused
+        StaticText, 0x11035d7c0, {{16.0, 217.0}, {87.0, 23.0}}, label: 'Your e-mail', value: Your e-mail, Focused
+        TextField, 0x11035d400, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+      }
+      ↪︎Find: Elements matching predicate 'label BEGINSWITH "Your e-mail" AND (elementType == 49 OR elementType == 50)'
+        Output: {
+          TextField, 0x10fbc5b80, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+        }
+        ↪︎Find: First Match
+          Output: {
+            TextField, 0x10fbf8dc0, {{16.0, 239.0}, {384.0, 37.0}}, label: 'Your e-mail', value: return.g1@newmail...., Focused
+          }
+
+    t =    21.56s Tear Down
+Test Case '-[CaptureUITests.FormTests testFormReturn]' failed (21.774 seconds).
+Test Suite 'FormTests' failed at 2026-09-30 23:41:03.793.
+	 Executed 1 test, with 1 failure (0 unexpected) in 21.774 (21.777) seconds
+Test Suite 'CaptureUITests.xctest' failed at 2026-09-30 23:41:03.794.
+	 Executed 1 test, with 1 failure (0 unexpected) in 21.774 (21.777) seconds
+Test Suite 'Selected tests' failed at 2026-09-30 23:41:03.794.
+	 Executed 1 test, with 1 failure (0 unexpected) in 21.774 (21.778) seconds
+** BUILD INTERRUPTED **

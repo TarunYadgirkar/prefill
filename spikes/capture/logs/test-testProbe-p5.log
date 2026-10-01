@@ -1,0 +1,82 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project PrefillCapture.xcodeproj -scheme PrefillCapture -destination "platform=iOS Simulator,id=7395317A-E54F-4CA6-8E64-6D8D22109587" -derivedDataPath build "-only-testing:CaptureUITests/ProbeTests/testProbe"
+
+2026-09-30 23:49:13.341892-0700 CaptureUITests-Runner[46298:13084727] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:49:15.131.
+Test Suite 'CaptureUITests.xctest' started at 2026-09-30 23:49:15.131.
+Test Suite 'ProbeTests' started at 2026-09-30 23:49:15.131.
+Test Case '-[CaptureUITests.ProbeTests testProbe]' started.
+    t =     0.00s Start Test at 2026-09-30 23:49:15.133
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.mobilesafari with URL http://127.0.0.1:8803/web/form-latency.html?probe=1&r=1790837355
+    t =     0.02s     Launch com.apple.mobilesafari
+    t =     0.07s         Setting up automation session
+objc[46298]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x1064e8398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x1065f4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.44s         Wait for com.apple.mobilesafari to idle
+    t =     6.55s Waiting 10.0s for Any (First Match) to exist
+    t =     7.57s     Checking `Expect predicate `existsNoRetry == 1` for object Any (First Match)`
+    t =     7.57s         Checking existence of `Any (First Match)`
+    t =     7.64s Tap Any (First Match)
+    t =     7.64s     Wait for com.apple.mobilesafari to idle
+    t =     7.64s     Find the Any (First Match)
+    t =     7.67s     Check for interrupting elements affecting "Email" TextField
+    t =     7.69s     Synthesize event
+    t =     7.98s     Wait for com.apple.mobilesafari to idle
+    t =     9.02s Type 'probe.p5@newmail.e...' into "Email" TextField
+    t =     9.02s     Wait for com.apple.mobilesafari to idle
+    t =     9.03s     Find the "Email" TextField
+    t =     9.09s     Check for interrupting elements affecting "Email" TextField
+    t =     9.12s     Synthesize event
+    t =     9.72s     Wait for com.apple.mobilesafari to idle
+    t =     9.72s Checking existence of `"Done" Button`
+    t =     9.75s Find the "Done" Button
+    t =     9.78s Tap "Done" Button
+    t =     9.78s     Wait for com.apple.mobilesafari to idle
+    t =     9.79s     Find the "Done" Button
+    t =     9.81s     Check for interrupting elements affecting "Done" Button
+    t =     9.83s     Synthesize event
+    t =    10.11s     Wait for com.apple.mobilesafari to idle
+    t =    11.03s Tap "Save" Button
+    t =    11.03s     Wait for com.apple.mobilesafari to idle
+    t =    11.04s     Find the "Save" Button
+    t =    11.06s     Check for interrupting elements affecting "Save" Button
+    t =    11.09s     Synthesize event
+    t =    11.38s     Wait for com.apple.mobilesafari to idle
+    t =    11.39s Checking existence of `Alert (First Match)`
+    t =    11.41s Checking existence of `Alert (First Match)`
+    t =    12.44s Checking existence of `Alert (First Match)`
+    t =    12.46s Checking existence of `Alert (First Match)`
+    t =    13.49s Checking existence of `Alert (First Match)`
+    t =    13.53s Checking existence of `Alert (First Match)`
+    t =    14.56s Checking existence of `Alert (First Match)`
+    t =    14.59s Checking existence of `Alert (First Match)`
+    t =    15.61s Checking existence of `Alert (First Match)`
+    t =    15.65s Checking existence of `Alert (First Match)`
+    t =    16.68s Checking existence of `Alert (First Match)`
+    t =    16.72s Checking existence of `Alert (First Match)`
+    t =    17.74s Checking existence of `Alert (First Match)`
+    t =    17.78s Checking existence of `Alert (First Match)`
+    t =    18.80s Checking existence of `Alert (First Match)`
+    t =    18.85s Checking existence of `Alert (First Match)`
+    t =    19.87s Checking existence of `Alert (First Match)`
+    t =    19.91s Checking existence of `Alert (First Match)`
+    t =    20.93s Checking existence of `Alert (First Match)`
+    t =    20.97s Checking existence of `Alert (First Match)`
+    t =    22.05s Waiting 15.0s for StaticText (First Match) to exist
+    t =    23.06s     Checking `Expect predicate `existsNoRetry == 1` for object StaticText (First Match)`
+    t =    23.06s         Checking existence of `StaticText (First Match)`
+    t =    23.10s Find the StaticText (First Match)
+2026-09-30 23:49:39.262417-0700 CaptureUITests-Runner[46298:13084727] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8824/snap?name=p5-probe-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    24.58s Requesting snapshot of accessibility hierarchy for app with pid 46313
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/capture/UITests/Driver.swift:13: warning: -[CaptureUITests.ProbeTests testProbe] : Synchronous URL loading of http://127.0.0.1:8824/snap?name=p5-probe-after should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    24.71s Requesting snapshot of accessibility hierarchy for app with pid 46313
+    t =    24.73s Tear Down
+Test Case '-[CaptureUITests.ProbeTests testProbe]' passed (24.947 seconds).
+Test Suite 'ProbeTests' passed at 2026-09-30 23:49:40.081.
+	 Executed 1 test, with 0 failures (0 unexpected) in 24.947 (24.949) seconds
+Test Suite 'CaptureUITests.xctest' passed at 2026-09-30 23:49:40.082.
+	 Executed 1 test, with 0 failures (0 unexpected) in 24.947 (24.951) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:49:40.083.
+	 Executed 1 test, with 0 failures (0 unexpected) in 24.947 (24.952) seconds
+** BUILD INTERRUPTED **

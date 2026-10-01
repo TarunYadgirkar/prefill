@@ -1,0 +1,2 @@
+t5b-on-tagged-tapdropdown {'src': 'page', 'event': 'focus', 'field': 'email', 'value': '', 'isTrusted': True}
+t5b-on-tagged-tapdropdown {'src': 'uitest', 'event': 'tap-candidate', 'found': '9 dl-one@example.net (76.0, 340.3333333333333, 250.0, 42.0)'}

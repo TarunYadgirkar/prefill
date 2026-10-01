@@ -1,0 +1,144 @@
+Attributes: Application, 0x103643980, pid: 37416, label: 'Settings'
+Element subtree:
+ →Application, 0x103643980, pid: 37416, label: 'Settings'
+    Window (Main), 0x1036412c0, {{0.0, 0.0}, {402.0, 874.0}}
+      Other, 0x103641400, {{0.0, 0.0}, {402.0, 874.0}}
+        Other, 0x103642f80, {{0.0, 0.0}, {402.0, 874.0}}
+          Other, 0x103643340, {{0.0, 0.0}, {402.0, 874.0}}
+            Other, 0x103643200, {{0.0, 0.0}, {402.0, 874.0}}
+              Other, 0x1036435c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x103643700, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x103643840, {{0.0, 0.0}, {402.0, 874.0}}
+                    Other, 0x103643ac0, {{0.0, 0.0}, {402.0, 874.0}}
+                      Other, 0x103643c00, {{0.0, 0.0}, {402.0, 874.0}}
+                        NavigationBar, 0x106465f40, {{0.0, 62.0}, {402.0, 54.0}}, identifier: 'AutoFill & Passwords'
+                          Button, 0x106464c80, {{16.0, 62.0}, {44.0, 44.0}}, identifier: 'BackButton', label: 'General'
+                          StaticText, 0x106465a40, {{118.0, 73.7}, {166.0, 20.7}}, label: 'AutoFill & Passwords'
+                        Other, 0x106465040, {{0.0, 0.0}, {402.0, 874.0}}
+                          Other, 0x106465180, {{0.0, 0.0}, {402.0, 874.0}}
+                            Other, 0x106464f00, {{0.0, 0.0}, {402.0, 874.0}}
+                              Other, 0x1064652c0, {{0.0, 0.0}, {402.0, 874.0}}
+                                Other, 0x106465900, {{0.0, 116.0}, {402.0, 724.0}}
+                                  Other, 0x106465400, {{0.0, 0.0}, {402.0, 874.0}}
+                                    Other, 0x106465b80, {{0.0, 0.0}, {402.0, 874.0}}
+                                      CollectionView, 0x106465cc0, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Other, 0x106464500, {{-8.0, -1632.0}, {418.0, 1896.7}}
+                                        Other, 0x106464640, {{0.0, 0.0}, {402.0, 874.0}}
+                                          Other, 0x106467e80, {{0.0, 0.0}, {402.0, 156.0}}
+                                        Other, 0x1069ebe80, {{0.0, 0.0}, {402.0, 874.0}}
+                                        Cell, 0x1069ebc00, {{16.0, 151.0}, {370.0, 52.0}}
+                                          Other, 0x10ecc4000, {{16.0, 151.0}, {370.0, 52.0}}
+                                            Other, 0x10ecc4140, {{16.0, 151.0}, {370.0, 52.0}}
+                                          Other, 0x10ecc4280, {{16.0, 151.0}, {370.0, 52.0}}
+                                            Other, 0x10ecc43c0, {{16.0, 151.0}, {370.0, 52.0}}
+                                              Other, 0x10ecc4500, {{16.0, 151.0}, {370.0, 52.0}}
+                                                Switch, 0x10ecc4640, {{16.0, 151.0}, {370.0, 52.0}}, identifier: 'AutoFillToggle', label: 'AutoFill Passwords and Passkeys', value: 1
+                                                  StaticText, 0x10ecc4780, {{32.0, 166.8}, {250.0, 20.3}}, label: 'AutoFill Passwords and Passkeys'
+                                                  Switch, 0x10ecc48c0, {{309.0, 163.0}, {63.0, 28.0}}, value: 1
+                                        Cell, 0x10ecc4a00, {{16.0, 203.0}, {370.0, 61.7}}
+                                          Other, 0x10ecc4b40, {{16.0, 203.0}, {370.0, 61.7}}
+                                          Other, 0x10ecc4c80, {{16.0, 203.0}, {370.0, 61.7}}
+                                            Other, 0x10ecc4dc0, {{16.0, 203.0}, {370.0, 61.7}}
+                                              Other, 0x10ecc4f00, {{16.0, 203.0}, {370.0, 61.7}}
+                                                StaticText, 0x10ecc5040, {{16.0, 203.0}, {370.0, 61.7}}, label: 'Automatically suggest passwords, passkeys, and verification codes when signing in to apps and websites.'
+                                        Other, 0x10ecc5180, {{-8.0, 264.7}, {418.0, 191.3}}
+                                        Cell, 0x10ecc52c0, {{16.0, 264.7}, {370.0, 40.3}}
+                                          Other, 0x10ecc5400, {{16.0, 264.7}, {370.0, 40.3}}
+                                          Other, 0x10ecc5540, {{16.0, 264.7}, {370.0, 40.3}}
+                                            Other, 0x10ecc5680, {{16.0, 264.7}, {370.0, 40.3}}
+                                              Other, 0x10ecc57c0, {{16.0, 264.7}, {370.0, 40.3}}
+                                                StaticText, 0x10ecc5900, {{16.0, 264.7}, {370.0, 40.3}}, label: 'AutoFill from:'
+                                        Cell, 0x10ecc5a40, {{16.0, 305.0}, {370.0, 66.7}}
+                                          Other, 0x10ecc5b80, {{16.0, 305.0}, {370.0, 66.7}}
+                                            Other, 0x10ecc5cc0, {{16.0, 305.0}, {370.0, 66.7}}
+                                          Other, 0x10ecc5e00, {{16.0, 305.0}, {370.0, 66.7}}
+                                            Other, 0x10ecc5f40, {{16.0, 305.0}, {370.0, 66.7}}
+                                              Other, 0x10ecc6080, {{16.0, 305.0}, {370.0, 66.7}}
+                                                Switch, 0x10ecc61c0, {{16.0, 305.0}, {370.0, 66.7}}, identifier: 'AutoFillFromPasswordsToggle', label: 'Passwords, Passkeys, passwords, and codes', value: 1
+                                                  Image, 0x10ecc6300, {{32.0, 324.3}, {28.0, 28.0}}
+                                                  StaticText, 0x10ecc6440, {{68.0, 320.0}, {82.0, 20.3}}, label: 'Passwords'
+                                                  Switch, 0x10ecc6580, {{309.0, 324.3}, {63.0, 28.0}}, value: 1
+                                                  StaticText, 0x10ecc66c0, {{68.0, 342.3}, {185.3, 14.3}}, label: 'Passkeys, passwords, and codes'
+                                        Cell, 0x10ecc6800, {{16.0, 371.7}, {370.0, 66.7}}
+                                          Other, 0x10ecc6940, {{16.0, 371.7}, {370.0, 66.7}}
+                                            Other, 0x10ecc6a80, {{16.0, 371.7}, {370.0, 66.7}}
+                                          Other, 0x10ecc6bc0, {{16.0, 371.7}, {370.0, 66.7}}
+                                            Other, 0x10ecc6d00, {{16.0, 371.7}, {370.0, 66.7}}
+                                              Other, 0x10ecc6e40, {{16.0, 371.7}, {370.0, 66.7}}
+                                                Switch, 0x10ecc6f80, {{16.0, 371.7}, {370.0, 66.7}}, identifier: 'AutoFillFromPrefill SpikeToggle', label: 'Prefill Spike, Passwords (filling only)', value: 1
+                                                  Image, 0x10ecc70c0, {{32.0, 391.0}, {28.0, 28.0}}
+                                                  StaticText, 0x10ecc7200, {{68.0, 386.7}, {89.0, 20.3}}, label: 'Prefill Spike'
+                                                  Switch, 0x10ecc7340, {{309.0, 391.0}, {63.0, 28.0}}, value: 1
+                                                  StaticText, 0x10ecc7480, {{68.0, 409.0}, {131.0, 14.3}}, label: 'Passwords (filling only)'
+                                        Other, 0x10ecc75c0, {{68.0, 370.7}, {302.0, 1.0}}
+                                        Other, 0x10ecc7700, {{-8.0, 456.0}, {418.0, 119.7}}
+                                        Cell, 0x10ecc7840, {{16.0, 462.0}, {370.0, 52.0}}
+                                          Other, 0x10ecc7980, {{16.0, 462.0}, {370.0, 52.0}}
+                                            Other, 0x10ecc7ac0, {{16.0, 462.0}, {370.0, 52.0}}
+                                          Other, 0x10ecc7c00, {{16.0, 462.0}, {370.0, 52.0}}
+                                            Other, 0x10ecc7d40, {{16.0, 462.0}, {370.0, 52.0}}
+                                              Other, 0x10ecc7e80, {{16.0, 462.0}, {370.0, 52.0}}
+                                                Switch, 0x10ed10000, {{16.0, 462.0}, {370.0, 52.0}}, identifier: 'SuggestStrongPasswordsToggle', label: 'Suggest Strong Passwords', value: 1
+                                                  StaticText, 0x10ed10140, {{32.0, 477.8}, {204.7, 20.3}}, label: 'Suggest Strong Passwords'
+                                                  Switch, 0x10ed10280, {{309.0, 474.0}, {63.0, 28.0}}, value: 1
+                                        Cell, 0x10ed103c0, {{16.0, 514.0}, {370.0, 61.7}}
+                                          Other, 0x10ed10500, {{16.0, 514.0}, {370.0, 61.7}}
+                                          Other, 0x10ed10640, {{16.0, 514.0}, {370.0, 61.7}}
+                                            Other, 0x10ed10780, {{16.0, 514.0}, {370.0, 61.7}}
+                                              Other, 0x10ed108c0, {{16.0, 514.0}, {370.0, 61.7}}
+                                                StaticText, 0x10ed10a00, {{16.0, 514.0}, {370.0, 61.7}}, label: 'Automatically suggest unique, strong passwords when creating accounts or changing passwords in Safari and other apps.'
+                                        Other, 0x10ed10b40, {{-8.0, 575.7}, {418.0, 138.0}}
+                                        Cell, 0x10ed10c80, {{16.0, 575.7}, {370.0, 40.3}}
+                                          Other, 0x10ed10dc0, {{16.0, 575.7}, {370.0, 40.3}}
+                                          Other, 0x10ed10f00, {{16.0, 575.7}, {370.0, 40.3}}
+                                            Other, 0x10ed11040, {{16.0, 575.7}, {370.0, 40.3}}
+                                              Other, 0x10ed11180, {{16.0, 575.7}, {370.0, 40.3}}
+                                                StaticText, 0x10ed112c0, {{16.0, 575.7}, {370.0, 40.3}}, label: 'Verification Codes'
+                                        Cell, 0x10ed11400, {{16.0, 616.0}, {370.0, 52.0}}
+                                          Other, 0x10ed11540, {{16.0, 616.0}, {370.0, 52.0}}
+                                            Other, 0x10ed11680, {{16.0, 616.0}, {370.0, 52.0}}
+                                          Other, 0x10ed117c0, {{16.0, 616.0}, {370.0, 52.0}}
+                                            Other, 0x10ed11900, {{16.0, 616.0}, {370.0, 52.0}}
+                                              Other, 0x10ed11a40, {{16.0, 616.0}, {370.0, 52.0}}
+                                                Switch, 0x10ed11b80, {{16.0, 616.0}, {370.0, 52.0}}, label: 'Delete After Use', value: 0
+                                                  StaticText, 0x10ed11cc0, {{32.0, 631.8}, {125.3, 20.3}}, label: 'Delete After Use'
+                                                  Switch, 0x10ed11e00, {{309.0, 628.0}, {63.0, 28.0}}, value: 0
+                                        Cell, 0x10ed11f40, {{16.0, 668.0}, {370.0, 45.7}}
+                                          Other, 0x10ed12080, {{16.0, 668.0}, {370.0, 45.7}}
+                                          Other, 0x10ed121c0, {{16.0, 668.0}, {370.0, 45.7}}
+                                            Other, 0x10ed12300, {{16.0, 668.0}, {370.0, 45.7}}
+                                              Other, 0x10ed12440, {{16.0, 668.0}, {370.0, 45.7}}
+                                                StaticText, 0x10ed12580, {{16.0, 668.0}, {370.0, 45.7}}, label: 'Automatically delete verification codes in Messages and Mail after they are used.'
+                                        Other, 0x10ed126c0, {{-8.0, 713.7}, {418.0, 1863.3}}
+                                        Cell, 0x10ed12800, {{16.0, 731.0}, {370.0, 52.0}}
+                                          Other, 0x10ed12940, {{16.0, 731.0}, {370.0, 52.0}}
+                                            Other, 0x10ed12a80, {{16.0, 731.0}, {370.0, 52.0}}
+                                          Other, 0x10ed12bc0, {{16.0, 731.0}, {370.0, 52.0}}
+                                            Other, 0x10ed12d00, {{16.0, 731.0}, {370.0, 52.0}}
+                                              Other, 0x10ed12e40, {{16.0, 731.0}, {370.0, 52.0}}
+                                                Button, 0x10ed12f80, {{32.0, 736.0}, {338.0, 42.0}}, label: 'Set Up Codes In, Passwords'
+                                                  StaticText, 0x10ed130c0, {{271.7, 747.0}, {82.0, 20.3}}, label: 'Passwords'
+                                                StaticText, 0x10ed13200, {{32.0, 746.8}, {123.3, 20.3}}, label: 'Set Up Codes In'
+                                        Cell, 0x10ed13340, {{16.0, 783.0}, {370.0, 45.7}}
+                                          Other, 0x10ed13480, {{16.0, 783.0}, {370.0, 45.7}}
+                                          Other, 0x10ed135c0, {{16.0, 783.0}, {370.0, 45.7}}
+                                            Other, 0x10ed13700, {{16.0, 783.0}, {370.0, 45.7}}
+                                              Other, 0x10ed13840, {{16.0, 783.0}, {370.0, 45.7}}
+                                                StaticText, 0x10ed13980, {{16.0, 783.0}, {370.0, 45.7}}, label: '“Passwords” will be used to open links and QR codes for setting up verification codes.'
+                                        Other, 0x10ed13ac0, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                          Other, 0x10ed13c00, {{396.0, 130.3}, {3.0, 678.7}}
+                                        Other, 0x10ed13d40, {{369.0, 116.0}, {30.0, 696.0}}, label: 'Vertical scroll bar, 1 page', value: 0%
+                                          Other, 0x10ed13e80, {{396.0, 130.3}, {3.0, 678.7}}
+                        Toolbar, 0x10ed14000, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                          Other, 0x10ed14140, {{0.0, 0.0}, {402.0, 874.0}}
+                    Toolbar, 0x10ed14280, {{0.0, 0.0}, {402.0, 874.0}}, identifier: 'Toolbar', label: 'Toolbar'
+                      Other, 0x10ed143c0, {{0.0, 0.0}, {402.0, 874.0}}
+                Other, 0x10ed14500, {{0.0, 0.0}, {402.0, 874.0}}
+                  Other, 0x10ed14640, {{0.0, 0.0}, {402.0, 874.0}}
+Path to element:
+ →Application, 0x103643980, pid: 37416, label: 'Settings'
+Query chain:
+ →Find: Application 'com.apple.Preferences'
+  Output: {
+    Application, 0x10ed14780, pid: 37416, label: 'Settings'
+  }

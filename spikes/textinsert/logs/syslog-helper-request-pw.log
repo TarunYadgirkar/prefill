@@ -1,0 +1,34 @@
+Timestamp               Ty Process[PID:TID]
+2026-09-30 23:37:20.207 A  AuthenticationServicesAgent[88774:c67d5d] (AuthenticationServicesCore) ASCAgent request
+2026-09-30 23:37:20.212 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.mobilesafari:Authorization] Initializing ASCAgent 0x101532080.
+2026-09-30 23:37:20.212 A  AuthenticationServicesAgent[88774:c660d5] (PlugInKit) continuous-discovery
+2026-09-30 23:37:20.213 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.mobilesafari:Authorization] Received connection from 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert
+2026-09-30 23:37:20.213 Df AuthenticationServicesAgent[88774:c660d5] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> created discovery driver
+2026-09-30 23:37:20.213 Df AuthenticationServicesAgent[88774:c660d5] [com.apple.PlugInKit:discovery] [d 8E461AAC-31F2-4E87-8BF2-60ED3C30956A] <PKHost:0x1014ed200> Beginning discovery for flags: 0, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:20.214 A  AuthenticationServicesAgent[88774:c67d5d] (PlugInKit) discovery
+2026-09-30 23:37:20.214 Df pkd[86982:c6814f] [com.apple.PlugInKit:discovery] [d 8E461AAC-31F2-4E87-8BF2-60ED3C30956A] Final plugin count: 1
+2026-09-30 23:37:20.214 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.PlugInKit:discovery] [d B8F9AFF8-51D6-4913-A095-8479F523B862] <PKHost:0x1014ed200> Beginning discovery for flags: 1024, point: com.apple.authentication-services-credential-provider-ui
+2026-09-30 23:37:20.214 Df AuthenticationServicesAgent[88774:c660d5] [com.apple.PlugInKit:discovery] [d 8E461AAC-31F2-4E87-8BF2-60ED3C30956A] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 1
+2026-09-30 23:37:20.214 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> delivering update to host (1 plugins)
+2026-09-30 23:37:20.215 A  AuthenticationServicesAgent[88774:c684e6] (ExtensionFoundation) discovering extensions
+2026-09-30 23:37:20.215 Df pkd[86982:c6814f] [com.apple.PlugInKit:discovery] [d B8F9AFF8-51D6-4913-A095-8479F523B862] Final plugin count: 0
+2026-09-30 23:37:20.216 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.PlugInKit:discovery] [d B8F9AFF8-51D6-4913-A095-8479F523B862] <PKHost:0x1014ed200> Completed discovery. Final # of matches: 0
+2026-09-30 23:37:20.227 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.extensionkit:NSExtension] discovered extensions: attributes {
+    NSExtensionPointName = "com.apple.authentication-services-credential-provider-ui";
+}, extensionSet {(
+    <EXConcreteExtension: 0x1016600e0> {id = com.tarunyadgirkar.prefill.spike.textinsert.provider}
+)}
+2026-09-30 23:37:20.227 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> installing watchers for continuous discovery
+2026-09-30 23:37:20.227 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.launchservices:appinstallation] registering for distributed notification com.apple.LaunchServices.pluginsregistered in this process
+2026-09-30 23:37:20.228 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.launchservices:appinstallation] registering for distributed notification com.apple.LaunchServices.pluginsunregistered in this process
+2026-09-30 23:37:20.230 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.mobilesafari:Authorization] 5AKJYZ7USP.com.tarunyadgirkar.prefill.spike.textinsert disconnected.
+2026-09-30 23:37:20.230 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.mobilesafari:Authorization] Completing authorization: 0x101532080 (null) Error Domain=com.apple.AuthenticationServicesCore.AuthorizationError Code=2 "(null)" (null)
+2026-09-30 23:37:20.231 Df AuthenticationServicesAgent[88774:c67d5d] [com.apple.mobilesafari:Authorization] Dealloc for 0x101532080. Cancelling any outstanding requests.
+2026-09-30 23:37:20.231 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> explicit cancellation for discovery
+2026-09-30 23:37:20.231 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> removing watchers for continous discovery
+2026-09-30 23:37:20.231 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.launchservices:appinstallation] unregistering for distributed notification com.apple.LaunchServices.pluginsregistered in this process
+2026-09-30 23:37:20.231 Df AuthenticationServicesAgent[88774:c684e6] [com.apple.launchservices:appinstallation] unregistering for distributed notification com.apple.LaunchServices.pluginsunregistered in this process
+2026-09-30 23:37:20.232 A  AuthenticationServicesAgent[88774:c684e7] (ExtensionFoundation) discovering extensions
+2026-09-30 23:37:20.232 E  AuthenticationServicesAgent[88774:c684e7] [com.apple.extensionkit:NSExtension] errors encountered while discovering extensions: Error Domain=PlugInKit Code=13 "query cancelled" UserInfo={NSLocalizedDescription=query cancelled}
+2026-09-30 23:37:20.232 Df AuthenticationServicesAgent[88774:c684e7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> destroying discovery driver
+2026-09-30 23:37:20.232 Df AuthenticationServicesAgent[88774:c684e7] [com.apple.PlugInKit:discovery] <PKDiscoveryDriver:0x10147d6e0> removing watchers for continous discovery

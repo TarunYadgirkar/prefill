@@ -1,0 +1,45 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/DatalistSpike.xcodeproj -scheme DatalistSpike -destination "platform=iOS Simulator,id=47A4C2A7-9518-49BF-92C1-D602AAE4E6D9" -derivedDataPath /Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build "-only-testing:DatalistUITests/DriverTests/testSafariField"
+
+2026-09-30 23:17:32.060561-0700 DatalistUITests-Runner[95888:12848616] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:17:34.138.
+Test Suite 'DatalistUITests.xctest' started at 2026-09-30 23:17:34.138.
+Test Suite 'DriverTests' started at 2026-09-30 23:17:34.138.
+Test Case '-[DatalistUITests.DriverTests testSafariField]' started.
+    t =     0.00s Start Test at 2026-09-30 23:17:34.140
+    t =     0.02s Set Up
+    t =     0.02s Open com.apple.mobilesafari
+    t =     0.02s     Activate com.apple.mobilesafari
+    t =     0.05s         Wait for com.apple.mobilesafari to idle
+    t =     0.09s Wait for com.apple.mobilesafari to become Running Foreground
+objc[95888]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x103a54398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x108078310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     2.09s Waiting 10.0s for "Email" TextField to exist
+    t =     3.09s     Checking `Expect predicate `existsNoRetry == 1` for object "Email" TextField`
+    t =     3.09s         Checking existence of `"Email" TextField`
+    t =     3.17s Tap "Email" TextField
+    t =     3.17s     Wait for com.apple.mobilesafari to idle
+    t =     3.18s     Find the "Email" TextField
+    t =     3.19s     Check for interrupting elements affecting "Email" TextField
+    t =     3.21s     Synthesize event
+    t =     3.51s     Wait for com.apple.mobilesafari to idle
+    t =     7.54s Requesting snapshot of accessibility hierarchy for app with pid 95817
+    t =     7.95s Requesting snapshot of accessibility hierarchy for app with pid 95817
+    t =    10.04s Tear Down
+Test Case '-[DatalistUITests.DriverTests testSafariField]' passed (10.095 seconds).
+Test Suite 'DriverTests' passed at 2026-09-30 23:17:44.235.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.095 (10.097) seconds
+Test Suite 'DatalistUITests.xctest' passed at 2026-09-30 23:17:44.236.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.095 (10.097) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:17:44.236.
+	 Executed 1 test, with 0 failures (0 unexpected) in 10.095 (10.098) seconds
+2026-09-30 23:17:44.548 xcodebuild[95877:12848413] [MT] IDETestOperationsObserverDebug: 13.464 elapsed -- Testing started completed.
+2026-09-30 23:17:44.548 xcodebuild[95877:12848413] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:17:44.548 xcodebuild[95877:12848413] [MT] IDETestOperationsObserverDebug: 13.464 sec, +13.464 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/datalist/build/Logs/Test/Test-DatalistSpike-2026.09.30_23-17-31--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

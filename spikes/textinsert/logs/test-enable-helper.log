@@ -1,0 +1,76 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -project TextInsertSpike.xcodeproj -scheme TextInsertSpike -destination "platform=iOS Simulator,id=CF361191-F960-4212-9B76-7C41256A11C9" -derivedDataPath build "-only-testing:TextInsertUITests/EnableTests/testEnableViaHelper"
+
+2026-09-30 23:13:21.679922-0700 TextInsertUITests-Runner[88528:12804065] [Default] Running tests...
+    t =      nans Interface orientation changed to Portrait
+Test Suite 'Selected tests' started at 2026-09-30 23:13:23.877.
+Test Suite 'TextInsertUITests.xctest' started at 2026-09-30 23:13:23.878.
+Test Suite 'EnableTests' started at 2026-09-30 23:13:23.878.
+Test Case '-[TextInsertUITests.EnableTests testEnableViaHelper]' started.
+    t =     0.00s Start Test at 2026-09-30 23:13:23.880
+    t =     0.19s Set Up
+    t =     0.20s Open com.tarunyadgirkar.prefill.spike.textinsert
+    t =     0.20s     Launch com.tarunyadgirkar.prefill.spike.textinsert
+2026-09-30 23:13:24.282 xcodebuild[88326:12802892] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-09-30 23:13:24.282 xcodebuild[88326:12802892] [MT] IDELaunchParametersSnapshot: no debugger version
+objc[88528]: Class UIAccessibilityLoaderWebShared is implemented in both /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x109f8c398) and /private/var/run/com.apple.security.cryptexd/mnt/com.apple.iPhoneOS.SimulatorRuntime-v24.1.434.0.GOjTIm/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 27.0.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x10a4e4310). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+    t =     1.02s         Setting up automation session
+    t =     2.86s         Wait for com.tarunyadgirkar.prefill.spike.textinsert to idle
+2026-09-30 23:13:29.126044-0700 TextInsertUITests-Runner[88528:12804065] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8805/snap?name=app-home should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     5.84s Tap "turnOn" Button
+    t =     5.84s     Wait for com.tarunyadgirkar.prefill.spike.textinsert to idle
+    t =     5.84s     Find the "turnOn" Button
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/UITests/Spike.swift:13: warning: -[TextInsertUITests.EnableTests testEnableViaHelper] : Synchronous URL loading of http://127.0.0.1:8805/snap?name=app-home should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =     6.10s     Check for interrupting elements affecting "turnOn" Button
+    t =     6.14s     Synthesize event
+    t =     6.59s     Wait for com.tarunyadgirkar.prefill.spike.textinsert to idle
+2026-09-30 23:13:33.725316-0700 TextInsertUITests-Runner[88528:12804065] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8805/snap?name=helper-prompt should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    10.39s Requesting snapshot of accessibility hierarchy for app with pid 88624
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/UITests/Spike.swift:13: warning: -[TextInsertUITests.EnableTests testEnableViaHelper] : Synchronous URL loading of http://127.0.0.1:8805/snap?name=helper-prompt should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    10.47s Requesting snapshot of accessibility hierarchy for app with pid 88624
+    t =    10.49s Requesting snapshot of accessibility hierarchy for app with pid 86754
+    t =    10.71s Requesting snapshot of accessibility hierarchy for app with pid 86754
+    t =    10.85s Checking existence of `"Turn On" Button`
+    t =    10.87s Checking existence of `"Allow" Button`
+    t =    10.90s Checking existence of `"Use" Button`
+    t =    10.91s Checking existence of `"Enable" Button`
+    t =    10.92s Checking existence of `"Continue" Button`
+    t =    10.93s Checking existence of `Button (First Match)`
+    t =    10.97s Checking existence of `Button (First Match)`
+    t =    11.00s Checking existence of `Button (First Match)`
+    t =    11.05s Checking existence of `Button (First Match)`
+    t =    11.07s Checking existence of `Button (First Match)`
+    t =    11.10s Checking existence of `"Turn On" Button`
+    t =    11.13s Checking existence of `"Allow" Button`
+    t =    11.15s Checking existence of `"Use" Button`
+    t =    11.16s Checking existence of `"Enable" Button`
+    t =    11.17s Checking existence of `"Continue" Button`
+    t =    11.18s Checking existence of `Button (First Match)`
+    t =    11.28s Tap Button (First Match)
+    t =    11.28s     Wait for com.tarunyadgirkar.prefill.spike.textinsert to idle
+    t =    11.29s     Find the Button (First Match)
+    t =    11.31s     Check for interrupting elements affecting "turnOn" Button
+    t =    11.34s     Synthesize event
+    t =    11.66s     Wait for com.tarunyadgirkar.prefill.spike.textinsert to idle
+2026-09-30 23:13:38.792606-0700 TextInsertUITests-Runner[88528:12804065] [CFNetwork Performance Diagnostic] __delegate_identifier__:Performance Diagnostics__:::____message__:Synchronous URL loading of http://127.0.0.1:8805/snap?name=helper-after-accept should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    15.46s Requesting snapshot of accessibility hierarchy for app with pid 88624
+/Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/UITests/Spike.swift:13: warning: -[TextInsertUITests.EnableTests testEnableViaHelper] : Synchronous URL loading of http://127.0.0.1:8805/snap?name=helper-after-accept should not occur on this application's main thread as it may lead to UI unresponsiveness. Please switch to an asynchronous networking API such as URLSession.
+    t =    15.53s Requesting snapshot of accessibility hierarchy for app with pid 88624
+    t =    15.54s Tear Down
+Test Case '-[TextInsertUITests.EnableTests testEnableViaHelper]' passed (15.822 seconds).
+Test Suite 'EnableTests' passed at 2026-09-30 23:13:39.702.
+	 Executed 1 test, with 0 failures (0 unexpected) in 15.822 (15.824) seconds
+Test Suite 'TextInsertUITests.xctest' passed at 2026-09-30 23:13:39.704.
+	 Executed 1 test, with 0 failures (0 unexpected) in 15.822 (15.826) seconds
+Test Suite 'Selected tests' passed at 2026-09-30 23:13:39.704.
+	 Executed 1 test, with 0 failures (0 unexpected) in 15.822 (15.827) seconds
+2026-09-30 23:13:53.397 xcodebuild[88326:12802892] [MT] IDETestOperationsObserverDebug: 37.568 elapsed -- Testing started completed.
+2026-09-30 23:13:53.397 xcodebuild[88326:12802892] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-09-30 23:13:53.397 xcodebuild[88326:12802892] [MT] IDETestOperationsObserverDebug: 37.568 sec, +37.568 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/tarunyadgirkar/TarunsCode/prefill/spikes/textinsert/build/Logs/Test/Test-TextInsertSpike-2026.09.30_23-13-15--0700.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

@@ -1,0 +1,70 @@
+trigger | page | event->written ms | bg->handler_start ms | handler pid | contacts status
+? ? 1669 - ? notDetermined(0) 
+? ? 1660 - ? notDetermined(0) 
+? ? 1316 - ? notDetermined(0) 
+submit-click form-return.html 1336 1322 38842 notDetermined(0) 
+submit form-return.html 1339 1339 38842 notDetermined(0) 
+submit-click form-latency.html 1399 1383 40298 notDetermined(0) 
+submit form-latency.html 1403 1403 40298 notDetermined(0) 
+submit-click form-latency.html 11 10 40298 notDetermined(0) 
+submit form-latency.html 11 11 40298 notDetermined(0) 
+submit-click form-latency.html 10 9 40298 notDetermined(0) 
+submit form-latency.html 11 10 40298 notDetermined(0) 
+submit-click form-latency.html 10 9 40298 notDetermined(0) 
+submit form-latency.html 12 10 40298 notDetermined(0) 
+submit-click form-latency.html 9 8 40298 notDetermined(0) 
+submit form-latency.html 9 8 40298 notDetermined(0) 
+submit-click form-latency.html 23 20 40298 notDetermined(0) 
+submit form-latency.html 25 22 40298 notDetermined(0) 
+pagehide form-fetch.html?r=1790837106 1470 1400 42738 notDetermined(0) 
+submit-click form-latency.html?probe=1&r=1790837169 1173 1173 43642 notDetermined(0) 
+submit form-latency.html?probe=1&r=1790837169 1160 1149 43642 notDetermined(0) probe={"fetch_count": 0, "request_access_error": "CNErrorDomain code=100 Access Denied userInfo=[\"NSLocalizedFailureReason\": This application has not been granted permission to access Contacts., \"NSUnderlyingError\": Error Domain=CNContactsFoundationErrorDomain Code=7 \"(null)\", \"NSLocalizedDescription\": Access Denied]", "status_after_request": "denied(2)", "status_before": "notDetermined(0)"}
+submit-click form-latency.html?probe=1&r=1790837219 1338 1313 44417 authorized(3) 
+submit form-latency.html?probe=1&r=1790837219 1338 1330 44417 authorized(3) probe={"emails_after": ["nil=alex.school@example.edu", "_$!<Home>!$_=alex.rivera@example.com", "_$!<Work>!$_=alex@work.example.org"], "emails_before": ["_$!<Home>!$_=alex.rivera@example.com", "_$!<Work>!$_=alex@work.example.org", "nil=alex.school@example.edu"], "fetch_count": 1, "save": "ok", "status_before": "authorized(3)"}
+submit-click form-latency.html?probe=1&r=1790837264 1184 1172 45049 notDetermined(0) 
+submit form-latency.html?probe=1&r=1790837264 1191 1190 45049 notDetermined(0) probe={"fetch_count": 0, "request_access_error": "CNErrorDomain code=100 Access Denied userInfo=[\"NSUnderlyingError\": Error Domain=CNContactsFoundationErrorDomain Code=7 \"(null)\", \"NSLocalizedDescription\": Access Denied, \"NSLocalizedFailureReason\": This application has not been granted permission to access Contacts.]", "status_after_request": "denied(2)", "status_before": "notDetermined(0)"}
+submit-click form-latency.html?probe=1&r=1790837305 1320 1307 45708 notDetermined(0) 
+submit form-latency.html?probe=1&r=1790837305 1327 1326 45708 notDetermined(0) probe={"fetch_count": 0, "request_access_error": "CNErrorDomain code=100 Access Denied userInfo=[\"NSLocalizedFailureReason\": This application has not been granted permission to access Contacts., \"NSLocalizedDescription\": Access Denied]", "status_after_request": "notDetermined(0)", "status_before": "notDetermined(0)"}
+submit-click form-latency.html?probe=1&r=1790837355 1156 1155 46479 authorized(3) 
+submit form-latency.html?probe=1&r=1790837355 1149 1139 46479 authorized(3) probe={"emails_after": ["_$!<Work>!$_=alex@work.example.org", "nil=alex.school@example.edu", "_$!<Home>!$_=alex.rivera@example.com"], "emails_before": ["nil=alex.school@example.edu", "_$!<Home>!$_=alex.rivera@example.com", "_$!<Work>!$_=alex@work.example.org"], "fetch_count": 1, "save": "ok", "status_before": "authorized(3)"}
+submit-click form-latency.html?probe=1&r=1790837388 1273 1271 46974 authorized(3) 
+submit form-latency.html?probe=1&r=1790837388 1264 1249 46974 authorized(3) probe={"emails_after": ["_$!<Home>!$_=alex.rivera@example.com", "_$!<Work>!$_=alex@work.example.org", "nil=alex.school@example.edu"], "emails_before": ["_$!<Work>!$_=alex@work.example.org", "nil=alex.school@example.edu", "_$!<Home>!$_=alex.rivera@example.com"], "fetch_count": 1, "save": "ok", "status_before": "authorized(3)"}
+first message to a fresh handler process (cold), n=9: median 1320 ms, min 1156, max 1470
+later messages to the same process (warm), n=18: median 24 ms, min 9, max 1403
+
+captures by page/trigger:
+submit-click form-button.html ['name', 'email', 'tel', 'address'] profile=none
+submit form-button.html ['name', 'email', 'tel', 'address'] profile=none
+visibility-hidden form-fetch.html ['email', 'tel'] profile=none
+submit-click form-return.html ['name', 'email'] profile=none
+submit form-return.html ['name', 'email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+pagehide form-fetch.html ['email', 'tel'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+submit form-latency.html ['email'] profile=none
+submit-click form-latency.html ['email'] profile=none
+
+CORRECTED (warm = event more than 2 s after the first event served by that handler pid):
+cold n=17 median 1320 min 1149 max 1470
+warm n=10 median 11 min 9 max 25
+first 3 rows predate the handler change that echoed t_event; their event->written values (1669,1660,1316 ms) come from latency_event_to_written_ms and are cold sends
