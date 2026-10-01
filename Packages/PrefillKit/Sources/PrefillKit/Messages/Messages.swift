@@ -93,11 +93,15 @@ public struct CaptureRequest: Codable, Sendable, Hashable {
     public let host: String
     public let fields: [CapturedField]
     public let hasPassword: Bool
+    // False when the page was only hidden, never submitted: such values are never saved
+    // straight to the card.
+    public let submitted: Bool
 
-    public init(host: String, fields: [CapturedField], hasPassword: Bool) {
+    public init(host: String, fields: [CapturedField], hasPassword: Bool, submitted: Bool = true) {
         self.host = host
         self.fields = fields
         self.hasPassword = hasPassword
+        self.submitted = submitted
     }
 
     public var hints: [ContactKind: SectionHint] {
@@ -229,7 +233,7 @@ extension ExtensionResponse: Codable {
 }
 
 public enum MessageError: Error, Sendable {
-    case notJSON, unknownType
+    case notJSON, unknownType, tooLarge
 }
 
 // SFExtensionMessageKey carries Foundation JSON objects (NSDictionary and friends).
@@ -237,7 +241,10 @@ public enum MessageCoding {
     public static func request(from message: Any?) throws -> ExtensionRequest {
         guard let message, JSONSerialization.isValidJSONObject(message) else { throw MessageError.notJSON }
         let data = try JSONSerialization.data(withJSONObject: message)
-        return try JSONDecoder().decode(ExtensionRequest.self, from: data)
+        guard data.count <= MessageLimits.bytes else { throw MessageError.tooLarge }
+        let request = try JSONDecoder().decode(ExtensionRequest.self, from: data)
+        guard request.isWithinLimits else { throw MessageError.tooLarge }
+        return request
     }
 
     // Names the kind of failure only. A decoding error's description can quote the value.
@@ -245,6 +252,7 @@ public enum MessageCoding {
         switch error {
         case MessageError.notJSON: "notJSON"
         case MessageError.unknownType: "unknownType"
+        case MessageError.tooLarge: "tooLarge"
         case DecodingError.typeMismatch: "typeMismatch"
         case DecodingError.valueNotFound: "valueNotFound"
         case DecodingError.keyNotFound: "keyNotFound"

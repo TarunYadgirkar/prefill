@@ -4,8 +4,10 @@ import {
   FIELD_KINDS,
   SECTION_HINTS,
   SYNC_STATUSES,
+  LIMITS,
   isExtensionRequest,
   isExtensionResponse,
+  parseExtensionRequest,
   type CaptureRequest,
   type CaptureResult,
   type ErrorResponse,
@@ -29,6 +31,7 @@ const capture: CaptureRequest = {
   type: "capture",
   host: "shop.example.net",
   hasPassword: true,
+  submitted: true,
   fields: [
     { kind: "name", value: "Alex Rivera", autocomplete: "name", name: "full_name", label: "Full name" },
     { kind: "email", value: "alex.new@example.net", autocomplete: "email", name: "email", label: "Email" },
@@ -101,7 +104,14 @@ describe("message contract", () => {
     { type: "pageContext", host: "example.net", fields: [{ kind: "fax" }] },
     { type: "pageContext", host: "example.net", fields: [{ kind: "email", section: "school" }] },
     { type: "capture", host: "example.net", fields: [] },
-    { type: "capture", host: "example.net", hasPassword: false, fields: [{ kind: "email", value: 7 }] },
+    {
+      type: "capture",
+      host: "example.net",
+      hasPassword: false,
+      submitted: true,
+      fields: [{ kind: "email", value: 7 }],
+    },
+    { type: "capture", host: "example.net", hasPassword: false, fields: [] },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });
@@ -112,5 +122,53 @@ describe("message contract", () => {
     { type: "error" },
   ])("rejects the response %j", (message) => {
     expect(isExtensionResponse(message)).toBe(false);
+  });
+
+  it("drops properties the contract doesn't name", () => {
+    const message = { ...capture, extra: "x", fields: [{ kind: "email", value: "a@example.net", html: "<b>" }] };
+    expect(parseExtensionRequest(message)).toEqual({ ...capture, fields: [{ kind: "email", value: "a@example.net" }] });
+  });
+});
+
+describe("message limits, mirrored in MessageLimits.swift", () => {
+  const field = (extra: Record<string, unknown>) => ({ kind: "email", value: "a@example.net", ...extra });
+  const request = (fields: unknown[], host = "shop.example.net") => ({
+    type: "capture",
+    host,
+    hasPassword: false,
+    submitted: true,
+    fields,
+  });
+
+  it("accepts a capture right at the limits", () => {
+    const full = field({ value: "a".repeat(LIMITS.value), label: "b".repeat(LIMITS.text) });
+    expect(isExtensionRequest(request(Array<unknown>(LIMITS.captureFields).fill(full)))).toBe(true);
+  });
+
+  it.each([
+    ["a long value", request([field({ value: "a".repeat(LIMITS.value + 1) })])],
+    ["a long name", request([field({ name: "n".repeat(LIMITS.text + 1) })])],
+    ["a long autocomplete", request([field({ autocomplete: "x".repeat(LIMITS.text + 1) })])],
+    ["too many fields", request(Array<unknown>(LIMITS.captureFields + 1).fill(field({})))],
+    ["a long host", request([field({})], "h".repeat(LIMITS.host + 1))],
+    [
+      "a long address part",
+      request([
+        {
+          kind: "address",
+          address: { street: "1 Main St", city: "c".repeat(LIMITS.part + 1), state: "", postalCode: "", country: "" },
+        },
+      ]),
+    ],
+    [
+      "too many page fields",
+      {
+        type: "pageContext",
+        host: "example.net",
+        fields: Array<unknown>(LIMITS.pageFields + 1).fill({ kind: "email" }),
+      },
+    ],
+  ])("turns away %s", (_, message) => {
+    expect(isExtensionRequest(message)).toBe(false);
   });
 });

@@ -32,19 +32,21 @@ private enum Page {
         return ["type": "pageContext", "host": host, "fields": [field, ["kind": "phone"]]]
     }
 
-    static func signup(_ host: String, email: String) -> [String: Any] {
-        [
-            "type": "capture", "host": host, "hasPassword": true,
-            "fields": [
-                ["kind": "name", "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"],
-                ["kind": "email", "value": email, "autocomplete": "email", "name": "email", "label": "Email"]
-            ]
+    static func signup(_ host: String, email: String, submitted: Bool = true) -> [String: Any] {
+        signup(host, emails: [email], submitted: submitted)
+    }
+
+    static func signup(_ host: String, emails: [String], submitted: Bool = true) -> [String: Any] {
+        let name: [String: Any] = ["kind": "name", "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"]
+        let typed = emails.map { ["kind": "email", "value": $0, "autocomplete": "email", "name": "email"] }
+        return [
+            "type": "capture", "host": host, "hasPassword": true, "submitted": submitted, "fields": [name] + typed
         ]
     }
 
     static var gift: [String: Any] {
         [
-            "type": "capture", "host": siteA, "hasPassword": false,
+            "type": "capture", "host": siteA, "hasPassword": false, "submitted": true,
             "fields": [
                 ["kind": "name", "value": "Jordan Lee", "name": "recipient_name", "label": "Recipient's name"],
                 [
@@ -183,5 +185,47 @@ struct MessageRouterTests {
         #expect(reply == .capture(CaptureResponse(saved: 0, review: 1, ignored: 1)))
         #expect(try #require(store.events.captures.first).verdict == .needsReview)
         #expect(gateway.card == Alex.card)
+    }
+
+    @Test func aPageThatWasOnlyHiddenNeverWritesTheCard() throws {
+        let store = linked()
+        let reply = router(store).route(Page.signup(Page.siteA, email: Page.newEmail, submitted: false))
+        #expect(reply == .capture(CaptureResponse(saved: 0, review: 1, ignored: 1)))
+        #expect(gateway.saves.isEmpty)
+        #expect(try #require(store.events.captures.first).verdict == .needsReview)
+    }
+
+    @Test func oneFormSavesAtMostThreeNewValues() {
+        let emails = (1...5).map { "new\($0)@example.org" }
+        let reply = router(linked()).route(Page.signup(Page.siteA, emails: emails))
+        #expect(reply == .capture(CaptureResponse(saved: 3, review: 2, ignored: 1)))
+        #expect(gateway.card.emails.count == 6)
+    }
+
+    @Test func savesAcrossSitesAreCappedPerHour() {
+        let recent = (0..<5).map { index in
+            Capture(
+                host: "elsewhere.example", value: Alex.value(.email("old\(index)@example.org"), label: nil),
+                date: .testNow.addingTimeInterval(-600), verdict: .saved
+            )
+        }
+        let store = linked()
+        try? store.appendEvents(usage: [], captures: recent)
+        let reply = router(store).route(Page.signup(Page.siteA, emails: ["a@example.org", "b@example.org"]))
+        #expect(reply == .capture(CaptureResponse(saved: 1, review: 1, ignored: 1)))
+    }
+
+    @Test func withMatchEachSiteOffNoUseIsRecorded() throws {
+        let store = linked(Settings(matchEachSite: false))
+        let router = router(store)
+        _ = router.route(Page.signup(Page.siteA, email: Page.newEmail))
+        _ = router.route(Page.signup(Page.siteB, email: "alex@work.example.org"))
+        #expect(store.events.usage.isEmpty)
+        #expect(try #require(store.events.captures.first).verdict == .saved)
+    }
+
+    @Test func aCaptureReadsTheCardOnce() {
+        _ = router(linked()).route(Page.signup(Page.siteA, email: Page.newEmail))
+        #expect(gateway.fetches == 1)
     }
 }

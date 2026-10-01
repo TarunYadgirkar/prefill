@@ -1,14 +1,18 @@
 import { labelText, placeholderText } from "./dom";
 import type { AddressPart, ContactField, FieldElement } from "./fieldTypes";
-import type { CaptureRequest, CapturedField, PostalAddress } from "./messages";
+import { LIMITS, type CaptureRequest, type CapturedField, type PostalAddress } from "./messages";
 
-export interface EditedField {
-  element: FieldElement;
-  field: ContactField;
-  value: string;
+export interface FieldDescription {
+  autocomplete: string;
+  name: string;
+  label: string;
 }
 
-type Description = Pick<CapturedField, "autocomplete" | "name" | "label">;
+export interface EditedField {
+  field: ContactField;
+  description: FieldDescription;
+  value: string;
+}
 
 interface AddressDraft {
   group: string;
@@ -16,18 +20,38 @@ interface AddressDraft {
   members: readonly EditedField[];
 }
 
-const MAX_VALUE = 256;
+const clip = (text: string, max: number): string => text.slice(0, max);
 
-function nonEmpty(entries: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(Object.entries(entries).filter(([, value]) => value !== ""));
+// Read from the DOM when the person types, so a report never touches an element the
+// page may have removed since.
+export function describeElement(element: FieldElement): FieldDescription {
+  return {
+    autocomplete: element.getAttribute("autocomplete")?.trim() ?? "",
+    name: element.getAttribute("name") ?? element.id,
+    label: labelText(element) || placeholderText(element),
+  };
 }
 
-function describe(members: readonly EditedField[]): Description {
-  const first = members[0]?.element;
+function nonEmpty(entries: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(entries)
+      .map(([key, value]): [string, string] => [key, clip(value, LIMITS.text)])
+      .filter(([, value]) => value !== ""),
+  );
+}
+
+function describe(members: readonly EditedField[]): Pick<CapturedField, "autocomplete" | "name" | "label"> {
+  const descriptions = members.map((member) => member.description);
   return nonEmpty({
-    autocomplete: first?.getAttribute("autocomplete")?.trim() ?? "",
-    name: members.map(({ element }) => element.getAttribute("name") ?? element.id).filter(Boolean).join(" "),
-    label: members.map(({ element }) => labelText(element) || placeholderText(element)).filter(Boolean).join(", "),
+    autocomplete: descriptions[0]?.autocomplete ?? "",
+    name: descriptions
+      .map((description) => description.name)
+      .filter(Boolean)
+      .join(" "),
+    label: descriptions
+      .map((description) => description.label)
+      .filter(Boolean)
+      .join(", "),
   });
 }
 
@@ -37,7 +61,7 @@ function withSection(field: CapturedField, members: readonly EditedField[]): Cap
 }
 
 function single(entry: EditedField): CapturedField {
-  const field: CapturedField = { kind: entry.field.kind, value: entry.value, ...describe([entry]) };
+  const field: CapturedField = { kind: entry.field.kind, value: clip(entry.value, LIMITS.value), ...describe([entry]) };
   return withSection(field, [entry]);
 }
 
@@ -56,21 +80,23 @@ function addPart(draft: AddressDraft | undefined, entry: EditedField): AddressDr
   return { ...base, parts: { ...base.parts, [part]: value }, members: [...base.members, entry] };
 }
 
-function addressField(draft: AddressDraft): CapturedField[] {
+// An address flushed from a page that was only hidden must have its postal code too, so
+// a half-typed one never leaves the page.
+function addressField(draft: AddressDraft, submitted: boolean): CapturedField[] {
   const { parts } = draft;
   const street = [parts.street, parts.street2].filter(Boolean).join("\n");
-  if (street === "") return [];
+  if (street === "" || (!submitted && parts.postalCode === undefined)) return [];
   const address: PostalAddress = {
-    street,
-    city: parts.city ?? "",
-    state: parts.state ?? "",
-    postalCode: parts.postalCode ?? "",
-    country: parts.country ?? "",
+    street: clip(street, LIMITS.street),
+    city: clip(parts.city ?? "", LIMITS.part),
+    state: clip(parts.state ?? "", LIMITS.part),
+    postalCode: clip(parts.postalCode ?? "", LIMITS.part),
+    country: clip(parts.country ?? "", LIMITS.part),
   };
   return [withSection({ kind: "address", address, ...describe(draft.members) }, draft.members)];
 }
 
-function assemble(entries: readonly EditedField[]): CapturedField[] {
+function assemble(entries: readonly EditedField[], submitted: boolean): CapturedField[] {
   const fields: CapturedField[] = [];
   let draft: AddressDraft | undefined;
   for (const entry of entries) {
@@ -79,24 +105,24 @@ function assemble(entries: readonly EditedField[]): CapturedField[] {
       continue;
     }
     if (draft !== undefined && startsNew(draft, entry)) {
-      fields.push(...addressField(draft));
+      fields.push(...addressField(draft, submitted));
       draft = undefined;
     }
     draft = addPart(draft, entry);
   }
-  return draft === undefined ? fields : [...fields, ...addressField(draft)];
+  return draft === undefined ? fields : [...fields, ...addressField(draft, submitted)];
+}
+
+export interface CaptureFacts {
+  host: string;
+  hasPassword: boolean;
+  submitted: boolean;
 }
 
 // Names alone are never saved, so a form with nothing else typed sends nothing.
-export function buildCapture(
-  host: string,
-  hasPassword: boolean,
-  entries: readonly EditedField[],
-): CaptureRequest | undefined {
-  const typed = entries
-    .map((entry) => ({ ...entry, value: entry.value.slice(0, MAX_VALUE) }))
-    .filter((entry) => entry.value !== "");
-  const fields = assemble(typed);
+export function buildCapture(facts: CaptureFacts, entries: readonly EditedField[]): CaptureRequest | undefined {
+  const typed = entries.filter((entry) => entry.value !== "");
+  const fields = assemble(typed, facts.submitted).slice(0, LIMITS.captureFields);
   if (!fields.some((field) => field.kind !== "name")) return undefined;
-  return { type: "capture", host, hasPassword, fields };
+  return { type: "capture", host: facts.host, hasPassword: facts.hasPassword, submitted: facts.submitted, fields };
 }

@@ -1,12 +1,25 @@
 # Messages between the extension and the app
 
-The content script sends a message to `background.js` with `browser.runtime.sendMessage`. The background script checks it with `isExtensionRequest` and forwards it unchanged with `browser.runtime.sendNativeMessage`. `SafariWebExtensionHandler` reads it from `SFExtensionMessageKey`, decodes it into `ExtensionRequest` and hands it to `MessageRouter`, which answers with an `ExtensionResponse`. The background script checks the answer with `isExtensionResponse` and replaces anything malformed with `{ "type": "error", "reason": "unreadable reply" }` before the page sees it.
+The content script sends a message to `background.js` with `browser.runtime.sendMessage`. The background script turns away messages from any other extension, parses the message with `parseExtensionRequest`, which rebuilds it from the fields below and drops anything else, replaces `host` with the host of the page Safari says sent it, and forwards the result with `browser.runtime.sendNativeMessage`. `SafariWebExtensionHandler` reads it from `SFExtensionMessageKey`, decodes it into `ExtensionRequest` and hands it to `MessageRouter`, which answers with an `ExtensionResponse`. The background script parses the answer the same way and replaces anything malformed with `{ "type": "error", "reason": "unreadable reply" }` before the page sees it.
 
-The content script runs in every frame (`all_frames`). A frame without email, phone or address fields sends nothing.
+The content script runs in the top frame of `http` and `https` pages only, once the page has loaded (`document_idle`). Frames are left out so an embedded widget from another site can't reorder the card or record values under its own host. A page without email, phone or address fields sends nothing. `capture` is only sent from secure pages (`https`, or `localhost` while testing), so a network attacker on a plain `http` page can't feed values to the card.
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
 Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page.
+
+Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift). The handler answers `error` to anything over them.
+
+| Limit | Value |
+| --- | --- |
+| Whole message | 64 KB |
+| `host` | 253 characters |
+| `pageContext` fields | 40 |
+| `capture` fields | 20 |
+| `value` | 256 characters |
+| `autocomplete`, `name`, `label` | 100 characters each |
+| `address.street` | 400 characters |
+| Other address parts | 200 characters each |
 
 ## Shared values
 
@@ -34,7 +47,7 @@ A `name` field is never saved. The capture filter only uses it to tell whether a
 
 ## pageContext
 
-The content script sends `pageContext` once the page has settled (300 ms after the last change, so forms an app renders after load still count). If the person focuses a contact field before any reply has come back, it sends the message once more. It lists the kinds of email, phone and address fields on the page and their section hints, without any values. Name fields are left out because they never change the card's order. The app ranks the person's values for this site and rewrites their card if the first two values of a kind should change.
+The content script sends `pageContext` once the page has settled: 300 ms after the last change that added a field, and never more than a second after the first such change, so forms an app renders after load still count and a page that never stops changing still gets one. It sends again when a later form adds a kind or section it hasn't reported yet, such as the address step of a checkout. The card's order is shared by every tab, so it also sends again when the page comes back from the back-forward cache or into view, and on the first focus of an email, phone or address field after load or after either of those. It lists the kinds of email, phone and address fields on the page and their section hints, without any values. Name fields are left out because they never change the card's order. The app ranks the person's values for this site and rewrites their card if the first two values of a kind should change.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
@@ -55,7 +68,7 @@ The content script sends `pageContext` once the page has settled (300 ms after t
 }
 ```
 
-The reply is `pageContextResult`. Its `status` is `saved` when the card was rewritten, `unchanged` when the first two values already fit, `off` when Match each site is turned off, `notSetUp` when the person hasn't linked their card in Prefill yet, and `failed` when the card could not be read or saved. A failure includes a `reason` the app can show as is.
+The reply is `pageContextResult`. Its `status` is `saved` when the card was rewritten, `unchanged` when the first two values already fit, `off` when Match each site is turned off, `notSetUp` when the person hasn't linked their card in Prefill yet, and `failed` when the card could not be read or saved. A failure includes a `reason` written for people. The content script only uses the status, to keep a retry for the next focus after `failed` or `error`; nothing shows the reason yet.
 
 ```json
 { "type": "pageContextResult", "status": "saved" }
@@ -71,12 +84,15 @@ The reply is `pageContextResult`. Its `status` is `saved` when the card was rewr
 
 ## capture
 
-The content script sends `capture` when a form is submitted (a submit event or a click on its submit button, whichever comes first), or when a page with typed contact values is hidden, which covers forms that post with `fetch`. Only fields the person typed into while they were visible are sent. Password, one-time code and card number fields are never sent. Address parts typed into separate boxes arrive as one `address`; a repeated part or a different `autocomplete` section starts the next one. A form with nothing but names typed sends nothing. `hasPassword` tells the app whether the form had a password field, which marks it as a sign-up or sign-in form.
+The content script sends `capture` with `submitted: true` when a form is submitted (a submit event or a click on its submit button, whichever comes first), or when the person clicks a button outside any form that says it submits ("Continue", "Sign up") next to the fields they typed in. It sends `submitted: false` when the page is hidden, which covers forms that post with `fetch`; that report holds only fields the person has left, and an address only once its postal code is in. Fields reported for a hidden page stay, so a later submit still sends them whole.
+
+Only events Safari marks as the person's count, and only fields they typed into while the field was on screen at a usable size. If the page changes a value after the person typed it (beyond a phone number's spacing), the field is dropped. Password, one-time code, card number, bank account and ID fields are never sent. Address parts typed into separate boxes arrive as one `address`; a repeated part or a different `autocomplete` section starts the next one. A form with nothing but names typed sends nothing. `hasPassword` is true when the form has a visible password field that isn't a sign-in's current password, which marks it as a sign-up.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
 | `host` | string | The page's host name. |
-| `hasPassword` | boolean | The form contained a password field. |
+| `hasPassword` | boolean | The form has a visible new-password field. |
+| `submitted` | boolean | The form was submitted, rather than the page being hidden. |
 | `fields[].kind` | field kind | What the field holds. |
 | `fields[].value` | string, optional | The typed text for email, phone and name fields. |
 | `fields[].address` | object, optional | For an address, the parts `street`, `city`, `state`, `postalCode` and `country`. |
@@ -85,13 +101,14 @@ The content script sends `capture` when a form is submitted (a submit event or a
 | `fields[].label` | string, optional | The text of the field's label. |
 | `fields[].section` | section hint, optional | The section from `autocomplete`. A `home` or `work` section becomes the saved value's label. |
 
-The app uses `autocomplete`, `name` and `label` to skip fields meant for someone else, such as a gift recipient or an invite.
+The app uses `autocomplete`, `name` and `label` to skip fields meant for someone else, such as a gift recipient or an invite, and checks each value: an email must be a single address with a valid domain, a phone number 7 to 15 digits with only the usual separators (and not a card number or a bare code), and an address free of links and control characters.
 
 ```json
 {
   "type": "capture",
   "host": "shop.example.net",
   "hasPassword": true,
+  "submitted": true,
   "fields": [
     { "kind": "name", "value": "Alex Rivera", "autocomplete": "name", "name": "full_name", "label": "Full name" },
     { "kind": "email", "value": "alex.new@example.net", "autocomplete": "email", "name": "email", "label": "Email" },
@@ -110,7 +127,7 @@ The app uses `autocomplete`, `name` and `label` to skip fields meant for someone
 }
 ```
 
-The reply is `captureResult`, with counts only. `saved` values went onto the card, ranked first for this site, `review` values wait in Recently added for the person to confirm, and `ignored` fields were skipped. A value already on the card counts toward none of the three, since only its use on this site is recorded. A value that should have been saved but could not be written to the card goes to review instead. Before the person has linked their card, the app stores nothing and every field counts as `ignored`.
+The reply is `captureResult`, with counts only. `saved` values went onto the card (ranked first for this site when Match each site is on, and placed after the person's own order when it is off), `review` values wait in Recently added for the person to confirm, and `ignored` fields were skipped. A value already on the card counts toward none of the three, since only its use on this site is recorded, and only when Match each site is on. Values go to review instead of the card when the report has `submitted: false`, when the card can't be written, or past the save limits: three new values per form and six per hour across all sites. Before the person has linked their card, or when the card can't be read, the app stores nothing and every field counts as `ignored`.
 
 ```json
 { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 }
@@ -118,7 +135,7 @@ The reply is `captureResult`, with counts only. `saved` values went onto the car
 
 ## error
 
-The handler answers `error` when a message is not valid JSON, has an unknown `type`, or is missing a required field.
+The handler answers `error` when a message is not valid JSON, has an unknown `type`, is missing a required field, or is over the size limits.
 
 ```json
 { "type": "error", "reason": "unknown message" }

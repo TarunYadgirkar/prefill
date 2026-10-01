@@ -31,7 +31,7 @@ const ANY: readonly Control[] = ["text", "email", "tel", "number", "select", "te
 const nameIgnored = /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|用户名/iu;
 const addressNameIgnored = /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 
-// Card numbers, security codes, one-time codes, passwords and government IDs. A field
+// Card numbers, security codes, one-time codes, passwords, bank details and government IDs. A field
 // that matches is never classified as contact data, whatever else it matches.
 export const SENSITIVE: readonly RegExp[] = [
   /(?:card|cc|acct).?(?:number|#|no|num|field(?!s)|pan)|0000 ?0000 ?0000 ?0000|1234 ?1234 ?1234 ?1234/iu,
@@ -39,6 +39,8 @@ export const SENSITIVE: readonly RegExp[] = [
   /\botp\b|one.?time|verification.code|2fa|six.digit/iu,
   /card.?(?:holder|owner)|name.*on.*card|(?:card|cc).?name|expir|exp.*date/iu,
   /password|passwort|passcode|contraseña|mot de passe|\bssn\b|social.?security/iu,
+  /account.?(?:number|no\b|num|#)|routing|\biban\b|\bbic\b|swift.?code|sort.?code|\bpin\b(?!.?code)|token|(?:backup|recovery|access|auth).?code/iu,
+  /\bdob\b|date.?of.?birth|birth.?date|national.?id|passport|tax.?id|driver.?s?.?licen[cs]e|\b(?:ein|itin|nin)\b/iu,
 ];
 
 // Fields that look like contact data but are not the person's own details. Checked after
@@ -50,7 +52,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "email" },
     pattern:
-      /e.?mail|correo.*electr(o|ó)nico|courriel|メールアドレス|邮件|邮箱|電子郵件|電郵地址|Электронн(ая|ой).?Почт(а|ы)|(\b|_)eposta(\b|_)/iu,
+      /\be[-_ ]?mail|email|correo.*electr(o|ó)nico|courriel|メールアドレス|邮件|邮箱|電子郵件|電郵地址|Электронн(ая|ой).?Почт(а|ы)|(\b|_)eposta(\b|_)/iu,
     controls: TEXT_EMAIL,
   },
   {

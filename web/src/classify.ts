@@ -84,21 +84,29 @@ function fromRule(result: RuleResult): Classification {
   return result.kind === "ignored" ? IGNORED : contact(result);
 }
 
+// A source's texts are its raw and split forms, so a negative that matches any of them
+// (the "ext" in "phone ext") rules the source out.
 function matchRules(texts: readonly string[], control: Control): Classification | undefined {
   const rule = RULES.find(
     (candidate) =>
       candidate.controls.includes(control) &&
-      texts.some((text) => candidate.pattern.test(text) && candidate.negative?.test(text) !== true),
+      texts.some((text) => candidate.pattern.test(text)) &&
+      !texts.some((text) => candidate.negative?.test(text) === true),
   );
   return rule === undefined ? undefined : fromRule(rule.result);
 }
 
+function sourcesOf(el: FieldElement): string[][] {
+  return [[labelText(el)], nameTexts(el), [placeholderText(el)]].map((texts) => texts.filter(Boolean));
+}
+
+function isSensitiveText(sources: readonly string[][]): boolean {
+  return sources.flat().some((text) => SENSITIVE_PATTERNS.some((pattern) => pattern.test(text)));
+}
+
 // Label first, then name and id, then placeholder: the first source that matches a
 // pattern decides, the way a person reading the form would.
-function fromPatterns(el: FieldElement, control: Control): Classification | undefined {
-  const sources = [[labelText(el)], nameTexts(el), [placeholderText(el)]].map((texts) => texts.filter(Boolean));
-  const all = sources.flat();
-  if (all.some((text) => SENSITIVE_PATTERNS.some((pattern) => pattern.test(text)))) return SENSITIVE;
+function fromPatterns(sources: readonly string[][], control: Control): Classification | undefined {
   for (const texts of sources) {
     const match = matchRules(texts, control);
     if (match !== undefined) return match;
@@ -106,14 +114,16 @@ function fromPatterns(el: FieldElement, control: Control): Classification | unde
   return undefined;
 }
 
-// Autocomplete tokens first (WHATWG grammar), then the input type, then label, name and
-// id patterns. `type=tel` alone is only trusted when no pattern says otherwise, because
-// some stores use it for ZIP codes.
+// Sensitive words first, whatever the tags say, then autocomplete tokens (WHATWG grammar),
+// then the input type, then label, name and id patterns. `type=tel` alone proves nothing:
+// stores use it for ZIP codes, and banks for account numbers and codes.
 export function classify(el: FieldElement): Classification {
   const control = controlOf(el);
   if (control === "sensitive" || control === "ignored") return { kind: control };
+  const sources = sourcesOf(el);
+  if (isSensitiveText(sources)) return SENSITIVE;
   const detail = parseAutocomplete(el.getAttribute("autocomplete"));
   if (detail !== undefined) return fromAutocomplete(detail, control);
   if (control === "email") return contact({ kind: "email" });
-  return fromPatterns(el, control) ?? (control === "tel" ? contact({ kind: "phone" }) : IGNORED);
+  return fromPatterns(sources, control) ?? IGNORED;
 }

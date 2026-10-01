@@ -45,12 +45,19 @@ describe("parseAutocomplete", () => {
     expect(parseAutocomplete(raw)).toEqual(detail);
   });
 
-  it.each([null, "", "on", "off", "nope", "work street-address", "email work", "billing shipping email", "section- email"])(
-    "rejects %j",
-    (raw) => {
-      expect(parseAutocomplete(raw)).toBeUndefined();
-    },
-  );
+  it.each([
+    null,
+    "",
+    "on",
+    "off",
+    "nope",
+    "work street-address",
+    "email work",
+    "billing shipping email",
+    "section- email",
+  ])("rejects %j", (raw) => {
+    expect(parseAutocomplete(raw)).toBeUndefined();
+  });
 });
 
 describe("classify on the testbed page", () => {
@@ -135,7 +142,24 @@ describe("classify single fields", () => {
     ['<input type="password" name="email">', "sensitive"],
     ['<input type="hidden" name="email">', "ignored"],
     ['<input type="search" name="email">', "ignored"],
-    ['<input type="tel">', "phone"],
+    ['<input type="tel">', "ignored"],
+    ['<label>Mobile phone <input type="tel"></label>', "phone"],
+    ['<input type="tel" name="pan1">', "ignored"],
+    ['<label>Enter the 8-digit code <input type="tel" inputmode="numeric"></label>', "ignored"],
+    ['<label>Account number <input type="tel"></label>', "sensitive"],
+    ['<label>Routing number <input type="tel"></label>', "sensitive"],
+    ['<label>Backup code <input type="tel"></label>', "sensitive"],
+    ['<label>PIN <input type="tel"></label>', "sensitive"],
+    ['<label>Date of birth <input type="tel"></label>', "sensitive"],
+    ['<label>PIN code <input name="x"></label>', "address postalCode"],
+    ['<input type="tel" autocomplete="tel" aria-label="Verification code">', "sensitive"],
+    ['<input autocomplete="email" aria-label="Account number">', "sensitive"],
+    ['<input name="phone_ext">', "ignored"],
+    ['<input type="tel" name="phone_ext">', "ignored"],
+    ['<input name="home_mailing_address">', "address street"],
+    ['<input name="same_mailing_street">', "address street"],
+    ['<input name="e-mail">', "email"],
+    ['<input name="userEmail">', "email"],
     ['<label>Card number <input name="x"></label>', "sensitive"],
     ['<label>CVV <input name="x"></label>', "sensitive"],
     ['<label>Business email <input name="x"></label>', "email"],

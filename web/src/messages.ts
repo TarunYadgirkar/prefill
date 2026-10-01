@@ -1,161 +1,166 @@
 // Wire format shared with Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift
-// and described in docs/messages.md. Field names must stay identical on both sides;
-// docs/message-examples.json is checked by tests in both languages.
+// and described in docs/messages.md. Field names and limits must stay identical on both
+// sides; docs/message-examples.json is checked by tests in both languages. The types are
+// derived from the parsers below, so a parser and its type can't drift apart.
 
 export const FIELD_KINDS = ["email", "phone", "address", "name"] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
 export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off", "notSetUp"] as const;
 
+// Mirrored by MessageLimits in Messages.swift.
+export const LIMITS = {
+  host: 253,
+  pageFields: 40,
+  captureFields: 20,
+  value: 256,
+  text: 100,
+  street: 400,
+  part: 200,
+  reason: 500,
+} as const;
+
 export type FieldKind = (typeof FIELD_KINDS)[number];
 export type SectionHint = (typeof SECTION_HINTS)[number];
 export type SyncStatus = (typeof SYNC_STATUSES)[number];
 
-export interface PostalAddress {
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
+const INVALID: unique symbol = Symbol("invalid");
+type Parser<T> = (value: unknown) => T | typeof INVALID;
+interface Optional<T> {
+  optional: Parser<T>;
 }
-
-export interface Ping {
-  type: "ping";
-}
-
-export interface PageField {
-  kind: FieldKind;
-  section?: SectionHint;
-}
-
-export interface PageContextRequest {
-  type: "pageContext";
-  host: string;
-  fields: PageField[];
-}
-
-export interface CapturedField {
-  kind: FieldKind;
-  value?: string;
-  address?: PostalAddress;
-  autocomplete?: string;
-  name?: string;
-  label?: string;
-  section?: SectionHint;
-}
-
-export interface CaptureRequest {
-  type: "capture";
-  host: string;
-  hasPassword: boolean;
-  fields: CapturedField[];
-}
-
-export type ExtensionRequest = Ping | PageContextRequest | CaptureRequest;
-
-export interface Pong {
-  type: "pong";
-}
-
-export interface PageContextResult {
-  type: "pageContextResult";
-  status: SyncStatus;
-  reason?: string;
-}
-
-export interface CaptureResult {
-  type: "captureResult";
-  saved: number;
-  review: number;
-  ignored: number;
-}
-
-export interface ErrorResponse {
-  type: "error";
-  reason: string;
-}
-
-export type ExtensionResponse = Pong | PageContextResult | CaptureResult | ErrorResponse;
-
-type Check = (value: unknown) => boolean;
+type Field = Parser<unknown> | Optional<unknown>;
+type Parsed<P> = P extends Parser<infer T> ? T : never;
+type Flat<T> = { [K in keyof T]: T[K] };
+type ObjectOf<S extends Record<string, Field>> = Flat<
+  { [K in keyof S as S[K] extends Optional<unknown> ? never : K]: Parsed<S[K]> } & {
+    [K in keyof S as S[K] extends Optional<unknown> ? K : never]?: S[K] extends Optional<infer T> ? T : never;
+  }
+>;
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-const string: Check = (value) => typeof value === "string";
-const boolean: Check = (value) => typeof value === "boolean";
-const count: Check = (value) => Number.isInteger(value) && (value as number) >= 0;
+const text =
+  (max: number): Parser<string> =>
+  (value) =>
+    typeof value === "string" && value.length <= max ? value : INVALID;
+const boolean: Parser<boolean> = (value) => (typeof value === "boolean" ? value : INVALID);
+const count: Parser<number> = (value) =>
+  typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : INVALID;
 const literal =
-  (expected: string): Check =>
+  <T extends string>(expected: T): Parser<T> =>
   (value) =>
-    value === expected;
+    value === expected ? expected : INVALID;
 const oneOf =
-  (allowed: readonly string[]): Check =>
+  <T extends string>(allowed: readonly T[]): Parser<T> =>
   (value) =>
-    typeof value === "string" && allowed.includes(value);
-const optional =
-  (check: Check): Check =>
-  (value) =>
-    value === undefined || check(value);
-const arrayOf =
-  (check: Check): Check =>
-  (value) =>
-    Array.isArray(value) && value.every(check);
-const shape =
-  (checks: Record<string, Check>): Check =>
-  (value) =>
-    isRecord(value) && Object.entries(checks).every(([key, check]) => check(value[key]));
+    allowed.find((candidate) => candidate === value) ?? INVALID;
+const optional = <T>(parser: Parser<T>): Optional<T> => ({ optional: parser });
 
-const fieldKind = oneOf(FIELD_KINDS);
+const arrayOf =
+  <T>(item: Parser<T>, max: number): Parser<T[]> =>
+  (value) => {
+    if (!Array.isArray(value) || value.length > max) return INVALID;
+    const items = value.map(item);
+    return items.some((parsed) => parsed === INVALID) ? INVALID : (items as T[]);
+  };
+
+function parseField(field: Field, raw: unknown): unknown {
+  if (typeof field === "function") return field(raw);
+  return raw === undefined ? undefined : field.optional(raw);
+}
+
+// Rebuilds the object from the known keys only, so nothing extra travels on.
+const object =
+  <S extends Record<string, Field>>(shape: S): Parser<ObjectOf<S>> =>
+  (value) => {
+    if (!isRecord(value)) return INVALID;
+    const entries = Object.entries(shape).map(([key, field]) => [key, parseField(field, value[key])] as const);
+    if (entries.some(([, parsed]) => parsed === INVALID)) return INVALID;
+    return Object.fromEntries(entries.filter(([, parsed]) => parsed !== undefined)) as ObjectOf<S>;
+  };
+
 const section = optional(oneOf(SECTION_HINTS));
 
-const postalAddress = shape({ street: string, city: string, state: string, postalCode: string, country: string });
+const postalAddress = object({
+  street: text(LIMITS.street),
+  city: text(LIMITS.part),
+  state: text(LIMITS.part),
+  postalCode: text(LIMITS.part),
+  country: text(LIMITS.part),
+});
 
-const requestChecks: Record<ExtensionRequest["type"], Check> = {
-  ping: shape({ type: literal("ping") }),
-  pageContext: shape({
+const pageField = object({ kind: oneOf(FIELD_KINDS), section });
+
+const capturedField = object({
+  kind: oneOf(FIELD_KINDS),
+  value: optional(text(LIMITS.value)),
+  address: optional(postalAddress),
+  autocomplete: optional(text(LIMITS.text)),
+  name: optional(text(LIMITS.text)),
+  label: optional(text(LIMITS.text)),
+  section,
+});
+
+const requests = {
+  ping: object({ type: literal("ping") }),
+  pageContext: object({
     type: literal("pageContext"),
-    host: string,
-    fields: arrayOf(shape({ kind: fieldKind, section })),
+    host: text(LIMITS.host),
+    fields: arrayOf(pageField, LIMITS.pageFields),
   }),
-  capture: shape({
+  capture: object({
     type: literal("capture"),
-    host: string,
+    host: text(LIMITS.host),
     hasPassword: boolean,
-    fields: arrayOf(
-      shape({
-        kind: fieldKind,
-        value: optional(string),
-        address: optional(postalAddress),
-        autocomplete: optional(string),
-        name: optional(string),
-        label: optional(string),
-        section,
-      }),
-    ),
+    submitted: boolean,
+    fields: arrayOf(capturedField, LIMITS.captureFields),
   }),
 };
 
-const responseChecks: Record<ExtensionResponse["type"], Check> = {
-  pong: shape({ type: literal("pong") }),
-  pageContextResult: shape({
+const responses = {
+  pong: object({ type: literal("pong") }),
+  pageContextResult: object({
     type: literal("pageContextResult"),
     status: oneOf(SYNC_STATUSES),
-    reason: optional(string),
+    reason: optional(text(LIMITS.reason)),
   }),
-  captureResult: shape({ type: literal("captureResult"), saved: count, review: count, ignored: count }),
-  error: shape({ type: literal("error"), reason: string }),
+  captureResult: object({ type: literal("captureResult"), saved: count, review: count, ignored: count }),
+  error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
-function matches(checks: Record<string, Check>, message: unknown): boolean {
-  if (!isRecord(message) || typeof message.type !== "string") return false;
-  const check = Object.hasOwn(checks, message.type) ? checks[message.type] : undefined;
-  return check?.(message) ?? false;
+export type PostalAddress = Parsed<typeof postalAddress>;
+export type PageField = Parsed<typeof pageField>;
+export type CapturedField = Parsed<typeof capturedField>;
+export type Ping = Parsed<typeof requests.ping>;
+export type PageContextRequest = Parsed<typeof requests.pageContext>;
+export type CaptureRequest = Parsed<typeof requests.capture>;
+export type ExtensionRequest = Ping | PageContextRequest | CaptureRequest;
+export type Pong = Parsed<typeof responses.pong>;
+export type PageContextResult = Parsed<typeof responses.pageContextResult>;
+export type CaptureResult = Parsed<typeof responses.captureResult>;
+export type ErrorResponse = Parsed<typeof responses.error>;
+export type ExtensionResponse = Pong | PageContextResult | CaptureResult | ErrorResponse;
+
+function parseByType<T>(parsers: Record<string, Parser<T>>, message: unknown): T | undefined {
+  if (!isRecord(message) || typeof message.type !== "string") return undefined;
+  const parser = Object.hasOwn(parsers, message.type) ? parsers[message.type] : undefined;
+  const parsed = parser?.(message);
+  return parsed === undefined || parsed === INVALID ? undefined : parsed;
+}
+
+export function parseExtensionRequest(message: unknown): ExtensionRequest | undefined {
+  return parseByType<ExtensionRequest>(requests, message);
+}
+
+export function parseExtensionResponse(message: unknown): ExtensionResponse | undefined {
+  return parseByType<ExtensionResponse>(responses, message);
 }
 
 export function isExtensionRequest(message: unknown): message is ExtensionRequest {
-  return matches(requestChecks, message);
+  return parseExtensionRequest(message) !== undefined;
 }
 
 export function isExtensionResponse(message: unknown): message is ExtensionResponse {
-  return matches(responseChecks, message);
+  return parseExtensionResponse(message) !== undefined;
 }

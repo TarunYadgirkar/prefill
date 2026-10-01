@@ -33,18 +33,21 @@ public struct MessageRouter: Sendable {
     }
 
     func pageContext(_ request: PageContextRequest) -> PageContextResponse {
-        let state: AppState
-        do {
-            state = try store.readAppState()
-        } catch {
-            Self.log.error("app state unreadable: \(String(describing: type(of: error)), privacy: .public)")
-            return PageContextResponse(outcome: .failed(.other))
-        }
+        guard let state = appState() else { return PageContextResponse(outcome: .failed(.other)) }
         guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
         guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
         let page = PageSignal(host: request.host, hints: request.hints, now: now(), matchEachSite: true)
         let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
         return PageContextResponse(outcome: result.outcome)
+    }
+
+    func appState() -> AppState? {
+        do {
+            return try store.readAppState()
+        } catch {
+            Self.log.error("app state unreadable: \(String(describing: type(of: error)), privacy: .public)")
+            return nil
+        }
     }
 
     // Events are expendable history: a damaged item reads as empty rather than blocking.

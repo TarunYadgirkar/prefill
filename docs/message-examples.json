@@ -19,6 +19,7 @@
       "type": "capture",
       "host": "shop.example.net",
       "hasPassword": true,
+      "submitted": true,
       "fields": [
         { "kind": "name", "value": "Alex Rivera", "autocomplete": "name", "name": "full_name", "label": "Full name" },
         { "kind": "email", "value": "alex.new@example.net", "autocomplete": "email", "name": "email", "label": "Email" },

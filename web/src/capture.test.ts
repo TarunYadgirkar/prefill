@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import formHtml from "../../testbed/form.html?raw";
 import { installCapture } from "./capture";
 import checkoutTagged from "./fixtures/checkout-tagged.html?raw";
@@ -9,10 +9,22 @@ import type { CaptureRequest } from "./messages";
 
 let uninstall: (() => void) | undefined;
 
+const ON_SCREEN = new DOMRect(10, 10, 200, 30);
+const OFF_SCREEN = new DOMRect(-10_000, 10, 200, 30);
+
+beforeEach(() => {
+  // happy-dom lays nothing out, so every element would measure 0 by 0.
+  vi.spyOn(Element.prototype, "getBoundingClientRect").mockImplementation(function (this: Element) {
+    return this.hasAttribute("data-offscreen") ? OFF_SCREEN : ON_SCREEN;
+  });
+});
+
 afterEach(() => {
   uninstall?.();
   uninstall = undefined;
   document.body.innerHTML = "";
+  Reflect.deleteProperty(document, "visibilityState");
+  vi.restoreAllMocks();
 });
 
 function setUp(html: string, isUserEvent: (event: Event) => boolean = () => true) {
@@ -34,6 +46,12 @@ function type(selector: string, value: string): void {
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+// Typing, then leaving the field, as a person does before moving on.
+function fill(selector: string, value: string): void {
+  type(selector, value);
+  element(selector).dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 function choose(selector: string, value: string): void {
   const select = element(selector) as HTMLSelectElement;
   select.value = value;
@@ -49,7 +67,13 @@ function submit(selector: string): void {
 }
 
 function hide(): void {
+  Object.defineProperty(document, "visibilityState", { value: "hidden", configurable: true });
+  document.dispatchEvent(new Event("visibilitychange"));
   window.dispatchEvent(new Event("pagehide"));
+}
+
+function sentFields(send: ReturnType<typeof setUp>, call = 0) {
+  return send.mock.calls[call]?.[0].fields ?? [];
 }
 
 describe("capture on sign-up", () => {
@@ -67,6 +91,7 @@ describe("capture on sign-up", () => {
       type: "capture",
       host: "shop.example.net",
       hasPassword: true,
+      submitted: true,
       fields: [
         { kind: "name", value: "Alex Rivera", name: "fullName", label: "Full name" },
         { kind: "email", value: "new.person@example.org", autocomplete: "email", name: "email", label: "Email" },
@@ -87,7 +112,38 @@ describe("capture on sign-up", () => {
     type("#hp", "bot@example.net");
     type("#signupEmail", "new.person@example.org");
     click("#create");
-    expect(send.mock.calls[0]?.[0].fields.map((field) => field.value)).toEqual(["new.person@example.org"]);
+    expect(sentFields(send).map((field) => field.value)).toEqual(["new.person@example.org"]);
+  });
+
+  it.each([
+    ['<input type="email" name="a" style="display:none">', "display none"],
+    ['<input type="email" name="a" style="opacity:0">', "opacity 0"],
+    ['<input type="email" name="a" style="visibility:hidden">', "visibility hidden"],
+    ['<input type="email" name="a" data-offscreen>', "off the page"],
+    ['<input type="email" name="a" style="clip-path: inset(50%)">', "clipped away"],
+  ])("skips a field the person can't see: %s (%s)", (field) => {
+    const send = setUp(`<form>${field}<input type="email" name="b"><button>Go</button></form>`);
+    type("[name=a]", "planted@example.net");
+    type("[name=b]", "new.person@example.org");
+    click("button");
+    expect(sentFields(send).map((sent) => sent.value)).toEqual(["new.person@example.org"]);
+  });
+
+  it("drops a value the page rewrote after the person typed it", () => {
+    const send = setUp(signup);
+    type("#signupEmail", "new.person@example.org");
+    (element("#signupEmail") as HTMLInputElement).value = "attacker@evil.example";
+    type("#fullName", "Alex Rivera");
+    click("#create");
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("keeps a phone number the page only reformatted", () => {
+    const send = setUp('<form><input type="tel" name="phone" autocomplete="tel"><button>Save</button></form>');
+    type("[name=phone]", "5105550134");
+    (element("[name=phone]") as HTMLInputElement).value = "(510) 555-0134";
+    click("button");
+    expect(sentFields(send).map((field) => field.value)).toEqual(["(510) 555-0134"]);
   });
 
   it("sends nothing when only a name was typed", () => {
@@ -96,6 +152,21 @@ describe("capture on sign-up", () => {
     click("#create");
     hide();
     expect(send).not.toHaveBeenCalled();
+  });
+});
+
+describe("what counts as a sign-up", () => {
+  it.each([
+    ['<input type="password" autocomplete="new-password">', true],
+    ['<input type="password">', true],
+    ['<input type="password" autocomplete="current-password">', false],
+    ['<input type="password" style="display:none">', false],
+    ['<input type="password" hidden>', false],
+  ])("%s gives hasPassword %s", (password, expected) => {
+    const send = setUp(`<form><input type="email" name="email">${password}<button>Go</button></form>`);
+    type("[name=email]", "new.person@example.org");
+    click("button");
+    expect(send.mock.calls[0]?.[0].hasPassword).toBe(expected);
   });
 });
 
@@ -124,9 +195,19 @@ describe("capture on checkout", () => {
       [
         "address",
         "shipping",
-        { street: "2400 Durant Ave\nApt 4", city: "Berkeley", state: "California", postalCode: "94704", country: "United States" },
+        {
+          street: "2400 Durant Ave\nApt 4",
+          city: "Berkeley",
+          state: "California",
+          postalCode: "94704",
+          country: "United States",
+        },
       ],
-      ["address", "billing", { street: "1 Market St", city: "San Francisco", state: "", postalCode: "94105", country: "" }],
+      [
+        "address",
+        "billing",
+        { street: "1 Market St", city: "San Francisco", state: "", postalCode: "94105", country: "" },
+      ],
     ]);
     expect(JSON.stringify(request)).not.toContain("4111");
   });
@@ -140,7 +221,7 @@ describe("capture on checkout", () => {
     type("#billing_email", "alex.rivera@example.com");
     type("#coupon_code", "SAVE10");
     click("#place_order");
-    const fields = send.mock.calls[0]?.[0].fields ?? [];
+    const fields = sentFields(send);
     expect(fields.map((field) => field.kind)).toEqual(["name", "email", "address"]);
     expect(fields[2]).toMatchObject({
       address: { street: "2400 Durant Ave", city: "Berkeley", postalCode: "94704" },
@@ -149,12 +230,23 @@ describe("capture on checkout", () => {
     });
   });
 
-  it("waits for the real submit when the browser blocks an invalid form", () => {
+  it("waits for the real submit when the browser blocks an invalid form, without firing invalid events", () => {
     const send = setUp(checkoutTagged);
+    const invalid = vi.fn();
+    element("#checkout_email").addEventListener("invalid", invalid);
     type("#ship_phone", "+1 510 555 0134");
     click("#pay");
     expect(send).not.toHaveBeenCalled();
+    // The browser's own submit attempt fires it once; the check before it adds none.
+    expect(invalid).toHaveBeenCalledTimes(1);
     type("#checkout_email", "alex.rivera@example.com");
+    click("#pay");
+    expect(send).toHaveBeenCalledTimes(1);
+  });
+
+  it("trusts a submit button that skips validation", () => {
+    const send = setUp(checkoutTagged.replace('id="pay"', 'id="pay" formnovalidate'));
+    type("#ship_phone", "+1 510 555 0134");
     click("#pay");
     expect(send).toHaveBeenCalledTimes(1);
   });
@@ -169,7 +261,7 @@ describe("capture metadata for the someone-else filter", () => {
     type("[name=recipient_city]", "Oakland");
     type("[name=recipient_zip]", "94612");
     submit("#gift");
-    const fields = send.mock.calls[0]?.[0].fields ?? [];
+    const fields = sentFields(send);
     expect(fields.map((field) => [field.kind, field.name])).toEqual([
       ["name", "recipient_name"],
       ["email", "recipient_email"],
@@ -177,21 +269,121 @@ describe("capture metadata for the someone-else filter", () => {
     ]);
     expect(fields[0]?.autocomplete).toBe("off");
   });
+
+  it("keeps what it sends within the message limits", () => {
+    const inputs = Array.from({ length: 30 }, (_, index) => `<input type="email" name="e${String(index)}">`).join("");
+    const long = "x".repeat(300);
+    const send = setUp(
+      `<form><label>${long}<input type="email" name="${long}"></label>${inputs}<button>Go</button></form>`,
+    );
+    type(`[name="${long}"]`, "first@example.org");
+    for (let index = 0; index < 30; index += 1) type(`[name=e${String(index)}]`, `e${String(index)}@example.org`);
+    click("button");
+    const fields = sentFields(send);
+    expect(fields).toHaveLength(20);
+    expect(fields[0]?.name).toHaveLength(100);
+    expect(fields[0]?.label?.length).toBeLessThanOrEqual(100);
+  });
 });
 
 describe("capture for forms that never submit", () => {
-  it("flushes typed values when the page is hidden, once", () => {
+  it("flushes finished fields when the page is hidden, once, as not submitted", () => {
     const send = setUp(formHtml);
-    type("[name=usr_contact]", "new.person@example.org");
-    type("[name=mob]", "510 555 0111");
-    Object.defineProperty(document, "visibilityState", { value: "hidden", configurable: true });
-    document.dispatchEvent(new Event("visibilitychange"));
+    fill("[name=usr_contact]", "new.person@example.org");
+    fill("[name=mob]", "510 555 0111");
+    hide();
     hide();
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0]?.[0].fields.map((field) => [field.kind, field.label])).toEqual([
+    expect(send.mock.calls[0]?.[0].submitted).toBe(false);
+    expect(sentFields(send).map((field) => [field.kind, field.label])).toEqual([
       ["email", "Your e-mail"],
       ["phone", "Mobile number"],
     ]);
-    Reflect.deleteProperty(document, "visibilityState");
+  });
+
+  it("leaves a field the person is still typing in", () => {
+    const send = setUp(formHtml);
+    fill("[name=usr_contact]", "new.person@example.org");
+    type("[name=mob]", "510 55");
+    hide();
+    expect(sentFields(send).map((field) => field.kind)).toEqual(["email"]);
+  });
+
+  it("keeps what a hidden page flushed, so the later submit still sends the whole address", () => {
+    const send = setUp(checkoutTagged);
+    fill("#ship_line1", "2400 Durant Ave");
+    fill("#ship_city", "Berkeley");
+    hide();
+    expect(send).not.toHaveBeenCalled();
+    fill("#ship_zip", "94704");
+    fill("#checkout_email", "alex.rivera@example.com");
+    submit("#checkout");
+    expect(send).toHaveBeenCalledTimes(1);
+    const address = sentFields(send).find((field) => field.kind === "address")?.address;
+    expect(address).toMatchObject({ street: "2400 Durant Ave", city: "Berkeley", postalCode: "94704" });
+  });
+
+  it("ignores a hide or pagehide the page made up", () => {
+    const send = setUp(formHtml, (event) => event.type === "input" || event.type === "change");
+    fill("[name=usr_contact]", "new.person@example.org");
+    hide();
+    expect(send).not.toHaveBeenCalled();
+  });
+});
+
+describe("buttons outside any form", () => {
+  const app = `
+    <nav><button id="menu">Menu</button></nav>
+    <main>
+      <div class="step">
+        <div class="row"><span id="email-label">Email</span><input type="email" name="email" aria-labelledby="email-label"></div>
+        <button id="show">Show password</button>
+        <button id="continue" type="button">Continue</button>
+      </div>
+    </main>`;
+
+  it("a button that doesn't say it submits sends nothing", () => {
+    const send = setUp(app);
+    type("[name=email]", "alex@gm");
+    click("#menu");
+    click("#show");
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("a nearby button that says it submits sends the fields, which stay for the next step", () => {
+    const send = setUp(app.replace('type="button"', ""));
+    type("[name=email]", "new.person@example.org");
+    click("#continue");
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0]?.[0]).toMatchObject({ submitted: true, fields: [{ kind: "email", label: "Email" }] });
+  });
+
+  it("a field the app has since removed is still reported, from what was read while typing", () => {
+    const send = setUp(app);
+    fill("[name=email]", "new.person@example.org");
+    element(".step").remove();
+    expect(() => {
+      hide();
+    }).not.toThrow();
+    expect(sentFields(send)).toEqual([
+      { kind: "email", value: "new.person@example.org", name: "email", label: "Email" },
+    ]);
+  });
+});
+
+describe("fields inside an open shadow root", () => {
+  it("captures what the person types in a web component", () => {
+    const send = setUp('<x-email-field></x-email-field><button id="go">Submit</button>');
+    const shadow = element("x-email-field").attachShadow({ mode: "open" });
+    shadow.innerHTML = '<label>Email <input type="email" name="email" autocomplete="email"></label>';
+    const input = shadow.querySelector("input");
+    if (input === null) throw new Error("no shadow input");
+    input.value = "new.person@example.org";
+    input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+    input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+    hide();
+    expect(sentFields(send)).toEqual([
+      { kind: "email", value: "new.person@example.org", autocomplete: "email", name: "email", label: "Email" },
+    ]);
   });
 });
