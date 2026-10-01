@@ -5,7 +5,7 @@ import Testing
 
 // Setup and cleanup for the Safari extension end-to-end run (scripts/test.sh e2e). They run
 // inside Prefill.app, so they write the same shared store the extension reads, the way
-// onboarding will. Both stay disabled unless the script sets PREFILL_E2E, so the unit run
+// onboarding will. All stay disabled unless the script sets PREFILL_E2E, so the unit run
 // never touches the Alex Rivera card.
 @Suite(.serialized)
 struct E2ESetupHostTests {
@@ -59,6 +59,19 @@ struct E2ESetupHostTests {
         try store.writeAppState(AppState(values: values, cardLink: link))
         #expect(try store.readAppState().cardLink?.contactIdentifier == identifier)
         #expect(try store.readEvents() == ExtensionEvents())
+    }
+
+    // The positive control for the gift step of ExtensionE2ETests: its capture reached the
+    // app, which recorded the buyer's own email as used on site A and kept nothing of the
+    // recipient's, not even for review.
+    @Test(.enabled(if: mode == "verify"))
+    func verifyGiftCapture() throws {
+        let events = try sharedStore().readEvents()
+        let buyer = ContactValue(payload: .email(Self.emails[0].value), label: nil, source: .card, createdAt: .now)
+        #expect(events.usage.contains { $0.valueID == buyer.id && $0.host == "localhost" })
+        let kept = events.captures.map { Normalizer.key(for: $0.value.payload) }
+        #expect(!kept.contains("jordan.lee@example.net"))
+        #expect(!kept.contains { $0.hasPrefix("77 gift way") })
     }
 
     @Test(.enabled(if: mode == "restore"))

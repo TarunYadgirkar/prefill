@@ -33,6 +33,10 @@ final class ExtensionE2ETests: XCTestCase {
             expectFirstSuggestion(workEmail, on: .siteB, shot: "c-site-b-bar")
             expectFirstSuggestion(newEmail, on: .siteA, shot: "c-site-a-bar-again")
         }
+        // The buyer's own name and card email are on the gift form, so without the someone-else
+        // rule the recipient's email would be saved. scripts/test.sh then checks, through a host
+        // test, that the capture reached the app: the buyer's email was used on site A and nothing
+        // of the recipient's was kept, not even for review.
         XCTContext.runActivity(named: "d. A gift for someone else leaves the card alone") { _ in
             let before = E2EServer.card()
             sendGift(on: .siteA)
@@ -56,6 +60,8 @@ final class ExtensionE2ETests: XCTestCase {
 
     private func sendGift(on site: Site) {
         SafariDriver.open(site.page("gift.html"), waitingFor: "Recipient")
+        SafariDriver.type("Alex Rivera", into: "Your name")
+        SafariDriver.type("alex.rivera@example.com", into: "Your email")
         SafariDriver.type("Jordan Lee", into: "Recipient's name")
         SafariDriver.type("jordan.lee@example.net", into: "Recipient's email")
         SafariDriver.type("77 Gift Way", into: "Street address")

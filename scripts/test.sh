@@ -5,7 +5,8 @@
 #                   simulator), web tests, lint, typecheck.
 #   e2e: PrefillUITests on the simulator ($PREFILL_SIM, default Prefill Dev). Links the
 #        Alex Rivera card through a host test, serves the test sites with
-#        scripts/e2e-server.py, drives Settings and Safari, then restores the card.
+#        scripts/e2e-server.py, drives Settings and Safari, checks the recorded events
+#        through another host test, then restores the card.
 #        Screenshots land in assets/generated/e2e-ext-*.png.
 source ${0:A:h}/lib.sh
 
@@ -45,10 +46,12 @@ unit() {
   (cd $ROOT && swiftlint lint --strict --quiet)
 }
 
-# usage: host_e2e_step <link|restore>  Runs the gated E2ESetupHostTests inside Prefill.app.
+# usage: host_e2e_step <link|verify|restore>  Runs the gated E2ESetupHostTests inside Prefill.app.
+# The pass pattern names the mode's own test, because a run where it was skipped passes too.
+typeset -A E2E_STEP_TESTS=(link linkAlexCard verify verifyGiftCapture restore restoreAlexCard)
 host_e2e_step() {
   export TEST_RUNNER_PREFILL_E2E=$1
-  run_xcodebuild_test $LOGS/test-e2e-$1.log 'Test run with [0-9]+ tests? .*passed' \
+  run_xcodebuild_test $LOGS/test-e2e-$1.log "✔ Test ${E2E_STEP_TESTS[$1]}\\(\\) passed" \
     test -project $PROJECT -scheme PrefillHostTests -configuration Personal \
     -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED \
     -only-testing:PrefillHostTests/E2ESetupHostTests
@@ -78,6 +81,9 @@ e2e() {
   run_xcodebuild_test $LOGS/test-e2e.log "Test Suite 'All tests' passed" \
     test -project $PROJECT -scheme Prefill -configuration Personal \
     -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED || failed=1
+
+  step "Checking that the gift capture reached the app"
+  host_e2e_step verify || failed=1
 
   step "Restoring the card's emails and clearing the shared store"
   host_e2e_step restore
