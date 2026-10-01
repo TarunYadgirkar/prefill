@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "Prefill",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Puts the email, phone and address that fit each site first in Safari's AutoFill, and saves new ones you enter to your contact card.",
+        "description": "Description of what the extension does."
+    }
+}

@@ -1,0 +1,134 @@
+name: Prefill
+options:
+  bundleIdPrefix: com.tarunyadgirkar
+  deploymentTarget:
+    iOS: "27.0"
+  createIntermediateGroups: true
+configs:
+  Personal: debug
+  AppStore: release
+configFiles:
+  Personal: Config/Personal.xcconfig
+  AppStore: Config/AppStore.xcconfig
+packages:
+  PrefillKit:
+    path: Packages/PrefillKit
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    CODE_SIGN_STYLE: Automatic
+    "CODE_SIGN_STYLE[sdk=iphonesimulator*]": Manual
+    "CODE_SIGN_IDENTITY[sdk=iphonesimulator*]": "-"
+    "PROVISIONING_PROFILE_SPECIFIER[sdk=iphonesimulator*]": ""
+    TARGETED_DEVICE_FAMILY: "1"
+    GENERATE_INFOPLIST_FILE: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    PREFILL_KEYCHAIN_GROUP: $(AppIdentifierPrefix)com.tarunyadgirkar.prefill.shared
+    PREFILL_APP_GROUP: group.com.tarunyadgirkar.prefill
+    NS_CONTACTS_USAGE: Prefill reads and reorders the emails, phone numbers and addresses on your own contact card, so Safari suggests the right ones on each site.
+  configs:
+    # The simulator hands out a group container even without the entitlement, so the
+    # free-team build leaves the name empty and StoreFactory falls back to the Keychain.
+    Personal:
+      PREFILL_APP_GROUP: ""
+settingGroups:
+  sharedContainer:
+    configs:
+      Personal:
+        CODE_SIGN_ENTITLEMENTS: Config/Personal.entitlements
+      AppStore:
+        CODE_SIGN_ENTITLEMENTS: Config/AppStore.entitlements
+targets:
+  Prefill:
+    type: application
+    platform: iOS
+    sources: [App]
+    settings:
+      groups: [sharedContainer]
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(PREFILL_BUNDLE_ID)
+        INFOPLIST_FILE: App/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+        INFOPLIST_KEY_NSContactsUsageDescription: $(NS_CONTACTS_USAGE)
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    dependencies:
+      - package: PrefillKit
+      - target: PrefillSafari
+        embed: true
+  PrefillSafari:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Extension/SafariWebExtensionHandler.swift
+      - path: Extension/Resources/manifest.json
+        buildPhase: resources
+      - path: Extension/Resources/content.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/background.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/_locales
+        type: folder
+        buildPhase: resources
+      - path: Extension/Resources/images
+        type: folder
+        buildPhase: resources
+    settings:
+      groups: [sharedContainer]
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(PREFILL_BUNDLE_ID).safari
+        INFOPLIST_FILE: Extension/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+        INFOPLIST_KEY_NSContactsUsageDescription: $(NS_CONTACTS_USAGE)
+    dependencies:
+      - package: PrefillKit
+  PrefillHostTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [HostTests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.hosttests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: Prefill
+  PrefillUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [UITests]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.uitests
+        TEST_TARGET_NAME: Prefill
+    dependencies:
+      - target: Prefill
+schemes:
+  Prefill:
+    build:
+      targets:
+        Prefill: all
+        PrefillUITests: [test]
+    run:
+      config: Personal
+    test:
+      config: Personal
+      targets: [PrefillUITests]
+    profile:
+      config: AppStore
+    analyze:
+      config: Personal
+    archive:
+      config: AppStore
+  PrefillHostTests:
+    build:
+      targets:
+        PrefillHostTests: [test]
+    test:
+      config: Personal
+      targets: [PrefillHostTests]

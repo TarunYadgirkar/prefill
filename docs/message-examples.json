@@ -1,0 +1,50 @@
+{
+  "enums": {
+    "fieldKind": ["email", "phone", "address", "name"],
+    "sectionHint": ["home", "work", "shipping", "billing"],
+    "syncStatus": ["unchanged", "saved", "failed", "off"]
+  },
+  "requests": {
+    "ping": { "type": "ping" },
+    "pageContext": {
+      "type": "pageContext",
+      "host": "shop.example.net",
+      "fields": [
+        { "kind": "email", "section": "work" },
+        { "kind": "phone" },
+        { "kind": "address", "section": "shipping" }
+      ]
+    },
+    "capture": {
+      "type": "capture",
+      "host": "shop.example.net",
+      "hasPassword": true,
+      "fields": [
+        { "kind": "name", "value": "Alex Rivera", "autocomplete": "name", "name": "full_name", "label": "Full name" },
+        { "kind": "email", "value": "alex.new@example.net", "autocomplete": "email", "name": "email", "label": "Email" },
+        {
+          "kind": "address",
+          "section": "shipping",
+          "address": {
+            "street": "2400 Durant Ave",
+            "city": "Berkeley",
+            "state": "CA",
+            "postalCode": "94704",
+            "country": "United States"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "pong": { "type": "pong" },
+    "pageContextResult": { "type": "pageContextResult", "status": "saved" },
+    "pageContextFailed": {
+      "type": "pageContextResult",
+      "status": "failed",
+      "reason": "Prefill can't reach your contact card. Open Prefill to give it access again."
+    },
+    "captureResult": { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 },
+    "error": { "type": "error", "reason": "unknown message" }
+  }
+}

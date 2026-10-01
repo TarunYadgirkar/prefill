@@ -1,0 +1,25 @@
+included:
+  - App
+  - Extension
+  - UITests
+  - HostTests
+  - Packages/PrefillKit/Sources
+  - Packages/PrefillKit/Tests
+  - Packages/PrefillKit/Package.swift
+excluded:
+  - build
+  - spikes
+  - Packages/PrefillKit/.build
+
+cyclomatic_complexity:
+  warning: 8
+  error: 12
+function_body_length:
+  warning: 40
+  error: 60
+file_length:
+  warning: 400
+  error: 800
+type_body_length:
+  warning: 250
+  error: 400

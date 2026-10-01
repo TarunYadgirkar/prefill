@@ -5,3 +5,8 @@ __pycache__/
 /spikes/capture/logs/sim-log-stream.log
 /spikes/textinsert/logs/syslog-native-insert-pwonly-raw.log
 /spikes/textinsert/logs/sim-log-stream.log
+node_modules/
+.build/
+.swiftpm/
+/Extension/Resources/content.js
+/Extension/Resources/background.js

@@ -1,0 +1,23 @@
+{
+  "name": "prefill-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm run build:content && pnpm run build:background",
+    "build:content": "esbuild src/content.ts --bundle --format=iife --target=safari26 --outfile=../Extension/Resources/content.js",
+    "build:background": "esbuild src/background.ts --bundle --format=esm --target=safari26 --outfile=../Extension/Resources/background.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.11.0",
+    "happy-dom": "^20.14.5",
+    "jiti": "^2.7.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0",
+    "vitest": "^5.0.3"
+  }
+}

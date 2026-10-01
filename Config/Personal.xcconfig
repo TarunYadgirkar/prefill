@@ -1,0 +1,5 @@
+// Free personal team. Simulator builds and sideloading onto your own iPhone.
+// Its own bundle IDs, so registering them under the free team never blocks the plain
+// IDs the App Store build needs under the paid team.
+DEVELOPMENT_TEAM = 5AKJYZ7USP
+PREFILL_BUNDLE_ID = com.tarunyadgirkar.prefill.dev

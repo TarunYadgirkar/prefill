@@ -57,7 +57,7 @@ Facts this rests on (all observed on iOS 27.0, see REPORT.md "Spike results"):
 | `App/` | SwiftUI app: onboarding, Card, Sites, Recently added, Settings |
 | `Extension/` | `SafariWebExtensionHandler.swift` plus `Resources/` (manifest, built JS, icons, locales) |
 | `web/` | TypeScript (strict) for content and background scripts, built by esbuild into `Extension/Resources`, tested with Vitest, linted by ESLint with a complexity rule. pnpm. |
-| `scripts/` | `bootstrap.sh`, `build.sh`, `test.sh`, `sim-setup.sh` (clone sim, load test card, set My Info) |
+| `scripts/` | `bootstrap.sh`, `build.sh`, `test.sh`, `sim-setup.sh` (clone a base simulator that was set up by hand with REPORT.md Appendix A: test card imported, My Info set) |
 | `.swiftlint.yml` | cyclomatic complexity warning 8, error 12, function length, file length |
 
 ## Data model (PrefillKit)
@@ -102,7 +102,7 @@ Haptics on reorder and save, symbol effects on state changes, Dynamic Type, Voic
 ## Tasks
 
 ### Phase 0: Scaffold (one agent)
-- Create `project.yml`, `Packages/PrefillKit`, `web/` (pnpm, TypeScript strict, esbuild, Vitest, ESLint complexity), `.swiftlint.yml` (`brew install swiftlint`), scripts. Bundle IDs `com.tarunyadgirkar.prefill` and `.safari`, team `5AKJYZ7USP`, Keychain access group `$(AppIdentifierPrefix)com.tarunyadgirkar.prefill.shared`, no App Group.
+- Create `project.yml`, `Packages/PrefillKit`, `web/` (pnpm, TypeScript strict, esbuild, Vitest, ESLint complexity), `.swiftlint.yml` (`brew install swiftlint`), scripts. Bundle IDs `com.tarunyadgirkar.prefill` and `.safari` for AppStore, `com.tarunyadgirkar.prefill.dev` and `.dev.safari` for Personal (so the free team never claims the App Store IDs), team `5AKJYZ7USP`, Keychain access group `$(AppIdentifierPrefix)com.tarunyadgirkar.prefill.shared`, no App Group.
 - Validate: `scripts/build.sh` builds app plus extension for the iOS 27.0 simulator; `swift test` and `pnpm test` run empty suites.
 
 ### Phase 1: PrefillKit core (one agent, test first)
