@@ -1,0 +1,67 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Unlabeledfirst;Avery;;;
+FN:Avery Unlabeledfirst
+EMAIL;type=INTERNET:a-nolabel@example.com
+EMAIL;type=INTERNET;type=HOME:a-home@example.com
+EMAIL;type=INTERNET;type=WORK:a-work@example.com
+TEL:+1 (510) 555-1001
+TEL;type=HOME:+1 (510) 555-1002
+TEL;type=WORK:+1 (510) 555-1003
+ADR:;;101 Nolabel St;Oakland;CA;94601;United States
+ADR;type=HOME:;;102 Home St;Oakland;CA;94602;United States
+ADR;type=WORK:;;103 Work St;Oakland;CA;94603;United States
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Prefthird;Blake;;;
+FN:Blake Prefthird
+EMAIL;type=INTERNET;type=HOME:b-home@example.com
+EMAIL;type=INTERNET;type=WORK:b-work@example.com
+EMAIL;type=INTERNET;type=OTHER;type=pref:b-other-pref@example.com
+TEL;type=HOME:+1 (510) 555-2001
+TEL;type=WORK:+1 (510) 555-2002
+TEL;type=CELL;type=pref:+1 (510) 555-2003
+ADR;type=HOME:;;201 Home St;Oakland;CA;94602;United States
+ADR;type=WORK:;;202 Work St;Oakland;CA;94603;United States
+ADR;type=OTHER;type=pref:;;203 Otherpref St;Oakland;CA;94604;United States
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Fivevalues;Casey;;;
+FN:Casey Fivevalues
+EMAIL;type=INTERNET;type=WORK:c-1-work@example.com
+EMAIL;type=INTERNET;type=OTHER:c-2-other@example.com
+EMAIL;type=INTERNET;type=HOME:c-3-home@example.com
+item1.EMAIL;type=INTERNET:c-4-gym@example.com
+item1.X-ABLabel:Gym
+EMAIL;type=INTERNET:c-5-nolabel@example.com
+TEL;type=WORK:+1 (510) 555-3001
+TEL;type=OTHER:+1 (510) 555-3002
+TEL;type=HOME:+1 (510) 555-3003
+TEL;type=CELL:+1 (510) 555-3004
+item2.TEL:+1 (510) 555-3005
+item2.X-ABLabel:Gym
+ADR;type=WORK:;;301 Work St;Oakland;CA;94601;United States
+ADR;type=OTHER:;;302 Other St;Oakland;CA;94602;United States
+ADR;type=HOME:;;303 Home St;Oakland;CA;94603;United States
+item3.ADR:;;304 Gym St;Oakland;CA;94604;United States
+item3.X-ABLabel:Gym
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Customfirst;Drew;;;
+FN:Drew Customfirst
+item1.EMAIL;type=INTERNET:d-personal@example.com
+item1.X-ABLabel:Personal
+EMAIL;type=INTERNET;type=HOME:d-home@example.com
+EMAIL;type=INTERNET;type=WORK:d-work@example.com
+item2.TEL:+1 (510) 555-4001
+item2.X-ABLabel:Personal
+TEL;type=HOME:+1 (510) 555-4002
+TEL;type=WORK:+1 (510) 555-4003
+item3.ADR:;;401 Personal St;Oakland;CA;94601;United States
+item3.X-ABLabel:Personal
+ADR;type=HOME:;;402 Home St;Oakland;CA;94602;United States
+ADR;type=WORK:;;403 Work St;Oakland;CA;94603;United States
+END:VCARD

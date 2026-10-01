@@ -1,0 +1,13 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Rivera;Alex;;;
+FN:Alex Rivera
+ORG:Prefill Test Co
+EMAIL;type=INTERNET;type=HOME;type=pref:alex.rivera@example.com
+EMAIL;type=INTERNET;type=WORK:alex@work.example.org
+EMAIL;type=INTERNET:alex.school@example.edu
+TEL;type=CELL;type=pref:+1 (510) 555-0134
+TEL;type=WORK:+1 (415) 555-0199
+ADR;type=HOME;type=pref:;;2400 Durant Ave;Berkeley;CA;94704;United States
+ADR;type=WORK:;;1 Market St Suite 300;San Francisco;CA;94105;United States
+END:VCARD

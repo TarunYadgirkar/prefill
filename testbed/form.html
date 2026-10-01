@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prefill testbed</title>
+<style>
+  :root { color-scheme: light dark; --gap: 12px; }
+  body { font: 17px -apple-system, system-ui, sans-serif; margin: 0; padding: 16px; }
+  form { display: grid; gap: var(--gap); max-width: 480px; }
+  label { display: grid; gap: 4px; font-size: 15px; }
+  input, select { font: inherit; padding: 10px 12px; border: 1px solid #8884; border-radius: 10px; }
+  pre { font-size: 12px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<form id="tagged" autocomplete="on">
+  <label>Full name <input name="name" autocomplete="name"></label>
+  <label>Email <input name="email" type="email" autocomplete="email"></label>
+  <label>Phone <input name="tel" type="tel" autocomplete="tel"></label>
+  <label>Street <input name="street" autocomplete="address-line1"></label>
+  <label>City <input name="city" autocomplete="address-level2"></label>
+  <label>State <input name="state" autocomplete="address-level1"></label>
+  <label>ZIP <input name="zip" autocomplete="postal-code"></label>
+</form>
+<h2>Untagged</h2>
+<form id="untagged">
+  <label>Your e-mail <input id="f_em" name="usr_contact"></label>
+  <label>Mobile number <input id="f_ph" name="mob"></label>
+</form>
+<pre id="out"></pre>
+<script>
+  const out = document.getElementById('out');
+  const dump = () => {
+    out.textContent = [...document.querySelectorAll('input')]
+      .map(i => `${i.name}: ${i.value}`).join('\n');
+  };
+  document.addEventListener('input', dump);
+  document.addEventListener('change', dump);
+  dump();
+</script>
+</body>
+</html>
