@@ -3,13 +3,6 @@ import Foundation
 public enum Normalizer {
     private static let usNationalLength = 10
     private static let usZipLength = 5
-    private static let twoPartSuffixes: Set<String> = [
-        "co.uk", "org.uk", "ac.uk", "gov.uk", "me.uk", "ltd.uk", "plc.uk",
-        "com.au", "net.au", "org.au", "edu.au", "gov.au",
-        "co.nz", "org.nz", "co.jp", "ne.jp", "or.jp", "ac.jp",
-        "co.in", "net.in", "org.in", "com.br", "com.mx", "com.cn", "com.hk", "com.sg",
-        "co.za", "co.kr", "com.tw", "com.tr", "co.il"
-    ]
 
     public static func key(for payload: ContactPayload) -> String {
         switch payload {
@@ -61,13 +54,7 @@ public enum Normalizer {
     }
 
     public static func registrableDomain(_ host: String) -> String {
-        let bare = host.lowercased()
-            .split(separator: ":", maxSplits: 1).first.map(String.init) ?? ""
-        let labels = bare.split(separator: ".").map(String.init)
-        guard labels.count > 2, !isIPv4(labels) else { return labels.joined(separator: ".") }
-        let lastTwo = labels.suffix(2).joined(separator: ".")
-        let keep = twoPartSuffixes.contains(lastTwo) ? 3 : 2
-        return labels.suffix(keep).joined(separator: ".")
+        PublicSuffix.registrableDomain(host)
     }
 
     public static func emailDomain(_ address: String) -> String? {
@@ -84,9 +71,5 @@ public enum Normalizer {
 
     private static func trunkStripped(_ digits: String) -> String {
         digits.hasPrefix("0") ? String(digits.dropFirst()) : digits
-    }
-
-    private static func isIPv4(_ labels: [String]) -> Bool {
-        labels.count == 4 && labels.allSatisfy { UInt8($0) != nil }
     }
 }
