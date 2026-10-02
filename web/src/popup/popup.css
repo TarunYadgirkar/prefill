@@ -73,7 +73,6 @@ h1 {
 h2 {
   font: -apple-system-footnote;
   color: var(--text-secondary);
-  text-transform: uppercase;
   padding: 0 var(--gutter) 6px;
 }
 
@@ -339,7 +338,6 @@ label.row .text {
 .problem h2 {
   font: -apple-system-headline;
   color: var(--text);
-  text-transform: none;
   padding: 0;
 }
 
