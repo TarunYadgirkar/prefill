@@ -44,6 +44,8 @@ struct SafariSwitches: View {
     let isEnabled: Bool
     let isAllowedOnWebsites: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    // Grows with the mark's text style, so the mark never spills into the title.
+    @ScaledMetric(relativeTo: .title2) private var markWidth = Size.statusMark
 
     // The extension can only have reported a form while it was on.
     private var isAllowed: Bool { isEnabled && isAllowedOnWebsites }
@@ -52,12 +54,14 @@ struct SafariSwitches: View {
         VStack(spacing: 0) {
             SwitchRow(
                 title: "Allow Extension", setting: isEnabled ? "On" : "Turn on", isDone: isEnabled,
+                markWidth: markWidth,
                 note: isEnabled ? nil : "Settings opens on Prefill's page."
             )
             Divider()
-                .padding(.leading, Spacing.medium + Size.statusMark + Spacing.small)
+                .padding(.leading, Spacing.medium + markWidth + Spacing.small)
             SwitchRow(
                 title: "All Websites", setting: isAllowed ? "Allow" : "Set to Allow", isDone: isAllowed,
+                markWidth: markWidth,
                 note: isAllowed ? nil : "Prefill confirms this once you fill in a form in Safari."
             )
         }
@@ -71,12 +75,13 @@ private struct SwitchRow: View {
     let title: LocalizedStringKey
     let setting: LocalizedStringKey
     let isDone: Bool
+    let markWidth: CGFloat
     let note: LocalizedStringKey?
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
             StatusMark(isDone: isDone)
-                .frame(width: Size.statusMark)
+                .frame(width: markWidth)
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 ViewThatFits(in: .horizontal) {
                     HStack {

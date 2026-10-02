@@ -22,6 +22,7 @@ struct RecentScreen: View {
                 }
             }
             .navigationTitle("Recently added")
+            .screenTitleDisplay()
             .background(Palette.canvas)
         }
     }
@@ -76,11 +77,12 @@ private struct RecentRow: View {
                 }
             }
             .opacity(item.state == .removed ? 0.5 : 1)
-            Text("On \(item.host) \(item.date.formatted(.relative(presentation: .named)))")
+            Text("On \(item.host.breakableAtPunctuation) \(item.date.formatted(.relative(presentation: .named)))")
                 .textRole(.footnote)
             actions
         }
         .padding(.vertical, Spacing.xxSmall)
+        .sensoryFeedback(.success, trigger: item.state) { _, new in new == .saved }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("recent-\(item.value.display)")
     }
@@ -88,11 +90,9 @@ private struct RecentRow: View {
     @ViewBuilder private var actions: some View {
         switch item.state {
         case .waiting:
-            HStack(spacing: Spacing.small) {
-                Button("Save to card") { run { await model.save(item) } }
-                    .fontWeight(.semibold)
-                Button("Dismiss") { model.dismiss(item) }
-                    .tint(Palette.textSecondary)
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Spacing.small) { reviewButtons }
+                VStack(alignment: .leading, spacing: Spacing.small) { reviewButtons }
             }
             .buttonStyle(.glass)
             .disabled(isWorking)
@@ -104,6 +104,13 @@ private struct RecentRow: View {
         case .removed:
             EmptyView()
         }
+    }
+
+    @ViewBuilder private var reviewButtons: some View {
+        Button("Save to card") { run { await model.save(item) } }
+            .fontWeight(.semibold)
+        Button("Dismiss") { model.dismiss(item) }
+            .tint(Palette.textSecondary)
     }
 
     private func run(_ work: @escaping () async -> Void) {

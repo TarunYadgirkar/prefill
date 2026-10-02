@@ -30,7 +30,7 @@ struct CardChooser: View {
             }
         }
         .navigationTitle("Which card is yours?")
-        .navigationBarTitleDisplayMode(.large)
+        .screenTitleDisplay()
         .searchable(text: $query, prompt: "Name or email")
         .overlay {
             if !cards.isEmpty && shown.isEmpty {
@@ -48,7 +48,7 @@ struct CardChooser: View {
                 VStack(alignment: .leading, spacing: Spacing.hairline) {
                     Text(card.name).textRole(.value)
                     if let detail = card.detail {
-                        Text(detail).textRole(.valueCaption)
+                        Text(detail.breakableAtPunctuation).textRole(.valueCaption)
                     }
                 }
                 Spacer(minLength: 0)

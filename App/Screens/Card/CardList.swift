@@ -56,12 +56,8 @@ struct CardList: View {
         case .value(let value, let placement):
             valueRow(value, placement: placement)
         case .divider:
-            Text("Safari shows these once you start typing one.")
-                .textRole(.footnote)
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
+            BarGroupDivider()
                 .moveDisabled(true)
-                .accessibilityAddTraits(.isHeader)
         }
     }
 
@@ -185,6 +181,17 @@ enum CardRow: Identifiable, Hashable {
         if count == 1 { return .alone }
         if index == 0 { return .first }
         return index == count - 1 ? .last : .middle
+    }
+}
+
+// Sits between the two values in the bar and the rest of the card.
+struct BarGroupDivider: View {
+    var body: some View {
+        Text("Safari shows these once you start typing one.")
+            .textRole(.footnote)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .accessibilityAddTraits(.isHeader)
     }
 }
 

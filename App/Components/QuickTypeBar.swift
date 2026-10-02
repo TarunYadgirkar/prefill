@@ -14,9 +14,6 @@ struct QuickTypeBar: View {
     let values: [ContactValue]
     var style: Style = .full
 
-    @Namespace private var slots
-    @Environment(\.displayScale) private var displayScale
-
     private var shown: [ContactValue] { Array(values.prefix(2)) }
 
     var body: some View {
@@ -52,28 +49,27 @@ struct QuickTypeBar: View {
         }
     }
 
+    // Every value is laid out, and its place in the order decides where it sits: the first
+    // two in the slots, the rest hidden behind the second slot. A reorder then moves each
+    // value from its old slot to its new one instead of swapping text in place.
     private var suggestionRow: some View {
-        HStack(spacing: 0) {
-            slot(0)
-            Rectangle()
-                .fill(Palette.keyboardSeparator)
-                .frame(width: 1 / displayScale)
-                .padding(.vertical, Spacing.small)
-            slot(1)
-        }
-        .frame(height: Size.suggestionHeight)
-    }
-
-    private func slot(_ index: Int) -> some View {
-        ZStack {
-            if index < shown.count {
-                let value = shown[index]
-                SuggestionSlot(kind: kind, value: value)
-                    .id(value.id)
-                    .slotMotion(id: value.id, in: slots)
+        GeometryReader { geometry in
+            let width = geometry.size.width / 2
+            ZStack(alignment: .leading) {
+                ForEach(Array(values.enumerated()), id: \.element.id) { index, value in
+                    SuggestionSlot(kind: kind, value: value)
+                        .frame(width: width, height: geometry.size.height)
+                        .slotPlacement(index, width: width)
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay {
+            Rectangle()
+                .fill(Palette.keyboardSeparator)
+                .frame(width: Size.barSeparator)
+                .padding(.vertical, Spacing.small)
+        }
+        .frame(height: Size.suggestionHeight)
     }
 
     private var spokenSlots: String {
@@ -99,27 +95,30 @@ private struct SuggestionSlot: View {
     }
 }
 
-// Values keep their identity across slots, so a value moving from the second slot to the
-// first slides there. With Reduce Motion on, slots cross-fade in place instead.
-private struct SlotMotion: ViewModifier {
-    let id: UUID
-    let namespace: Namespace.ID
+// Slides a value to its slot and fades it out past the second one. With Reduce Motion on,
+// values change places without moving and only fade.
+private struct SlotPlacement: ViewModifier {
+    private static let hiddenBlur: CGFloat = 4
+
+    let index: Int
+    let width: CGFloat
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private var isShown: Bool { index < 2 }
+
     func body(content: Content) -> some View {
-        if reduceMotion {
-            content.transition(.opacity)
-        } else {
-            content
-                .matchedGeometryEffect(id: id, in: namespace)
-                .transition(.blurReplace)
-        }
+        content
+            .offset(x: CGFloat(min(index, 1)) * width)
+            .animation(reduceMotion ? nil : Motion.reorder, value: index)
+            .opacity(isShown ? 1 : 0)
+            .blur(radius: isShown ? 0 : Self.hiddenBlur)
+            .animation(Motion.reorder(reduceMotion: reduceMotion), value: isShown)
     }
 }
 
 private extension View {
-    func slotMotion(id: UUID, in namespace: Namespace.ID) -> some View {
-        modifier(SlotMotion(id: id, namespace: namespace))
+    func slotPlacement(_ index: Int, width: CGFloat) -> some View {
+        modifier(SlotPlacement(index: index, width: width))
     }
 }
 

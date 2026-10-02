@@ -21,6 +21,7 @@ struct SitesScreen: View {
                 }
             }
             .navigationTitle("Sites")
+            .screenTitleDisplay()
             .navigationDestination(for: String.self) { host in
                 SiteDetail(host: host)
             }
@@ -68,7 +69,7 @@ private struct SiteRow: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             HStack(spacing: Spacing.xSmall) {
-                Text(site.host)
+                Text(site.host.breakableAtPunctuation)
                     .textRole(.bodyEmphasis)
                 if site.pinned[.email] != nil {
                     Image(systemName: "pin.fill")

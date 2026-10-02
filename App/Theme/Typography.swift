@@ -19,8 +19,8 @@ struct TextRole {
     static let barValue = TextRole(font: .body, color: Palette.keyboardValue)
     static let barCaption = TextRole(font: .footnote, color: Palette.keyboardCaption)
     static let barAction = TextRole(font: .body, color: Palette.accent)
-    static let barIcon = TextRole(font: .body.weight(.medium), color: Palette.keyboardValue)
-    static let keyCap = TextRole(font: .title2, color: Palette.keyboardValue)
+    static let barIcon = TextRole(font: .body.weight(.medium), color: Palette.keyboardGlyph)
+    static let keyCap = TextRole(font: .title2, color: Palette.keyboardGlyph)
 
     static let statusIcon = TextRole(font: .title2, color: Palette.pending)
     static let action = TextRole(font: .body, color: Palette.accent)

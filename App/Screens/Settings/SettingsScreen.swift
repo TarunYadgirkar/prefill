@@ -15,7 +15,7 @@ struct SettingsScreen: View {
                 } footer: {
                     Text("""
                         Before you tap a field, Prefill moves the values you use on that site to the front of \
-                        your card. Off, every site gets your own order.
+                        your card. When it's off, every site gets your own order.
                         """)
                 }
                 Section {
@@ -24,7 +24,7 @@ struct SettingsScreen: View {
                 } footer: {
                     Text("""
                         Adds new emails, phone numbers and addresses you type into Safari forms to your card. \
-                        Off, they wait in Recently added for you.
+                        When it's off, they wait in Recently added for you.
                         """)
                 }
                 Section("Safari") {
@@ -39,6 +39,7 @@ struct SettingsScreen: View {
                 cardSection
             }
             .navigationTitle("Settings")
+            .screenTitleDisplay()
             .sheet(isPresented: $isChoosingCard) {
                 NavigationStack {
                     CardChooser(path: .constant([]))

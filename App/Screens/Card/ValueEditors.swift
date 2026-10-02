@@ -16,7 +16,7 @@ struct RelabelSheet: View {
                     }
                     choice(String(localized: "No label"), label: nil)
                 } header: {
-                    Text(value.display)
+                    Text(value.display.breakableAtPunctuation)
                         .textRole(.value)
                         .textCase(nil)
                 }

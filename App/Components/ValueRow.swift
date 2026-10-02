@@ -7,16 +7,25 @@ struct ValueRow<Accessory: View>: View {
     let value: ContactValue
     @ViewBuilder var accessory: () -> Accessory
 
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    // At accessibility sizes the accessory moves under the value so the value keeps the width.
+    private var layout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.xSmall))
+            : AnyLayout(HStackLayout(spacing: Spacing.small))
+    }
+
     var body: some View {
-        HStack(spacing: Spacing.small) {
+        layout {
             VStack(alignment: .leading, spacing: Spacing.hairline) {
                 Text(LabelChoices.caption(value.label, kind: value.kind))
                     .textRole(.valueCaption)
-                Text(value.display)
+                Text(value.display.breakableAtPunctuation)
                     .textRole(.value)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            Spacer(minLength: 0)
+            .frame(maxWidth: .infinity, alignment: .leading)
             accessory()
         }
         .padding(.vertical, Spacing.xxSmall)

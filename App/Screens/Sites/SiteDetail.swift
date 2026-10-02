@@ -16,8 +16,11 @@ struct SiteDetail: View {
     var body: some View {
         List {
             Section {
-                ForEach(values) { value in
-                    row(value)
+                ForEach(CardRow.rows(for: values)) { row in
+                    switch row {
+                    case .value(let value, let placement): self.row(value, placement: placement)
+                    case .divider: BarGroupDivider()
+                    }
                 }
             } footer: {
                 Text(footer)
@@ -56,7 +59,7 @@ struct SiteDetail: View {
             : "Match each site is off, so pins wait until you turn it back on in Settings."
     }
 
-    private func row(_ value: ContactValue) -> some View {
+    private func row(_ value: ContactValue, placement: CardRow.Placement) -> some View {
         let isPinned = value.id == pinned
         return Button {
             pin(isPinned ? nil : value)
@@ -71,6 +74,8 @@ struct SiteDetail: View {
             }
         }
         .buttonStyle(.plain)
+        .listRowBackground(GroupedRowBackground(placement: placement))
+        .listRowSeparator(placement.isGroupEnd ? .hidden : .automatic, edges: .bottom)
         .accessibilityAddTraits(isPinned ? .isSelected : [])
         .accessibilityHint(isPinned ? "Stops pinning it here" : "Always offers it first on this site")
         .accessibilityIdentifier("site-value-\(value.display)")

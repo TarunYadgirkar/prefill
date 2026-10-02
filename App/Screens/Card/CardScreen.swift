@@ -18,6 +18,7 @@ struct CardScreen: View {
                 }
             }
             .navigationTitle(model.cardName.isEmpty ? String(localized: "Your card") : model.cardName)
+            .screenTitleDisplay()
             .safeAreaBar(edge: .top) {
                 if model.cardFailure == nil {
                     CardHeader(kind: $kind)
