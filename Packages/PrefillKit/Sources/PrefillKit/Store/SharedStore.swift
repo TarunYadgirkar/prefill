@@ -8,6 +8,8 @@ public protocol SharedStore: Sendable {
     func writeAppState(_ state: AppState) throws
     func readEvents() throws -> ExtensionEvents
     func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws
+    // Deletes both documents, for "Delete Prefill data" and for leftovers of an earlier install.
+    func removeAll() throws
 }
 
 extension SharedStore {
@@ -34,6 +36,14 @@ public enum StoreFactory {
     public enum Backend: Sendable, Hashable {
         case appGroup(URL)
         case keychain(accessGroup: String?)
+
+        // The case only: the container path and keychain group stay out of the log.
+        var name: String {
+            switch self {
+            case .appGroup: "appGroup"
+            case .keychain: "keychain"
+            }
+        }
     }
 
     public static let appGroupKey = "PrefillAppGroup"
@@ -43,7 +53,7 @@ public enum StoreFactory {
         let backend = backend(info: bundle.infoDictionary ?? [:]) { group in
             FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
         }
-        StoreLog.logger.info("store backend \(String(describing: backend), privacy: .public)")
+        StoreLog.logger.info("store backend \(backend.name, privacy: .public)")
         switch backend {
         case .appGroup(let url):
             return AppGroupStore(directory: url.appending(path: "Prefill", directoryHint: .isDirectory))

@@ -4,6 +4,7 @@ import SwiftUI
 struct SettingsScreen: View {
     @Environment(AppModel.self) private var model
     @State private var isConfirmingRestore = false
+    @State private var isConfirmingDelete = false
     @State private var isChoosingCard = false
 
     var body: some View {
@@ -47,6 +48,7 @@ struct SettingsScreen: View {
                     Text("Safari").textRole(.groupHeader)
                 }
                 cardSection
+                dataSection
             }
             .navigationTitle("Settings")
             .screenTitleDisplay()
@@ -84,6 +86,28 @@ struct SettingsScreen: View {
         } footer: {
             Text("Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill.")
                 .textRole(.footnote)
+        }
+    }
+
+    private var dataSection: some View {
+        Section {
+            Button("Delete Prefill data", role: .destructive) { isConfirmingDelete = true }
+                .accessibilityIdentifier("delete-data")
+                .confirmationDialog(
+                    "Delete Prefill data?", isPresented: $isConfirmingDelete, titleVisibility: .visible
+                ) {
+                    Button("Delete Prefill data", role: .destructive) {
+                        Task { await model.deleteAllData() }
+                    }
+                } message: {
+                    Text("Your contact card stays as it is. You’ll set Prefill up again.")
+                }
+        } footer: {
+            Text("""
+                Prefill keeps which card is yours, the sites you use each value on and recent saves \
+                on this iPhone only.
+                """)
+            .textRole(.footnote)
         }
     }
 

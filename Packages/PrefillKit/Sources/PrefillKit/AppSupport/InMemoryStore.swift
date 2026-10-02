@@ -21,6 +21,10 @@ public final class InMemoryStore: SharedStore {
         documents.withLock { $0.1 }
     }
 
+    public func removeAll() throws {
+        documents.withLock { $0 = (AppState(), ExtensionEvents()) }
+    }
+
     public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
         documents.withLock { $0.1 = $0.1.appending(usage: usage, captures: captures, cardWrites: cardWrites) }
     }

@@ -16,6 +16,10 @@ final class MemoryStore: SharedStore {
     func writeAppState(_ state: AppState) throws { documents.withLock { $0.state = state } }
     func readEvents() throws -> ExtensionEvents { documents.withLock { $0.events } }
 
+    func removeAll() throws {
+        documents.withLock { $0 = (AppState(), ExtensionEvents()) }
+    }
+
     func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
         documents.withLock {
             $0.events = $0.events.appending(usage: usage, captures: captures, cardWrites: cardWrites)

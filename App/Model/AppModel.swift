@@ -50,7 +50,9 @@ final class AppModel {
 
     static func live() -> AppModel {
         let gateway = CNContactStoreGateway()
-        return AppModel(store: StoreFactory.make(), gateway: gateway, contacts: LiveContactsSource(gateway: gateway))
+        let store = StoreFactory.make()
+        ReinstallCleanup.run(store: store, defaults: .standard)
+        return AppModel(store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway))
     }
 
     var phase: Phase {
@@ -133,6 +135,24 @@ final class AppModel {
     func finishOnboarding() {
         hasFinishedOnboarding = true
         defaults.set(true, forKey: Self.finishedOnboardingKey)
+    }
+
+    // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
+    func deleteAllData() async {
+        do {
+            try store.removeAll()
+        } catch {
+            problem = Problem(
+                title: String(localized: "Prefill couldn’t delete its data"),
+                message: String(localized: "Nothing was deleted. Try again in a moment.")
+            )
+            return
+        }
+        defaults.removeObject(forKey: Self.finishedOnboardingKey)
+        hasFinishedOnboarding = false
+        state = AppState()
+        events = ExtensionEvents()
+        await reload()
     }
 
     func requestAccess() async {
