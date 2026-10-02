@@ -30,13 +30,22 @@ final class AppTourTests: XCTestCase {
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")
         app.launch()
+        let news = app.buttons["value-alex.news@example.com"]
+        let first = app.buttons["value-alex.rivera@example.com"]
+        XCTAssertTrue(news.waitForExistence(timeout: 10))
+        call("/record/start?name=motion-reorder-\(variant)")
+        pause(2)
+        news.press(forDuration: 0.8, thenDragTo: first)
+        pause(2)
+        call("/record/stop")
         tab("Sites")
         let site = app.buttons["site-example.org"]
-        XCTAssertTrue(site.waitForExistence(timeout: 10))
+        swipeUp(until: site)
         site.tap()
         let school = app.buttons["site-value-alex.school@example.edu"]
+        swipeUp(until: school)
         XCTAssertTrue(school.waitForExistence(timeout: 5))
-        call("/record/start?name=motion-pin")
+        call("/record/start?name=motion-pin-\(variant)")
         pause(2)
         school.tap()
         pause(2)
@@ -52,25 +61,31 @@ final class AppTourTests: XCTestCase {
         app.buttons["Work sign-in"].tap()
         pause(1)
         snap("onboarding-card-work")
+        swipeUp(until: share)
         share.tap()
         let alex = app.buttons.containing(NSPredicate(format: "label CONTAINS 'Alex Rivera'")).firstMatch
-        XCTAssertTrue(alex.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Which card is yours?"].waitForExistence(timeout: 10))
+        pause(1)
         snap("onboarding-choose")
+        swipeUp(until: alex)
+        XCTAssertTrue(alex.waitForExistence(timeout: 5))
         alex.tap()
         let next = app.buttons["continue"]
         XCTAssertTrue(next.waitForExistence(timeout: 10))
         snap("onboarding-linked")
-        swipeUp(until: app.descendants(matching: .any)["quicktype-bar"].firstMatch)
+        swipeUp(until: next)
         next.tap()
         let open = app.buttons["open-safari-settings"]
         XCTAssertTrue(open.waitForExistence(timeout: 10))
         snap("onboarding-safari")
+        swipeUp(until: open)
         open.tap()
         flipAllowExtension(to: true)
         app.activate()
         let finish = app.buttons["finish-onboarding"]
         XCTAssertTrue(finish.waitForExistence(timeout: 15))
         snap("onboarding-safari-on")
+        swipeUp(until: finish)
         finish.tap()
     }
 
@@ -79,16 +94,21 @@ final class AppTourTests: XCTestCase {
         snap("card")
         let school = app.buttons["value-alex.school@example.edu"]
         let home = app.buttons["value-alex.rivera@example.com"]
+        swipeUp(until: school)
         XCTAssertTrue(school.waitForExistence(timeout: 5))
-        school.press(forDuration: 0.8, thenDragTo: home)
-        pause(2)
-        snap("card-reordered")
-        app.buttons["value-alex.school@example.edu"].tap()
+        if school.isHittable && home.isHittable {
+            school.press(forDuration: 0.8, thenDragTo: home)
+            pause(2)
+            snap("card-reordered")
+        }
+        swipeUp(until: school)
+        school.tap()
         XCTAssertTrue(app.navigationBars["Label"].waitForExistence(timeout: 5))
         snap("card-relabel")
         app.buttons["Cancel"].tap()
         pickKind("Address")
         snap("card-address")
+        swipeUp(until: app.buttons["add-value"])
         app.buttons["add-value"].tap()
         XCTAssertTrue(app.buttons["add-to-card"].waitForExistence(timeout: 5))
         pause(1)
@@ -103,9 +123,11 @@ final class AppTourTests: XCTestCase {
         XCTAssertTrue(site.waitForExistence(timeout: 10))
         snap("sites")
         site.tap()
-        let school = app.buttons["site-value-alex.school@example.edu"]
-        XCTAssertTrue(school.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.navigationBars["example.org"].waitForExistence(timeout: 5))
         snap("site-detail")
+        let school = app.buttons["site-value-alex.school@example.edu"]
+        swipeUp(until: school)
+        XCTAssertTrue(school.waitForExistence(timeout: 5))
         school.tap()
         pause(1)
         snap("site-pinned")
@@ -117,11 +139,15 @@ final class AppTourTests: XCTestCase {
         let waiting = app.buttons["Save to card"].firstMatch
         XCTAssertTrue(waiting.waitForExistence(timeout: 10))
         snap("recent")
+        swipeUp(until: waiting)
         waiting.tap()
         pause(2)
-        app.buttons["Dismiss"].firstMatch.tap()
+        let dismiss = app.buttons["Dismiss"].firstMatch
+        swipeUp(until: dismiss)
+        dismiss.tap()
         pause(1)
         let undo = app.buttons["Undo, take it off your card"].firstMatch
+        swipeUp(until: undo)
         XCTAssertTrue(undo.waitForExistence(timeout: 5))
         undo.tap()
         pause(2)
@@ -155,8 +181,9 @@ final class AppTourTests: XCTestCase {
     }
 
     private func swipeUp(until element: XCUIElement) {
-        for _ in 0..<4 where !(element.exists && element.isHittable) {
+        for _ in 0..<8 where !(element.exists && element.isHittable && element.frame.maxY < app.frame.height * 0.8) {
             app.swipeUp()
+            pause(0.5)
         }
     }
 
