@@ -1,0 +1,21 @@
+{
+  "identifier": "alex-card",
+  "givenName": "Alex",
+  "familyName": "Rivera",
+  "emails": [
+    { "label": "_$!<Home>!$_", "payload": { "email": { "_0": "alex.rivera@example.com" } } },
+    { "label": "_$!<Work>!$_", "payload": { "email": { "_0": "alex@work.example.org" } } }
+  ],
+  "phones": [{ "label": "_$!<Mobile>!$_", "payload": { "phone": { "_0": "+1 (510) 555-0134" } } }],
+  "addresses": [
+    {
+      "label": "_$!<Home>!$_",
+      "payload": {
+        "address": {
+          "_0": { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
+        }
+      }
+    }
+  ],
+  "links": [{ "label": "GitHub", "payload": { "link": { "_0": "https://github.com/alexrivera" } } }]
+}
