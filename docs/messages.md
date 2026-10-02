@@ -91,7 +91,7 @@ The reply is `pageContextResult`. Its `status` is `saved` when the card was rewr
 
 ## linkSuggestions
 
-When the person focuses a `link` field (a focus event Safari marks as theirs, on a field without a `list` of its own), the content script asks for the card's links of the types the field wants. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
+The content script asks for the card's links of the types a page's `link` fields want once the page has loaded, because Safari reads a field's list as the field takes focus and the app's answer would come too late. It asks again each time the person focuses a `link` field (a focus event Safari marks as theirs, on a field without a `list` of its own), which also covers fields a page adds later. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ When the person focuses a `link` field (a focus event Safari marks as theirs, on
 }
 ```
 
-The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
+The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The content script attaches them when the field takes focus, from the links it already has, and the `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
 
 ## capture
 
