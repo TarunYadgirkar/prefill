@@ -184,7 +184,8 @@ struct ValueLookupTests {
     ])
 
     private func first(_ kind: ContactKind, host: String?, in state: AppState) -> ContactValue? {
-        ValueLookup.ranked(kind, host: host, state: state, events: events, card: Alex.card, now: .testNow).first
+        let order = ManualOrder.values(kind, card: Alex.card, known: state.values, now: .testNow)
+        return ValueLookup.ranked(order, host: host, state: state, events: events, now: .testNow).first
     }
 
     @Test func aSiteGetsWhatSafariOffersThere() {

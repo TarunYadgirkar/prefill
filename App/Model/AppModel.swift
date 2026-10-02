@@ -51,6 +51,9 @@ final class AppModel {
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
     }
 
+    // The one model of the running app, shared by its screens and its intents.
+    static let shared = live()
+
     static func live() -> AppModel {
         let gateway = CNContactStoreGateway()
         let store = StoreFactory.make()
@@ -114,6 +117,14 @@ final class AppModel {
         isLoaded = true
         intelligenceState = Intelligence.state
         await refreshInsights()
+    }
+
+    // Siri, Shortcuts and Focus can run an intent before the app has drawn anything, and
+    // the extension may have written since, so each intent reads the store and card first.
+    func refreshForIntent() async {
+        readStore()
+        access = contacts.access
+        await refreshCard()
     }
 
     func refreshCard() async {
@@ -181,7 +192,7 @@ final class AppModel {
         problem = Problem(title: String(localized: "Your card didn’t change"), message: failure.appMessage)
     }
 
-    private func readStore() {
+    func readStore() {
         state = (try? store.readAppState()) ?? state
         events = (try? store.readEvents()) ?? events
     }

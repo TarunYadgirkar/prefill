@@ -2,12 +2,11 @@ import Foundation
 
 // Answers for Siri and Shortcuts: which value Safari offers first, on one site or everywhere.
 public enum ValueLookup {
-    // Every value of `kind` in the order Prefill puts on the card for `host`, or for any site
-    // Prefill has nothing to go on when `host` is nil.
+    // One kind's values in the person's order (ManualOrder.values), put in the order Prefill
+    // writes to the card for `host`, or for any site it has nothing to go on when `host` is nil.
     public static func ranked(
-        _ kind: ContactKind, host: String?, state: AppState, events: ExtensionEvents, card: CardRecord, now: Date
+        _ order: [ContactValue], host: String?, state: AppState, events: ExtensionEvents, now: Date
     ) -> [ContactValue] {
-        let order = ManualOrder.values(kind, card: card, known: state.values, now: now)
         guard let host else {
             let context = RankingContext(
                 host: nil, hint: nil, now: now, matchEachSite: false, focusLabel: state.settings.focusLabel
