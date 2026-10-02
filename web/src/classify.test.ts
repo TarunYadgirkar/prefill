@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import formHtml from "../../testbed/form.html?raw";
+import greenhouse from "../../testbed/sites/greenhouse.html?raw";
 import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
 import { fieldElements } from "./dom";
@@ -175,5 +176,25 @@ describe("classify single fields", () => {
   ])("%s is %s", (html, expected) => {
     page(html);
     expect(summary(classify(field("input, select, textarea")))).toBe(expected);
+  });
+});
+
+describe("classify link fields", () => {
+  it("reads a Greenhouse-style application's untagged link questions", () => {
+    page(greenhouse.replace(/<link[^>]*>/u, ""));
+    const links = (selector: string): unknown => {
+      const found = classify(field(selector));
+      return found.kind === "link" ? found.linkTypes : found.kind;
+    };
+    expect(links("#question_0")).toEqual(["github", "website"]);
+    expect(links("#question_1")).toEqual(["linkedin"]);
+    expect(links("#question_2")).toBe("ignored");
+    expect(summary(classify(field("#email")))).toBe("email");
+  });
+
+  it("treats a url field as a website and leaves a company website alone", () => {
+    page('<input id="a" type="url"><label>Company website <input id="b"></label>');
+    expect(classify(field("#a"))).toMatchObject({ kind: "link", linkTypes: ["website"] });
+    expect(classify(field("#b")).kind).toBe("ignored");
   });
 });

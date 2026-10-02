@@ -3,7 +3,9 @@
 // sides; docs/message-examples.json is checked by tests in both languages. The types are
 // derived from the parsers below, so a parser and its type can't drift apart.
 
-export const FIELD_KINDS = ["email", "phone", "address", "name"] as const;
+export const FIELD_KINDS = ["email", "phone", "address", "name", "link"] as const;
+// What a profile or website link is, read from its host by the app.
+export const LINK_TYPES = ["github", "website", "linkedin", "x", "other"] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
 export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off", "notSetUp"] as const;
 // "submit" is a form the person sent. "flush" is what they typed before the page was hidden,
@@ -28,9 +30,12 @@ export const LIMITS = {
   popupValues: 30,
   popupRecent: 5,
   display: 1_000,
+  linkTypes: 5,
+  links: 10,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
+export type LinkType = (typeof LINK_TYPES)[number];
 export type SectionHint = (typeof SECTION_HINTS)[number];
 export type SyncStatus = (typeof SYNC_STATUSES)[number];
 export type CaptureTrigger = (typeof CAPTURE_TRIGGERS)[number];
@@ -125,6 +130,12 @@ const postalAddress = object({
 
 const pageField = object({ kind: oneOf(FIELD_KINDS), section });
 
+const WEB_ADDRESS = /^https?:\/\/\S+$/u;
+const suggestedLink = object({
+  type: oneOf(LINK_TYPES),
+  url: refine(text(LIMITS.value), (url) => WEB_ADDRESS.test(url)),
+});
+
 // An address arrives in parts and every other kind as one value, never both.
 const capturedField = refine(
   object({
@@ -156,6 +167,11 @@ const pageRequests = {
     hasPassword: boolean,
     trigger: oneOf(CAPTURE_TRIGGERS),
     fields: arrayOf(capturedField, LIMITS.captureFields),
+  }),
+  linkSuggestions: object({
+    type: literal("linkSuggestions"),
+    host: hostName,
+    types: arrayOf(oneOf(LINK_TYPES), LIMITS.linkTypes),
   }),
 };
 
@@ -190,6 +206,7 @@ const pageResponses = {
     reason: optional(text(LIMITS.reason)),
   }),
   captureResult: object({ type: literal("captureResult"), saved: count, review: count, ignored: count }),
+  linkSuggestionsResult: object({ type: literal("linkSuggestionsResult"), links: arrayOf(suggestedLink, LIMITS.links) }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -211,7 +228,8 @@ export type CapturedField = Parsed<typeof capturedField>;
 export type Ping = Parsed<typeof pageRequests.ping>;
 export type PageContextRequest = Parsed<typeof pageRequests.pageContext>;
 export type CaptureRequest = Parsed<typeof pageRequests.capture>;
-export type PageRequest = Ping | PageContextRequest | CaptureRequest;
+export type LinkSuggestionsRequest = Parsed<typeof pageRequests.linkSuggestions>;
+export type PageRequest = Ping | PageContextRequest | CaptureRequest | LinkSuggestionsRequest;
 export type PopupStateRequest = Parsed<typeof sheetRequests.popupState>;
 export type PinRequest = Parsed<typeof sheetRequests.pin>;
 export type UnpinRequest = Parsed<typeof sheetRequests.unpin>;
@@ -223,7 +241,9 @@ export type Pong = Parsed<typeof pageResponses.pong>;
 export type PageContextResult = Parsed<typeof pageResponses.pageContextResult>;
 export type CaptureResult = Parsed<typeof pageResponses.captureResult>;
 export type ErrorResponse = Parsed<typeof pageResponses.error>;
-export type PageResponse = Pong | PageContextResult | CaptureResult | ErrorResponse;
+export type SuggestedLink = Parsed<typeof suggestedLink>;
+export type LinkSuggestionsResult = Parsed<typeof pageResponses.linkSuggestionsResult>;
+export type PageResponse = Pong | PageContextResult | CaptureResult | LinkSuggestionsResult | ErrorResponse;
 export type PopupValue = Parsed<typeof popupValue>;
 export type PopupKind = Parsed<typeof popupKind>;
 export type PopupRecent = Parsed<typeof popupRecent>;
