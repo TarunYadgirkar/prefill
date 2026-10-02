@@ -44,8 +44,17 @@ function element(selector: string): Element {
   return found;
 }
 
+// A script's execCommand makes trusted input events with no tap or key before them.
+function insertText(selector: string, value: string): void {
+  const input = element(selector) as HTMLInputElement;
+  input.value = value;
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 function type(selector: string, value: string): void {
   const input = element(selector) as HTMLInputElement;
+  input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, composed: true }));
   input.value = value;
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
@@ -58,6 +67,7 @@ function fill(selector: string, value: string): void {
 
 function choose(selector: string, value: string): void {
   const select = element(selector) as HTMLSelectElement;
+  select.dispatchEvent(new Event("pointerdown", { bubbles: true, composed: true }));
   select.value = value;
   select.dispatchEvent(new Event("change", { bubbles: true }));
 }
@@ -123,6 +133,33 @@ describe("capture on sign-up", () => {
     click("#create");
     submit("form");
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it("sends nothing a script typed and submitted inside the person's tap", () => {
+    const send = setUp(signup);
+    insertText("#fullName", "Alex Rivera");
+    insertText("#signupEmail", "attacker@evil.example");
+    (element("form") as HTMLFormElement).requestSubmit();
+    submit("form");
+    hide();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("counts a tap on a field's label as touching the field", () => {
+    const send = setUp('<form><label id="l">Email <input type="email" name="e"></label><button>Go</button></form>');
+    element("#l").dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    insertText("[name=e]", "new.person@example.org");
+    click("button");
+    expect(sentFields(send).map((field) => field.value)).toEqual(["new.person@example.org"]);
+  });
+
+  it("reports at most three times from one page", () => {
+    const send = setUp('<form><input type="email" name="e"><button>Go</button></form>');
+    ["a", "b", "c", "d"].forEach((name) => {
+      type("[name=e]", `${name}@example.org`);
+      click("button");
+    });
+    expect(send).toHaveBeenCalledTimes(3);
   });
 
   it("skips a field the person can't edit", () => {
@@ -420,6 +457,7 @@ describe("fields inside an open shadow root", () => {
     shadow.innerHTML = '<label>Email <input type="email" name="email" autocomplete="email"></label>';
     const input = shadow.querySelector("input");
     if (input === null) throw new Error("no shadow input");
+    input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, composed: true }));
     input.value = "new.person@example.org";
     input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
     input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
