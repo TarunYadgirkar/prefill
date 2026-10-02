@@ -89,38 +89,43 @@ public struct AppState: Codable, Sendable, Hashable {
 // Written only by the extension, append-only. The caps keep the Keychain item small
 // (about 120 bytes per usage event, 400 per capture, so well under 150 KB in total)
 // while still covering months of form fills. `cardWrites` holds when page context last
-// rewrote the card, so a page can't make it churn. `pins` and `mutes` are choices made in
-// Safari's Prefill sheet, which the app folds into AppState.
+// rewrote the card, so a page can't make it churn. `saves` holds when captures went onto
+// the card, for the hourly limit. `pins` and `mutes` are choices made in Safari's Prefill
+// sheet, which the app folds into AppState.
 public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxUsage = 500
     public static let maxCaptures = 200
     public static let maxCardWrites = 20
+    public static let maxSaves = 20
     public static let maxPins = 100
     public static let maxMutes = 100
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
     public let cardWrites: [Date]
+    public let saves: [Date]
     public let pins: [PinEvent]
     public let mutes: [MuteEvent]
 
     public init(
         usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = [],
-        pins: [PinEvent] = [], mutes: [MuteEvent] = []
+        saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = []
     ) {
         self.usage = usage
         self.captures = captures
         self.cardWrites = cardWrites
+        self.saves = saves
         self.pins = pins
         self.mutes = mutes
     }
 
-    // Documents written before `cardWrites`, `pins` and `mutes` existed still read.
+    // Documents written before `cardWrites`, `saves`, `pins` and `mutes` existed still read.
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         usage = try container.decode([UsageEvent].self, forKey: .usage)
         captures = try container.decode([Capture].self, forKey: .captures)
         cardWrites = try container.decodeIfPresent([Date].self, forKey: .cardWrites) ?? []
+        saves = try container.decodeIfPresent([Date].self, forKey: .saves) ?? []
         pins = try container.decodeIfPresent([PinEvent].self, forKey: .pins) ?? []
         mutes = try container.decodeIfPresent([MuteEvent].self, forKey: .mutes) ?? []
     }
@@ -128,11 +133,27 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public func appending(_ new: ExtensionEvents) -> ExtensionEvents {
         ExtensionEvents(
             usage: Array((usage + new.usage).suffix(Self.maxUsage)),
-            captures: Array((captures + new.captures).suffix(Self.maxCaptures)),
+            captures: Self.trimmed(captures + new.captures),
             cardWrites: Array((cardWrites + new.cardWrites).suffix(Self.maxCardWrites)),
+            saves: Array((saves + new.saves).suffix(Self.maxSaves)),
             pins: Array((pins + new.pins).suffix(Self.maxPins)),
             mutes: Array((mutes + new.mutes).suffix(Self.maxMutes))
         )
+    }
+
+    // A page can file many values for review, so those go first, oldest first. Saved and
+    // undone records go last: Undo reads them, and an undo counts only once the app folds it in.
+    private static let evictionOrder: [Set<CaptureVerdict>] = [[.needsReview, .duplicate], [.dismissed], [.saved]]
+
+    static func trimmed(_ captures: [Capture]) -> [Capture] {
+        let excess = captures.count - maxCaptures
+        guard excess > 0 else { return captures }
+        let dropped = evictionOrder.reduce(into: [Int]()) { dropped, verdicts in
+            let room = excess - dropped.count
+            dropped += captures.indices.filter { verdicts.contains(captures[$0].verdict) }.prefix(room)
+        }
+        let droppedSet = Set(dropped)
+        return captures.indices.filter { !droppedSet.contains($0) }.map { captures[$0] }
     }
 
     public func appending(

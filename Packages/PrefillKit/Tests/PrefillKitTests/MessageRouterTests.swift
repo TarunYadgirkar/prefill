@@ -23,6 +23,17 @@ final class MemoryStore: SharedStore {
     func appendEvents(_ new: ExtensionEvents) throws {
         documents.withLock { $0.events = $0.events.appending(new) }
     }
+
+    // Stands in for review spam having trimmed every capture record away.
+    func removeCaptures() throws {
+        documents.withLock { documents in
+            let events = documents.events
+            documents.events = ExtensionEvents(
+                usage: events.usage, cardWrites: events.cardWrites, saves: events.saves, pins: events.pins,
+                mutes: events.mutes
+            )
+        }
+    }
 }
 
 private enum Page {
@@ -260,6 +271,27 @@ struct MessageRouterTests {
         try? store.appendEvents(usage: [], captures: recent)
         let reply = router(store).route(Page.signup(Page.siteA, emails: ["a@example.org", "b@example.org"]))
         #expect(reply == .capture(CaptureResponse(saved: 1, review: 1, ignored: 1)))
+    }
+
+    @Test func theHourlyLimitHoldsAfterSavedRecordsAreTrimmed() {
+        let store = linked()
+        let router = router(store)
+        _ = router.route(Page.signup(Page.siteA, emails: ["a@example.org", "b@example.org", "c@example.org"]))
+        _ = router.route(Page.signup(Page.siteB, emails: ["d@example.org", "e@example.org", "f@example.org"]))
+        try? store.removeCaptures()
+        let reply = router.route(Page.signup(Page.siteA, email: "g@example.org"))
+        #expect(reply == .capture(CaptureResponse(saved: 0, review: 1, ignored: 1)))
+    }
+
+    @Test func oneSiteCanFileOnlySoManyValuesForReviewEachDay() {
+        let store = linked()
+        let router = router(store)
+        let batches = (0..<3).map { batch in (0..<10).map { "flushed\(batch)-\($0)@example.org" } }
+        let replies = batches.map { router.route(Page.signup(Page.siteA, emails: $0, submitted: false)) }
+        #expect(replies.last == .capture(CaptureResponse(saved: 0, review: 0, ignored: 11)))
+        #expect(store.events.captures.count == MessageRouter.maxReviewsPerSite)
+        let elsewhere = router.route(Page.signup(Page.siteB, email: Page.newEmail, submitted: false))
+        #expect(elsewhere == .capture(CaptureResponse(saved: 0, review: 1, ignored: 1)))
     }
 
     @Test func withMatchEachSiteOffNoUseIsRecorded() throws {
