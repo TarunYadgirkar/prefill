@@ -106,10 +106,13 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public let saves: [Date]
     public let pins: [PinEvent]
     public let mutes: [MuteEvent]
+    // When the extension last reported a page with contact fields. Safari can't tell the app
+    // whether All Websites is allowed, but the extension only runs on pages once it is.
+    public let lastPageSeen: Date?
 
     public init(
         usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = [],
-        saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = []
+        saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = [], lastPageSeen: Date? = nil
     ) {
         self.usage = usage
         self.captures = captures
@@ -117,6 +120,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         self.saves = saves
         self.pins = pins
         self.mutes = mutes
+        self.lastPageSeen = lastPageSeen
     }
 
     // Documents written before `cardWrites`, `saves`, `pins` and `mutes` existed still read.
@@ -128,6 +132,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         saves = try container.decodeIfPresent([Date].self, forKey: .saves) ?? []
         pins = try container.decodeIfPresent([PinEvent].self, forKey: .pins) ?? []
         mutes = try container.decodeIfPresent([MuteEvent].self, forKey: .mutes) ?? []
+        lastPageSeen = try container.decodeIfPresent(Date.self, forKey: .lastPageSeen)
     }
 
     public func appending(_ new: ExtensionEvents) -> ExtensionEvents {
@@ -137,7 +142,8 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
             cardWrites: Array((cardWrites + new.cardWrites).suffix(Self.maxCardWrites)),
             saves: Array((saves + new.saves).suffix(Self.maxSaves)),
             pins: Array((pins + new.pins).suffix(Self.maxPins)),
-            mutes: Array((mutes + new.mutes).suffix(Self.maxMutes))
+            mutes: Array((mutes + new.mutes).suffix(Self.maxMutes)),
+            lastPageSeen: new.lastPageSeen ?? lastPageSeen
         )
     }
 

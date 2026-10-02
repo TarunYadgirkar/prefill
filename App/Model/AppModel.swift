@@ -97,7 +97,7 @@ final class AppModel {
     // Safari can't report the All Websites switch, but the extension only reports forms
     // once it is allowed to run on them.
     var isAllowedOnWebsites: Bool {
-        !events.usage.isEmpty || !events.captures.isEmpty
+        events.lastPageSeen != nil || !events.usage.isEmpty || !events.captures.isEmpty
     }
 
     func start() async {

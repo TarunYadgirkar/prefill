@@ -38,7 +38,10 @@ public struct MessageRouter: Sendable {
     static let maxCardWritesPerWindow = 6
     static let cardWriteWindow: TimeInterval = 60
 
+    static let pageSeenInterval: TimeInterval = 86_400
+
     func pageContext(_ request: PageContextRequest) -> PageContextResponse {
+        notePageSeen(at: now())
         guard let state = currentState() else { return PageContextResponse(outcome: .failed(.other)) }
         guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
         guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
@@ -55,6 +58,11 @@ public struct MessageRouter: Sendable {
         let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
         if result.outcome == .saved { noteCardWrite(at: date) }
         return PageContextResponse(outcome: result.outcome)
+    }
+
+    func notePageSeen(at date: Date) {
+        if let seen = events().lastPageSeen, date.timeIntervalSince(seen) < Self.pageSeenInterval { return }
+        append(ExtensionEvents(lastPageSeen: date))
     }
 
     func noteCardWrite(at date: Date) {

@@ -57,7 +57,7 @@ struct SafariSwitch: Identifiable {
             ),
             SafariSwitch(
                 id: 1, title: "All Websites", setting: isAllowed ? "Allow" : "Set to Allow", isDone: isAllowed,
-                note: isAllowed ? nil : "Prefill confirms this once you fill in a form in Safari."
+                note: isAllowed ? nil : "Prefill confirms this the next time you open a page with a form in Safari."
             )
         ]
     }

@@ -128,6 +128,20 @@ struct MessageRouterTests {
         #expect(gateway.fetches == 0)
     }
 
+    @Test func aPageWithFormsConfirmsTheExtensionRunsOnWebsites() throws {
+        let store = MemoryStore()
+        _ = router(store).route(Page.context(Page.siteA))
+        #expect(try store.readEvents().lastPageSeen == .testNow)
+    }
+
+    @Test func aPageWithFormsRecordsSightingsAtMostDaily() throws {
+        let earlier = Date.testNow.addingTimeInterval(-3_600)
+        let store = MemoryStore()
+        try store.appendEvents(ExtensionEvents(lastPageSeen: earlier))
+        _ = router(store).route(Page.context(Page.siteA))
+        #expect(try store.readEvents().lastPageSeen == earlier)
+    }
+
     @Test func pageContextWithMatchEachSiteOffLeavesTheCardAlone() {
         let reply = router(linked(Settings(matchEachSite: false))).route(Page.context(Page.siteA))
         #expect(reply == .pageContext(PageContextResponse(status: .off)))
