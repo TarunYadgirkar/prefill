@@ -52,6 +52,29 @@ public struct CardRecord: Codable, Sendable, Hashable {
     }
 }
 
+// The last line against losing a value: whatever planned a save, a save that only reorders
+// and adds keeps every value the card had and adds only a few.
+extension CardRecord {
+    static let maxAdditionsPerKind = 3
+
+    func keepsEveryValue(of basis: CardRecord) -> Bool {
+        ContactKind.allCases.allSatisfy { kind in
+            let before = Set(basis.entries(kind).map(\.key))
+            let after = Set(entries(kind).map(\.key))
+            return before.isSubset(of: after) && after.subtracting(before).count <= Self.maxAdditionsPerKind
+        }
+    }
+
+    // This card with any value of `basis` it lost put back at the end.
+    func restoringValues(of basis: CardRecord) -> CardRecord {
+        ContactKind.allCases.reduce(self) { card, kind in
+            let present = Set(card.entries(kind).map(\.key))
+            let lost = basis.entries(kind).filter { !present.contains($0.key) }
+            return lost.isEmpty ? card : card.replacing(kind, with: card.entries(kind) + lost)
+        }
+    }
+}
+
 public struct CardLink: Codable, Sendable, Hashable {
     public let contactIdentifier: String
     public let containerIdentifier: String?

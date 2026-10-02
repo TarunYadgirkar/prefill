@@ -28,7 +28,8 @@ public struct CardEditor: Sendable {
     private func write(_ edit: Edit, card: CardRecord, attempt: Int) throws(CardWriteFailure) -> CardWriteOutcome {
         let target = Self.target(edit, card: card)
         guard target != card else { return .unchanged }
-        switch try gateway.save(target, basis: card, transactionAuthor: CardWriter.transactionAuthor) {
+        let author = CardWriter.transactionAuthor
+        switch try gateway.save(target, basis: card, scope: .personEdit, transactionAuthor: author) {
         case .saved: return .saved
         case .stale(let current) where attempt < Self.attempts:
             return try write(edit, card: current, attempt: attempt + 1)
