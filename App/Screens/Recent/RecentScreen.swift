@@ -84,11 +84,29 @@ private struct RecentRow: View {
     @Environment(AppModel.self) private var model
     let item: RecentItem
     @State private var isWorking = false
+    // Nil until the person picks a label; until then the suggestion stands.
+    @State private var picked: String??
+
+    private var suggestion: Insight<SuggestedLabel> { model.suggestedLabel(item) }
+
+    // The label Save puts on the card: the person's pick, the form's own label, or the suggestion.
+    private var label: String? {
+        picked ?? item.value.label ?? suggestion.result.contactsLabel
+    }
+
+    private var isModelPick: Bool {
+        picked == nil && item.value.label == nil && suggestion.source == .model
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
-                ValueRow(value: item.value, showsKindCaption: false)
+                if item.state == .saved {
+                    ValueRow(value: item.value, showsKindCaption: false)
+                } else {
+                    labelMenu
+                    ValueText(value: item.value)
+                }
                 Text("Typed on \(item.host.breakableAtPunctuation) \(typedWhen)")
                     .textRole(.footnote)
             }
@@ -124,17 +142,47 @@ private struct RecentRow: View {
             .prefillButtonStyle(.rowDestructive)
             .disabled(isWorking)
         case .removed:
-            Button("Save to card", systemImage: "arrow.uturn.backward") { run { await model.putBack(item) } }
+            Button("Save to card", systemImage: "arrow.uturn.backward") {
+                run { await model.putBack(item, label: label) }
+            }
                 .prefillButtonStyle(.rowPrimary)
                 .disabled(isWorking)
         }
     }
 
     @ViewBuilder private var reviewButtons: some View {
-        Button("Save to card") { run { await model.save(item) } }
+        Button("Save to card") { run { await model.save(item, label: label) } }
             .prefillButtonStyle(.rowPrimary)
         Button("Don’t save") { model.dismiss(item) }
             .prefillButtonStyle(.rowSecondary)
+    }
+
+    // Preselected with the suggested label, so saving is one tap. The Apple Intelligence mark
+    // shows only while the label on it is the one the on-device model chose.
+    private var labelMenu: some View {
+        let caption = LabelChoices.caption(label, kind: item.value.kind)
+        return Menu {
+            Picker("Label", selection: selection) {
+                ForEach(LabelChoices.system(for: item.value.kind), id: \.self) { choice in
+                    Text(LabelChoices.caption(choice, kind: item.value.kind)).tag(Optional(choice))
+                }
+                Text("No label").tag(String?.none)
+            }
+            .pickerStyle(.inline)
+        } label: {
+            LabelChip(caption: caption, symbol: isModelPick ? "apple.intelligence" : nil)
+        }
+        .menuStyle(.button)
+        .buttonStyle(.borderless)
+        .padding(.vertical, -Spacing.small)
+        .padding(.trailing, -Spacing.medium)
+        .accessibilityLabel(Text("Label for \(item.value.display)"))
+        .accessibilityValue(isModelPick ? Text("\(caption), suggested by Apple Intelligence") : Text(caption))
+        .accessibilityIdentifier("suggested-label-\(item.value.display)")
+    }
+
+    private var selection: Binding<String?> {
+        Binding { label } set: { picked = .some($0) }
     }
 
     private func run(_ work: @escaping () async -> Void) {

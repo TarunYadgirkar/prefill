@@ -11,9 +11,14 @@ struct RankerTests {
         pins: [SitePin] = [],
         host: String? = "shop.example.net",
         hint: SectionHint? = nil,
-        matchEachSite: Bool = true
+        matchEachSite: Bool = true,
+        siteKind: SiteKind = .unknown,
+        focusLabel: String? = nil
     ) -> [ContactValue] {
-        let context = RankingContext(host: host, hint: hint, now: .testNow, matchEachSite: matchEachSite)
+        let context = RankingContext(
+            host: host, hint: hint, now: .testNow, matchEachSite: matchEachSite,
+            siteKind: siteKind, focusLabel: focusLabel
+        )
         return Ranker.rank(values, usage: usage, pins: pins, context: context)
     }
 
@@ -129,5 +134,42 @@ struct RankerTests {
         ]
         #expect(rank(usage: usage) == [Alex.workEmail, Alex.schoolEmail, Alex.homeEmail])
         #expect(rank(usage: usage) == rank(usage: usage.reversed()))
+    }
+
+    @Test func aSchoolSiteLiftsTheSchoolValueEvenUnlabeled() {
+        #expect(rank(siteKind: .school).first == Alex.schoolEmail)
+    }
+
+    @Test func theSectionHintBeatsTheSiteKind() {
+        #expect(rank(hint: .work, siteKind: .school).prefix(2) == [Alex.workEmail, Alex.schoolEmail])
+    }
+
+    @Test func useOnThisSiteBeatsTheSiteKind() {
+        let ranked = rank(usage: [use(Alex.homeEmail, on: site, daysAgo: 60)], siteKind: .school)
+        #expect(ranked.prefix(2) == [Alex.homeEmail, Alex.schoolEmail])
+    }
+
+    @Test func theSiteKindBeatsTheFocusLabel() {
+        #expect(rank(siteKind: .school, focusLabel: "work") == [Alex.schoolEmail, Alex.workEmail, Alex.homeEmail])
+    }
+
+    @Test func aFocusLabelLiftsItsValueEvenWithoutAHost() {
+        #expect(rank(host: nil, focusLabel: "work").first == Alex.workEmail)
+        #expect(rank(matchEachSite: false, focusLabel: "work").first == Alex.workEmail)
+    }
+
+    @Test func aPinBeatsTheFocusLabel() {
+        let pin = SitePin(host: "example.net", kind: .email, valueID: Alex.schoolEmail.id)
+        #expect(rank(pins: [pin], focusLabel: "work").first == Alex.schoolEmail)
+    }
+
+    // Recent use lifts a value the card has by half a step, a captured one by a fifth.
+    @Test func aCapturedValueGetsASmallerRecencyBoost() {
+        let captured = Alex.value(.email("alex.news@example.com"), label: nil, source: .captured)
+        let emails = [Alex.homeEmail, Alex.workEmail, captured]
+        let usage = [use(captured, on: "example.org", daysAgo: 0)]
+        #expect(rank(emails, usage: usage) == emails)
+        let fromCard = Alex.value(.email("alex.news@example.com"), label: nil)
+        #expect(rank([Alex.homeEmail, Alex.workEmail, fromCard], usage: usage)[1] == fromCard)
     }
 }

@@ -103,7 +103,7 @@ struct CardWriterTests {
     }
 
     @Test func aChangePastTheSecondSlotIsNotWorthASave() {
-        let extra = Alex.value(.email("rivera.alex@example.net"), label: nil)
+        let extra = Alex.value(.email("rivera.alex@example.info"), label: nil)
         let card = Alex.card.replacing(.email, with: (Alex.emails + [extra]).map(\.entry))
         let gateway = FakeGateway(card: card)
         let usage = [UsageEvent(valueID: extra.id, host: "example.org", date: .daysAgo(1))]

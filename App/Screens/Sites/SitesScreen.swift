@@ -67,6 +67,10 @@ private struct SiteRow: View {
                         .textRole(.rowIcon)
                         .accessibilityLabel("Email pinned")
                 }
+                Spacer(minLength: Spacing.xSmall)
+                if let kind = site.kind.title {
+                    SiteKindTag(title: kind)
+                }
             }
             if let first = site.values(.email).first {
                 Text("Suggests \(first.payload.barText.breakableAtPunctuation) first")
@@ -75,6 +79,20 @@ private struct SiteRow: View {
             }
         }
         .padding(.vertical, Spacing.xxSmall)
+    }
+}
+
+// What kind of site this is, which decides the value Safari offers on a first visit.
+private struct SiteKindTag: View {
+    let title: LocalizedStringKey
+
+    var body: some View {
+        Text(title)
+            .textRole(.footnote)
+            .padding(.horizontal, Spacing.xSmall)
+            .padding(.vertical, Spacing.hairline)
+            .background(Palette.highlight, in: .capsule)
+            .accessibilityLabel(Text("\(Text(title)) site"))
     }
 }
 
