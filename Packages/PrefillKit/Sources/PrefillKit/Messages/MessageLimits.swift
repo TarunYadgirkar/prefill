@@ -19,6 +19,7 @@ public enum MessageLimits {
     static let linkTypes = LinkType.allCases.count
     static let linksPerType = 3
     static let links = 10
+    static let suggestions = 5
 }
 
 extension ExtensionRequest {
@@ -36,6 +37,8 @@ extension ExtensionRequest {
             host.count <= MessageLimits.host
         case .linkSuggestions(let body):
             body.host.count <= MessageLimits.host && body.types.count <= MessageLimits.linkTypes
+        case .contactSuggestions(let body):
+            body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
         }
     }
 }
@@ -66,7 +69,8 @@ extension ExtensionRequest {
         case .ping: true
         case .pageContext(let body): MessageText.isHost(body.host)
         case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
-        case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions: MessageText.isHost(host)
+        case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions, .contactSuggestions:
+            MessageText.isHost(host)
         }
     }
 
@@ -82,6 +86,7 @@ extension ExtensionRequest {
         case .undoCapture(let body): body.host
         case .muteSite(let body): body.host
         case .linkSuggestions(let body): body.host
+        case .contactSuggestions(let body): body.host
         }
     }
 }

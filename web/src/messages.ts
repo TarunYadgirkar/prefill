@@ -32,6 +32,7 @@ export const LIMITS = {
   display: 1_000,
   linkTypes: 5,
   links: 10,
+  suggestions: 5,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -173,6 +174,11 @@ const pageRequests = {
     host: hostName,
     types: arrayOf(oneOf(LINK_TYPES), LIMITS.linkTypes),
   }),
+  contactSuggestions: object({
+    type: literal("contactSuggestions"),
+    host: hostName,
+    fields: arrayOf(pageField, LIMITS.pageFields),
+  }),
 };
 
 const contactKind = oneOf(CONTACT_KINDS);
@@ -207,6 +213,13 @@ const pageResponses = {
   }),
   captureResult: object({ type: literal("captureResult"), saved: count, review: count, ignored: count }),
   linkSuggestionsResult: object({ type: literal("linkSuggestionsResult"), links: arrayOf(suggestedLink, LIMITS.links) }),
+  contactSuggestionsResult: object({
+    type: literal("contactSuggestionsResult"),
+    emails: arrayOf(text(LIMITS.value), LIMITS.suggestions),
+    phones: arrayOf(text(LIMITS.value), LIMITS.suggestions),
+    addresses: arrayOf(postalAddress, LIMITS.suggestions),
+    name: optional(object({ given: text(LIMITS.part), family: text(LIMITS.part) })),
+  }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -229,7 +242,8 @@ export type Ping = Parsed<typeof pageRequests.ping>;
 export type PageContextRequest = Parsed<typeof pageRequests.pageContext>;
 export type CaptureRequest = Parsed<typeof pageRequests.capture>;
 export type LinkSuggestionsRequest = Parsed<typeof pageRequests.linkSuggestions>;
-export type PageRequest = Ping | PageContextRequest | CaptureRequest | LinkSuggestionsRequest;
+export type ContactSuggestionsRequest = Parsed<typeof pageRequests.contactSuggestions>;
+export type PageRequest = Ping | PageContextRequest | CaptureRequest | LinkSuggestionsRequest | ContactSuggestionsRequest;
 export type PopupStateRequest = Parsed<typeof sheetRequests.popupState>;
 export type PinRequest = Parsed<typeof sheetRequests.pin>;
 export type UnpinRequest = Parsed<typeof sheetRequests.unpin>;
@@ -243,7 +257,14 @@ export type CaptureResult = Parsed<typeof pageResponses.captureResult>;
 export type ErrorResponse = Parsed<typeof pageResponses.error>;
 export type SuggestedLink = Parsed<typeof suggestedLink>;
 export type LinkSuggestionsResult = Parsed<typeof pageResponses.linkSuggestionsResult>;
-export type PageResponse = Pong | PageContextResult | CaptureResult | LinkSuggestionsResult | ErrorResponse;
+export type ContactSuggestionsResult = Parsed<typeof pageResponses.contactSuggestionsResult>;
+export type PageResponse =
+  | Pong
+  | PageContextResult
+  | CaptureResult
+  | LinkSuggestionsResult
+  | ContactSuggestionsResult
+  | ErrorResponse;
 export type PopupValue = Parsed<typeof popupValue>;
 export type PopupKind = Parsed<typeof popupKind>;
 export type PopupRecent = Parsed<typeof popupRecent>;

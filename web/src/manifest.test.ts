@@ -1,4 +1,5 @@
 // @vitest-environment node
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
@@ -25,6 +26,18 @@ describe.each([
   it.each(Object.entries(icons))("%s px points at a square PNG of that size", (size, path) => {
     expect(existsSync(new URL(path, RESOURCES))).toBe(true);
     expect(pngSize(path)).toEqual({ width: Number(size), height: Number(size) });
+  });
+});
+
+describe("Chrome manifest", () => {
+  // Chrome names an unpacked extension after its key: the first 128 bits of the key's
+  // SHA-256, one letter a to p per hex digit. The Mac app allows only that ID.
+  it("has the key whose ID the Mac app's native host allows", () => {
+    const chrome = JSON.parse(readFileSync(new URL("../chromium/manifest.json", import.meta.url), "utf8")) as { key: string };
+    const digest = createHash("sha256").update(Buffer.from(chrome.key, "base64")).digest("hex").slice(0, 32);
+    const id = digest.replace(/[0-9a-f]/gu, (digit) => String.fromCharCode(97 + parseInt(digit, 16)));
+    const installer = readFileSync(new URL("../../MacApp/Relay/HostInstaller.swift", import.meta.url), "utf8");
+    expect(installer).toContain(`static let extensionID = "${id}"`);
   });
 });
 

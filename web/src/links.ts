@@ -1,4 +1,6 @@
 import { classify } from "./classify";
+import { attachList } from "./datalist";
+import { trackGestures } from "./gesture";
 import { eventOrigin, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { parseExtensionResponse, type LinkSuggestionsRequest, type LinkType, type SuggestedLink } from "./messages";
@@ -41,27 +43,6 @@ function wantsUrl(element: FieldElement): boolean {
   return element.localName === "input" && (element as HTMLInputElement).type.toLowerCase() === "url";
 }
 
-function attach(element: HTMLInputElement, options: readonly string[]): () => void {
-  const doc = element.ownerDocument;
-  const list = doc.createElement("datalist");
-  list.id = `prefill-links-${crypto.randomUUID()}`;
-  list.append(
-    ...options.map((value) => {
-      const option = doc.createElement("option");
-      option.value = value;
-      return option;
-    }),
-  );
-  // Outside the page's own markup, but in the field's tree, where its list id resolves.
-  const root = element.getRootNode();
-  (root instanceof ShadowRoot ? root : doc.body).append(list);
-  element.setAttribute("list", list.id);
-  return () => {
-    element.removeAttribute("list");
-    list.remove();
-  };
-}
-
 // The link types the page's fields ask for, so the links can be fetched before the first focus.
 function wantedOnPage(doc: Document): LinkType[] {
   return [...new Set(fieldElements(doc, MAX_INSPECTED).flatMap(linkTypesOf))];
@@ -74,6 +55,7 @@ function wantedOnPage(doc: Document): LinkType[] {
 // gets its list once the app answers. A field with a list of its own is left alone.
 export function installLinks(doc: Document, options: LinkOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+  const gestures = trackGestures(doc, isUserEvent);
   let known: { types: ReadonlySet<LinkType>; links: readonly SuggestedLink[] } | undefined;
   let detach: (() => void) | undefined;
   let focused: FieldElement | undefined;
@@ -98,14 +80,14 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
   const offer = (element: HTMLInputElement, wanted: readonly LinkType[], links: readonly SuggestedLink[] | undefined): void => {
     if (focused !== element || detach !== undefined || links === undefined) return;
     const choices = linkOptions(wanted, links, wantsUrl(element));
-    if (choices.length > 0) detach = attach(element, choices);
+    if (choices.length > 0) detach = attachList(element, choices);
   };
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
     if (!isFieldElement(target) || target.hasAttribute("list")) return;
     const wanted = linkTypesOf(target);
-    if (wanted.length === 0) return;
+    if (wanted.length === 0 || !gestures.allows(target as HTMLInputElement)) return;
     clear();
     focused = target;
     suggest(target as HTMLInputElement, wanted);
@@ -135,6 +117,7 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
   doc.addEventListener("focusout", onBlur, true);
   return () => {
     clear();
+    gestures.stop();
     doc.removeEventListener("DOMContentLoaded", prefetch);
     doc.removeEventListener("focusin", onFocus, true);
     doc.removeEventListener("focusout", onBlur, true);

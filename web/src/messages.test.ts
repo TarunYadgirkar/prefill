@@ -26,6 +26,8 @@ import {
   type PopupStateResult,
   type LinkSuggestionsRequest,
   type LinkSuggestionsResult,
+  type ContactSuggestionsRequest,
+  type ContactSuggestionsResult,
   parsePageRequest,
 } from "./messages";
 
@@ -45,6 +47,20 @@ const linkSuggestionsResult: LinkSuggestionsResult = {
     { type: "github", url: "https://github.com/alexrivera" },
     { type: "website", url: "https://alexrivera.dev" },
   ],
+};
+
+const contactSuggestions: ContactSuggestionsRequest = {
+  type: "contactSuggestions",
+  host: "shop.example.net",
+  fields: [{ kind: "email" }, { kind: "address", section: "shipping" }, { kind: "name" }],
+};
+
+const contactSuggestionsResult: ContactSuggestionsResult = {
+  type: "contactSuggestionsResult",
+  emails: ["alex@work.example.org", "alex.rivera@example.com"],
+  phones: [],
+  addresses: [{ street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" }],
+  name: { given: "Alex", family: "Rivera" },
 };
 
 const pageContext: PageContextRequest = {
@@ -134,13 +150,13 @@ describe("message contract", () => {
     expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(true);
   });
 
-  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions }))("request %s matches the shared example", (name, typed) => {
+  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions, contactSuggestions }))("request %s matches the shared example", (name, typed) => {
     const example: unknown = examples.requests[name as keyof typeof examples.requests];
     expect(example).toEqual(typed);
     expect(isExtensionRequest(example)).toBe(true);
   });
 
-  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, error }))(
+  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, contactSuggestionsResult, error }))(
     "response %s matches the shared example",
     (name, typed) => {
       const example: unknown = examples.responses[name as keyof typeof examples.responses];

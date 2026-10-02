@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Prefill",
+  "description": "Suggests the emails, phone numbers, addresses and links from your contact card that fit each site, and saves new ones you enter to your card.",
+  "version": "1.0",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwWtd5xrDt9cLfKPMbYvEi2H30nJ2voWmgo6MWEgvedYw2l+6K5F27547vIprXcz55rPoOie3a+lI58OxWGcFL9EUW8z1O+9v4no/FTgP6ueuaUKtolSi0KVUo60FiWk2oA1xken1W+ec2UR6xgm1+C2jlE6Ii7nxmFgN42kbCxMutalR3Xrg6LaA+7QnvQCiJIJhG5INIozJcxrXOtEzb0cD5jx7+4sN73G3tF/Tu7QtEptuEr5qbRWM8VXfOpjEIitBjv4i3STah53O/aQoLBgxykagJj9ymtcSjOBlv7KD+RuFcbvZSxABYsebGpwFJKladZmYnnCXAxMmszT69wIDAQAB",
+  "icons": {
+    "48": "images/icon-48.png",
+    "96": "images/icon-96.png",
+    "128": "images/icon-128.png"
+  },
+  "action": {
+    "default_title": "Prefill",
+    "default_icon": {
+      "16": "images/toolbar-icon-16.png",
+      "32": "images/toolbar-icon-32.png",
+      "48": "images/toolbar-icon-48.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "js": ["content.js"],
+      "matches": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"],
+      "all_frames": false,
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": ["nativeMessaging"]
+}
