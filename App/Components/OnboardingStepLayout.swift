@@ -32,7 +32,7 @@ struct OnboardingStepLayout<Content: View, Actions: View>: View {
             }
             .frame(maxWidth: Size.readableWidth, alignment: .leading)
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, Spacing.large)
+            .padding(.horizontal, Spacing.page)
             .padding(.top, Spacing.xLarge)
             .padding(.bottom, Spacing.large)
         }
@@ -41,7 +41,7 @@ struct OnboardingStepLayout<Content: View, Actions: View>: View {
             if !typeSize.isAccessibilitySize {
                 actionStack
                     .frame(maxWidth: Size.readableWidth)
-                    .padding(.horizontal, Spacing.large)
+                    .padding(.horizontal, Spacing.page)
                     .padding(.vertical, Spacing.small)
             }
         }

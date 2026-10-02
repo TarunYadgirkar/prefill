@@ -5,6 +5,8 @@ import SwiftUI
 // value itself. Addresses keep every line, so nothing the bar truncates is lost here.
 struct ValueRow<Accessory: View>: View {
     let value: ContactValue
+    // One of the two values Safari offers first, which VoiceOver says after the value.
+    var isInBar = false
     @ViewBuilder var accessory: () -> Accessory
 
     @Environment(\.dynamicTypeSize) private var typeSize
@@ -26,6 +28,8 @@ struct ValueRow<Accessory: View>: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityElement(children: .combine)
+            .accessibilityValue(isInBar ? Text("Offered first in Safari") : Text(""))
             accessory()
         }
         .padding(.vertical, Spacing.xxSmall)
@@ -34,8 +38,8 @@ struct ValueRow<Accessory: View>: View {
 }
 
 extension ValueRow where Accessory == EmptyView {
-    init(value: ContactValue) {
-        self.init(value: value) { EmptyView() }
+    init(value: ContactValue, isInBar: Bool = false) {
+        self.init(value: value, isInBar: isInBar) { EmptyView() }
     }
 }
 

@@ -12,15 +12,16 @@ struct TextRole {
     static let bodyEmphasis = TextRole(font: .body.weight(.semibold), color: Palette.textPrimary)
     static let secondary = TextRole(font: .subheadline, color: Palette.textSecondary)
     static let footnote = TextRole(font: .footnote, color: Palette.textSecondary)
+    static let groupHeader = TextRole(font: .subheadline.weight(.semibold), color: Palette.textPrimary)
 
     static let value = TextRole(font: .body, color: Palette.textPrimary)
     static let valueCaption = TextRole(font: .footnote, color: Palette.textSecondary)
 
-    static let barValue = TextRole(font: .body, color: Palette.keyboardValue)
+    // Safari sets bar values at 16pt, the callout size.
+    static let barValue = TextRole(font: .callout, color: Palette.keyboardValue)
     static let barCaption = TextRole(font: .footnote, color: Palette.keyboardCaption)
-    static let barAction = TextRole(font: .body, color: Palette.accent)
-    static let barIcon = TextRole(font: .body.weight(.medium), color: Palette.keyboardGlyph)
     static let keyCap = TextRole(font: .title2, color: Palette.keyboardGlyph)
+    static let keySublabel = TextRole(font: .caption2.weight(.semibold), color: Palette.keyboardGlyph)
 
     static let statusIcon = TextRole(font: .title2, color: Palette.pending)
     static let action = TextRole(font: .body, color: Palette.accent)

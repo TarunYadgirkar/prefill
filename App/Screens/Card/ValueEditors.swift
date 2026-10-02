@@ -28,7 +28,7 @@ struct RelabelSheet: View {
                         .disabled(trimmedCustom.isEmpty)
                 }
             }
-            .navigationTitle("Label")
+            .navigationTitle("Change label")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -39,7 +39,8 @@ struct RelabelSheet: View {
                 if !LabelChoices.isSystem(value.label, kind: value.kind) { custom = value.label ?? "" }
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.large])
+        .presentationBackground(Palette.canvas)
     }
 
     private var trimmedCustom: String {
@@ -97,7 +98,7 @@ struct AddValueSheet: View {
                             .foregroundStyle(Palette.destructive)
                     }
                 }
-                Section("Label") {
+                Section {
                     Picker("Label", selection: $label) {
                         Text("No label").tag(String?.none)
                         ForEach(LabelChoices.system(for: kind), id: \.self) { choice in
@@ -113,7 +114,7 @@ struct AddValueSheet: View {
                     Button("Cancel", role: .cancel) { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add to card") { Task { await submit() } }
+                    Button("Add") { Task { await submit() } }
                         .accessibilityIdentifier("add-to-card")
                 }
             }
@@ -125,7 +126,6 @@ struct AddValueSheet: View {
         switch kind {
         case .email:
             TextField("name@example.com", text: $draft.email)
-                .textContentType(.emailAddress)
                 .keyboardType(.emailAddress)
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
@@ -133,15 +133,14 @@ struct AddValueSheet: View {
                 .accessibilityLabel("Email")
         case .phone:
             TextField("Phone number", text: $draft.phone)
-                .textContentType(.telephoneNumber)
                 .keyboardType(.phonePad)
                 .focused($isFocused)
         case .address:
-            TextField("Street", text: $draft.street).textContentType(.fullStreetAddress).focused($isFocused)
-            TextField("City", text: $draft.city).textContentType(.addressCity)
-            TextField("State", text: $draft.state).textContentType(.addressState)
-            TextField("ZIP or postal code", text: $draft.postalCode).textContentType(.postalCode)
-            TextField("Country", text: $draft.country).textContentType(.countryName)
+            AddressField(title: "Street", prompt: "Required", text: $draft.street).focused($isFocused)
+            AddressField(title: "City", text: $draft.city)
+            AddressField(title: "State", text: $draft.state)
+            AddressField(title: "Postal code", text: $draft.postalCode)
+            AddressField(title: "Country", text: $draft.country)
         }
     }
 
@@ -153,8 +152,36 @@ struct AddValueSheet: View {
             if await model.add(payload, label: label) {
                 dismiss()
             } else {
-                error = String(localized: "That's already on your card.")
+                error = String(localized: "That’s already on your card.")
             }
+        }
+    }
+}
+
+// No text content type on purpose: iOS would offer the card's own values here, and those are
+// the one answer this form can't take. The name stays beside the field once it's filled in,
+// or above it at accessibility sizes, where there's no room beside it.
+private struct AddressField: View {
+    let title: LocalizedStringKey
+    var prompt: LocalizedStringKey = "Optional"
+    @Binding var text: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+    @ScaledMetric(relativeTo: .body) private var labelWidth = Size.fieldLabel
+
+    private var layout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.xxSmall))
+            : AnyLayout(HStackLayout(spacing: Spacing.small))
+    }
+
+    var body: some View {
+        layout {
+            Text(title)
+                .textRole(.body)
+                .frame(width: typeSize.isAccessibilitySize ? nil : labelWidth, alignment: .leading)
+                .accessibilityHidden(true)
+            TextField(title, text: $text, prompt: Text(prompt))
+                .textInputAutocapitalization(.words)
         }
     }
 }

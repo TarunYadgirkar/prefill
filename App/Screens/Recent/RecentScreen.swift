@@ -2,7 +2,7 @@ import PrefillKit
 import SwiftUI
 
 // Values the extension caught in Safari forms. Ones Prefill was sure about are already on
-// the card and can be undone; the rest wait for Save or Dismiss.
+// the card and can come off again; the rest wait for Save or Dismiss.
 struct RecentScreen: View {
     @Environment(AppModel.self) private var model
 
@@ -32,8 +32,9 @@ private struct RecentList: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var waiting: [RecentItem] { model.recent.filter { $0.state == .waiting } }
-    private var saved: [RecentItem] { model.recent.filter { $0.state != .waiting } }
+    private var waiting: [RecentItem] { items(.waiting) }
+    private var saved: [RecentItem] { items(.saved) }
+    private var removed: [RecentItem] { items(.removed) }
 
     var body: some View {
         List {
@@ -46,7 +47,7 @@ private struct RecentList: View {
                     Text("Waiting for you")
                 } footer: {
                     Text(model.state.settings.saveNewInfo
-                        ? "Prefill wasn't sure these are yours, so they aren't on your card yet."
+                        ? "Prefill wasn’t sure these are yours, so they aren’t on your card yet."
                         : "Save new info is off, so everything new waits here for you.")
                         .textRole(.footnote)
                 }
@@ -58,8 +59,19 @@ private struct RecentList: View {
                     }
                 }
             }
+            if !removed.isEmpty {
+                Section("Taken off your card") {
+                    ForEach(removed) { item in
+                        RecentRow(item: item)
+                    }
+                }
+            }
         }
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.recent)
+    }
+
+    private func items(_ state: RecentItem.State) -> [RecentItem] {
+        model.recent.filter { $0.state == state }
     }
 }
 
@@ -70,14 +82,8 @@ private struct RecentRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            ValueRow(value: item.value) {
-                if item.state == .removed {
-                    Text("Removed")
-                        .textRole(.secondary)
-                }
-            }
-            .opacity(item.state == .removed ? 0.5 : 1)
-            Text("On \(item.host.breakableAtPunctuation) \(item.date.formatted(.relative(presentation: .named)))")
+            ValueRow(value: item.value)
+            Text("Typed on \(item.host.breakableAtPunctuation) \(item.date.formatted(.relative(presentation: .named)))")
                 .textRole(.footnote)
             actions
         }
@@ -94,13 +100,11 @@ private struct RecentRow: View {
                 HStack(spacing: Spacing.small) { reviewButtons }
                 VStack(alignment: .leading, spacing: Spacing.small) { reviewButtons }
             }
-            .buttonStyle(.glass)
             .disabled(isWorking)
         case .saved:
-            Button("Undo", systemImage: "arrow.uturn.backward") { run { await model.undo(item) } }
-                .buttonStyle(.glass)
+            Button("Remove from card", systemImage: "minus.circle") { run { await model.undo(item) } }
+                .prefillButtonStyle(.rowSecondary)
                 .disabled(isWorking)
-                .accessibilityLabel("Undo, take it off your card")
         case .removed:
             EmptyView()
         }
@@ -108,9 +112,9 @@ private struct RecentRow: View {
 
     @ViewBuilder private var reviewButtons: some View {
         Button("Save to card") { run { await model.save(item) } }
-            .fontWeight(.semibold)
+            .prefillButtonStyle(.rowPrimary)
         Button("Dismiss") { model.dismiss(item) }
-            .tint(Palette.textSecondary)
+            .prefillButtonStyle(.rowSecondary)
     }
 
     private func run(_ work: @escaping () async -> Void) {

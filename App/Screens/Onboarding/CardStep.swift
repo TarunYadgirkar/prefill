@@ -59,7 +59,7 @@ struct CardStep: View {
                 visit.
                 """
         ) {
-            QuickTypeBar(kind: .email, values: model.values(.email))
+            QuickTypeBar(kind: .email, values: model.values(.email), isFullBleed: true)
             VStack(alignment: .leading, spacing: Spacing.small) {
                 Text("Check that Safari uses this card")
                     .textRole(.sectionTitle)
@@ -133,8 +133,11 @@ private struct SiteDemo: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        VStack(spacing: Spacing.medium) {
-            QuickTypeBar(kind: .email, values: site == .store ? [Self.personal, Self.work] : [Self.work, Self.personal])
+        VStack(alignment: .leading, spacing: Spacing.medium) {
+            QuickTypeBar(
+                kind: .email, values: site == .store ? [Self.personal, Self.work] : [Self.work, Self.personal],
+                isFullBleed: true
+            )
             Picker("Example site", selection: $site.animation(Motion.reorder(reduceMotion: reduceMotion))) {
                 ForEach(Site.allCases, id: \.self) { site in
                     Text(site.title).tag(site)

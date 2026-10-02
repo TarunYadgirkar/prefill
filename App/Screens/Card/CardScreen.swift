@@ -2,11 +2,12 @@ import PrefillKit
 import SwiftUI
 
 // The card as Safari sees it: the bar at the top shows the two values Safari offers first,
-// and the list below is the person's order. The first two rows sit on the keyboard's
-// color, so the rows and the bar read as the same two values.
+// and the list below is the person's order, with those two values grouped under their own
+// header. Edit shows the drag handles; a long press on a row drags it too.
 struct CardScreen: View {
     @Environment(AppModel.self) private var model
     @State private var kind = ContactKind.email
+    @State private var editMode = EditMode.inactive
 
     var body: some View {
         NavigationStack {
@@ -21,31 +22,19 @@ struct CardScreen: View {
             .screenTitleDisplay()
             .safeAreaBar(edge: .top) {
                 if model.cardFailure == nil {
-                    CardHeader(kind: $kind)
+                    KindHeader(kind: $kind, values: model.values(kind))
                 }
             }
+            .toolbar {
+                if model.cardFailure == nil {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        EditButton()
+                    }
+                }
+            }
+            .environment(\.editMode, $editMode)
             .background(Palette.canvas)
         }
-    }
-}
-
-private struct CardHeader: View {
-    @Environment(AppModel.self) private var model
-    @Binding var kind: ContactKind
-
-    var body: some View {
-        VStack(spacing: Spacing.small) {
-            QuickTypeBar(kind: kind, values: model.values(kind), style: .compact)
-            Picker("Show", selection: $kind) {
-                ForEach(ContactKind.allCases) { kind in
-                    Text(kind.title).tag(kind)
-                }
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("kind-picker")
-        }
-        .padding(.horizontal, Spacing.medium)
-        .padding(.bottom, Spacing.xSmall)
     }
 }
 
@@ -54,7 +43,7 @@ private struct CardUnavailable: View {
 
     var body: some View {
         EmptyStateView(
-            title: "Prefill can't open your card", systemImage: "person.crop.circle.badge.exclamationmark",
+            title: "Prefill can’t open your card", systemImage: "person.crop.circle.badge.exclamationmark",
             message: Text(failure.appMessage)
         ) {
             if failure == .noAccess {

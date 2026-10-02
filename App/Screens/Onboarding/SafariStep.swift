@@ -12,7 +12,7 @@ struct SafariStep: View {
         OnboardingStepLayout(
             title: "Turn on Prefill in Safari",
             message: """
-                Prefill sees which fields a form asks for and what you type into them. That's how it saves new \
+                Prefill sees which fields a form asks for and what you type into them. That’s how it saves new \
                 info and picks the right values for each site.
                 """
         ) {
@@ -38,6 +38,31 @@ struct SafariStep: View {
     }
 }
 
+// The two Safari switches and what Prefill knows about each. Onboarding and Settings both
+// list them from here.
+struct SafariSwitch: Identifiable {
+    let id: Int
+    let title: LocalizedStringKey
+    let setting: LocalizedStringKey
+    let isDone: Bool
+    let note: LocalizedStringKey?
+
+    static func all(isEnabled: Bool, isAllowedOnWebsites: Bool) -> [SafariSwitch] {
+        // The extension can only have reported a form while it was on.
+        let isAllowed = isEnabled && isAllowedOnWebsites
+        return [
+            SafariSwitch(
+                id: 0, title: "Allow Extension", setting: isEnabled ? "On" : "Turn on", isDone: isEnabled,
+                note: isEnabled ? nil : "Settings opens on Prefill’s page."
+            ),
+            SafariSwitch(
+                id: 1, title: "All Websites", setting: isAllowed ? "Allow" : "Set to Allow", isDone: isAllowed,
+                note: isAllowed ? nil : "Prefill confirms this once you fill in a form in Safari."
+            )
+        ]
+    }
+}
+
 // The two switches as Settings shows them, each with a mark that turns into a check once
 // Prefill can confirm it.
 struct SafariSwitches: View {
@@ -47,23 +72,19 @@ struct SafariSwitches: View {
     // Grows with the mark's text style, so the mark never spills into the title.
     @ScaledMetric(relativeTo: .title2) private var markWidth = Size.statusMark
 
-    // The extension can only have reported a form while it was on.
-    private var isAllowed: Bool { isEnabled && isAllowedOnWebsites }
+    private var switches: [SafariSwitch] {
+        SafariSwitch.all(isEnabled: isEnabled, isAllowedOnWebsites: isAllowedOnWebsites)
+    }
 
     var body: some View {
-        VStack(spacing: 0) {
-            SwitchRow(
-                title: "Allow Extension", setting: isEnabled ? "On" : "Turn on", isDone: isEnabled,
-                markWidth: markWidth,
-                note: isEnabled ? nil : "Settings opens on Prefill's page."
-            )
-            Divider()
-                .padding(.leading, Spacing.medium + markWidth + Spacing.small)
-            SwitchRow(
-                title: "All Websites", setting: isAllowed ? "Allow" : "Set to Allow", isDone: isAllowed,
-                markWidth: markWidth,
-                note: isAllowed ? nil : "Prefill confirms this once you fill in a form in Safari."
-            )
+        VStack(alignment: .leading, spacing: 0) {
+            ForEach(switches) { item in
+                if item.id > 0 {
+                    Divider()
+                        .padding(.leading, Spacing.medium + markWidth + Spacing.small)
+                }
+                SwitchRow(item: item, markWidth: markWidth)
+            }
         }
         .background(Palette.surface, in: .rect(cornerRadius: Radius.diagram))
         .animation(Motion.state(reduceMotion: reduceMotion), value: [isEnabled, isAllowedOnWebsites])
@@ -72,38 +93,36 @@ struct SafariSwitches: View {
 }
 
 private struct SwitchRow: View {
-    let title: LocalizedStringKey
-    let setting: LocalizedStringKey
-    let isDone: Bool
+    let item: SafariSwitch
     let markWidth: CGFloat
-    let note: LocalizedStringKey?
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
-            StatusMark(isDone: isDone)
+            StatusMark(isDone: item.isDone)
                 .frame(width: markWidth)
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 ViewThatFits(in: .horizontal) {
                     HStack {
-                        Text(title).textRole(.body)
+                        Text(item.title).textRole(.body)
                         Spacer(minLength: Spacing.xSmall)
-                        Text(setting).textRole(.secondary)
+                        Text(item.setting).textRole(.secondary)
                     }
                     VStack(alignment: .leading, spacing: Spacing.hairline) {
-                        Text(title).textRole(.body)
-                        Text(setting).textRole(.secondary)
+                        Text(item.title).textRole(.body)
+                        Text(item.setting).textRole(.secondary)
                     }
                 }
-                if let note {
+                if let note = item.note {
                     Text(note)
                         .textRole(.footnote)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(Spacing.medium)
         .accessibilityElement(children: .combine)
-        .accessibilityValue(isDone ? Text("Done") : Text("Not yet"))
+        .accessibilityValue(item.isDone ? Text("Done") : Text("Not yet"))
     }
 }
 

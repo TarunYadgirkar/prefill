@@ -8,6 +8,8 @@ enum Spacing {
     static let medium: CGFloat = 16
     static let large: CGFloat = 24
     static let xLarge: CGFloat = 32
+    // The side margin of onboarding pages, which a full-width keyboard replica cancels.
+    static let page: CGFloat = 24
 }
 
 // Nested shapes stay concentric: an inner radius is the outer one minus the padding between.
@@ -16,16 +18,22 @@ enum Radius {
     static let key: CGFloat = 8
     static let listGroup: CGFloat = 26
     static let diagram: CGFloat = 20
-    static let diagramInner: CGFloat = Radius.diagram - Spacing.xSmall
+    static let diagramInner: CGFloat = Radius.diagram - Spacing.small
 }
 
 enum Size {
     static let accessoryHeight: CGFloat = 48
     static let suggestionHeight: CGFloat = 58
     static let keyRowPeek: CGFloat = 44
+    static let keySliver: CGFloat = 6
+    // With one suggestion Safari centers it and pulls the separators out to the edges
+    // (assets/generated/ios27-prefix-casey-4th-value.png).
+    static let loneSlotGutter: CGFloat = 30
     static let statusMark: CGFloat = 24
+    static let hitTarget: CGFloat = 44
     static let barSeparator: CGFloat = 1
     static let readableWidth: CGFloat = 560
+    static let fieldLabel: CGFloat = 100
 }
 
 enum Motion {

@@ -2,11 +2,13 @@ import PrefillKit
 import SwiftUI
 
 // One reorderable list, drawn as two groups: the two values Safari offers first, then the
-// rest. A spacer row between them can't be dragged, so dropping a value above it puts that
-// value in the bar.
+// rest, each under a header row. The header rows can't be dragged, so dropping a value above
+// the second one puts that value in the bar.
 struct CardList: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.editMode) private var editMode
+    @Environment(\.dynamicTypeSize) private var typeSize
     let kind: ContactKind
 
     @State private var relabeling: ContactValue?
@@ -55,8 +57,8 @@ struct CardList: View {
         switch row {
         case .value(let value, let placement):
             valueRow(value, placement: placement)
-        case .divider:
-            BarGroupDivider()
+        case .header(let group):
+            BarGroupHeader(group: group)
                 .moveDisabled(true)
         }
     }
@@ -65,7 +67,13 @@ struct CardList: View {
         Button {
             relabeling = value
         } label: {
-            ValueRow(value: value)
+            ValueRow(value: value) {
+                if editMode?.wrappedValue.isEditing != true && !typeSize.isAccessibilitySize {
+                    Image(systemName: "chevron.forward")
+                        .textRole(.rowIcon)
+                        .accessibilityHidden(true)
+                }
+            }
         }
         .buttonStyle(.plain)
         .listRowBackground(GroupedRowBackground(placement: placement))
@@ -77,6 +85,7 @@ struct CardList: View {
                 Label("Remove", systemImage: "trash")
             }
         }
+        .accessibilityValue(placement.isInBar ? Text("Offered first in Safari") : Text(""))
         .accessibilityHint("Changes its label")
         .accessibilityActions {
             Button("Move up") { step(value, by: -1) }
@@ -147,16 +156,21 @@ enum CardRow: Identifiable, Hashable {
         var isGroupEnd: Bool { position == .last || position == .alone }
     }
 
+    enum Group: Hashable {
+        case bar, rest
+    }
+
     case value(ContactValue, Placement)
-    case divider
+    case header(Group)
 
     private static let barSlots = 2
-    private static let dividerID = UUID()
+    private static let barHeaderID = UUID()
+    private static let restHeaderID = UUID()
 
     var id: UUID {
         switch self {
         case .value(let value, _): value.id
-        case .divider: Self.dividerID
+        case .header(let group): group == .bar ? Self.barHeaderID : Self.restHeaderID
         }
     }
 
@@ -168,7 +182,8 @@ enum CardRow: Identifiable, Hashable {
     static func rows(for values: [ContactValue]) -> [CardRow] {
         let bar = Array(values.prefix(barSlots))
         let rest = Array(values.dropFirst(barSlots))
-        return group(bar, isInBar: true) + (rest.isEmpty ? [] : [.divider] + group(rest, isInBar: false))
+        let barRows = bar.isEmpty ? [] : [.header(.bar)] + group(bar, isInBar: true)
+        return barRows + (rest.isEmpty ? [] : [.header(.rest)] + group(rest, isInBar: false))
     }
 
     private static func group(_ values: [ContactValue], isInBar: Bool) -> [CardRow] {
@@ -184,14 +199,28 @@ enum CardRow: Identifiable, Hashable {
     }
 }
 
-// Sits between the two values in the bar and the rest of the card.
-struct BarGroupDivider: View {
+// Names a group as a list row, so it can sit inside the one section the drag works in. The
+// larger gap above ties it to the values below it.
+struct BarGroupHeader: View {
+    let group: CardRow.Group
+
     var body: some View {
-        Text("Safari shows these once you start typing one.")
-            .textRole(.footnote)
+        Text(title)
+            .textRole(.groupHeader)
+            .listRowInsets(EdgeInsets(
+                top: group == .bar ? Spacing.xSmall : Spacing.large, leading: Spacing.medium,
+                bottom: Spacing.xxSmall, trailing: Spacing.medium
+            ))
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             .accessibilityAddTraits(.isHeader)
+    }
+
+    private var title: LocalizedStringKey {
+        switch group {
+        case .bar: "Safari offers these first"
+        case .rest: "Safari offers these after you type the first letters of one"
+        }
     }
 }
 
@@ -202,7 +231,7 @@ struct GroupedRowBackground: View {
 
     var body: some View {
         UnevenRoundedRectangle(cornerRadii: radii, style: .continuous)
-            .fill(placement.isInBar ? Palette.keyboardSurface : Palette.surface)
+            .fill(Palette.surface)
     }
 
     private var radii: RectangleCornerRadii {

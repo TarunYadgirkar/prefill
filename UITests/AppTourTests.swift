@@ -102,8 +102,9 @@ final class AppTourTests: XCTestCase {
             snap("card-reordered")
         }
         swipeUp(until: school)
-        school.tap()
-        XCTAssertTrue(app.navigationBars["Label"].waitForExistence(timeout: 5))
+        // At large text sizes the row's middle can sit under the pinned bar, so tap low.
+        school.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+        XCTAssertTrue(app.navigationBars["Change label"].waitForExistence(timeout: 5))
         snap("card-relabel")
         app.buttons["Cancel"].tap()
         pickKind("Address")
@@ -146,10 +147,10 @@ final class AppTourTests: XCTestCase {
         swipeUp(until: dismiss)
         dismiss.tap()
         pause(1)
-        let undo = app.buttons["Undo, take it off your card"].firstMatch
-        swipeUp(until: undo)
-        XCTAssertTrue(undo.waitForExistence(timeout: 5))
-        undo.tap()
+        let remove = app.buttons["Remove from card"].firstMatch
+        swipeUp(until: remove)
+        XCTAssertTrue(remove.waitForExistence(timeout: 5))
+        remove.tap()
         pause(2)
         snap("recent-after")
     }
@@ -162,7 +163,8 @@ final class AppTourTests: XCTestCase {
         app.buttons["restore-card"].tap()
         pause(1)
         snap("settings-restore")
-        app.buttons["Restore original card"].tap()
+        let confirm = NSPredicate(format: "label == 'Restore original card' AND identifier != 'restore-card'")
+        app.buttons.matching(confirm).firstMatch.tap()
         pause(2)
     }
 

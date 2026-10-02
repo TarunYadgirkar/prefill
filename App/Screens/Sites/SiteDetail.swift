@@ -19,72 +19,63 @@ struct SiteDetail: View {
                 ForEach(CardRow.rows(for: values)) { row in
                     switch row {
                     case .value(let value, let placement): self.row(value, placement: placement)
-                    case .divider: BarGroupDivider()
+                    case .header(let group): BarGroupHeader(group: group)
                     }
                 }
-            } footer: {
-                Text(footer)
+            } header: {
+                Text(header)
                     .textRole(.footnote)
-            }
-            if let pinned, let value = values.first(where: { $0.id == pinned }) {
-                Section {
-                    Button("Stop pinning") {
-                        pin(nil)
-                    }
-                    .accessibilityHint("\(value.display) goes back to its usual place here")
-                }
+                    .textCase(nil)
             }
         }
         .navigationTitle(host)
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaBar(edge: .top) {
-            VStack(spacing: Spacing.small) {
-                QuickTypeBar(kind: kind, values: values)
-                Picker("Show", selection: $kind) {
-                    ForEach(ContactKind.allCases) { kind in
-                        Text(kind.title).tag(kind)
-                    }
-                }
-                .pickerStyle(.segmented)
-            }
-            .padding(.horizontal, Spacing.medium)
-            .padding(.bottom, Spacing.xSmall)
+            KindHeader(kind: $kind, values: values)
         }
         .sensoryFeedback(.selection, trigger: pinned)
     }
 
-    private var footer: LocalizedStringKey {
+    private var header: LocalizedStringKey {
         model.state.settings.matchEachSite
-            ? "Tap a value to always offer it first on \(host)."
+            ? "Pin a value to always offer it first on \(host)."
             : "Match each site is off, so pins wait until you turn it back on in Settings."
     }
 
     private func row(_ value: ContactValue, placement: CardRow.Placement) -> some View {
-        let isPinned = value.id == pinned
-        return Button {
-            pin(isPinned ? nil : value)
-        } label: {
-            ValueRow(value: value) {
-                if isPinned {
-                    Label("Pinned", systemImage: "pin.fill")
-                        .labelStyle(.iconOnly)
-                        .foregroundStyle(Palette.accent)
-                        .contentTransition(.symbolEffect(.replace))
-                }
+        ValueRow(value: value, isInBar: placement.isInBar) {
+            PinButton(isPinned: value.id == pinned, valueName: value.display) {
+                pin(value.id == pinned ? nil : value)
             }
+            .accessibilityIdentifier("site-value-\(value.display)")
         }
-        .buttonStyle(.plain)
         .listRowBackground(GroupedRowBackground(placement: placement))
         .listRowSeparator(placement.isGroupEnd ? .hidden : .automatic, edges: .bottom)
-        .accessibilityAddTraits(isPinned ? .isSelected : [])
-        .accessibilityHint(isPinned ? "Stops pinning it here" : "Always offers it first on this site")
-        .accessibilityIdentifier("site-value-\(value.display)")
     }
 
     private func pin(_ value: ContactValue?) {
         withAnimation(Motion.reorder(reduceMotion: reduceMotion)) {
             model.pin(value, kind: kind, on: host)
         }
+    }
+}
+
+// An outline pin that fills in once the value is pinned to the site.
+private struct PinButton: View {
+    let isPinned: Bool
+    let valueName: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: isPinned ? "pin.fill" : "pin")
+                .foregroundStyle(isPinned ? Palette.accent : Palette.textSecondary)
+                .contentTransition(.symbolEffect(.replace))
+                .frame(minWidth: Size.hitTarget, minHeight: Size.hitTarget)
+                .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(isPinned ? Text("Unpin \(valueName)") : Text("Pin \(valueName)"))
     }
 }
 

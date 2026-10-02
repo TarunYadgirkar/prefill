@@ -12,7 +12,7 @@ enum Palette {
 
     static let accent = Color(uiColor: .systemBlue)
     static let positive = Color(uiColor: .systemGreen)
-    static let pending = Color(uiColor: .tertiaryLabel)
+    static let pending = Color(uiColor: .secondaryLabel)
     static let destructive = Color(uiColor: .systemRed)
 
     static let keyboardSurface = dynamic(light: 0xE2E3E9, dark: 0x222223)

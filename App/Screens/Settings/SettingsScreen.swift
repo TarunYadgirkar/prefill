@@ -15,7 +15,7 @@ struct SettingsScreen: View {
                 } footer: {
                     Text("""
                         Before you tap a field, Prefill moves the values you use on that site to the front of \
-                        your card. When it's off, every site gets your own order.
+                        your card. When it’s off, every site gets your own order.
                         """)
                 }
                 Section {
@@ -24,16 +24,25 @@ struct SettingsScreen: View {
                 } footer: {
                     Text("""
                         Adds new emails, phone numbers and addresses you type into Safari forms to your card. \
-                        When it's off, they wait in Recently added for you.
+                        When it’s off, they wait in Recently added for you.
                         """)
                 }
                 Section("Safari") {
-                    SafariSwitches(
-                        isEnabled: model.extensionEnabled == true, isAllowedOnWebsites: model.isAllowedOnWebsites
-                    )
-                    .listRowInsets(EdgeInsets())
-                    Button("Open Safari settings") {
+                    ForEach(safariSwitches) { item in
+                        LabeledContent {
+                            Text(item.setting)
+                        } label: {
+                            Label {
+                                Text(item.title)
+                            } icon: {
+                                StatusMark(isDone: item.isDone)
+                            }
+                        }
+                    }
+                    Button {
                         Task { await SafariExtension.openSettings() }
+                    } label: {
+                        Label("Open Safari settings", systemImage: "arrow.up.forward.app")
                     }
                 }
                 cardSection
@@ -57,7 +66,7 @@ struct SettingsScreen: View {
         Section {
             LabeledContent("Your card", value: model.cardName)
             Button("Choose a different card") { isChoosingCard = true }
-            Button("Restore my original card", role: .destructive) { isConfirmingRestore = true }
+            Button("Restore original card", role: .destructive) { isConfirmingRestore = true }
                 .disabled(model.state.cardLink == nil)
                 .accessibilityIdentifier("restore-card")
                 .confirmationDialog(
@@ -74,6 +83,10 @@ struct SettingsScreen: View {
         } footer: {
             Text("Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill.")
         }
+    }
+
+    private var safariSwitches: [SafariSwitch] {
+        SafariSwitch.all(isEnabled: model.extensionEnabled == true, isAllowedOnWebsites: model.isAllowedOnWebsites)
     }
 
     private var restoreMessage: String {

@@ -146,14 +146,14 @@ final class AppModel {
             try store.writeAppState(next)
         } catch {
             problem = Problem(
-                title: String(localized: "Prefill couldn't save that"),
-                message: String(localized: "Your change shows here but wasn't stored. Try it again in a moment.")
+                title: String(localized: "Prefill couldn’t save that"),
+                message: String(localized: "Your change shows here but wasn’t stored. Try it again in a moment.")
             )
         }
     }
 
     func report(_ failure: CardWriteFailure) {
-        problem = Problem(title: String(localized: "Your card didn't change"), message: failure.appMessage)
+        problem = Problem(title: String(localized: "Your card didn’t change"), message: failure.appMessage)
     }
 
     private func readStore() {
@@ -174,10 +174,10 @@ extension CardWriteFailure {
     var appMessage: String {
         switch self {
         case .noAccess: String(localized: """
-            Prefill can't reach your contact card. Turn on Contacts access for Prefill in Settings.
+            Prefill can’t reach your contact card. Turn on Contacts access for Prefill in Settings.
             """)
         case .cardMissing: String(localized: """
-            Prefill can't find your contact card. Choose your card again in Prefill's settings.
+            Prefill can’t find your contact card. Choose your card again in Prefill’s settings.
             """)
         case .notWritable, .changedDuringSave, .other: reason
         }
