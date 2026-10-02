@@ -11,7 +11,7 @@ extension MessageRouter {
         case .unpin(let body): choose(nil, kind: body.kind, host: body.host)
         case .undoCapture(let body): undoCapture(body)
         case .muteSite(let body): muteSite(body)
-        case .ping, .pageContext, .capture: PopupStateResponse(failure: .other)
+        case .ping, .pageContext, .capture, .linkSuggestions: PopupStateResponse(failure: .other)
         }
     }
 
@@ -34,7 +34,7 @@ extension MessageRouter {
         )
         let target = CardPlan(card: card, request: syncRequest(state, link: link, page: page)).target
         let site = Normalizer.registrableDomain(host)
-        let shown = kinds.reduce(into: [ContactKind]()) { if !$0.contains($1) { $0.append($1) } }
+        let shown = kinds.reduce(into: [ContactKind]()) { if $1 != .link, !$0.contains($1) { $0.append($1) } }
         return PopupStateResponse(
             status: isSiteSpecific ? .ready : .off,
             kinds: shown.map { kind in
@@ -45,7 +45,7 @@ extension MessageRouter {
                 )
             },
             recent: RecentCaptures.items(events: events, state: state, card: card)
-                .filter { $0.host == site }
+                .filter { $0.host == site && $0.value.kind != .link }
                 .prefix(MessageLimits.popupRecent)
                 .map(PopupRecent.init),
             muted: state.isMuted(site)

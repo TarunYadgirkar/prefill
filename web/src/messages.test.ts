@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import examples from "../../docs/message-examples.json" with { type: "json" };
 import {
   FIELD_KINDS,
+  LINK_TYPES,
   SECTION_HINTS,
   SYNC_STATUSES,
   POPUP_STATUSES,
@@ -23,12 +24,28 @@ import {
   type UndoCaptureRequest,
   type MuteSiteRequest,
   type PopupStateResult,
+  type LinkSuggestionsRequest,
+  type LinkSuggestionsResult,
   parsePageRequest,
 } from "./messages";
 
 // The typed literals fail typecheck if a field name drifts from messages.ts, and the
 // equality checks fail if docs/message-examples.json (which Swift also reads) drifts.
 const ping: Ping = { type: "ping" };
+
+const linkSuggestions: LinkSuggestionsRequest = {
+  type: "linkSuggestions",
+  host: "boards.example.io",
+  types: ["github", "website"],
+};
+
+const linkSuggestionsResult: LinkSuggestionsResult = {
+  type: "linkSuggestionsResult",
+  links: [
+    { type: "github", url: "https://github.com/alexrivera" },
+    { type: "website", url: "https://alexrivera.dev" },
+  ],
+};
 
 const pageContext: PageContextRequest = {
   type: "pageContext",
@@ -98,6 +115,7 @@ describe("message contract", () => {
   it("lists every shared value the way Swift does", () => {
     expect(examples.enums).toEqual({
       fieldKind: [...FIELD_KINDS],
+      linkType: [...LINK_TYPES],
       sectionHint: [...SECTION_HINTS],
       syncStatus: [...SYNC_STATUSES],
       popupStatus: [...POPUP_STATUSES],
@@ -116,13 +134,13 @@ describe("message contract", () => {
     expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(true);
   });
 
-  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite }))("request %s matches the shared example", (name, typed) => {
+  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions }))("request %s matches the shared example", (name, typed) => {
     const example: unknown = examples.requests[name as keyof typeof examples.requests];
     expect(example).toEqual(typed);
     expect(isExtensionRequest(example)).toBe(true);
   });
 
-  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, error }))(
+  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, error }))(
     "response %s matches the shared example",
     (name, typed) => {
       const example: unknown = examples.responses[name as keyof typeof examples.responses];

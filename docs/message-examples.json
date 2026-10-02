@@ -1,6 +1,7 @@
 {
   "enums": {
-    "fieldKind": ["email", "phone", "address", "name"],
+    "fieldKind": ["email", "phone", "address", "name", "link"],
+    "linkType": ["github", "website", "linkedin", "x", "other"],
     "sectionHint": ["home", "work", "shipping", "billing"],
     "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"],
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
@@ -43,7 +44,8 @@
     "pin": { "type": "pin", "host": "shop.example.net", "kind": "email", "valueID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B" },
     "unpin": { "type": "unpin", "host": "shop.example.net", "kind": "email" },
     "undoCapture": { "type": "undoCapture", "host": "shop.example.net", "valueID": "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A" },
-    "muteSite": { "type": "muteSite", "host": "shop.example.net", "muted": true }
+    "muteSite": { "type": "muteSite", "host": "shop.example.net", "muted": true },
+    "linkSuggestions": { "type": "linkSuggestions", "host": "boards.example.io", "types": ["github", "website"] }
   },
   "responses": {
     "pong": { "type": "pong" },
@@ -75,6 +77,13 @@
         }
       ],
       "muted": false
+    },
+    "linkSuggestionsResult": {
+      "type": "linkSuggestionsResult",
+      "links": [
+        { "type": "github", "url": "https://github.com/alexrivera" },
+        { "type": "website", "url": "https://alexrivera.dev" }
+      ]
     },
     "error": { "type": "error", "reason": "unknown message" }
   }

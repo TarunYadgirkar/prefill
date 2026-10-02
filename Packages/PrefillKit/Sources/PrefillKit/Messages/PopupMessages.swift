@@ -147,7 +147,7 @@ extension ContactPayload {
     // One line, the way Safari's bar shows an address.
     var lineText: String {
         switch self {
-        case .email(let text), .phone(let text): text
+        case .email(let text), .phone(let text), .link(let text): text
         case .address(let address): address.lines.joined(separator: ", ")
         }
     }

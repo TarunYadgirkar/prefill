@@ -9,8 +9,8 @@ import {
   type FieldElement,
   type FieldPart,
 } from "./fieldTypes";
-import type { FieldKind, SectionHint } from "./messages";
-import { NOT_PHONE, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
+import type { FieldKind, LinkType, SectionHint } from "./messages";
+import { LINK_WORDS, NOT_PHONE, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
 
 type ControlOrVerdict = Control | "sensitive" | "ignored";
 
@@ -20,6 +20,7 @@ const INPUT_CONTROLS: Readonly<Record<string, ControlOrVerdict>> = {
   tel: "tel",
   number: "number",
   password: "sensitive",
+  url: "url",
 };
 
 interface Mapped {
@@ -72,7 +73,22 @@ function contact(mapped: Mapped, detail?: AutocompleteDetail): ContactField {
   return { ...mapped, group, ...(section === undefined ? {} : { section }) };
 }
 
-function fromAutocomplete(detail: AutocompleteDetail, control: Control): Classification {
+// The link types the words name, in the order they name them: "GitHub/Portfolio" asks for
+// a GitHub link first, then a website. Words that name none ask for a website.
+function linkTypesIn(texts: readonly string[]): LinkType[] {
+  const found = LINK_WORDS.flatMap(([type, pattern]) => {
+    const at = Math.min(...texts.map((text) => text.search(pattern)).filter((index) => index >= 0));
+    return Number.isFinite(at) ? [{ type, at }] : [];
+  });
+  return found.length === 0 ? ["website"] : found.sort((first, second) => first.at - second.at).map(({ type }) => type);
+}
+
+function link(texts: readonly string[]): ContactField {
+  return { kind: "link", group: "", linkTypes: linkTypesIn(texts) };
+}
+
+function fromAutocomplete(detail: AutocompleteDetail, control: Control, sources: readonly string[][]): Classification {
+  if (detail.field === "url") return link(sources.flat());
   if (SENSITIVE_FIELDS.has(detail.field) || detail.field.startsWith("cc-")) return SENSITIVE;
   // Sign-in forms tag an email box "username"; it still holds one of the person's emails.
   if (detail.field === "username") return control === "email" ? contact({ kind: "email" }, detail) : IGNORED;
@@ -80,7 +96,8 @@ function fromAutocomplete(detail: AutocompleteDetail, control: Control): Classif
   return mapped === undefined ? IGNORED : contact(mapped, detail);
 }
 
-function fromRule(result: RuleResult): Classification {
+function fromRule(result: RuleResult, texts: readonly string[]): Classification {
+  if (result.kind === "link") return link(texts);
   return result.kind === "ignored" ? IGNORED : contact(result);
 }
 
@@ -93,7 +110,7 @@ function matchRules(texts: readonly string[], control: Control): Classification 
       texts.some((text) => candidate.pattern.test(text)) &&
       !texts.some((text) => candidate.negative?.test(text) === true),
   );
-  return rule === undefined ? undefined : fromRule(rule.result);
+  return rule === undefined ? undefined : fromRule(rule.result, texts);
 }
 
 function sourcesOf(el: FieldElement): string[][] {
@@ -116,9 +133,9 @@ function fromPatterns(sources: readonly string[][], control: Control): Classific
 
 function positive(el: FieldElement, control: Control, sources: readonly string[][]): Classification {
   const detail = parseAutocomplete(el.getAttribute("autocomplete"));
-  if (detail !== undefined) return fromAutocomplete(detail, control);
+  if (detail !== undefined) return fromAutocomplete(detail, control, sources);
   if (control === "email") return contact({ kind: "email" });
-  return fromPatterns(sources, control) ?? IGNORED;
+  return fromPatterns(sources, control) ?? (control === "url" ? link([]) : IGNORED);
 }
 
 // Sensitive words first, whatever the tags say, then autocomplete tokens (WHATWG grammar),

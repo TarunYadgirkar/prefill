@@ -47,7 +47,9 @@ public struct CardEditor: Sendable {
             }
             return card.replacing(value.kind, with: entries)
         case .restore(let original):
-            return ContactKind.allCases.reduce(card) { partial, kind in
+            // A snapshot taken before Prefill read links leaves the card's links as they are.
+            let kinds = ContactKind.allCases.filter { $0 != .link || original.knowsLinks }
+            return kinds.reduce(card) { partial, kind in
                 partial.replacing(kind, with: original.entries(kind))
             }
         }

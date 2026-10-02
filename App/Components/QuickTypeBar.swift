@@ -173,7 +173,7 @@ private struct KeyRowPeek: View {
         switch kind {
         case .phone: [Key(cap: "1", sublabel: " "), Key(cap: "2", sublabel: "ABC"), Key(cap: "3", sublabel: "DEF")]
         case .address: Array("QWERTYUIOP").map { Key(cap: String($0)) }
-        case .email: Array("qwertyuiop").map { Key(cap: String($0)) }
+        case .email, .link: Array("qwertyuiop").map { Key(cap: String($0)) }
         }
     }
 
@@ -202,6 +202,7 @@ extension ContactPayload {
     var barText: String {
         switch self {
         case .email(let text), .phone(let text): return text
+        case .link(let text): return text.replacing(/^https?:\/\//.ignoresCase(), with: "")
         case .address(let address):
             let locality = [address.city, address.state, address.postalCode]
                 .filter { !$0.isEmpty }

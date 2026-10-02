@@ -6,8 +6,10 @@
 // so a form about someone else still reaches the app's someone-else filter.
 
 import type { AddressPart, Control, NamePart } from "./fieldTypes";
+import type { LinkType } from "./messages";
 
 export type RuleResult =
+  | { kind: "link" }
   | { kind: "email" }
   | { kind: "phone" }
   | { kind: "address"; part: AddressPart }
@@ -22,11 +24,23 @@ export interface Rule {
 }
 
 const TEXT: readonly Control[] = ["text"];
+const WEB: readonly Control[] = ["text", "url"];
 const TEXT_EMAIL: readonly Control[] = ["text", "email"];
 const NUMERIC: readonly Control[] = ["text", "tel", "number"];
 const CHOICE: readonly Control[] = ["text", "select"];
 const STREET: readonly Control[] = ["text", "textarea"];
-const ANY: readonly Control[] = ["text", "email", "tel", "number", "select", "textarea"];
+const ANY: readonly Control[] = ["text", "email", "tel", "number", "select", "textarea", "url"];
+
+// Words that ask for a profile or website link, one pattern per link type. Prefill's own,
+// not from Chromium, which has no link types.
+export const LINK_WORDS: readonly (readonly [LinkType, RegExp])[] = [
+  ["github", /git.?hub/iu],
+  ["linkedin", /linked.?in/iu],
+  ["x", /twitter|\bx\.com\b|^x\s*[:(]|^x\s+(?:profile|handle|url|link|account)\b/iu],
+  ["other", /other.?(?:web.?site|url|link)/iu],
+  ["website", /portfolio|web.?site|personal.?(?:site|page)|home.?page|\burl\b|\bblog\b/iu],
+];
+const LINK = new RegExp(LINK_WORDS.map(([, pattern]) => pattern.source).join("|"), "iu");
 
 const nameIgnored = /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|用户名/iu;
 const addressNameIgnored = /(?:address|location).*(?:nickname|label|type)|lookup/iu;
@@ -68,6 +82,7 @@ export const RULES: readonly Rule[] = [
     controls: NUMERIC,
   },
   { result: { kind: "ignored" }, pattern: IGNORED, controls: ANY },
+  { result: { kind: "link" }, pattern: LINK, controls: WEB },
   {
     result: { kind: "address", part: "postalCode" },
     pattern:

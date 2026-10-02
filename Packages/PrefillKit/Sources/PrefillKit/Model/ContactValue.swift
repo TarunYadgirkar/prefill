@@ -2,7 +2,7 @@ import CryptoKit
 import Foundation
 
 public enum ContactKind: String, Codable, Sendable, CaseIterable {
-    case email, phone, address
+    case email, phone, address, link
 }
 
 public struct PostalAddress: Codable, Sendable, Hashable {
@@ -30,18 +30,21 @@ public enum ContactPayload: Codable, Sendable, Hashable {
     case email(String)
     case phone(String)
     case address(PostalAddress)
+    // A profile or website address, kept as written with a scheme in front.
+    case link(String)
 
     public var kind: ContactKind {
         switch self {
         case .email: .email
         case .phone: .phone
         case .address: .address
+        case .link: .link
         }
     }
 
     public var display: String {
         switch self {
-        case .email(let text), .phone(let text): text
+        case .email(let text), .phone(let text), .link(let text): text
         case .address(let address): address.lines.joined(separator: "\n")
         }
     }

@@ -82,7 +82,9 @@ public struct CaptureFilter: Sendable {
 
     private static func parse(_ field: CapturedField, at date: Date) -> ContactValue? {
         guard let payload = payload(field) else { return nil }
-        let label = field.section.flatMap(LabelName.system(for:))
+        let label = if case .link(let url) = payload { LinkType.of(url).label } else {
+            field.section.flatMap(LabelName.system(for:))
+        }
         return ContactValue(payload: payload, label: label, source: .captured, createdAt: date)
     }
 
@@ -92,6 +94,7 @@ public struct CaptureFilter: Sendable {
         case .email: return ValueRules.isEmail(text) ? .email(text) : nil
         case .phone: return ValueRules.isPhone(text, autocomplete: field.autocomplete) ? .phone(text) : nil
         case .address: return field.address.flatMap { ValueRules.isAddress($0) ? .address($0) : nil }
+        case .link: return ValueRules.isLink(text) ? .link(LinkURL.full(text)) : nil
         case .name: return nil
         }
     }

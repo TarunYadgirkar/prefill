@@ -8,12 +8,13 @@ import SwiftUI
 struct KindHeader: View {
     @Binding var kind: ContactKind
     let values: [ContactValue]
+    var kinds = ContactKind.allCases
 
     var body: some View {
         VStack(spacing: Spacing.small) {
             QuickTypeBar(kind: kind, values: values, style: .compact)
             Picker("Value type", selection: $kind) {
-                ForEach(ContactKind.allCases) { kind in
+                ForEach(kinds) { kind in
                     Text(kind.title).tag(kind)
                 }
             }

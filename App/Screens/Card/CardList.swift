@@ -124,6 +124,7 @@ struct CardList: View {
         case .email: "Remove this email from your card?"
         case .phone: "Remove this phone number from your card?"
         case .address: "Remove this address from your card?"
+        case .link: "Remove this link from your card?"
         }
     }
 
@@ -132,6 +133,7 @@ struct CardList: View {
         case .email: "Remove email"
         case .phone: "Remove phone number"
         case .address: "Remove address"
+        case .link: "Remove link"
         }
     }
 }

@@ -22,9 +22,9 @@ const MAX_SCANS = 30;
 const DEFAULT_MIN_INTERVAL_MS = 2_000;
 const MAX_REPORTS = 5;
 
-// Name fields never change the card's order, so they don't make a page worth reporting.
+// Name and link fields never change the card's order, so they don't make a page worth reporting.
 function pageField(field: ContactField): PageField | undefined {
-  if (field.kind === "name") return undefined;
+  if (field.kind === "name" || field.kind === "link") return undefined;
   return field.section === undefined ? { kind: field.kind } : { kind: field.kind, section: field.section };
 }
 
@@ -42,7 +42,7 @@ export function contactFields(root: ParentNode): PageField[] {
 function isRankedField(target: EventTarget | null): boolean {
   if (!isFieldElement(target)) return false;
   const classification = classify(target);
-  return isContact(classification) && classification.kind !== "name";
+  return isContact(classification) && classification.kind !== "name" && classification.kind !== "link";
 }
 
 const keyOf = (field: PageField): string => `${field.kind} ${field.section ?? ""}`;

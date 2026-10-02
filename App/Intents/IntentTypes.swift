@@ -11,14 +11,6 @@ nonisolated enum ValueKindOption: String, AppEnum {
         .address: "address"
     ]
 
-    init(_ kind: ContactKind) {
-        self = switch kind {
-        case .email: .email
-        case .phone: .phone
-        case .address: .address
-        }
-    }
-
     var kind: ContactKind {
         switch self {
         case .email: .email

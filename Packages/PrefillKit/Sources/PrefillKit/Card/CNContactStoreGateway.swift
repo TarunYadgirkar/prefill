@@ -95,7 +95,8 @@ enum CNCardMapping {
     static var keys: [CNKeyDescriptor] {
         [
             CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey,
-            CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey
+            CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey,
+            CNContactUrlAddressesKey
         ].map { $0 as CNKeyDescriptor }
     }
 
@@ -114,7 +115,8 @@ enum CNCardMapping {
             familyName: contact.familyName,
             emails: contact.emailAddresses.map { CardEntry(label: $0.label, payload: .email($0.value as String)) },
             phones: contact.phoneNumbers.map { CardEntry(label: $0.label, payload: .phone($0.value.stringValue)) },
-            addresses: contact.postalAddresses.map { CardEntry(label: $0.label, payload: .address(postal($0.value))) }
+            addresses: contact.postalAddresses.map { CardEntry(label: $0.label, payload: .address(postal($0.value))) },
+            links: contact.urlAddresses.map { CardEntry(label: $0.label, payload: .link($0.value as String)) }
         )
     }
 
@@ -139,6 +141,12 @@ enum CNCardMapping {
         } make: { entry in
             guard case .address(let address) = entry.payload else { return nil }
             return cnPostal(address)
+        }
+        contact.urlAddresses = fresh(record.links, originals: contact.urlAddresses) {
+            Normalizer.link($0 as String)
+        } make: { entry in
+            guard case .link(let text) = entry.payload else { return nil }
+            return text as NSString
         }
     }
 

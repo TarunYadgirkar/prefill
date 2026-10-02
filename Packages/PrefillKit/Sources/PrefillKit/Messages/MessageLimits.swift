@@ -11,10 +11,14 @@ public enum MessageLimits {
     static let text = 100
     static let street = 400
     static let part = 200
-    static let popupKinds = ContactKind.allCases.count
+    // The sheet works with the kinds Safari's contact bar shows; links aren't among them.
+    static let popupKinds = 3
     static let popupValues = 30
     static let popupRecent = 5
     static let display = 1_000
+    static let linkTypes = LinkType.allCases.count
+    static let linksPerType = 3
+    static let links = 10
 }
 
 extension ExtensionRequest {
@@ -30,6 +34,8 @@ extension ExtensionRequest {
             body.host.count <= MessageLimits.host && body.kinds.count <= MessageLimits.popupKinds
         case .pin, .unpin, .undoCapture, .muteSite:
             host.count <= MessageLimits.host
+        case .linkSuggestions(let body):
+            body.host.count <= MessageLimits.host && body.types.count <= MessageLimits.linkTypes
         }
     }
 }
@@ -60,7 +66,7 @@ extension ExtensionRequest {
         case .ping: true
         case .pageContext(let body): MessageText.isHost(body.host)
         case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
-        case .popupState, .pin, .unpin, .undoCapture, .muteSite: MessageText.isHost(host)
+        case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions: MessageText.isHost(host)
         }
     }
 
@@ -75,6 +81,7 @@ extension ExtensionRequest {
         case .unpin(let body): body.host
         case .undoCapture(let body): body.host
         case .muteSite(let body): body.host
+        case .linkSuggestions(let body): body.host
         }
     }
 }

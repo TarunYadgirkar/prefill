@@ -5,7 +5,7 @@ import Foundation
 // by tests in both languages.
 
 public enum FieldKind: String, Codable, Sendable, CaseIterable {
-    case email, phone, address, name
+    case email, phone, address, name, link
 
     public var contactKind: ContactKind? { ContactKind(rawValue: rawValue) }
 }
@@ -146,6 +146,7 @@ public enum ExtensionRequest: Sendable, Hashable {
     case unpin(UnpinRequest)
     case undoCapture(UndoCaptureRequest)
     case muteSite(MuteSiteRequest)
+    case linkSuggestions(LinkSuggestionsRequest)
 }
 
 public enum ExtensionResponse: Sendable, Hashable {
@@ -153,6 +154,7 @@ public enum ExtensionResponse: Sendable, Hashable {
     case pageContext(PageContextResponse)
     case capture(CaptureResponse)
     case popupState(PopupStateResponse)
+    case linkSuggestions(LinkSuggestionsResponse)
     case error(reason: String)
 }
 
@@ -165,11 +167,11 @@ private struct ErrorBody: Codable {
 }
 
 private enum RequestType: String, Codable {
-    case ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite
+    case ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions
 }
 
 private enum ResponseType: String, Codable {
-    case pong, pageContextResult, captureResult, popupStateResult, error
+    case pong, pageContextResult, captureResult, popupStateResult, linkSuggestionsResult, error
 }
 
 extension ExtensionRequest: Codable {
@@ -179,6 +181,7 @@ extension ExtensionRequest: Codable {
         case .ping: self = .ping
         case .pageContext: self = .pageContext(try PageContextRequest(from: decoder))
         case .capture: self = .capture(try CaptureRequest(from: decoder))
+        case .linkSuggestions: self = .linkSuggestions(try LinkSuggestionsRequest(from: decoder))
         case .some(let sheet): self = try Self.sheetRequest(sheet, from: decoder)
         case nil: throw MessageError.unknownType
         }
@@ -191,7 +194,7 @@ extension ExtensionRequest: Codable {
         case .unpin: .unpin(try UnpinRequest(from: decoder))
         case .undoCapture: .undoCapture(try UndoCaptureRequest(from: decoder))
         case .muteSite: .muteSite(try MuteSiteRequest(from: decoder))
-        case .ping, .pageContext, .capture: throw MessageError.unknownType
+        case .ping, .pageContext, .capture, .linkSuggestions: throw MessageError.unknownType
         }
     }
 
@@ -211,6 +214,7 @@ extension ExtensionRequest: Codable {
         case .unpin: .unpin
         case .undoCapture: .undoCapture
         case .muteSite: .muteSite
+        case .linkSuggestions: .linkSuggestions
         }
     }
 
@@ -224,6 +228,7 @@ extension ExtensionRequest: Codable {
         case .unpin(let body): body
         case .undoCapture(let body): body
         case .muteSite(let body): body
+        case .linkSuggestions(let body): body
         }
     }
 }
@@ -236,6 +241,7 @@ extension ExtensionResponse: Codable {
         case .pageContextResult: self = .pageContext(try PageContextResponse(from: decoder))
         case .captureResult: self = .capture(try CaptureResponse(from: decoder))
         case .popupStateResult: self = .popupState(try PopupStateResponse(from: decoder))
+        case .linkSuggestionsResult: self = .linkSuggestions(try LinkSuggestionsResponse(from: decoder))
         case .error: self = .error(reason: try ErrorBody(from: decoder).reason)
         case nil: throw MessageError.unknownType
         }
@@ -255,6 +261,7 @@ extension ExtensionResponse: Codable {
         case .pageContext: .pageContextResult
         case .capture: .captureResult
         case .popupState: .popupStateResult
+        case .linkSuggestions: .linkSuggestionsResult
         case .error: .error
         }
     }
@@ -265,6 +272,7 @@ extension ExtensionResponse: Codable {
         case .pageContext(let body): body
         case .capture(let body): body
         case .popupState(let body): body
+        case .linkSuggestions(let body): body
         case .error(let reason): ErrorBody(reason: reason)
         }
     }
