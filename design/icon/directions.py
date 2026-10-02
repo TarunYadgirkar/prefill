@@ -35,41 +35,53 @@ A, B, C = (PALETTES[k] for k in ("a-slot", "b-shortlist", "c-caret"))
 
 BOWL = '<path d="M452 204H600A156 156 0 0 1 600 516H452A56 56 0 0 1 396 460V260A56 56 0 0 1 452 204Z" fill="#000"/>'
 
-KEY_ROW = "".join(rect(112 + i * 166, 664, 248 + i * 166, 812, 40) for i in range(5))
+
+def a_slot(keys: bool) -> dict:
+    dy = -40 if keys else 0
+    bar_y, chip_y = 372 + dy, 336 + dy
+    key_row = "".join(rect(112 + i * 166, 812, 248 + i * 166, 1100, 40) for i in range(5))
+    groups = [
+        {
+            "translucency": 0.1,
+            "shadow": "neutral",
+            "shadow_opacity": 0.8,
+            "layers": [
+                {"name": "chip-value", "glass": False, "fill": ((A["Ink"], 0.9), (A["Ink"], 0.9)),
+                 "svg": pill(184, chip_y + 112, 436, chip_y + 156)},
+                {"name": "chip-label", "glass": False, "fill": ((A["Ink"], 0.6), (A["Ink"], 0.6)),
+                 "svg": pill(240, chip_y + 60, 380, chip_y + 94)},
+                {"name": "chip", "fill": (A["Marigold"], A["Marigold"]), "svg": rect(140, chip_y, 480, chip_y + 216, 108)},
+            ],
+        },
+        {
+            "translucency": 0.3,
+            "shadow": "neutral",
+            "shadow_opacity": 0.4,
+            "layers": [
+                {"name": "bar-value", "glass": False, "fill": ((A["Frost"], 0.95), (A["Frost"], 0.9)),
+                 "svg": pill(590, bar_y + 114, 842, bar_y + 158)},
+                {"name": "bar-label", "glass": False, "fill": ((A["Frost"], 0.55), (A["Frost"], 0.5)),
+                 "svg": rect(527, bar_y + 48, 537, bar_y + 172, 5) + pill(656, bar_y + 62, 776, bar_y + 96)},
+                {"name": "bar", "fill": ((A["Harbor"], 1.0), ("#9DB3B6", 0.45)), "svg": pill(112, bar_y, 912, bar_y + 220)},
+            ],
+        },
+    ]
+    if keys:
+        groups.append({
+            "translucency": 0.5,
+            "shadow": "neutral",
+            "shadow_opacity": 0.2,
+            "layers": [{"name": "keys", "fill": (("#FFFFFF", 0.75), ("#9DB3B6", 0.28), ("#FFFFFF", 0.3)), "svg": key_row}],
+        })
+    return {
+        "title": "A  Slot",
+        "background": ([A["Frost"], "#C9E0DD"], [A["Harbor"], A["Night harbor"]]),
+        "groups": groups,
+    }
+
 
 DIRECTIONS = {
-    "a-slot": {
-        "title": "A  Slot",
-        "background": ([A["Harbor"], A["Night harbor"]], ["#0C2C32", "#030C0E"]),
-        "groups": [
-            {
-                "translucency": 0.15,
-                "layers": [
-                    {"name": "chip-text", "glass": False, "fill": ((A["Ink"], 0.75), (A["Ink"], 0.8)),
-                     "svg": pill(252, 330, 380, 354) + pill(196, 382, 436, 414)},
-                    {"name": "chip", "fill": (A["Marigold"], A["Marigold"]), "svg": rect(132, 276, 496, 468, 96)},
-                ],
-            },
-            {
-                "translucency": 0.5,
-                "shadow": "neutral",
-                "layers": [
-                    {"name": "bar-text", "glass": False, "fill": ((A["Ink"], 0.4), (A["Frost"], 0.4)),
-                     "svg": rect(508, 352, 516, 476, 4) + pill(648, 370, 776, 392) + pill(592, 420, 832, 450)},
-                    {"name": "bar", "fill": ((A["Frost"], 0.88), ("#9DB3B6", 0.5)),
-                     "svg": pill(112, 304, 912, 524)},
-                ],
-            },
-            {
-                "translucency": 0.6,
-                "shadow": "neutral",
-                "shadow_opacity": 0.25,
-                "layers": [
-                    {"name": "keys", "fill": ((A["Frost"], 0.32), ("#9DB3B6", 0.22)), "svg": KEY_ROW},
-                ],
-            },
-        ],
-    },
+    "a-slot": a_slot(keys=True),
     "b-shortlist": {
         "title": "B  Shortlist",
         "background": ([B["Paper"], B["Linen"]], ["#2A241F", B["Espresso"]]),

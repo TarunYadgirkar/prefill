@@ -3,8 +3,8 @@
     {
       "value": {
         "linear-gradient": [
-          "srgb:0.07843,0.31373,0.35294,1.00000",
-          "srgb:0.02745,0.11765,0.13725,1.00000"
+          "srgb:0.93333,0.95686,0.95294,1.00000",
+          "srgb:0.78824,0.87843,0.86667,1.00000"
         ]
       }
     },
@@ -12,8 +12,8 @@
       "appearance": "dark",
       "value": {
         "linear-gradient": [
-          "srgb:0.04706,0.17255,0.19608,1.00000",
-          "srgb:0.01176,0.04706,0.05490,1.00000"
+          "srgb:0.07843,0.31373,0.35294,1.00000",
+          "srgb:0.02745,0.11765,0.13725,1.00000"
         ]
       }
     }
@@ -22,19 +22,37 @@
     {
       "layers": [
         {
-          "image-name": "chip-text.svg",
-          "name": "chip-text",
+          "image-name": "chip-value.svg",
+          "name": "chip-value",
           "glass": false,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.05098,0.16471,0.18824,0.75000"
+                "solid": "srgb:0.05098,0.16471,0.18824,0.90000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.05098,0.16471,0.18824,0.80000"
+                "solid": "srgb:0.05098,0.16471,0.18824,0.90000"
+              }
+            }
+          ]
+        },
+        {
+          "image-name": "chip-label.svg",
+          "name": "chip-label",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.05098,0.16471,0.18824,0.60000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.05098,0.16471,0.18824,0.60000"
               }
             }
           ]
@@ -59,12 +77,12 @@
         }
       ],
       "shadow": {
-        "kind": "layer-color",
-        "opacity": 0.5
+        "kind": "neutral",
+        "opacity": 0.8
       },
       "translucency": {
         "enabled": true,
-        "value": 0.15
+        "value": 0.1
       },
       "specular": true,
       "blur-material": 0.3,
@@ -73,19 +91,37 @@
     {
       "layers": [
         {
-          "image-name": "bar-text.svg",
-          "name": "bar-text",
+          "image-name": "bar-value.svg",
+          "name": "bar-value",
           "glass": false,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.05098,0.16471,0.18824,0.40000"
+                "solid": "srgb:0.93333,0.95686,0.95294,0.95000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.93333,0.95686,0.95294,0.40000"
+                "solid": "srgb:0.93333,0.95686,0.95294,0.90000"
+              }
+            }
+          ]
+        },
+        {
+          "image-name": "bar-label.svg",
+          "name": "bar-label",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.93333,0.95686,0.95294,0.55000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.93333,0.95686,0.95294,0.50000"
               }
             }
           ]
@@ -97,13 +133,13 @@
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.93333,0.95686,0.95294,0.88000"
+                "solid": "srgb:0.07843,0.31373,0.35294,1.00000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.61569,0.70196,0.71373,0.50000"
+                "solid": "srgb:0.61569,0.70196,0.71373,0.45000"
               }
             }
           ]
@@ -111,11 +147,11 @@
       ],
       "shadow": {
         "kind": "neutral",
-        "opacity": 0.5
+        "opacity": 0.4
       },
       "translucency": {
         "enabled": true,
-        "value": 0.5
+        "value": 0.3
       },
       "specular": true,
       "blur-material": 0.3,
@@ -130,13 +166,19 @@
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.93333,0.95686,0.95294,0.32000"
+                "solid": "srgb:1.00000,1.00000,1.00000,0.75000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.61569,0.70196,0.71373,0.22000"
+                "solid": "srgb:0.61569,0.70196,0.71373,0.28000"
+              }
+            },
+            {
+              "appearance": "tinted",
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.30000"
               }
             }
           ]
@@ -144,11 +186,11 @@
       ],
       "shadow": {
         "kind": "neutral",
-        "opacity": 0.25
+        "opacity": 0.2
       },
       "translucency": {
         "enabled": true,
-        "value": 0.6
+        "value": 0.5
       },
       "specular": true,
       "blur-material": 0.3,

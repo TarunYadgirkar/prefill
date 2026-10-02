@@ -2,6 +2,7 @@
 import json
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -12,7 +13,16 @@ HERE = Path(__file__).resolve().parent
 GENERATED = HERE.parents[1] / "assets" / "generated"
 ICTOOL = "/Applications/Xcode.app/Contents/Applications/Icon Composer.app/Contents/Executables/ictool"
 RENDITIONS = {"light": "Default", "dark": "Dark"}
+FINAL_RENDITIONS = {"light": "Default", "dark": "Dark", "tinted": "TintedDark", "clear": "ClearLight"}
 SHEET_SIZES = (1024, 180, 60)
+FINAL_SHEET_SIZES = (512, 180, 60)
+FINAL_KEY = "a-slot"
+HARBOR_HUE = "0.58"
+REPO = HERE.parents[1]
+APP_ICON = REPO / "App" / "AppIcon.icon"
+EXTENSION_IMAGES = REPO / "Extension" / "Resources" / "images"
+MANIFEST_SIZES = (48, 96, 128, 256, 512)
+TOOLBAR_SIZES = (16, 19, 32, 38, 48, 72)
 
 
 def color(hex_value: str, alpha: float = 1.0) -> str:
@@ -30,8 +40,11 @@ def fill(spec) -> dict:
     return {"solid": color(spec)}
 
 
-def specialized(light, dark) -> list:
-    return [{"value": fill(light)}, {"appearance": "dark", "value": fill(dark)}]
+def specialized(light, dark, tinted=None) -> list:
+    out = [{"value": fill(light)}, {"appearance": "dark", "value": fill(dark)}]
+    if tinted is not None:
+        out.append({"appearance": "tinted", "value": fill(tinted)})
+    return out
 
 
 def svg(body: str) -> str:
@@ -75,9 +88,10 @@ def write_bundle(key: str, spec: dict) -> Path:
 
 
 def render(bundle: Path, rendition: str, out: Path) -> None:
+    tint = ["--tint-color", HARBOR_HUE, "--tint-strength", "0.75"] if rendition.startswith("Tinted") else []
     subprocess.run(
         [ICTOOL, str(bundle), "--export-image", "--output-file", str(out), "--platform", "iOS",
-         "--rendition", rendition, "--width", "1024", "--height", "1024", "--scale", "1"],
+         "--rendition", rendition, "--width", "1024", "--height", "1024", "--scale", "1", *tint],
         check=True, capture_output=True,
     )
 
@@ -115,8 +129,72 @@ def contact_sheet(renders: dict) -> Path:
     return out
 
 
+def final_sheet(renders: dict) -> Path:
+    pad, gap, label_h = 64, 40, 72
+    col_w = sum(FINAL_SHEET_SIZES) + gap * (len(FINAL_SHEET_SIZES) - 1)
+    band_w = col_w + pad * 2
+    band_h = pad * 2 + label_h + FINAL_SHEET_SIZES[0]
+    sheet = Image.new("RGB", (band_w * 2, band_h * 2), "#F2F2F4")
+    draw = ImageDraw.Draw(sheet)
+    for i, (mode, path) in enumerate(renders.items()):
+        is_dark = mode in ("dark", "tinted")
+        left = (i % 2) * band_w
+        top = (i // 2) * band_h
+        draw.rectangle((left, top, left + band_w, top + band_h), fill="#0B0B0D" if is_dark else "#F2F2F4")
+        draw.text((left + pad, top + pad), mode.capitalize(), fill="#F5F5F7" if is_dark else "#1D1D1F", font=font(40))
+        icon = Image.open(path).convert("RGBA")
+        x = left + pad
+        for size in FINAL_SHEET_SIZES:
+            scaled = icon.resize((size, size), Image.LANCZOS)
+            sheet.paste(scaled, (x, top + pad + label_h + FINAL_SHEET_SIZES[0] - size), scaled)
+            x += size + gap
+    out = GENERATED / "icon-final-sheet.png"
+    sheet.save(out)
+    return out
+
+
+def toolbar_glyph(size: int) -> Image.Image:
+    unit = size * 8 / 32
+    glyph = Image.new("RGBA", (size * 8, size * 8), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(glyph)
+
+    def box(x0, y0, x1, y1):
+        return [round(v * unit) for v in (x0, y0, x1, y1)]
+
+    draw.rounded_rectangle(box(1, 12, 31, 26), radius=round(7 * unit), fill=(47, 124, 135, 255))
+    draw.rounded_rectangle(box(20, 17.75, 28, 20.25), radius=round(1.25 * unit), fill=(255, 255, 255, 255))
+    draw.rounded_rectangle(box(0.5, 4.5, 20.5, 19.5), radius=round(7.5 * unit), fill=(0, 0, 0, 0))
+    draw.rounded_rectangle(box(2, 6, 19, 18), radius=round(6 * unit), fill=(255, 180, 58, 255))
+    draw.rounded_rectangle(box(6, 10.75, 15, 13.25), radius=round(1.25 * unit), fill=(13, 42, 48, 255))
+    return glyph.resize((size, size), Image.LANCZOS)
+
+
+def export_extension_icons(light: Path) -> None:
+    icon = Image.open(light).convert("RGBA")
+    for size in MANIFEST_SIZES:
+        icon.resize((size, size), Image.LANCZOS).save(EXTENSION_IMAGES / f"icon-{size}.png")
+    for size in TOOLBAR_SIZES:
+        toolbar_glyph(size).save(EXTENSION_IMAGES / f"toolbar-icon-{size}.png")
+
+
+def build_final() -> None:
+    bundle = write_bundle(FINAL_KEY, DIRECTIONS[FINAL_KEY])
+    renders = {}
+    for mode, rendition in FINAL_RENDITIONS.items():
+        renders[mode] = GENERATED / f"icon-final-{mode}.png"
+        render(bundle, rendition, renders[mode])
+        print(renders[mode])
+    print(final_sheet(renders))
+    shutil.rmtree(APP_ICON, ignore_errors=True)
+    shutil.copytree(bundle, APP_ICON)
+    export_extension_icons(renders["light"])
+
+
 def main() -> None:
     GENERATED.mkdir(parents=True, exist_ok=True)
+    if sys.argv[1:] == ["final"]:
+        build_final()
+        return
     renders = {}
     for key, spec in DIRECTIONS.items():
         bundle = write_bundle(key, spec)
