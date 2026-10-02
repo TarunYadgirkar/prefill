@@ -242,15 +242,7 @@ private struct LabelMenu: View {
             .pickerStyle(.inline)
             Button("Custom label…", systemImage: "pencil", action: editCustom)
         } label: {
-            HStack(spacing: Spacing.xxSmall) {
-                Text(caption)
-                Image(systemName: "chevron.up.chevron.down")
-                    .imageScale(.small)
-            }
-            .textRole(.captionAction)
-            .padding(.vertical, Spacing.small)
-            .padding(.trailing, Spacing.medium)
-            .contentShape(.rect)
+            LabelChip(caption: caption)
         }
         .menuStyle(.button)
         .buttonStyle(.borderless)

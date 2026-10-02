@@ -35,8 +35,9 @@ extension AppModel {
         commit(state.pinning(value?.id, kind: kind, host: host))
     }
 
-    func save(_ item: RecentItem) async {
-        _ = await add(item.value.payload, label: item.value.label, source: .captured)
+    // `label` is what the person picked in Recently added, or the suggestion they kept.
+    func save(_ item: RecentItem, label: String?) async {
+        _ = await add(item.value.payload, label: label, source: .captured)
     }
 
     func dismiss(_ item: RecentItem) {
@@ -45,9 +46,9 @@ extension AppModel {
 
     // Puts a value that was taken off or dismissed back on the card, and lets later forms
     // save it again.
-    func putBack(_ item: RecentItem) async {
+    func putBack(_ item: RecentItem, label: String?) async {
         commit(state.unrejecting(item.value.id))
-        _ = await add(item.value.payload, label: item.value.label, source: .captured)
+        _ = await add(item.value.payload, label: label, source: .captured)
     }
 
     // Takes a saved value off the card and remembers not to save it again.
@@ -58,12 +59,18 @@ extension AppModel {
 
     // Turning it off puts the person's own order back on the card straight away.
     func setMatchEachSite(_ isOn: Bool) {
-        commit(state.with(settings: Settings(matchEachSite: isOn, saveNewInfo: state.settings.saveNewInfo)))
+        let settings = state.settings
+        commit(state.with(settings: Settings(
+            matchEachSite: isOn, saveNewInfo: settings.saveNewInfo, focusLabel: settings.focusLabel
+        )))
         if !isOn { Task { await syncCard() } }
     }
 
     func setSaveNewInfo(_ isOn: Bool) {
-        commit(state.with(settings: Settings(matchEachSite: state.settings.matchEachSite, saveNewInfo: isOn)))
+        let settings = state.settings
+        commit(state.with(settings: Settings(
+            matchEachSite: settings.matchEachSite, saveNewInfo: isOn, focusLabel: settings.focusLabel
+        )))
     }
 
     func restoreOriginalCard() async {
@@ -86,7 +93,10 @@ extension AppModel {
         guard let link = state.cardLink else { return }
         let request = CardSyncRequest(
             cardIdentifier: link.contactIdentifier, known: state.values, additions: additions, usage: [], pins: [],
-            page: PageSignal(host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite)
+            page: PageSignal(
+                host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
+                focusLabel: state.settings.focusLabel
+            )
         )
         if case .failed(let failure) = await CardWork.sync(gateway, request) { report(failure) }
         await refreshCard()

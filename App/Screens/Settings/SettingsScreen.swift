@@ -26,6 +26,16 @@ struct SettingsScreen: View {
                         """)
                     .textRole(.footnote)
                 }
+                if let line = model.intelligenceState.settingsLine {
+                    Section {
+                        Label {
+                            Text(line).textRole(.body)
+                        } icon: {
+                            Image(systemName: "apple.intelligence")
+                        }
+                        .accessibilityIdentifier("apple-intelligence")
+                    }
+                }
                 Section {
                     ForEach(safariSwitches) { item in
                         LabeledContent {

@@ -28,12 +28,15 @@ final class AppModel {
     private(set) var extensionEnabled: Bool?
     private(set) var hasFinishedOnboarding: Bool
     private(set) var isLoaded = false
+    private(set) var intelligenceState = IntelligenceState.unsupported
     var problem: Problem?
 
     let store: any SharedStore
     let gateway: any ContactsGateway
     let contacts: any ContactsSource
     private let defaults: UserDefaults
+    @ObservationIgnored let intelligence = Intelligence()
+    @ObservationIgnored var isAskingModel = false
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
 
     init(
@@ -107,6 +110,8 @@ final class AppModel {
         await refreshCard()
         await refreshExtension()
         isLoaded = true
+        intelligenceState = Intelligence.state
+        await refreshInsights()
     }
 
     func refreshCard() async {
