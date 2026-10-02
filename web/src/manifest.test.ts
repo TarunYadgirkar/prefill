@@ -7,7 +7,7 @@ const PNG_SIGNATURE = "89504e470d0a1a0a";
 
 interface Manifest {
   icons: Record<string, string>;
-  action: { default_icon: Record<string, string> };
+  action: { default_icon: Record<string, string>; default_popup: string };
 }
 
 const manifest = JSON.parse(readFileSync(new URL("manifest.json", RESOURCES), "utf8")) as Manifest;
@@ -25,5 +25,11 @@ describe.each([
   it.each(Object.entries(icons))("%s px points at a square PNG of that size", (size, path) => {
     expect(existsSync(new URL(path, RESOURCES))).toBe(true);
     expect(pngSize(path)).toEqual({ width: Number(size), height: Number(size) });
+  });
+});
+
+describe("manifest action", () => {
+  it("opens Safari's Prefill sheet from the page menu", () => {
+    expect(manifest.action.default_popup).toBe("popup.html");
   });
 });

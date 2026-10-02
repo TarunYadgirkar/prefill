@@ -6,7 +6,7 @@ The content script runs in the top frame of `https` pages only, plus plain `http
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is the one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
 
@@ -28,6 +28,8 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | Field kind | `email`, `phone`, `address`, `name` |
 | Section hint | `home`, `work`, `shipping`, `billing`, taken from the field's `autocomplete` tokens |
 | Sync status | `unchanged`, `saved`, `failed`, `off`, `notSetUp` |
+| Sheet status | `ready`, `off`, `notSetUp`, `failed` |
+| Recent state | `saved`, `waiting`, `removed` |
 
 The `enums` block in `docs/message-examples.json` lists these values. The Swift suite checks it against `FieldKind`, `SectionHint` and `SyncStatus`, and the Vitest suite checks it against the arrays the TypeScript types and validators are built from.
 
@@ -134,6 +136,63 @@ The reply is `captureResult`, with counts only. `saved` values went onto the car
 ```json
 { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 }
 ```
+
+## The Prefill sheet
+
+Tapping Prefill in Safari's page menu opens `popup.html` as a half-height sheet. It asks the active tab's content script `{ "type": "pageNeeds" }`, which answers with the page's host and the kinds of contact fields it has (`email`, `phone`, `address`); the content script only answers this extension, in the top frame of a page it runs on. The sheet takes the host from the tab's address when Safari shares it and from that answer otherwise, and shows nothing in Private Browsing. It then sends the messages below straight to the app with `browser.runtime.sendNativeMessage`, and clears the page-menu badge for the tab.
+
+Every sheet request carries the `host` it is about, checked like any other host, and every reply is `popupStateResult`. Kinds are `email`, `phone` or `address`; a value ID is the UUID the app gives each value. Before the card is linked the reply is `notSetUp`, and when the card can't be read or saved it is `failed` with a `reason`.
+
+| Request | Fields | What the app does |
+| --- | --- | --- |
+| `popupState` | `host`, `kinds` (at most 3) | Reads the card and plans this site's order without saving. |
+| `pin` | `host`, `kind`, `valueID` | Records the pick for the site, rewrites the card so the value is first, and answers for that kind. Does nothing with Match each site off. |
+| `unpin` | `host`, `kind` | Takes the pick back and rewrites the card the same way. |
+| `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed. |
+| `muteSite` | `host`, `muted` | Turns "Don't save on this site" on or off. While it is on, a `capture` from the site is dropped whole. |
+
+These are recorded as events (`pins`, `mutes`, and a `dismissed` capture for an undo), since only the app writes AppState. The app folds them in when it reads the store, and the handler reads through the same fold, so a choice counts right away.
+
+```json
+{ "type": "pin", "host": "shop.example.net", "kind": "email", "valueID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B" }
+```
+
+The reply lists, for each kind asked about, every value in the order Safari will offer them on the site (the first two are the bar's two slots), with the label as the bar captions it and the value on one line. `pinnedID` is the value picked for the site, if any. `recent` holds up to five values saved from the site, newest first, and `muted` says whether the site is muted.
+
+| Limit | Value |
+| --- | --- |
+| Kinds per reply | 3 |
+| Values per kind | 30 |
+| `recent` | 5 |
+| `caption` | 100 UTF-16 units |
+| `text` | 1,000 UTF-16 units, cut short by the app, with line breaks and hidden characters turned into spaces |
+
+```json
+{
+  "type": "popupStateResult",
+  "status": "ready",
+  "kinds": [
+    {
+      "kind": "email",
+      "pinnedID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B",
+      "values": [
+        { "id": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B", "caption": "work", "text": "alex@work.example.org" },
+        { "id": "0B3E5A7C-9D1F-5B2A-8C4E-6F8A0B2C4D6E", "caption": "home", "text": "alex.rivera@example.com" }
+      ]
+    }
+  ],
+  "recent": [
+    {
+      "kind": "email",
+      "state": "saved",
+      "value": { "id": "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A", "caption": "email", "text": "alex.new@example.net" }
+    }
+  ],
+  "muted": false
+}
+```
+
+When a `capture` reply has values waiting for review, the background script puts that count on Prefill's row in the page menu for the tab with `browser.action.setBadgeText`. Values saved straight to the card leave no badge, since the sheet's Undo covers them.
 
 ## error
 

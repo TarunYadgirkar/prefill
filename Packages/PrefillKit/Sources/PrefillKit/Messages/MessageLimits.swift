@@ -105,12 +105,17 @@ enum MessageText {
     }
 
     // Card text for the sheet: hidden characters and line breaks become spaces, and a value
-    // longer than the sheet's limit is cut short.
+    // longer than the sheet's limit is cut short. The limit counts UTF-16 units, as
+    // JavaScript's length does, so the sheet's parser never turns the reply away.
     static func oneLine(_ text: String, max: Int) -> String {
-        let scalars = text.unicodeScalars.map { scalar in
+        let flat = String(text.unicodeScalars.map { scalar in
             hidden.contains(scalar.properties.generalCategory) ? " " : Character(scalar)
-        }
-        return String(String(scalars).prefix(max))
+        })
+        var used = 0
+        return String(flat.prefix { character in
+            used += character.utf16.count
+            return used <= max
+        })
     }
 
     static func isHost(_ host: String) -> Bool {

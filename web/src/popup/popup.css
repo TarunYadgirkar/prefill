@@ -1,0 +1,358 @@
+/* Safari's Prefill sheet. Colors mirror App/Theme/Palette.swift: the keyboard values were
+   sampled from iOS 27 screenshots, the rest are the system grouped colors. */
+:root {
+  color-scheme: light dark;
+  --canvas: #f2f2f7;
+  --surface: #ffffff;
+  --text: #000000;
+  --text-secondary: #6c6c70;
+  --separator: rgb(60 60 67 / 0.29);
+  --accent-text: #0068d6;
+  --critical: #d70015;
+  --keyboard-surface: #e2e3e9;
+  --keyboard-separator: #cdced4;
+  --keyboard-caption: #3c3c3e;
+  --keyboard-value: #343434;
+  --marigold: #ffb43a;
+  --segment-track: rgb(118 118 128 / 0.12);
+  --segment-thumb: #ffffff;
+  --radius-group: 10px;
+  --radius-bar: 26px;
+  --gutter: 16px;
+  --row-height: 44px;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #000000;
+    --surface: #1c1c1e;
+    --text: #ffffff;
+    --text-secondary: rgb(235 235 245 / 0.6);
+    --separator: rgb(84 84 88 / 0.65);
+    --accent-text: #0a84ff;
+    --critical: #ff6961;
+    --keyboard-surface: #222223;
+    --keyboard-separator: #323235;
+    --keyboard-caption: #b2b2b2;
+    --keyboard-value: #b2b2b2;
+    --segment-track: rgb(118 118 128 / 0.24);
+    --segment-thumb: #636366;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  min-width: 375px;
+  background: var(--canvas);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font: -apple-system-body;
+  color: var(--text);
+  background: var(--canvas);
+  padding: 8px var(--gutter) calc(24px + env(safe-area-inset-bottom));
+}
+
+main {
+  display: grid;
+  gap: 20px;
+}
+
+h1 {
+  font: -apple-system-title2;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+h2 {
+  font: -apple-system-footnote;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  padding: 0 var(--gutter) 6px;
+}
+
+.eyebrow,
+.footnote,
+.note,
+.pinned {
+  font: -apple-system-footnote;
+  color: var(--text-secondary);
+}
+
+.footnote {
+  padding: 6px var(--gutter) 0;
+  text-wrap: pretty;
+}
+
+.note:empty {
+  display: none;
+}
+
+.failure {
+  font: -apple-system-footnote;
+  color: var(--critical);
+}
+
+/* The QuickType row, on the keyboard's surface with its rounded top corners. */
+.bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 4px;
+  border-radius: var(--radius-bar) var(--radius-bar) 8px 8px;
+  background: var(--keyboard-surface);
+}
+
+.bar.alone {
+  grid-template-columns: 1fr;
+  padding: 0 44px;
+}
+
+.slot {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 6px 8px;
+  min-width: 0;
+  text-align: center;
+}
+
+.slot + .slot {
+  box-shadow: inset 1px 0 0 var(--keyboard-separator);
+}
+
+.slot .caption {
+  font: -apple-system-footnote;
+  color: var(--keyboard-caption);
+}
+
+.slot .text {
+  font: -apple-system-callout;
+  color: var(--keyboard-value);
+}
+
+.slot .caption,
+.slot .text {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Slot one carries a marigold mark, never a fill. */
+.slot.first::after {
+  content: "";
+  position: absolute;
+  inset: auto 30% 2px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--marigold);
+  box-shadow: 0 0 8px var(--marigold);
+}
+
+.slot.empty {
+  font: -apple-system-footnote;
+  color: var(--keyboard-caption);
+}
+
+.segments {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--segment-track);
+}
+
+.segment {
+  min-height: 32px;
+  font: -apple-system-subheadline;
+  font-weight: 500;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  transition-property: background-color, box-shadow;
+  transition-duration: 150ms;
+  transition-timing-function: var(--ease);
+}
+
+.segment[aria-selected="true"] {
+  background: var(--segment-thumb);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04);
+}
+
+.list {
+  display: grid;
+  padding: 0;
+  list-style: none;
+  border-radius: var(--radius-group);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.list > li + li .row,
+.list > li + li.row {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--row-height);
+  padding: 10px var(--gutter);
+  font: -apple-system-body;
+  color: var(--text);
+  text-align: start;
+  background: var(--surface);
+  border: 0;
+}
+
+.row .lines {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+
+.row .caption {
+  font: -apple-system-footnote;
+  color: var(--text-secondary);
+}
+
+.row .text {
+  overflow-wrap: anywhere;
+}
+
+.choice {
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+
+.choice:active:not(:disabled) {
+  background: var(--segment-track);
+}
+
+.choice:disabled {
+  color: var(--text-secondary);
+}
+
+.accessory,
+.link {
+  flex: none;
+  font: -apple-system-body;
+  color: var(--accent-text);
+}
+
+.choice:disabled .accessory {
+  visibility: hidden;
+}
+
+.accessory.quiet {
+  color: var(--text-secondary);
+}
+
+.link {
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: 44px;
+}
+
+.pinned .link {
+  font: -apple-system-footnote;
+  min-height: 0;
+}
+
+.link:disabled {
+  opacity: 0.4;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+input[role="switch"] {
+  appearance: none;
+  flex: none;
+  position: relative;
+  width: 51px;
+  height: 31px;
+  border-radius: 16px;
+  background: var(--segment-track);
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+
+input[role="switch"]::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.15), 0 3px 1px rgb(0 0 0 / 0.06);
+  transition-property: translate;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease);
+}
+
+input[role="switch"]:checked {
+  background: #34c759;
+}
+
+input[role="switch"]:checked::after {
+  translate: 20px 0;
+}
+
+label.row .text {
+  flex: 1;
+}
+
+.problem {
+  display: grid;
+  gap: 6px;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.problem h2 {
+  font: -apple-system-headline;
+  color: var(--text);
+  text-transform: none;
+  padding: 0;
+}
+
+.problem p {
+  color: var(--text-secondary);
+}
+
+::view-transition-group(*) {
+  animation-duration: 300ms;
+  animation-timing-function: var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+
+  * {
+    transition-duration: 0ms !important;
+  }
+}

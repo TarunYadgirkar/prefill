@@ -1,7 +1,9 @@
-import { parseExtensionRequest, parseExtensionResponse, type ErrorResponse, type ExtensionRequest } from "./messages";
+import { parsePageRequest, parsePageResponse, type ErrorResponse, type PageRequest, type PageResponse } from "./messages";
 import { isTrustedPage } from "./origin";
 
 export type SendNative = (message: unknown) => Promise<unknown>;
+// Marks Prefill's row in Safari's page menu with the number of values waiting for review.
+export type MarkForReview = (tabId: number, count: number) => void;
 
 const badReply: ErrorResponse = { type: "error", reason: "unreadable reply" };
 
@@ -19,21 +21,34 @@ function senderHost(sender: MessageSender, extensionId: string): string | undefi
   }
 }
 
-function boundToSender(request: ExtensionRequest, host: string): ExtensionRequest {
+function boundToSender(request: PageRequest, host: string): PageRequest {
   return request.type === "ping" ? request : { ...request, host };
 }
 
-// Only well-formed requests from this extension's pages reach the app, rebuilt from
-// their known fields, and only well-formed replies reach the page.
+// Values saved straight to the card leave no mark, since Undo in the sheet covers them.
+function markIfWaiting(response: PageResponse, sender: MessageSender, mark: MarkForReview | undefined): void {
+  const tabId = sender.tab?.id;
+  if (response.type !== "captureResult" || response.review === 0 || tabId === undefined) return;
+  mark?.(tabId, response.review);
+}
+
+// Only well-formed page requests from this extension's content script reach the app,
+// rebuilt from their known fields, and only well-formed page replies come back. The
+// sheet's requests, whose replies hold the person's values, are never relayed.
 export function relayToNative(
   message: unknown,
   sender: MessageSender,
   extensionId: string,
   sendNative: SendNative,
+  markForReview?: MarkForReview,
 ): Promise<unknown> | undefined {
   const host = senderHost(sender, extensionId);
   if (host === undefined) return undefined;
-  const request = parseExtensionRequest(message);
+  const request = parsePageRequest(message);
   if (request === undefined) return undefined;
-  return sendNative(boundToSender(request, host)).then((reply) => parseExtensionResponse(reply) ?? badReply);
+  return sendNative(boundToSender(request, host)).then((reply) => {
+    const response = parsePageResponse(reply) ?? badReply;
+    markIfWaiting(response, sender, markForReview);
+    return response;
+  });
 }
