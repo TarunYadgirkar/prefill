@@ -37,24 +37,33 @@ private enum Page {
     }
 
     static func signup(_ host: String, emails: [String], submitted: Bool = true) -> [String: Any] {
-        let name: [String: Any] = ["kind": "name", "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"]
-        let typed = emails.map { ["kind": "email", "value": $0, "autocomplete": "email", "name": "email"] }
+        let name: [String: Any] = [
+            "kind": "name", "userTyped": true, "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"
+        ]
+        let typed = emails.map {
+            ["kind": "email", "userTyped": true, "value": $0, "autocomplete": "email", "name": "email"]
+        }
         return [
-            "type": "capture", "host": host, "hasPassword": true, "submitted": submitted, "fields": [name] + typed
+            "type": "capture", "host": host, "hasPassword": true, "trigger": submitted ? "submit" : "flush",
+            "fields": [name] + typed
         ]
     }
 
     static var gift: [String: Any] {
         [
-            "type": "capture", "host": siteA, "hasPassword": false, "submitted": true,
+            "type": "capture", "host": siteA, "hasPassword": false, "trigger": "submit",
             "fields": [
-                ["kind": "name", "value": "Jordan Lee", "name": "recipient_name", "label": "Recipient's name"],
                 [
-                    "kind": "email", "value": "jordan.lee@example.net", "name": "recipient_email",
+                    "kind": "name", "userTyped": true, "value": "Jordan Lee", "name": "recipient_name",
+                    "label": "Recipient's name"
+                ],
+                [
+                    "kind": "email", "userTyped": true, "value": "jordan.lee@example.net", "name": "recipient_email",
                     "label": "Recipient's email"
                 ],
                 [
-                    "kind": "address", "name": "recipient_street recipient_city", "section": "shipping",
+                    "kind": "address", "userTyped": true, "name": "recipient_street recipient_city",
+                    "section": "shipping",
                     "address": [
                         "street": "77 Gift Way", "city": "Oakland", "state": "", "postalCode": "94612", "country": ""
                     ]

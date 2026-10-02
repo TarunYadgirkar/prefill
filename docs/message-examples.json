@@ -19,13 +19,14 @@
       "type": "capture",
       "host": "shop.example.net",
       "hasPassword": true,
-      "submitted": true,
+      "trigger": "submit",
       "fields": [
-        { "kind": "name", "value": "Alex Rivera", "autocomplete": "name", "name": "full_name", "label": "Full name" },
-        { "kind": "email", "value": "alex.new@example.net", "autocomplete": "email", "name": "email", "label": "Email" },
+        { "kind": "name", "value": "Alex Rivera", "autocomplete": "name", "name": "full_name", "label": "Full name", "userTyped": true },
+        { "kind": "email", "value": "alex.new@example.net", "autocomplete": "email", "name": "email", "label": "Email", "userTyped": true },
         {
           "kind": "address",
           "section": "shipping",
+          "userTyped": true,
           "address": {
             "street": "2400 Durant Ave",
             "city": "Berkeley",

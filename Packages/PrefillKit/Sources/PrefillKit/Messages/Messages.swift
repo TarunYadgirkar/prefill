@@ -74,10 +74,12 @@ public struct CapturedField: Codable, Sendable, Hashable {
     public let name: String?
     public let label: String?
     public let section: SectionHint?
+    // The person typed this value themselves, as opposed to the page filling it in.
+    public let userTyped: Bool
 
     public init(
         kind: FieldKind, value: String?, address: PostalAddress?, autocomplete: String?,
-        name: String?, label: String?, section: SectionHint?
+        name: String?, label: String?, section: SectionHint?, userTyped: Bool
     ) {
         self.kind = kind
         self.value = value
@@ -86,22 +88,27 @@ public struct CapturedField: Codable, Sendable, Hashable {
         self.name = name
         self.label = label
         self.section = section
+        self.userTyped = userTyped
     }
+}
+
+// `submit` is a form the person sent. `flush` is what they typed before the page was
+// hidden, which is never saved straight to the card.
+public enum CaptureTrigger: String, Codable, Sendable, CaseIterable {
+    case submit, flush
 }
 
 public struct CaptureRequest: Codable, Sendable, Hashable {
     public let host: String
     public let fields: [CapturedField]
     public let hasPassword: Bool
-    // False when the page was only hidden, never submitted: such values are never saved
-    // straight to the card.
-    public let submitted: Bool
+    public let trigger: CaptureTrigger
 
-    public init(host: String, fields: [CapturedField], hasPassword: Bool, submitted: Bool = true) {
+    public init(host: String, fields: [CapturedField], hasPassword: Bool, trigger: CaptureTrigger = .submit) {
         self.host = host
         self.fields = fields
         self.hasPassword = hasPassword
-        self.submitted = submitted
+        self.trigger = trigger
     }
 
     public var hints: [ContactKind: SectionHint] {
@@ -232,8 +239,8 @@ extension ExtensionResponse: Codable {
     }
 }
 
-public enum MessageError: Error, Sendable {
-    case notJSON, unknownType, tooLarge
+public enum MessageError: String, Error, Sendable {
+    case notJSON, unknownType, tooLarge, malformed
 }
 
 // SFExtensionMessageKey carries Foundation JSON objects (NSDictionary and friends).
@@ -244,15 +251,14 @@ public enum MessageCoding {
         guard data.count <= MessageLimits.bytes else { throw MessageError.tooLarge }
         let request = try JSONDecoder().decode(ExtensionRequest.self, from: data)
         guard request.isWithinLimits else { throw MessageError.tooLarge }
+        guard request.isWellFormed else { throw MessageError.malformed }
         return request
     }
 
     // Names the kind of failure only. A decoding error's description can quote the value.
     public static func failureName(_ error: any Error) -> String {
-        switch error {
-        case MessageError.notJSON: "notJSON"
-        case MessageError.unknownType: "unknownType"
-        case MessageError.tooLarge: "tooLarge"
+        if let error = error as? MessageError { return error.rawValue }
+        return switch error {
         case DecodingError.typeMismatch: "typeMismatch"
         case DecodingError.valueNotFound: "valueNotFound"
         case DecodingError.keyNotFound: "keyNotFound"

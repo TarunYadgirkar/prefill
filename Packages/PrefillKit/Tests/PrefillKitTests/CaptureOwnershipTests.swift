@@ -9,19 +9,22 @@ extension CaptureTesting {
 
     func field(
         _ kind: FieldKind, _ value: String? = nil, autocomplete: String? = nil,
-        name: String? = nil, label: String? = nil, section: SectionHint? = nil, address: PostalAddress? = nil
+        name: String? = nil, label: String? = nil, section: SectionHint? = nil, address: PostalAddress? = nil,
+        userTyped: Bool = true
     ) -> CapturedField {
         CapturedField(
             kind: kind, value: value, address: address, autocomplete: autocomplete,
-            name: name, label: label, section: section
+            name: name, label: label, section: section, userTyped: userTyped
         )
     }
 
     func decide(
-        _ fields: [CapturedField], hasPassword: Bool = false,
+        _ fields: [CapturedField], hasPassword: Bool = false, trigger: CaptureTrigger = .submit,
         filter: CaptureFilter = CaptureFilter(card: Alex.card, settings: Settings())
     ) -> [CaptureDecision] {
-        let request = CaptureRequest(host: "shop.example.net", fields: fields, hasPassword: hasPassword)
+        let request = CaptureRequest(
+            host: "shop.example.net", fields: fields, hasPassword: hasPassword, trigger: trigger
+        )
         return filter.evaluate(request, at: .testNow)
     }
 
@@ -40,11 +43,11 @@ struct CaptureOwnershipTests: CaptureTesting {
     @Test(arguments: [
         CapturedField(
             kind: .email, value: "alex.new@example.net", address: nil, autocomplete: nil,
-            name: "email", label: nil, section: nil
+            name: "email", label: nil, section: nil, userTyped: true
         ),
         CapturedField(
             kind: .phone, value: "(925) 555-0101", address: nil, autocomplete: nil,
-            name: "phone", label: nil, section: nil
+            name: "phone", label: nil, section: nil, userTyped: true
         )
     ])
     func aNewValueNextToSomeoneElsesNameNeedsReview(value: CapturedField) {

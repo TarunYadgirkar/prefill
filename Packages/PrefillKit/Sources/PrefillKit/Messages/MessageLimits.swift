@@ -41,3 +41,47 @@ private extension PostalAddress {
             && [city, state, postalCode, country].allSatisfy { $0.count <= MessageLimits.part }
     }
 }
+
+// What the content script can't send: a host that isn't a plain lowercase host name, text
+// with control, format (bidi overrides, zero-width) or line separator characters, and an
+// address sent as one value or another kind sent in address parts. A street may span
+// lines, so it keeps plain newlines.
+extension ExtensionRequest {
+    var isWellFormed: Bool {
+        switch self {
+        case .ping: true
+        case .pageContext(let body): MessageText.isHost(body.host)
+        case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
+        }
+    }
+}
+
+private extension CapturedField {
+    var isWellFormed: Bool {
+        let hasShape = kind == .address ? address != nil && value == nil : address == nil && value != nil
+        let texts = [value, autocomplete, name, label].compactMap(\.self)
+        return hasShape && texts.allSatisfy { MessageText.isPlain($0) } && address.map(\.isPlain) ?? true
+    }
+}
+
+private extension PostalAddress {
+    var isPlain: Bool {
+        MessageText.isPlain(street, allowingNewlines: true)
+            && [city, state, postalCode, country].allSatisfy { MessageText.isPlain($0) }
+    }
+}
+
+enum MessageText {
+    private static let hidden: Set<Unicode.GeneralCategory> = [.control, .format, .lineSeparator, .paragraphSeparator]
+    private static let hostScalars = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyz0123456789.-")
+
+    static func isPlain(_ text: String, allowingNewlines: Bool = false) -> Bool {
+        text.unicodeScalars.allSatisfy { scalar in
+            (allowingNewlines && scalar == "\n") || !hidden.contains(scalar.properties.generalCategory)
+        }
+    }
+
+    static func isHost(_ host: String) -> Bool {
+        !host.isEmpty && host.unicodeScalars.allSatisfy(hostScalars.contains)
+    }
+}

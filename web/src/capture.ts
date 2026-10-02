@@ -2,13 +2,16 @@ import { buildCapture, describeElement, type EditedField, type FieldDescription 
 import { classify } from "./classify";
 import { eventOrigin, fieldValue, isFieldElement, isInView, isRendered } from "./dom";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
-import type { CaptureRequest } from "./messages";
+import type { CaptureRequest, CaptureTrigger } from "./messages";
 
 export interface CaptureOptions {
   host: () => string;
   send: (request: CaptureRequest) => void;
   // Only events the browser made for the person count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
+  // A submit counts only while the person has just tapped or typed, so a page script that
+  // submits the form by itself sends nothing.
+  hasActivation?: () => boolean;
 }
 
 interface Tracked {
@@ -21,15 +24,15 @@ interface Tracked {
 }
 
 interface Trigger {
-  submitted: boolean;
+  trigger: CaptureTrigger;
   // A real submit ends the form, so its fields are forgotten. A hidden page or a click
   // outside any form may come back, so they stay for the next report.
   consume: boolean;
 }
 
-const SUBMIT: Trigger = { submitted: true, consume: true };
-const LOOSE_SUBMIT: Trigger = { submitted: true, consume: false };
-const HIDDEN: Trigger = { submitted: false, consume: false };
+const SUBMIT: Trigger = { trigger: "submit", consume: true };
+const LOOSE_SUBMIT: Trigger = { trigger: "submit", consume: false };
+const HIDDEN: Trigger = { trigger: "flush", consume: false };
 
 const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
 const SUBMIT_WORDS =
@@ -95,10 +98,52 @@ function sameValue(field: ContactField, typed: string, now: string): boolean {
   return typed.replace(/\s+/gu, " ").toLowerCase() === now.replace(/\s+/gu, " ").toLowerCase();
 }
 
+// Judged when the person types, like visibility: a page may lock fields while it submits.
+function isEditable(element: FieldElement): boolean {
+  const control = element as Partial<HTMLInputElement>;
+  return control.disabled !== true && control.readOnly !== true;
+}
+
+function activationOf(win: Window): () => boolean {
+  return () => (win.navigator as Partial<Navigator>).userActivation?.isActive === true;
+}
+
+// A password box stays one after a "show password" toggle turns it into a text box, so
+// every element that was ever type=password is remembered and never read.
+function watchPasswords(doc: Document): { isPassword: (element: Element) => boolean; stop: () => void } {
+  const seen = new WeakSet<Element>();
+  const note = (element: Element): void => {
+    if (element.getAttribute("type")?.toLowerCase() === "password") seen.add(element);
+  };
+  doc.querySelectorAll("input[type]").forEach(note);
+  const observer = new MutationObserver((records) => {
+    for (const record of records) {
+      if (!(record.target instanceof Element)) continue;
+      if (record.oldValue?.toLowerCase() === "password") seen.add(record.target);
+      note(record.target);
+    }
+  });
+  observer.observe(doc.documentElement, {
+    attributes: true,
+    attributeFilter: ["type"],
+    attributeOldValue: true,
+    subtree: true,
+  });
+  return {
+    isPassword: (element) => {
+      note(element);
+      return seen.has(element);
+    },
+    stop: () => {
+      observer.disconnect();
+    },
+  };
+}
+
 function reportable(element: FieldElement, entry: Tracked, trigger: Trigger): EditedField | undefined {
   const value = fieldValue(element);
   if (!sameValue(entry.field, entry.typed, value)) return undefined;
-  if (!trigger.submitted && !entry.settled) return undefined;
+  if (trigger.trigger === "flush" && !entry.settled) return undefined;
   return { field: entry.field, description: entry.description, value };
 }
 
@@ -109,10 +154,17 @@ function reportable(element: FieldElement, entry: Tracked, trigger: Trigger): Ed
 // Sensitive fields are never read.
 export function installCapture(doc: Document, win: Window, options: CaptureOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+  const hasActivation = options.hasActivation ?? activationOf(win);
+  const isPersonSubmit = (event: Event): boolean => isUserEvent(event) && hasActivation();
+  const passwords = watchPasswords(doc);
   const edited = new Map<FieldElement, Tracked>();
   let lastSignature = "";
 
   const track = (target: FieldElement, settled: boolean): void => {
+    if (passwords.isPassword(target) || !isEditable(target)) {
+      edited.delete(target);
+      return;
+    }
     const known = edited.get(target);
     if (known !== undefined) {
       edited.set(target, { ...known, typed: fieldValue(target), settled });
@@ -133,11 +185,11 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
   const report = (elements: readonly FieldElement[], scope: ParentNode, trigger: Trigger): void => {
     const entries = inDocumentOrder(elements).flatMap((element) => {
       const entry = edited.get(element);
-      if (entry === undefined) return [];
+      if (entry === undefined || passwords.isPassword(element)) return [];
       if (trigger.consume) edited.delete(element);
       return reportable(element, entry, trigger) ?? [];
     });
-    const facts = { host: options.host(), hasPassword: hasNewPassword(scope), submitted: trigger.submitted };
+    const facts = { host: options.host(), hasPassword: hasNewPassword(scope), trigger: trigger.trigger };
     const request = buildCapture(facts, entries);
     if (request === undefined) return;
     const signature = JSON.stringify(request);
@@ -156,11 +208,11 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
   };
 
   const onSubmit = (event: Event): void => {
-    if (isUserEvent(event) && event.target instanceof HTMLFormElement) reportForm(event.target);
+    if (isPersonSubmit(event) && event.target instanceof HTMLFormElement) reportForm(event.target);
   };
 
   const onClick = (event: Event): void => {
-    const control = isUserEvent(event) ? submitControl(eventOrigin(event)) : undefined;
+    const control = isPersonSubmit(event) ? submitControl(eventOrigin(event)) : undefined;
     if (control === undefined) return;
     const form = control.form;
     const fields = [...edited.keys()];
@@ -188,6 +240,7 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
   win.addEventListener("pagehide", flush, true);
 
   return () => {
+    passwords.stop();
     doc.removeEventListener("input", remember, true);
     doc.removeEventListener("change", remember, true);
     doc.removeEventListener("submit", onSubmit, true);

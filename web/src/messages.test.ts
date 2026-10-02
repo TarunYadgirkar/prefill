@@ -31,13 +31,14 @@ const capture: CaptureRequest = {
   type: "capture",
   host: "shop.example.net",
   hasPassword: true,
-  submitted: true,
+  trigger: "submit",
   fields: [
-    { kind: "name", value: "Alex Rivera", autocomplete: "name", name: "full_name", label: "Full name" },
-    { kind: "email", value: "alex.new@example.net", autocomplete: "email", name: "email", label: "Email" },
+    { kind: "name", value: "Alex Rivera", autocomplete: "name", name: "full_name", label: "Full name", userTyped: true },
+    { kind: "email", value: "alex.new@example.net", autocomplete: "email", name: "email", label: "Email", userTyped: true },
     {
       kind: "address",
       section: "shipping",
+      userTyped: true,
       address: {
         street: "2400 Durant Ave",
         city: "Berkeley",
@@ -108,10 +109,13 @@ describe("message contract", () => {
       type: "capture",
       host: "example.net",
       hasPassword: false,
-      submitted: true,
-      fields: [{ kind: "email", value: 7 }],
+      trigger: "submit",
+      fields: [{ kind: "email", value: 7, userTyped: true }],
     },
     { type: "capture", host: "example.net", hasPassword: false, fields: [] },
+    { type: "capture", host: "example.net", hasPassword: false, submitted: true, fields: [] },
+    { type: "capture", host: "example.net", hasPassword: false, trigger: "script", fields: [] },
+    { type: "pageContext", host: "Example.net/path", fields: [] },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });
@@ -125,18 +129,25 @@ describe("message contract", () => {
   });
 
   it("drops properties the contract doesn't name", () => {
-    const message = { ...capture, extra: "x", fields: [{ kind: "email", value: "a@example.net", html: "<b>" }] };
-    expect(parseExtensionRequest(message)).toEqual({ ...capture, fields: [{ kind: "email", value: "a@example.net" }] });
+    const message = {
+      ...capture,
+      extra: "x",
+      fields: [{ kind: "email", value: "a@example.net", userTyped: true, html: "<b>" }],
+    };
+    expect(parseExtensionRequest(message)).toEqual({
+      ...capture,
+      fields: [{ kind: "email", value: "a@example.net", userTyped: true }],
+    });
   });
 });
 
 describe("message limits, mirrored in MessageLimits.swift", () => {
-  const field = (extra: Record<string, unknown>) => ({ kind: "email", value: "a@example.net", ...extra });
+  const field = (extra: Record<string, unknown>) => ({ kind: "email", value: "a@example.net", userTyped: true, ...extra });
   const request = (fields: unknown[], host = "shop.example.net") => ({
     type: "capture",
     host,
     hasPassword: false,
-    submitted: true,
+    trigger: "submit",
     fields,
   });
 
@@ -151,11 +162,20 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
     ["a long autocomplete", request([field({ autocomplete: "x".repeat(LIMITS.text + 1) })])],
     ["too many fields", request(Array<unknown>(LIMITS.captureFields + 1).fill(field({})))],
     ["a long host", request([field({})], "h".repeat(LIMITS.host + 1))],
+    ["a right-to-left override", request([field({ value: "a\u202E@example.net" })])],
+    ["a zero-width space", request([field({ value: "a\u200B@example.net" })])],
+    ["a newline in an email", request([field({ value: "a@example.net\nBcc: b@example.net" })])],
+    ["an email sent as an address", request([{ kind: "email", userTyped: true, address: { street: "1 Main St", city: "", state: "", postalCode: "", country: "" } }])],
+    ["an address sent as one value", request([{ kind: "address", value: "1 Main St", userTyped: true }])],
+    ["a field without provenance", request([{ kind: "email", value: "a@example.net" }])],
+    // eslint-disable-next-line no-sparse-arrays
+    ["a sparse field list", request([field({}), , field({})])],
     [
       "a long address part",
       request([
         {
           kind: "address",
+          userTyped: true,
           address: { street: "1 Main St", city: "c".repeat(LIMITS.part + 1), state: "", postalCode: "", country: "" },
         },
       ]),

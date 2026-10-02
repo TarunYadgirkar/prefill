@@ -27,10 +27,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function setUp(html: string, isUserEvent: (event: Event) => boolean = () => true) {
+function setUp(
+  html: string,
+  isUserEvent: (event: Event) => boolean = () => true,
+  hasActivation: () => boolean = () => true,
+) {
   document.body.innerHTML = html;
   const send = vi.fn<(request: CaptureRequest) => void>();
-  uninstall = installCapture(document, window, { host: () => "shop.example.net", send, isUserEvent });
+  uninstall = installCapture(document, window, { host: () => "shop.example.net", send, isUserEvent, hasActivation });
   return send;
 }
 
@@ -91,10 +95,17 @@ describe("capture on sign-up", () => {
       type: "capture",
       host: "shop.example.net",
       hasPassword: true,
-      submitted: true,
+      trigger: "submit",
       fields: [
-        { kind: "name", value: "Alex Rivera", name: "fullName", label: "Full name" },
-        { kind: "email", value: "new.person@example.org", autocomplete: "email", name: "email", label: "Email" },
+        { kind: "name", value: "Alex Rivera", name: "fullName", label: "Full name", userTyped: true },
+        {
+          kind: "email",
+          value: "new.person@example.org",
+          autocomplete: "email",
+          name: "email",
+          label: "Email",
+          userTyped: true,
+        },
       ],
     });
   });
@@ -104,6 +115,37 @@ describe("capture on sign-up", () => {
     type("#signupEmail", "new.person@example.org");
     click("#create");
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it("sends nothing when the page script submits without the person tapping", () => {
+    const send = setUp(signup, () => true, () => false);
+    type("#signupEmail", "new.person@example.org");
+    click("#create");
+    submit("form");
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("skips a field the person can't edit", () => {
+    const send = setUp(
+      '<form><input type="email" name="a" readonly><input type="email" name="b" disabled><input type="email" name="c"><button>Go</button></form>',
+    );
+    type("[name=a]", "page@example.net");
+    type("[name=b]", "page2@example.net");
+    type("[name=c]", "new.person@example.org");
+    click("button");
+    expect(sentFields(send).map((field) => field.value)).toEqual(["new.person@example.org"]);
+  });
+
+  it("never reads a password box a show-password toggle turned into text", async () => {
+    const send = setUp(
+      '<form><input type="email" name="email"><input type="password" name="secret_box" id="pw"><button>Go</button></form>',
+    );
+    element("#pw").setAttribute("type", "email");
+    await Promise.resolve();
+    type("#pw", "hunter2@example.net");
+    type("[name=email]", "new.person@example.org");
+    click("button");
+    expect(sentFields(send).map((field) => field.value)).toEqual(["new.person@example.org"]);
   });
 
   it("skips fields hidden from the person and fields left as the page filled them", () => {
@@ -294,7 +336,7 @@ describe("capture for forms that never submit", () => {
     hide();
     hide();
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0]?.[0].submitted).toBe(false);
+    expect(send.mock.calls[0]?.[0].trigger).toBe("flush");
     expect(sentFields(send).map((field) => [field.kind, field.label])).toEqual([
       ["email", "Your e-mail"],
       ["phone", "Mobile number"],
@@ -355,7 +397,7 @@ describe("buttons outside any form", () => {
     type("[name=email]", "new.person@example.org");
     click("#continue");
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0]?.[0]).toMatchObject({ submitted: true, fields: [{ kind: "email", label: "Email" }] });
+    expect(send.mock.calls[0]?.[0]).toMatchObject({ trigger: "submit", fields: [{ kind: "email", label: "Email" }] });
   });
 
   it("a field the app has since removed is still reported, from what was read while typing", () => {
@@ -366,7 +408,7 @@ describe("buttons outside any form", () => {
       hide();
     }).not.toThrow();
     expect(sentFields(send)).toEqual([
-      { kind: "email", value: "new.person@example.org", name: "email", label: "Email" },
+      { kind: "email", value: "new.person@example.org", name: "email", label: "Email", userTyped: true },
     ]);
   });
 });
@@ -383,7 +425,14 @@ describe("fields inside an open shadow root", () => {
     input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
     hide();
     expect(sentFields(send)).toEqual([
-      { kind: "email", value: "new.person@example.org", autocomplete: "email", name: "email", label: "Email" },
+      {
+        kind: "email",
+        value: "new.person@example.org",
+        autocomplete: "email",
+        name: "email",
+        label: "Email",
+        userTyped: true,
+      },
     ]);
   });
 });
