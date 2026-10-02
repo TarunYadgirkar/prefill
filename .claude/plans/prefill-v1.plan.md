@@ -123,6 +123,14 @@ Haptics on reorder and save, symbol effects on state changes, Dynamic Type, Voic
 - Reviews: `react`-equivalent SwiftUI review, `security-reviewer` (PII, all-sites content script, App Group store), complexity lint as a hard gate.
 - Screenshots to `assets/generated/`.
 
+### Phase 4a: Delight (after phases 2 and 3 merge)
+Details, evidence and build notes for every item are in `research/feature-scouting.md`.
+- Safari popup as a native half-sheet: the bar replica for this site, tap to use a value here (pin event plus immediate card rewrite), recent saves with Undo and "Don't save on this site", and a page-menu badge only when a capture needs review.
+- Intelligence actor in PrefillKit (FoundationModels, on-device only, never Private Cloud Compute): automatic labels for captured values and site sense for unseen sites. Rules first, model in the app only, never in the Safari handler. Graceful when Apple Intelligence is off.
+- Siri and Shortcuts: "Which email do I use on <site>?" and "What's my shipping address?", answered with an interactive bar snippet whose slots can be swapped. Intents live in the app target with allowedExecutionTargets = .main.
+- Work Focus filter that prefers work values in the global order.
+- App icon: direction A (Slot), refined per the icon notes, rendered with ictool for light, dark, tinted and clear.
+
 ### Phase 5: Your iPhone
 - Sign with personal team `5AKJYZ7USP`, install with `xcrun devicectl` through `scripts/install-device.sh` (rerun weekly, since free-team apps expire after 7 days). Check on device: a linked iCloud card, sync to your other devices, and the bar on real sites.
 

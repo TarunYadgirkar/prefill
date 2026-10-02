@@ -1,0 +1,112 @@
+{
+  "fill-specializations": [
+    {
+      "value": {
+        "linear-gradient": [
+          "srgb:0.89020,0.94510,0.91765,1.00000",
+          "srgb:0.74902,0.86275,0.80392,1.00000"
+        ]
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "srgb:0.07059,0.14902,0.11765,1.00000",
+          "srgb:0.04314,0.09804,0.07843,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "layers": [
+        {
+          "image-name": "bowl-text.svg",
+          "name": "bowl-text",
+          "glass": false,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.04314,0.09804,0.07843,0.60000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.04314,0.09804,0.07843,0.65000"
+              }
+            }
+          ]
+        },
+        {
+          "image-name": "bowl.svg",
+          "name": "bowl",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.30980,0.82745,0.60784,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.30980,0.82745,0.60784,1.00000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.2
+      },
+      "specular": true,
+      "blur-material": 0.3,
+      "lighting": "individual"
+    },
+    {
+      "layers": [
+        {
+          "image-name": "stem.svg",
+          "name": "stem",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:0.05490,0.47843,0.33333,1.00000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:0.16471,0.65098,0.45098,1.00000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.1
+      },
+      "specular": true,
+      "blur-material": 0.3,
+      "lighting": "individual"
+    }
+  ],
+  "supported-platforms": {
+    "squares": [
+      "iOS"
+    ]
+  }
+}
