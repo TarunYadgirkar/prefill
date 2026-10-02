@@ -1,5 +1,5 @@
 #!/bin/zsh
-# usage: test.sh [unit|e2e]
+# usage: test.sh [unit|e2e|intents]
 #   unit (default): PrefillKit on macOS and on the simulator, the app-hosted store and
 #                   Contacts tests (grants the Personal app Contacts access on the
 #                   simulator), web tests, lint, typecheck.
@@ -8,6 +8,9 @@
 #        scripts/e2e-server.py, drives Settings and Safari, checks the recorded events
 #        through another host test, then restores the card.
 #        Screenshots land in assets/generated/e2e-ext-*.png.
+#   intents: runs the Siri, Shortcuts and Focus intents inside Prefill.app against the
+#            Alex Rivera card (IntentsHostTests), which puts the card back afterwards.
+#            The Siri snippet lands in assets/generated/intents-bar-snippet.png.
 source ${0:A:h}/lib.sh
 
 E2E_PORT=8846
@@ -90,8 +93,21 @@ e2e() {
   return $failed
 }
 
+intents() {
+  step "Intents against the Alex Rivera card on $SIM_UDID"
+  xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
+  boot_sim
+  xcrun simctl privacy $SIM_UDID grant contacts $PERSONAL_BUNDLE_ID
+  export TEST_RUNNER_PREFILL_INTENTS=1 TEST_RUNNER_PREFILL_SNAPSHOT_DIR=$ROOT/assets/generated
+  run_xcodebuild_test $LOGS/test-intents.log '✔ Test intentsAnswerAndReorderTheAlexRiveraCard\(\) passed' \
+    test -project $PROJECT -scheme PrefillHostTests -configuration Personal \
+    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED \
+    -only-testing:PrefillHostTests/IntentsHostTests
+}
+
 case ${1:-unit} in
   unit) unit ;;
   e2e) e2e ;;
-  *) print "usage: test.sh [unit|e2e]"; exit 64 ;;
+  intents) intents ;;
+  *) print "usage: test.sh [unit|e2e|intents]"; exit 64 ;;
 esac
