@@ -7,7 +7,8 @@
 #        Alex Rivera card through a host test, serves the test sites with
 #        scripts/e2e-server.py, drives Settings and Safari, checks the recorded events
 #        through another host test, then restores the card.
-#        Screenshots land in assets/generated/e2e-ext-*.png.
+#        Screenshots land in assets/generated/e2e-ext-*.png. PREFILL_E2E_ONLY=<test class>
+#        runs that class alone and skips the gift check.
 source ${0:A:h}/lib.sh
 
 E2E_PORT=8846
@@ -77,13 +78,16 @@ e2e() {
   host_e2e_step link
 
   step "PrefillUITests on $SIM_UDID"
-  local failed=0
-  run_xcodebuild_test $LOGS/test-e2e.log "Test Suite 'All tests' passed" \
+  local failed=0 only=${PREFILL_E2E_ONLY:-}
+  local selection=(${only:+-only-testing:PrefillUITests/$only})
+  run_xcodebuild_test $LOGS/test-e2e.log "Test Suite '(All tests|Selected tests)' passed" \
     test -project $PROJECT -scheme Prefill -configuration Personal \
-    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED || failed=1
+    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED $selection || failed=1
 
-  step "Checking that the gift capture reached the app"
-  host_e2e_step verify || failed=1
+  if [[ -z $only ]]; then
+    step "Checking that the gift capture reached the app"
+    host_e2e_step verify || failed=1
+  fi
 
   step "Restoring the card's emails and clearing the shared store"
   host_e2e_step restore

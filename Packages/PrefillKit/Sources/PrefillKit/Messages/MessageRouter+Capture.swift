@@ -9,11 +9,14 @@ extension MessageRouter {
     static let saveWindow: TimeInterval = 3_600
 
     // Without a linked card there is nothing to compare against and nobody has agreed to
-    // anything yet, and without the card nothing can be compared either, so in both cases
-    // the capture is dropped whole (docs/messages.md, capture).
+    // anything yet, without the card nothing can be compared either, and on a site the
+    // person said not to save on nothing is wanted, so in each case the capture is dropped
+    // whole (docs/messages.md, capture).
     func capture(_ request: CaptureRequest) -> CaptureResponse {
         let dropped = CaptureResponse(saved: 0, review: 0, ignored: request.fields.count)
-        guard let state = appState(), let link = state.cardLink else { return dropped }
+        guard let state = currentState(), let link = state.cardLink, !state.isMuted(request.host) else {
+            return dropped
+        }
         let card: CardRecord
         do {
             card = try gateway.fetchCard(identifier: link.contactIdentifier)
@@ -67,11 +70,7 @@ extension MessageRouter {
         let usage = context.usage(decisions)
         let captures = CaptureFilter.captures(from: decisions, host: context.request.host, at: context.date)
         guard !usage.isEmpty || !captures.isEmpty else { return }
-        do {
-            try store.appendEvents(usage: usage, captures: captures)
-        } catch {
-            Self.log.error("events not saved: \(String(describing: type(of: error)), privacy: .public)")
-        }
+        append(ExtensionEvents(usage: usage, captures: captures))
     }
 }
 

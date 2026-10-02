@@ -135,6 +135,7 @@ final class AppModel {
     func refreshExtension() async {
         extensionEnabled = await SafariExtension.isEnabled()
         events = (try? store.readEvents()) ?? events
+        foldSafariChoices()
     }
 
     func finishOnboarding() {
@@ -184,6 +185,14 @@ final class AppModel {
     private func readStore() {
         state = (try? store.readAppState()) ?? state
         events = (try? store.readEvents()) ?? events
+        foldSafariChoices()
+    }
+
+    // Pins, "Don't save on this site" and undone saves from Safari's Prefill sheet.
+    private func foldSafariChoices() {
+        let folded = state.folding(events)
+        guard folded != state else { return }
+        commit(folded)
     }
 
     // Values added to the card elsewhere join the person's order where the card has them.

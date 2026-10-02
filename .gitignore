@@ -10,4 +10,7 @@ node_modules/
 .swiftpm/
 /Extension/Resources/content.js
 /Extension/Resources/background.js
+/Extension/Resources/popup.js
+/Extension/Resources/popup.css
+/Extension/Resources/popup.html
 .worktrees/

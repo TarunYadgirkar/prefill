@@ -79,6 +79,24 @@ enum SafariDriver {
             .map(\.label)
     }
 
+    // Safari's page menu, then Prefill's row, which opens the extension's sheet.
+    static func openPrefillSheet() {
+        let menu = safari.buttons["MoreMenuButton"].firstMatch
+        XCTAssertTrue(menu.waitForExistence(timeout: 10), "no page menu button")
+        menu.tap()
+        let row = safari.buttons[extensionName].firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "no Prefill row in the page menu")
+        row.tap()
+    }
+
+    // Swipes the sheet down by its top edge, the way a person closes it.
+    static func closeSheet(from element: XCUIElement) {
+        let top = element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0))
+        let start = top.withOffset(CGVector(dx: 0, dy: -40))
+        start.press(forDuration: 0.1, thenDragTo: start.withOffset(CGVector(dx: 0, dy: 700)))
+        Thread.sleep(forTimeInterval: 1.5)
+    }
+
     // Settings can reopen where it was left, so walk back to its first page.
     private static func popToRoot(_ app: XCUIApplication) {
         let back = app.navigationBars.buttons["BackButton"].firstMatch

@@ -74,6 +74,15 @@ targets:
       - path: Extension/Resources/background.js
         buildPhase: resources
         optional: true
+      - path: Extension/Resources/popup.html
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.css
+        buildPhase: resources
+        optional: true
       - path: Extension/Resources/_locales
         type: folder
         buildPhase: resources

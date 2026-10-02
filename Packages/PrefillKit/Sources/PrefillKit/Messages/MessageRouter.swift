@@ -29,6 +29,7 @@ public struct MessageRouter: Sendable {
         case .ping: return .pong
         case .pageContext(let body): return .pageContext(pageContext(body))
         case .capture(let body): return .capture(capture(body))
+        default: return .popupState(sheet(request))
         }
     }
 
@@ -38,7 +39,7 @@ public struct MessageRouter: Sendable {
     static let cardWriteWindow: TimeInterval = 60
 
     func pageContext(_ request: PageContextRequest) -> PageContextResponse {
-        guard let state = appState() else { return PageContextResponse(outcome: .failed(.other)) }
+        guard let state = currentState() else { return PageContextResponse(outcome: .failed(.other)) }
         guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
         guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
         let date = now()
@@ -56,12 +57,24 @@ public struct MessageRouter: Sendable {
         return PageContextResponse(outcome: result.outcome)
     }
 
-    private func noteCardWrite(at date: Date) {
+    func noteCardWrite(at date: Date) {
+        append(ExtensionEvents(cardWrites: [date]))
+    }
+
+    @discardableResult
+    func append(_ new: ExtensionEvents) -> Bool {
         do {
-            try store.appendEvents(usage: [], captures: [], cardWrites: [date])
+            try store.appendEvents(new)
+            return true
         } catch {
-            Self.log.error("card write not noted: \(String(describing: type(of: error)), privacy: .public)")
+            Self.log.error("events not saved: \(String(describing: type(of: error)), privacy: .public)")
+            return false
         }
+    }
+
+    // AppState with the choices made in Safari's Prefill sheet that the app hasn't folded in yet.
+    func currentState() -> AppState? {
+        appState()?.folding(events())
     }
 
     func appState() -> AppState? {

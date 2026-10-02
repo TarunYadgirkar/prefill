@@ -7,14 +7,14 @@ public protocol SharedStore: Sendable {
     func readAppState() throws -> AppState
     func writeAppState(_ state: AppState) throws
     func readEvents() throws -> ExtensionEvents
-    func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws
+    func appendEvents(_ new: ExtensionEvents) throws
     // Deletes both documents, for "Delete Prefill data" and for leftovers of an earlier install.
     func removeAll() throws
 }
 
 extension SharedStore {
-    public func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
-        try appendEvents(usage: usage, captures: captures, cardWrites: [])
+    public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date] = []) throws {
+        try appendEvents(ExtensionEvents(usage: usage, captures: captures, cardWrites: cardWrites))
     }
 }
 

@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm run build:content && pnpm run build:background",
+    "build": "pnpm run build:content && pnpm run build:background && pnpm run build:popup",
     "build:content": "esbuild src/content.ts --bundle --format=iife --target=safari26 --minify --outfile=../Extension/Resources/content.js",
     "build:background": "esbuild src/background.ts --bundle --format=esm --target=safari26 --minify --outfile=../Extension/Resources/background.js",
+    "build:popup": "esbuild src/popup/popup.ts src/popup/popup.css src/popup/popup.html --bundle --loader:.html=copy --format=esm --target=safari26 --minify --outdir=../Extension/Resources",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run"

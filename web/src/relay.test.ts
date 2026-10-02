@@ -67,3 +67,33 @@ describe("relayToNative", () => {
     expect(sendNative).not.toHaveBeenCalled();
   });
 });
+
+describe("the sheet's messages and the review badge", () => {
+  const tab = { incognito: false, id: 7 };
+
+  it("never relays a sheet request from a page, since its reply holds the person's values", () => {
+    const sendNative = vi.fn();
+    const request = { type: "popupState", host: "shop.example.net", kinds: ["email"] };
+    expect(relayToNative(request, fromPage, ID, sendNative)).toBeUndefined();
+    expect(sendNative).not.toHaveBeenCalled();
+  });
+
+  it("never hands a sheet reply to a page", async () => {
+    const sendNative = vi.fn().mockResolvedValue({ type: "popupStateResult", status: "ready", kinds: [], recent: [], muted: false });
+    await expect(relayToNative({ type: "ping" }, fromPage, ID, sendNative)).resolves.toEqual({
+      type: "error",
+      reason: "unreadable reply",
+    });
+  });
+
+  it.each([
+    [{ saved: 0, review: 2, ignored: 0 }, [[7, 2]]],
+    [{ saved: 1, review: 0, ignored: 0 }, []],
+  ])("marks the tab only when values wait for review (%j)", async (counts, calls) => {
+    const sendNative = vi.fn().mockResolvedValue({ type: "captureResult", ...counts });
+    const mark = vi.fn();
+    const capture = { type: "capture", host: "x", hasPassword: false, trigger: "submit", fields: [] };
+    await relayToNative(capture, { ...fromPage, tab }, ID, sendNative, mark);
+    expect(mark.mock.calls).toEqual(calls);
+  });
+});

@@ -11,6 +11,10 @@ public enum MessageLimits {
     static let text = 100
     static let street = 400
     static let part = 200
+    static let popupKinds = ContactKind.allCases.count
+    static let popupValues = 30
+    static let popupRecent = 5
+    static let display = 1_000
 }
 
 extension ExtensionRequest {
@@ -22,6 +26,10 @@ extension ExtensionRequest {
         case .capture(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.captureFields
                 && body.fields.allSatisfy(\.isWithinLimits)
+        case .popupState(let body):
+            body.host.count <= MessageLimits.host && body.kinds.count <= MessageLimits.popupKinds
+        case .pin, .unpin, .undoCapture, .muteSite:
+            host.count <= MessageLimits.host
         }
     }
 }
@@ -52,6 +60,21 @@ extension ExtensionRequest {
         case .ping: true
         case .pageContext(let body): MessageText.isHost(body.host)
         case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
+        case .popupState, .pin, .unpin, .undoCapture, .muteSite: MessageText.isHost(host)
+        }
+    }
+
+    // The site a request from Safari's Prefill sheet is about.
+    var host: String {
+        switch self {
+        case .ping: ""
+        case .pageContext(let body): body.host
+        case .capture(let body): body.host
+        case .popupState(let body): body.host
+        case .pin(let body): body.host
+        case .unpin(let body): body.host
+        case .undoCapture(let body): body.host
+        case .muteSite(let body): body.host
         }
     }
 }
@@ -79,6 +102,20 @@ enum MessageText {
         text.unicodeScalars.allSatisfy { scalar in
             (allowingNewlines && scalar == "\n") || !hidden.contains(scalar.properties.generalCategory)
         }
+    }
+
+    // Card text for the sheet: hidden characters and line breaks become spaces, and a value
+    // longer than the sheet's limit is cut short. The limit counts UTF-16 units, as
+    // JavaScript's length does, so the sheet's parser never turns the reply away.
+    static func oneLine(_ text: String, max: Int) -> String {
+        let flat = String(text.unicodeScalars.map { scalar in
+            hidden.contains(scalar.properties.generalCategory) ? " " : Character(scalar)
+        })
+        var used = 0
+        return String(flat.prefix { character in
+            used += character.utf16.count
+            return used <= max
+        })
     }
 
     static func isHost(_ host: String) -> Bool {

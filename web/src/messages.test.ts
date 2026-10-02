@@ -4,6 +4,8 @@ import {
   FIELD_KINDS,
   SECTION_HINTS,
   SYNC_STATUSES,
+  POPUP_STATUSES,
+  RECENT_STATES,
   LIMITS,
   isExtensionRequest,
   isExtensionResponse,
@@ -15,6 +17,13 @@ import {
   type PageContextResult,
   type Ping,
   type Pong,
+  type PopupStateRequest,
+  type PinRequest,
+  type UnpinRequest,
+  type UndoCaptureRequest,
+  type MuteSiteRequest,
+  type PopupStateResult,
+  parsePageRequest,
 } from "./messages";
 
 // The typed literals fail typecheck if a field name drifts from messages.ts, and the
@@ -60,12 +69,39 @@ const pageContextFailed: PageContextResult = {
 const captureResult: CaptureResult = { type: "captureResult", saved: 1, review: 0, ignored: 1 };
 const error: ErrorResponse = { type: "error", reason: "unknown message" };
 
+const WORK = "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B";
+const HOME = "0B3E5A7C-9D1F-5B2A-8C4E-6F8A0B2C4D6E";
+const ADDED = "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A";
+const popupState: PopupStateRequest = { type: "popupState", host: "shop.example.net", kinds: ["email"] };
+const pin: PinRequest = { type: "pin", host: "shop.example.net", kind: "email", valueID: WORK };
+const unpin: UnpinRequest = { type: "unpin", host: "shop.example.net", kind: "email" };
+const undoCapture: UndoCaptureRequest = { type: "undoCapture", host: "shop.example.net", valueID: ADDED };
+const muteSite: MuteSiteRequest = { type: "muteSite", host: "shop.example.net", muted: true };
+const popupStateResult: PopupStateResult = {
+  type: "popupStateResult",
+  status: "ready",
+  kinds: [
+    {
+      kind: "email",
+      pinnedID: WORK,
+      values: [
+        { id: WORK, caption: "work", text: "alex@work.example.org" },
+        { id: HOME, caption: "home", text: "alex.rivera@example.com" },
+      ],
+    },
+  ],
+  recent: [{ kind: "email", state: "saved", value: { id: ADDED, caption: "email", text: "alex.new@example.net" } }],
+  muted: false,
+};
+
 describe("message contract", () => {
   it("lists every shared value the way Swift does", () => {
     expect(examples.enums).toEqual({
       fieldKind: [...FIELD_KINDS],
       sectionHint: [...SECTION_HINTS],
       syncStatus: [...SYNC_STATUSES],
+      popupStatus: [...POPUP_STATUSES],
+      recentState: [...RECENT_STATES],
     });
   });
 
@@ -80,13 +116,13 @@ describe("message contract", () => {
     expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(true);
   });
 
-  it.each(Object.entries({ ping, pageContext, capture }))("request %s matches the shared example", (name, typed) => {
+  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite }))("request %s matches the shared example", (name, typed) => {
     const example: unknown = examples.requests[name as keyof typeof examples.requests];
     expect(example).toEqual(typed);
     expect(isExtensionRequest(example)).toBe(true);
   });
 
-  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, error }))(
+  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, error }))(
     "response %s matches the shared example",
     (name, typed) => {
       const example: unknown = examples.responses[name as keyof typeof examples.responses];
@@ -116,6 +152,10 @@ describe("message contract", () => {
     { type: "capture", host: "example.net", hasPassword: false, submitted: true, fields: [] },
     { type: "capture", host: "example.net", hasPassword: false, trigger: "script", fields: [] },
     { type: "pageContext", host: "Example.net/path", fields: [] },
+    { type: "popupState", host: "example.net", kinds: ["name"] },
+    { type: "popupState", host: "example.net", kinds: ["email", "phone", "address", "email"] },
+    { type: "pin", host: "example.net", kind: "email", valueID: "not-a-uuid" },
+    { type: "muteSite", host: "example.net", muted: "yes" },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });
@@ -190,5 +230,19 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
     ],
   ])("turns away %s", (_, message) => {
     expect(isExtensionRequest(message)).toBe(false);
+  });
+});
+
+describe("sheet messages", () => {
+  it("are never page requests, so the background script won't relay them", () => {
+    for (const message of [popupState, pin, unpin, undoCapture, muteSite]) expect(parsePageRequest(message)).toBeUndefined();
+  });
+
+  it.each([
+    ["too many values", { kind: "email", values: Array<unknown>(LIMITS.popupValues + 1).fill({ id: WORK, caption: "work", text: "a" }) }],
+    ["a value over the display limit", { kind: "email", values: [{ id: WORK, caption: "work", text: "a".repeat(LIMITS.display + 1) }] }],
+    ["a line break in a value", { kind: "email", values: [{ id: WORK, caption: "work", text: "a\nb" }] }],
+  ])("turns away a reply with %s", (_, kind) => {
+    expect(isExtensionResponse({ ...popupStateResult, kinds: [kind] })).toBe(false);
   });
 });

@@ -7,6 +7,22 @@ import Testing
 // file system.
 private let noAccess = CardWriteFailure.noAccess.reason
 
+private let popupExample: PopupStateResponse = {
+    let work = PopupValue(
+        id: UUID(uuidString: "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B")!, caption: "work", text: "alex@work.example.org"
+    )
+    let home = PopupValue(
+        id: UUID(uuidString: "0B3E5A7C-9D1F-5B2A-8C4E-6F8A0B2C4D6E")!, caption: "home", text: "alex.rivera@example.com"
+    )
+    let added = PopupValue(
+        id: UUID(uuidString: "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A")!, caption: "email", text: "alex.new@example.net"
+    )
+    return PopupStateResponse(
+        status: .ready, kinds: [PopupKind(kind: .email, values: [work, home], pinnedID: work.id)],
+        recent: [PopupRecent(value: added, kind: .email, state: .saved)]
+    )
+}()
+
 struct MessageContractTests {
     private static var examples: [String: [String: Any]] {
         let url = URL(filePath: #filePath)
@@ -27,11 +43,11 @@ struct MessageContractTests {
     }
 
     @Test func theExamplesFileLoads() {
-        #expect(Self.examples["requests"]?.count == 3)
-        #expect(Self.examples["responses"]?.count == 5)
+        #expect(Self.examples["requests"]?.count == 8)
+        #expect(Self.examples["responses"]?.count == 6)
     }
 
-    @Test(arguments: ["ping", "pageContext", "capture"])
+    @Test(arguments: ["ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite"])
     func requestExamplesRoundTripWithTheSameFieldNames(name: String) throws {
         let json = try #require(example("requests", name) as? NSDictionary)
         let request = try MessageCoding.request(from: json)
@@ -75,6 +91,7 @@ struct MessageContractTests {
         ("pageContextResult", .pageContext(PageContextResponse(status: .saved))),
         ("pageContextFailed", .pageContext(PageContextResponse(status: .failed, reason: noAccess))),
         ("captureResult", .capture(CaptureResponse(saved: 1, review: 0, ignored: 1))),
+        ("popupStateResult", .popupState(popupExample)),
         ("error", .error(reason: "unknown message"))
     ])
     func responsesEncodeToTheExamples(name: String, response: ExtensionResponse) throws {
@@ -89,6 +106,8 @@ struct MessageContractTests {
         #expect(enums["fieldKind"] as? [String] == FieldKind.allCases.map(\.rawValue))
         #expect(enums["sectionHint"] as? [String] == SectionHint.allCases.map(\.rawValue))
         #expect(enums["syncStatus"] as? [String] == SyncStatus.allCases.map(\.rawValue))
+        #expect(enums["popupStatus"] as? [String] == PopupStatus.allCases.map(\.rawValue))
+        #expect(enums["recentState"] as? [String] == PopupRecentState.allCases.map(\.rawValue))
     }
 
     // Mirrors the rejected requests in web/src/messages.test.ts.
