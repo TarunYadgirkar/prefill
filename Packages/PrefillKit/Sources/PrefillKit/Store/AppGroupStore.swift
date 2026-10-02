@@ -27,10 +27,10 @@ public struct AppGroupStore: SharedStore {
         try read(.events) ?? ExtensionEvents()
     }
 
-    public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
+    public func appendEvents(_ new: ExtensionEvents) throws {
         try coordinate(.events, options: .forMerging) { url in
             let current = try Self.load(ExtensionEvents.self, at: url) ?? ExtensionEvents()
-            let next = current.appending(usage: usage, captures: captures, cardWrites: cardWrites)
+            let next = current.appending(new)
             let data = try DocumentCoder.encode(next)
             try data.write(to: url, options: Self.writing)
         }

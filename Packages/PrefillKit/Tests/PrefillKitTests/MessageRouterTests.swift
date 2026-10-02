@@ -20,10 +20,8 @@ final class MemoryStore: SharedStore {
         documents.withLock { $0 = (AppState(), ExtensionEvents()) }
     }
 
-    func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
-        documents.withLock {
-            $0.events = $0.events.appending(usage: usage, captures: captures, cardWrites: cardWrites)
-        }
+    func appendEvents(_ new: ExtensionEvents) throws {
+        documents.withLock { $0.events = $0.events.appending(new) }
     }
 }
 

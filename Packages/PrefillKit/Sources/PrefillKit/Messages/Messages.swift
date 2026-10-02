@@ -141,12 +141,18 @@ public enum ExtensionRequest: Sendable, Hashable {
     case ping
     case pageContext(PageContextRequest)
     case capture(CaptureRequest)
+    case popupState(PopupStateRequest)
+    case pin(PinRequest)
+    case unpin(UnpinRequest)
+    case undoCapture(UndoCaptureRequest)
+    case muteSite(MuteSiteRequest)
 }
 
 public enum ExtensionResponse: Sendable, Hashable {
     case pong
     case pageContext(PageContextResponse)
     case capture(CaptureResponse)
+    case popupState(PopupStateResponse)
     case error(reason: String)
 }
 
@@ -159,11 +165,11 @@ private struct ErrorBody: Codable {
 }
 
 private enum RequestType: String, Codable {
-    case ping, pageContext, capture
+    case ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite
 }
 
 private enum ResponseType: String, Codable {
-    case pong, pageContextResult, captureResult, error
+    case pong, pageContextResult, captureResult, popupStateResult, error
 }
 
 extension ExtensionRequest: Codable {
@@ -173,7 +179,19 @@ extension ExtensionRequest: Codable {
         case .ping: self = .ping
         case .pageContext: self = .pageContext(try PageContextRequest(from: decoder))
         case .capture: self = .capture(try CaptureRequest(from: decoder))
+        case .some(let sheet): self = try Self.sheetRequest(sheet, from: decoder)
         case nil: throw MessageError.unknownType
+        }
+    }
+
+    private static func sheetRequest(_ type: RequestType, from decoder: any Decoder) throws -> ExtensionRequest {
+        switch type {
+        case .popupState: .popupState(try PopupStateRequest(from: decoder))
+        case .pin: .pin(try PinRequest(from: decoder))
+        case .unpin: .unpin(try UnpinRequest(from: decoder))
+        case .undoCapture: .undoCapture(try UndoCaptureRequest(from: decoder))
+        case .muteSite: .muteSite(try MuteSiteRequest(from: decoder))
+        case .ping, .pageContext, .capture: throw MessageError.unknownType
         }
     }
 
@@ -188,6 +206,11 @@ extension ExtensionRequest: Codable {
         case .ping: .ping
         case .pageContext: .pageContext
         case .capture: .capture
+        case .popupState: .popupState
+        case .pin: .pin
+        case .unpin: .unpin
+        case .undoCapture: .undoCapture
+        case .muteSite: .muteSite
         }
     }
 
@@ -196,6 +219,11 @@ extension ExtensionRequest: Codable {
         case .ping: nil
         case .pageContext(let body): body
         case .capture(let body): body
+        case .popupState(let body): body
+        case .pin(let body): body
+        case .unpin(let body): body
+        case .undoCapture(let body): body
+        case .muteSite(let body): body
         }
     }
 }
@@ -207,6 +235,7 @@ extension ExtensionResponse: Codable {
         case .pong: self = .pong
         case .pageContextResult: self = .pageContext(try PageContextResponse(from: decoder))
         case .captureResult: self = .capture(try CaptureResponse(from: decoder))
+        case .popupStateResult: self = .popupState(try PopupStateResponse(from: decoder))
         case .error: self = .error(reason: try ErrorBody(from: decoder).reason)
         case nil: throw MessageError.unknownType
         }
@@ -225,6 +254,7 @@ extension ExtensionResponse: Codable {
         case .pong: .pong
         case .pageContext: .pageContextResult
         case .capture: .captureResult
+        case .popupState: .popupStateResult
         case .error: .error
         }
     }
@@ -234,6 +264,7 @@ extension ExtensionResponse: Codable {
         case .pong: nil
         case .pageContext(let body): body
         case .capture(let body): body
+        case .popupState(let body): body
         case .error(let reason): ErrorBody(reason: reason)
         }
     }

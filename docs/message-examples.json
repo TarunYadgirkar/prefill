@@ -2,7 +2,9 @@
   "enums": {
     "fieldKind": ["email", "phone", "address", "name"],
     "sectionHint": ["home", "work", "shipping", "billing"],
-    "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"]
+    "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"],
+    "popupStatus": ["ready", "off", "notSetUp", "failed"],
+    "recentState": ["saved", "waiting", "removed"]
   },
   "requests": {
     "ping": { "type": "ping" },
@@ -36,7 +38,12 @@
           }
         }
       ]
-    }
+    },
+    "popupState": { "type": "popupState", "host": "shop.example.net", "kinds": ["email"] },
+    "pin": { "type": "pin", "host": "shop.example.net", "kind": "email", "valueID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B" },
+    "unpin": { "type": "unpin", "host": "shop.example.net", "kind": "email" },
+    "undoCapture": { "type": "undoCapture", "host": "shop.example.net", "valueID": "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A" },
+    "muteSite": { "type": "muteSite", "host": "shop.example.net", "muted": true }
   },
   "responses": {
     "pong": { "type": "pong" },
@@ -47,6 +54,28 @@
       "reason": "Prefill can't reach your contact card. Open Prefill to give it access again."
     },
     "captureResult": { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 },
+    "popupStateResult": {
+      "type": "popupStateResult",
+      "status": "ready",
+      "kinds": [
+        {
+          "kind": "email",
+          "pinnedID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B",
+          "values": [
+            { "id": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B", "caption": "work", "text": "alex@work.example.org" },
+            { "id": "0B3E5A7C-9D1F-5B2A-8C4E-6F8A0B2C4D6E", "caption": "home", "text": "alex.rivera@example.com" }
+          ]
+        }
+      ],
+      "recent": [
+        {
+          "kind": "email",
+          "state": "saved",
+          "value": { "id": "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A", "caption": "email", "text": "alex.new@example.net" }
+        }
+      ],
+      "muted": false
+    },
     "error": { "type": "error", "reason": "unknown message" }
   }
 }

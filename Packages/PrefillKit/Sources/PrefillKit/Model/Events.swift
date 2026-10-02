@@ -45,3 +45,31 @@ public struct Capture: Codable, Sendable, Hashable, Identifiable {
 
     public var kind: ContactKind { value.kind }
 }
+
+// A value the person picked for a site from Safari. A nil `valueID` takes the pick back.
+public struct PinEvent: Codable, Sendable, Hashable {
+    public let host: String
+    public let kind: ContactKind
+    public let valueID: UUID?
+    public let date: Date
+
+    public init(host: String, kind: ContactKind, valueID: UUID?, date: Date) {
+        self.host = host
+        self.kind = kind
+        self.valueID = valueID
+        self.date = date
+    }
+}
+
+// "Don't save on this site", turned on or off from Safari.
+public struct MuteEvent: Codable, Sendable, Hashable {
+    public let host: String
+    public let isMuted: Bool
+    public let date: Date
+
+    public init(host: String, isMuted: Bool, date: Date) {
+        self.host = host
+        self.isMuted = isMuted
+        self.date = date
+    }
+}
