@@ -115,7 +115,7 @@ private struct SlotFrames {
     }
 }
 
-private struct SuggestionSlot: View {
+struct SuggestionSlot: View {
     let kind: ContactKind
     let value: ContactValue
 

@@ -88,18 +88,23 @@ extension AppModel {
         }
     }
 
-    // Puts the person's own order on the card, with nothing site-specific mixed in.
-    private func syncCard(additions: [ContactValue] = []) async {
-        guard let link = state.cardLink else { return }
+    // Puts the person's own order on the card, or with a host that site's order, the way
+    // Safari's page context does.
+    @discardableResult
+    func syncCard(additions: [ContactValue] = [], host: String? = nil) async -> CardWriteOutcome {
+        guard let link = state.cardLink else { return .failed(.cardMissing) }
         let request = CardSyncRequest(
-            cardIdentifier: link.contactIdentifier, known: state.values, additions: additions, usage: [], pins: [],
+            cardIdentifier: link.contactIdentifier, known: state.values, additions: additions,
+            usage: host == nil ? [] : events.usage, pins: host == nil ? [] : state.pins,
             page: PageSignal(
-                host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
-                focusLabel: state.settings.focusLabel
+                host: host, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
+                siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
             )
         )
-        if case .failed(let failure) = await CardWork.sync(gateway, request) { report(failure) }
+        let outcome = await CardWork.sync(gateway, request)
+        if case .failed(let failure) = outcome { report(failure) }
         await refreshCard()
+        return outcome
     }
 
     private func edit(_ edit: CardEditor.Edit) async -> Bool {

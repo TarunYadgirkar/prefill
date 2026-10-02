@@ -175,3 +175,40 @@ struct LabelChoicesTests {
         #expect(LabelChoices.caption(nil, kind: .phone) == "phone")
     }
 }
+
+struct ValueLookupTests {
+    private let state = AppState(values: Alex.allValues)
+    private let events = ExtensionEvents(usage: [
+        UsageEvent(valueID: Alex.schoolEmail.id, host: "learn.example.edu", date: .daysAgo(1)),
+        UsageEvent(valueID: Alex.workEmail.id, host: "app.netflix.com", date: .daysAgo(2))
+    ])
+
+    private func first(_ kind: ContactKind, host: String?, in state: AppState) -> ContactValue? {
+        let order = ManualOrder.values(kind, card: Alex.card, known: state.values, now: .testNow)
+        return ValueLookup.ranked(order, host: host, state: state, events: events, now: .testNow).first
+    }
+
+    @Test func aSiteGetsWhatSafariOffersThere() {
+        #expect(first(.email, host: "www.netflix.com", in: state) == Alex.workEmail)
+        #expect(first(.email, host: nil, in: state) == Alex.homeEmail)
+    }
+
+    @Test func withoutASiteTheFocusLabelLeads() {
+        let focused = state.with(settings: Settings(focusLabel: "work"))
+        #expect(first(.address, host: nil, in: focused) == Alex.workAddress)
+    }
+
+    @Test func aShippingQuestionFindsTheHomeAddress() {
+        let ranked = [Alex.workAddress, Alex.homeAddress]
+        #expect(ValueLookup.answer(ranked, purpose: .shipping) == Alex.homeAddress)
+        #expect(ValueLookup.answer(ranked, purpose: nil) == Alex.workAddress)
+        #expect(ValueLookup.answer([Alex.workEmail], purpose: .home) == Alex.workEmail)
+    }
+
+    @Test func sitesMatchTheSearchNewestFirst() {
+        let pinned = state.pinning(Alex.homeEmail.id, kind: .email, host: "shop.example.net")
+        #expect(ValueLookup.sites(matching: nil, state: pinned, events: events)
+            == ["example.edu", "netflix.com", "example.net"])
+        #expect(ValueLookup.sites(matching: "Netflix", state: pinned, events: events) == ["netflix.com"])
+    }
+}
