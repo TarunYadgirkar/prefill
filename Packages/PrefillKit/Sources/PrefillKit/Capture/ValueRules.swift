@@ -40,6 +40,16 @@ enum ValueRules {
             && ([address.street] + parts).allSatisfy(isPlainText)
     }
 
+    // A web address: http, https or no scheme, a real domain for a host, and no spaces.
+    static func isLink(_ text: String) -> Bool {
+        let lowered = text.lowercased()
+        let hasOtherScheme = lowered.contains("://") && !["http://", "https://"].contains(where: lowered.hasPrefix)
+        guard text.count <= MessageLimits.value, !hasOtherScheme,
+              !text.contains(where: { $0.isWhitespace || isControl($0) }),
+              let url = LinkURL(text) else { return false }
+        return isDomain(Substring(url.host))
+    }
+
     private static func isDomain(_ domain: Substring) -> Bool {
         let labels = domain.split(separator: ".", omittingEmptySubsequences: false)
         guard labels.count >= 2, labels.last?.allSatisfy(\.isNumber) == false else { return false }

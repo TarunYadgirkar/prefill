@@ -43,11 +43,13 @@ struct MessageContractTests {
     }
 
     @Test func theExamplesFileLoads() {
-        #expect(Self.examples["requests"]?.count == 8)
-        #expect(Self.examples["responses"]?.count == 6)
+        #expect(Self.examples["requests"]?.count == 9)
+        #expect(Self.examples["responses"]?.count == 7)
     }
 
-    @Test(arguments: ["ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite"])
+    @Test(arguments: [
+        "ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite", "linkSuggestions"
+    ])
     func requestExamplesRoundTripWithTheSameFieldNames(name: String) throws {
         let json = try #require(example("requests", name) as? NSDictionary)
         let request = try MessageCoding.request(from: json)
@@ -92,6 +94,10 @@ struct MessageContractTests {
         ("pageContextFailed", .pageContext(PageContextResponse(status: .failed, reason: noAccess))),
         ("captureResult", .capture(CaptureResponse(saved: 1, review: 0, ignored: 1))),
         ("popupStateResult", .popupState(popupExample)),
+        ("linkSuggestionsResult", .linkSuggestions(LinkSuggestionsResponse(links: [
+            SuggestedLink(type: .github, url: "https://github.com/alexrivera"),
+            SuggestedLink(type: .website, url: "https://alexrivera.dev")
+        ]))),
         ("error", .error(reason: "unknown message"))
     ])
     func responsesEncodeToTheExamples(name: String, response: ExtensionResponse) throws {
@@ -104,6 +110,7 @@ struct MessageContractTests {
     @Test func everySharedValueMatchesTheExamplesList() {
         let enums = Self.examples["enums"] ?? [:]
         #expect(enums["fieldKind"] as? [String] == FieldKind.allCases.map(\.rawValue))
+        #expect(enums["linkType"] as? [String] == LinkType.allCases.map(\.rawValue))
         #expect(enums["sectionHint"] as? [String] == SectionHint.allCases.map(\.rawValue))
         #expect(enums["syncStatus"] as? [String] == SyncStatus.allCases.map(\.rawValue))
         #expect(enums["popupStatus"] as? [String] == PopupStatus.allCases.map(\.rawValue))

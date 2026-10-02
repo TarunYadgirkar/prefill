@@ -6,7 +6,7 @@ The content script runs in the top frame of `https` pages only, plus plain `http
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is the one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. The other is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
 
@@ -20,20 +20,25 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `autocomplete`, `name`, `label` | 100 characters each |
 | `address.street` | 400 characters |
 | Other address parts | 200 characters each |
+| `linkSuggestions` types | 5 |
+| `linkSuggestionsResult` links | 10, at most 3 of a type |
 
 ## Shared values
 
 | Name | Values |
 | --- | --- |
-| Field kind | `email`, `phone`, `address`, `name` |
+| Field kind | `email`, `phone`, `address`, `name`, `link` |
+| Link type | `github`, `website`, `linkedin`, `x`, `other` |
 | Section hint | `home`, `work`, `shipping`, `billing`, taken from the field's `autocomplete` tokens |
 | Sync status | `unchanged`, `saved`, `failed`, `off`, `notSetUp` |
 | Sheet status | `ready`, `off`, `notSetUp`, `failed` |
 | Recent state | `saved`, `waiting`, `removed` |
 
-The `enums` block in `docs/message-examples.json` lists these values. The Swift suite checks it against `FieldKind`, `SectionHint` and `SyncStatus`, and the Vitest suite checks it against the arrays the TypeScript types and validators are built from.
+The `enums` block in `docs/message-examples.json` lists these values. The Swift suite checks it against `FieldKind`, `LinkType`, `SectionHint` and `SyncStatus`, and the Vitest suite checks it against the arrays the TypeScript types and validators are built from.
 
 A `name` field is never saved. The capture filter only uses it to tell whether a form is about the person.
+
+A `link` field asks for a profile or website address, such as a job application's "GitHub/Portfolio:" or "LinkedIn:" question. The content script reads that from the field's label, name, id or placeholder (GitHub, portfolio, website, personal site, homepage, URL, LinkedIn, Twitter, x.com, other website), or from `type=url` and `autocomplete="url"`, which ask for a website. A field can ask for several link types, in the order its words name them. A link's type comes from its host: github.com, linkedin.com, x.com and twitter.com, and `website` for any other. On the card a link is one of the contact's URL addresses, labeled GitHub, LinkedIn, X or homepage. Link fields are never part of `pageContext`, since Safari's contact bar doesn't show links.
 
 ## ping
 
@@ -84,6 +89,31 @@ The reply is `pageContextResult`. Its `status` is `saved` when the card was rewr
 }
 ```
 
+## linkSuggestions
+
+When the person focuses a `link` field (a focus event Safari marks as theirs, on a field without a `list` of its own), the content script asks for the card's links of the types the field wants. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `host` | string | The page's host name. |
+| `types` | array of link types | What the field asks for, first wanted first. |
+
+```json
+{ "type": "linkSuggestions", "host": "boards.example.io", "types": ["github", "website"] }
+```
+
+```json
+{
+  "type": "linkSuggestionsResult",
+  "links": [
+    { "type": "github", "url": "https://github.com/alexrivera" },
+    { "type": "website", "url": "https://alexrivera.dev" }
+  ]
+}
+```
+
+The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
+
 ## capture
 
 The content script sends `capture` with `trigger: "submit"` when the person submits a form (a submit event or a click on its submit button, whichever comes first, while Safari reports a fresh tap or keypress), or clicks a button outside any form that says it submits ("Continue", "Sign up") next to the fields they typed in. A page script that submits the form by itself sends nothing. It sends `trigger: "flush"` when the page is hidden, which covers forms that post with `fetch`; that report holds only fields the person has left, and an address only once its postal code is in. Fields reported for a hidden page stay, so a later submit still sends them whole.
@@ -104,7 +134,7 @@ Only events Safari marks as the person's count, and only fields they typed into 
 | `fields[].section` | section hint, optional | The section from `autocomplete`. A `home` or `work` section becomes the saved value's label. |
 | `fields[].userTyped` | boolean | The person typed the value. The content script only sends such fields; the app ignores any other. |
 
-The app uses `autocomplete`, `name` and `label` to skip fields meant for someone else, such as a gift recipient or an invite, and checks each value: an email must be a single address with a valid domain, a phone number 7 to 15 digits with only the usual separators (and not a card number or a bare code), and an address free of links and control characters.
+The app uses `autocomplete`, `name` and `label` to skip fields meant for someone else, such as a gift recipient or an invite, and checks each value: an email must be a single address with a valid domain, a phone number 7 to 15 digits with only the usual separators (and not a card number or a bare code), an address free of links and control characters, and a link a single `http`, `https` or scheme-less web address with a valid domain. A link is saved with `https://` in front when it had no scheme, labeled by its type.
 
 ```json
 {

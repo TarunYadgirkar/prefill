@@ -9,6 +9,7 @@ public enum Normalizer {
         case .email(let text): email(text)
         case .phone(let text): phone(text)
         case .address(let address): self.address(address)
+        case .link(let text): link(text)
         }
     }
 
@@ -47,6 +48,13 @@ public enum Normalizer {
         let isUSZip = zip.count == usZipLength && zip.allSatisfy(\.isNumber)
             && (compact.count == usZipLength || compact.dropFirst(usZipLength).first == "-")
         return isUSZip ? String(zip) : compact
+    }
+
+    // Host and path only: no scheme, no "www.", a lowercase host and no trailing slash, so
+    // "https://GitHub.com/alex/" and "github.com/alex" are the same link.
+    public static func link(_ raw: String) -> String {
+        guard let url = LinkURL(raw) else { return fold(raw) }
+        return url.host + url.path
     }
 
     public static func fold(_ text: String) -> String {

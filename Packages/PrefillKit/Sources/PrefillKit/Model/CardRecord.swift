@@ -12,8 +12,8 @@ public struct CardEntry: Codable, Sendable, Hashable {
     public var key: String { Normalizer.key(for: payload) }
 }
 
-// The three ordered arrays on the person's contact card, free of the Contacts framework
-// so ranking and the write plan can be tested without a contact store.
+// The ordered arrays on the person's contact card, free of the Contacts framework so
+// ranking and the write plan can be tested without a contact store.
 public struct CardRecord: Codable, Sendable, Hashable {
     public let identifier: String
     public let givenName: String
@@ -21,10 +21,26 @@ public struct CardRecord: Codable, Sendable, Hashable {
     public let emails: [CardEntry]
     public let phones: [CardEntry]
     public let addresses: [CardEntry]
+    // Nil in a record stored before Prefill read the card's links, such as the original
+    // card snapshot, which then says nothing about them.
+    private let storedLinks: [CardEntry]?
+
+    public var links: [CardEntry] { storedLinks ?? [] }
+    var knowsLinks: Bool { storedLinks != nil }
 
     public init(
         identifier: String, givenName: String, familyName: String,
-        emails: [CardEntry], phones: [CardEntry], addresses: [CardEntry]
+        emails: [CardEntry], phones: [CardEntry], addresses: [CardEntry], links: [CardEntry] = []
+    ) {
+        self.init(
+            identifier: identifier, givenName: givenName, familyName: familyName,
+            emails: emails, phones: phones, addresses: addresses, storedLinks: links
+        )
+    }
+
+    private init(
+        identifier: String, givenName: String, familyName: String,
+        emails: [CardEntry], phones: [CardEntry], addresses: [CardEntry], storedLinks: [CardEntry]?
     ) {
         self.identifier = identifier
         self.givenName = givenName
@@ -32,6 +48,12 @@ public struct CardRecord: Codable, Sendable, Hashable {
         self.emails = emails
         self.phones = phones
         self.addresses = addresses
+        self.storedLinks = storedLinks
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case identifier, givenName, familyName, emails, phones, addresses
+        case storedLinks = "links"
     }
 
     public func entries(_ kind: ContactKind) -> [CardEntry] {
@@ -39,6 +61,7 @@ public struct CardRecord: Codable, Sendable, Hashable {
         case .email: emails
         case .phone: phones
         case .address: addresses
+        case .link: links
         }
     }
 
@@ -47,7 +70,8 @@ public struct CardRecord: Codable, Sendable, Hashable {
             identifier: identifier, givenName: givenName, familyName: familyName,
             emails: kind == .email ? entries : emails,
             phones: kind == .phone ? entries : phones,
-            addresses: kind == .address ? entries : addresses
+            addresses: kind == .address ? entries : addresses,
+            storedLinks: kind == .link ? entries : storedLinks
         )
     }
 }

@@ -18,6 +18,8 @@ public enum LabelChoices {
                 CNLabelSchool, CNLabelPhoneNumberMain, CNLabelOther
             ]
         case .address: [CNLabelHome, CNLabelWork, CNLabelSchool, CNLabelOther]
+        case .link:
+            [LinkType.github.label, LinkType.linkedin.label, LinkType.x.label, CNLabelURLAddressHomePage, CNLabelOther]
         }
     }
 
@@ -25,5 +27,7 @@ public enum LabelChoices {
         label.map(system(for: kind).contains) ?? false
     }
 
-    private static let unlabeled: [ContactKind: String] = [.email: "email", .phone: "phone", .address: "address"]
+    private static let unlabeled: [ContactKind: String] = [
+        .email: "email", .phone: "phone", .address: "address", .link: "link"
+    ]
 }

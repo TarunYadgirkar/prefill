@@ -29,6 +29,7 @@ public struct MessageRouter: Sendable {
         case .ping: return .pong
         case .pageContext(let body): return .pageContext(pageContext(body))
         case .capture(let body): return .capture(capture(body))
+        case .linkSuggestions(let body): return .linkSuggestions(linkSuggestions(body))
         default: return .popupState(sheet(request))
         }
     }

@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import PrefillKit
 
@@ -100,5 +101,62 @@ struct NormalizerTests {
     @Test func emailDomainIsRegistrable() {
         #expect(Normalizer.emailDomain("alex@mail.work.example.org") == "example.org")
         #expect(Normalizer.emailDomain("not-an-email") == nil)
+    }
+}
+
+struct LinkTests {
+    @Test(arguments: [
+        ("https://GitHub.com/alexrivera/", "github.com/alexrivera"),
+        ("github.com/alexrivera", "github.com/alexrivera"),
+        ("http://www.linkedin.com/in/alex-rivera?trk=x", "linkedin.com/in/alex-rivera"),
+        ("alexrivera.dev", "alexrivera.dev")
+    ])
+    func linkKeyIsHostAndPath(raw: String, expected: String) {
+        #expect(Normalizer.link(raw) == expected)
+    }
+
+    @Test(arguments: [
+        ("github.com/alexrivera", LinkType.github),
+        ("https://www.linkedin.com/in/alex", .linkedin),
+        ("https://twitter.com/alex", .x),
+        ("x.com/alex", .x),
+        ("https://alexrivera.github.io", .website),
+        ("https://alexrivera.dev", .website)
+    ])
+    func typeComesFromTheHost(raw: String, expected: LinkType) {
+        #expect(LinkType.of(raw) == expected)
+    }
+
+    @Test func onlyWebAddressesCount() {
+        #expect(ValueRules.isLink("github.com/alex"))
+        #expect(!ValueRules.isLink("alexrivera"))
+        #expect(!ValueRules.isLink("javascript:alert(1)"))
+        #expect(!ValueRules.isLink("https://github.com/alex - https://alex.dev"))
+        #expect(LinkType.cardText("github.com/alex") == "https://github.com/alex")
+    }
+}
+
+struct LinkCaptureTests: CaptureTesting {
+    @Test func aTypedLinkNextToTheOwnEmailIsSavedWithItsType() {
+        let decisions = decide([
+            field(.email, "alex.rivera@example.com"), field(.link, "github.com/alexrivera/", label: "GitHub/Portfolio:")
+        ])
+        let saved = newValue(.link("https://github.com/alexrivera/"), label: "GitHub")
+        #expect(decisions == [.duplicate(Alex.homeEmail.id), .save(saved)])
+    }
+
+    @Test func aRecordStoredBeforeLinksKeepsTheCardsLinksOnRestore() throws {
+        let old = try JSONDecoder().decode(CardRecord.self, from: JSONEncoder().encode(Alex.card).dropLinks())
+        let github = CardEntry(label: "GitHub", payload: .link("https://github.com/a"))
+        let card = Alex.card.replacing(.link, with: [github])
+        #expect(CardEditor.target(.restore(old), card: card).links == card.links)
+    }
+}
+
+private extension Data {
+    func dropLinks() throws -> Data {
+        var object = try #require(try JSONSerialization.jsonObject(with: self) as? [String: Any])
+        object["links"] = nil
+        return try JSONSerialization.data(withJSONObject: object)
     }
 }

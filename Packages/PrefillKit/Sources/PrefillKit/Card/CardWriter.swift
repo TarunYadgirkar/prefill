@@ -194,8 +194,10 @@ struct CardPlan {
         let onCard = Dictionary(entries.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
         let pool = manualOrder(kind, entries: entries, request: request)
             .map { value in onCard[value.key].map(value.with(entry:)) ?? value }
+        // Links aren't in Safari's contact bar, so they keep the person's order on every site.
         let context = request.page.context(for: kind, siteKind: siteKind)
-        let ranked = Ranker.rank(pool, usage: request.usage, pins: request.pins, context: context)
+        let ranked = kind == .link
+            ? pool : Ranker.rank(pool, usage: request.usage, pins: request.pins, context: context)
         return ranked.map { CardEntry(label: $0.label, payload: $0.payload) } + duplicates(in: entries)
     }
 
