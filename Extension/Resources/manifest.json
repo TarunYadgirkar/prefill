@@ -21,8 +21,9 @@
 
     "content_scripts": [{
         "js": [ "content.js" ],
-        "matches": [ "<all_urls>" ],
-        "run_at": "document_start"
+        "matches": [ "https://*/*", "http://*/*" ],
+        "all_frames": false,
+        "run_at": "document_idle"
     }],
 
     "permissions": [ "nativeMessaging" ]

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Send a gift</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<h1>Send a gift</h1>
+<form action="thanks.html" method="post">
+  <fieldset>
+    <legend>From</legend>
+    <label>Your name <input name="name" autocomplete="name"></label>
+    <label>Your email <input type="email" name="email" autocomplete="email"></label>
+  </fieldset>
+  <fieldset>
+    <legend>Who it's for</legend>
+    <label>Recipient's name <input name="recipient_name"></label>
+    <label>Recipient's email <input type="email" name="recipient_email"></label>
+    <label>Street address <input name="recipient_street" autocomplete="shipping address-line1"></label>
+    <label>City <input name="recipient_city" autocomplete="shipping address-level2"></label>
+    <label>ZIP <input name="recipient_zip" autocomplete="shipping postal-code"></label>
+  </fieldset>
+  <button type="submit">Send gift</button>
+</form>
+</body>
+</html>

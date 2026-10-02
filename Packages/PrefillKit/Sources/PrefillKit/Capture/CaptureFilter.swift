@@ -12,7 +12,6 @@ public enum CaptureDecision: Sendable, Hashable {
 }
 
 public struct CaptureFilter: Sendable {
-    private static let minPhoneDigits = 7
     private static let fullPhoneTokens: Set<String> = ["tel", "tel-national"]
 
     private let cardIDs: Set<UUID>
@@ -88,17 +87,11 @@ public struct CaptureFilter: Sendable {
     private static func payload(_ field: CapturedField) -> ContactPayload? {
         let text = (field.value ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         switch field.kind {
-        case .email: return isEmail(text) ? .email(text) : nil
-        case .phone: return text.filter(\.isNumber).count >= minPhoneDigits ? .phone(text) : nil
-        case .address: return field.address.flatMap { $0.street.isEmpty ? nil : .address($0) }
+        case .email: return ValueRules.isEmail(text) ? .email(text) : nil
+        case .phone: return ValueRules.isPhone(text, autocomplete: field.autocomplete) ? .phone(text) : nil
+        case .address: return field.address.flatMap { ValueRules.isAddress($0) ? .address($0) : nil }
         case .name: return nil
         }
-    }
-
-    private static func isEmail(_ text: String) -> Bool {
-        let parts = text.split(separator: "@", omittingEmptySubsequences: false)
-        guard parts.count == 2, let local = parts.first, let domain = parts.last else { return false }
-        return !local.isEmpty && domain.contains(".") && !domain.hasPrefix(".") && !domain.hasSuffix(".")
     }
 
     // Who the form is about. A name that isn't the card's means the phone and address

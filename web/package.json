@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "pnpm run build:content && pnpm run build:background",
-    "build:content": "esbuild src/content.ts --bundle --format=iife --target=safari26 --outfile=../Extension/Resources/content.js",
-    "build:background": "esbuild src/background.ts --bundle --format=esm --target=safari26 --outfile=../Extension/Resources/background.js",
+    "build:content": "esbuild src/content.ts --bundle --format=iife --target=safari26 --minify --outfile=../Extension/Resources/content.js",
+    "build:background": "esbuild src/background.ts --bundle --format=esm --target=safari26 --minify --outfile=../Extension/Resources/background.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run"

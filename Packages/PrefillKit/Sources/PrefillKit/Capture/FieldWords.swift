@@ -6,16 +6,23 @@ struct FieldWords {
     private static let someoneElseStems = ["recipient", "friend", "gift", "invit", "referr"]
     private static let sendVerbs: Set<String> = ["send", "forward", "share"]
     private static let sensitiveWords: Set<String> = ["password", "passcode", "otp", "cvv", "cvc", "csc", "ssn"]
+    // A box for a phone number that talks about any of these holds something else: a bank
+    // account, a PIN, a code sent by text, a birth date.
+    private static let sensitivePhoneWords: Set<String> = [
+        "account", "acct", "routing", "iban", "pin", "code", "token", "dob", "birth", "birthday", "passport"
+    ]
     private static let sensitiveAutocomplete: Set<String> = ["current-password", "new-password", "one-time-code"]
     private static let partialPhoneTokens: Set<String> = [
         "tel-country-code", "tel-area-code", "tel-local", "tel-local-prefix", "tel-local-suffix", "tel-extension"
     ]
 
+    private let kind: FieldKind
     private let autocomplete: Set<String>
     private let name: [String]
     private let label: [String]
 
     init(_ field: CapturedField) {
+        kind = field.kind
         autocomplete = Self.tokens(field.autocomplete)
         name = Self.words(field.name)
         label = Self.words(field.label)
@@ -30,6 +37,7 @@ struct FieldWords {
         return autocomplete.contains { $0.hasPrefix("cc-") || Self.sensitiveAutocomplete.contains($0) }
             || words.contains(where: Self.sensitiveWords.contains)
             || [name, label].contains { $0.joined().contains("cardnumber") }
+            || (kind == .phone && words.contains(where: Self.sensitivePhoneWords.contains))
     }
 
     // "to" alone would also catch "Ship to", shipToStreet and "Email to receive your

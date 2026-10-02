@@ -92,10 +92,12 @@ public struct CardWriter: Sendable {
         self.gateway = gateway
     }
 
-    public func sync(_ request: CardSyncRequest) -> CardWriteResult {
+    // `current` is a card the caller has just read. If it changed since, the save finds
+    // that out and plans again from the card as it is.
+    public func sync(_ request: CardSyncRequest, current: CardRecord? = nil) -> CardWriteResult {
         Self.syncLock.withLock { _ in
             do throws(CardWriteFailure) {
-                let card = try gateway.fetchCard(identifier: request.cardIdentifier)
+                let card = if let current { current } else { try gateway.fetchCard(identifier: request.cardIdentifier) }
                 return write(CardPlan(card: card, request: request), request: request, attempt: 1)
             } catch {
                 Self.log.error("fetch failed: \(String(describing: error), privacy: .public)")

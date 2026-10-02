@@ -1,0 +1,139 @@
+import type { FieldElement } from "./fieldTypes";
+
+const FIELD_TAGS: ReadonlySet<string> = new Set(["input", "select", "textarea"]);
+const FIELD_SELECTOR = "input, select, textarea";
+const SKIPPED_TEXT: ReadonlySet<string> = new Set(["select", "option", "script", "style", "textarea", "input"]);
+const MAX_TEXT = 200;
+// Smaller than this, a field is a honeypot or a tracking trick, not something a person types into.
+const MIN_SIZE = 4;
+
+export function isFieldElement(node: unknown): node is FieldElement {
+  return typeof node === "object" && node !== null && "localName" in node && FIELD_TAGS.has(String(node.localName));
+}
+
+// The element an event really started on. Events from inside an open shadow root reach
+// the document retargeted to the shadow host.
+export function eventOrigin(event: Event): EventTarget | null {
+  return event.composedPath()[0] ?? event.target;
+}
+
+function shadowRoots(root: ParentNode): ShadowRoot[] {
+  return [...root.querySelectorAll("*")].flatMap((element) =>
+    element.shadowRoot === null ? [] : [element.shadowRoot],
+  );
+}
+
+// Fields in page order, including those inside open shadow roots, up to `limit`.
+export function fieldElements(root: ParentNode, limit = Infinity): FieldElement[] {
+  const own = [...root.querySelectorAll(FIELD_SELECTOR)].filter(isFieldElement).slice(0, limit);
+  return shadowRoots(root).reduce<FieldElement[]>(
+    (found, shadow) => (found.length >= limit ? found : [...found, ...fieldElements(shadow, limit - found.length)]),
+    own,
+  );
+}
+
+// Whether added nodes could hold a field: one itself, one inside, or a shadow host.
+export function mayHoldFields(node: Node): boolean {
+  if (!(node instanceof Element)) return false;
+  return isFieldElement(node) || node.shadowRoot !== null || node.querySelector(FIELD_SELECTOR) !== null;
+}
+
+function squash(text: string): string {
+  return text.replace(/\s+/gu, " ").trim().slice(0, MAX_TEXT);
+}
+
+// A label's own words, without the text of a select or input nested inside it.
+function ownText(node: Node): string {
+  if (node.nodeType === Node.TEXT_NODE) return node.textContent ?? "";
+  if (node instanceof Element && SKIPPED_TEXT.has(node.localName)) return "";
+  return [...node.childNodes].map(ownText).join(" ");
+}
+
+function labelledByText(el: FieldElement): string {
+  const ids = (el.getAttribute("aria-labelledby") ?? "").split(/\s+/u).filter(Boolean);
+  // A detached element's root is the element itself, which can't look up ids.
+  const root = el.getRootNode();
+  if (!("getElementById" in root)) return "";
+  const finder = root as Document | ShadowRoot;
+  return ids
+    .map((id) => {
+      const found = finder.getElementById(id);
+      return found === null ? "" : ownText(found);
+    })
+    .join(" ");
+}
+
+// Label text in the order browsers use: <label> elements, aria-labelledby, aria-label.
+export function labelText(el: FieldElement): string {
+  const labels = [...(el.labels ?? [])].map(ownText).join(" ");
+  return squash([labels, labelledByText(el), el.getAttribute("aria-label") ?? ""].join(" "));
+}
+
+export function placeholderText(el: FieldElement): string {
+  return squash(el.getAttribute("placeholder") ?? "");
+}
+
+// The field's name and id as written, plus each split at camelCase, digits and
+// punctuation, so "billingAddressLine2" also reads as "billing address line 2".
+export function nameTexts(el: FieldElement): string[] {
+  const raw = [el.getAttribute("name") ?? "", el.id].filter(Boolean);
+  const split = raw.map((text) =>
+    text
+      .replace(/([a-z])([A-Z])/gu, "$1 $2")
+      .replace(/([A-Za-z])(\d)/gu, "$1 $2")
+      .replace(/[_\-[\].]+/gu, " ")
+      .toLowerCase()
+      .trim(),
+  );
+  return [...new Set([...raw, ...split])];
+}
+
+// Clipping away the whole box is the usual way to hide something that still takes input.
+function isClipped(el: Element): boolean {
+  const style = el.ownerDocument.defaultView?.getComputedStyle(el);
+  const clipPath = style?.getPropertyValue("clip-path") ?? "";
+  return (clipPath !== "" && clipPath !== "none") || /^rect/u.test(style?.getPropertyValue("clip") ?? "");
+}
+
+function isStyledVisible(el: Element): boolean {
+  if (el.closest("[hidden], [aria-hidden=true]") || isClipped(el)) return false;
+  return typeof el.checkVisibility === "function"
+    ? el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
+    : true;
+}
+
+function isOnPage(rect: DOMRect, view: Window | null): boolean {
+  return rect.right + (view?.scrollX ?? 0) > 0 && rect.bottom + (view?.scrollY ?? 0) > 0;
+}
+
+// Drawn at a usable size and not pushed off the page's top or left edge.
+export function isRendered(el: Element): boolean {
+  if (!isStyledVisible(el)) return false;
+  const rect = el.getBoundingClientRect();
+  return rect.width >= MIN_SIZE && rect.height >= MIN_SIZE && isOnPage(rect, el.ownerDocument.defaultView);
+}
+
+// Rendered and at least partly inside the layout viewport, as a field is while someone
+// types in it. On iOS the window's inner size follows zoom, so the larger of the two counts.
+export function isInView(el: Element): boolean {
+  if (!isRendered(el)) return false;
+  const rect = el.getBoundingClientRect();
+  const { width, height } = viewportSize(el.ownerDocument);
+  return rect.right > 0 && rect.bottom > 0 && rect.left < width && rect.top < height;
+}
+
+function viewportSize(doc: Document): { width: number; height: number } {
+  const view = doc.defaultView;
+  return {
+    width: Math.max(view?.innerWidth ?? 0, doc.documentElement.clientWidth),
+    height: Math.max(view?.innerHeight ?? 0, doc.documentElement.clientHeight),
+  };
+}
+
+export function fieldValue(el: FieldElement): string {
+  if (el.localName === "select") {
+    const select = el as HTMLSelectElement;
+    return (select.selectedOptions[0]?.text ?? select.value).trim();
+  }
+  return el.value.trim();
+}

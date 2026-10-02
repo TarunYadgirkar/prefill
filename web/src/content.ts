@@ -1,5 +1,10 @@
-import type { Ping } from "./messages";
+import { startPage } from "./page";
 
-const ping: Ping = { type: "ping" };
-
-void browser.runtime.sendMessage(ping);
+startPage({
+  doc: document,
+  win: window,
+  protocol: location.protocol,
+  hostname: location.hostname,
+  isSecureContext: window.isSecureContext,
+  send: (request) => browser.runtime.sendMessage(request),
+});

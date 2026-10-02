@@ -3,8 +3,14 @@
 #   unit (default): PrefillKit on macOS and on the simulator, the app-hosted store and
 #                   Contacts tests (grants the Personal app Contacts access on the
 #                   simulator), web tests, lint, typecheck.
-#   e2e: PrefillUITests on the simulator ($PREFILL_SIM, default Prefill Dev).
+#   e2e: PrefillUITests on the simulator ($PREFILL_SIM, default Prefill Dev). Links the
+#        Alex Rivera card through a host test, serves the test sites with
+#        scripts/e2e-server.py, drives Settings and Safari, checks the recorded events
+#        through another host test, then restores the card.
+#        Screenshots land in assets/generated/e2e-ext-*.png.
 source ${0:A:h}/lib.sh
+
+E2E_PORT=8846
 
 was_booted=false
 sim_is_booted && was_booted=true
@@ -40,16 +46,48 @@ unit() {
   (cd $ROOT && swiftlint lint --strict --quiet)
 }
 
+# usage: host_e2e_step <link|verify|restore>  Runs the gated E2ESetupHostTests inside Prefill.app.
+# The pass pattern names the mode's own test, because a run where it was skipped passes too.
+typeset -A E2E_STEP_TESTS=(link linkAlexCard verify verifyGiftCapture restore restoreAlexCard)
+host_e2e_step() {
+  export TEST_RUNNER_PREFILL_E2E=$1
+  run_xcodebuild_test $LOGS/test-e2e-$1.log "✔ Test ${E2E_STEP_TESTS[$1]}\\(\\) passed" \
+    test -project $PROJECT -scheme PrefillHostTests -configuration Personal \
+    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED \
+    -only-testing:PrefillHostTests/E2ESetupHostTests
+  local result=$?
+  unset TEST_RUNNER_PREFILL_E2E
+  return $result
+}
+
 e2e() {
   step "Building extension scripts and project"
   pnpm --dir $ROOT/web build
   xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
+  boot_sim
+  xcrun simctl privacy $SIM_UDID grant contacts $PERSONAL_BUNDLE_ID
   xcrun simctl terminate $SIM_UDID com.apple.mobilesafari 2>/dev/null || true
 
+  step "Serving the test sites on localhost:$E2E_PORT and 127.0.0.1:$E2E_PORT"
+  python3 $ROOT/scripts/e2e-server.py $E2E_PORT $SIM_UDID $ROOT/assets/generated &
+  server=$!
+  trap 'kill $server 2>/dev/null; shutdown_if_we_booted' EXIT
+
+  step "Linking the Alex Rivera card in the shared store"
+  host_e2e_step link
+
   step "PrefillUITests on $SIM_UDID"
+  local failed=0
   run_xcodebuild_test $LOGS/test-e2e.log "Test Suite 'All tests' passed" \
     test -project $PROJECT -scheme Prefill -configuration Personal \
-    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED
+    -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED || failed=1
+
+  step "Checking that the gift capture reached the app"
+  host_e2e_step verify || failed=1
+
+  step "Restoring the card's emails and clearing the shared store"
+  host_e2e_step restore
+  return $failed
 }
 
 case ${1:-unit} in
