@@ -34,6 +34,12 @@ const SUBMIT: Trigger = { trigger: "submit", consume: true };
 const LOOSE_SUBMIT: Trigger = { trigger: "submit", consume: false };
 const HIDDEN: Trigger = { trigger: "flush", consume: false };
 
+// Only a tap, a key or an input method on a field marks it as the person's. A script can
+// make trusted input events with execCommand, but none of these.
+const TOUCH_EVENTS = ["pointerdown", "touchstart", "keydown", "compositionstart"] as const;
+// A page reports a few times at most, so one page can't flood the review list.
+const MAX_REPORTS = 3;
+
 const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
 const SUBMIT_WORDS =
   /sign.?up|register|create|join|continue|next|submit|save|send|confirm|order|check.?out|pay|buy|subscribe|finish|done|get started/iu;
@@ -140,6 +146,15 @@ function watchPasswords(doc: Document): { isPassword: (element: Element) => bool
   };
 }
 
+// The field an event landed on, or the one its label controls.
+function touchedField(event: Event): FieldElement | undefined {
+  for (const target of event.composedPath()) {
+    if (isFieldElement(target)) return target;
+    if (target instanceof HTMLLabelElement && isFieldElement(target.control)) return target.control;
+  }
+  return undefined;
+}
+
 function reportable(element: FieldElement, entry: Tracked, trigger: Trigger): EditedField | undefined {
   const value = fieldValue(element);
   if (!sameValue(entry.field, entry.typed, value)) return undefined;
@@ -158,7 +173,9 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
   const isPersonSubmit = (event: Event): boolean => isUserEvent(event) && hasActivation();
   const passwords = watchPasswords(doc);
   const edited = new Map<FieldElement, Tracked>();
+  const touched = new WeakSet<FieldElement>();
   let lastSignature = "";
+  let reports = 0;
 
   const track = (target: FieldElement, settled: boolean): void => {
     if (passwords.isPassword(target) || !isEditable(target)) {
@@ -177,9 +194,15 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
     edited.set(target, { field, description: describeElement(target), typed: fieldValue(target), settled });
   };
 
+  const touch = (event: Event): void => {
+    const field = isUserEvent(event) ? touchedField(event) : undefined;
+    if (field !== undefined) touched.add(field);
+  };
+
   const remember = (event: Event): void => {
     const target = eventOrigin(event);
-    if (isUserEvent(event) && isFieldElement(target)) track(target, event.type === "change");
+    if (!isUserEvent(event) || !isFieldElement(target) || !touched.has(target)) return;
+    track(target, event.type === "change");
   };
 
   const report = (elements: readonly FieldElement[], scope: ParentNode, trigger: Trigger): void => {
@@ -193,8 +216,9 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
     const request = buildCapture(facts, entries);
     if (request === undefined) return;
     const signature = JSON.stringify(request);
-    if (signature === lastSignature) return;
+    if (signature === lastSignature || reports >= MAX_REPORTS) return;
     lastSignature = signature;
+    reports += 1;
     options.send(request);
   };
 
@@ -232,6 +256,9 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
     if (doc.visibilityState === "hidden") flush(event);
   };
 
+  TOUCH_EVENTS.forEach((type) => {
+    doc.addEventListener(type, touch, { capture: true, passive: true });
+  });
   doc.addEventListener("input", remember, true);
   doc.addEventListener("change", remember, true);
   doc.addEventListener("submit", onSubmit, true);
@@ -241,6 +268,9 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
 
   return () => {
     passwords.stop();
+    TOUCH_EVENTS.forEach((type) => {
+      doc.removeEventListener(type, touch, true);
+    });
     doc.removeEventListener("input", remember, true);
     doc.removeEventListener("change", remember, true);
     doc.removeEventListener("submit", onSubmit, true);

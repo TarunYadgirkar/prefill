@@ -89,6 +89,21 @@ struct ModelTests {
         #expect(events.captures.last == captures.last)
     }
 
+    @Test func reviewSpamNeverPushesOutSavedOrUndoneRecords() {
+        let saved = Capture(host: "example.org", value: Alex.schoolEmail, date: .daysAgo(9), verdict: .saved)
+        let undone = Capture(host: "example.org", value: Alex.workEmail, date: .daysAgo(8), verdict: .dismissed)
+        let spam = (0..<ExtensionEvents.maxCaptures).map { index in
+            Capture(
+                host: "spam.example", value: Alex.value(.email("junk\(index)@spam.example"), label: nil),
+                date: .testNow, verdict: .needsReview
+            )
+        }
+        let events = ExtensionEvents(captures: [saved, undone]).appending(usage: [], captures: spam)
+        #expect(events.captures.count == ExtensionEvents.maxCaptures)
+        #expect(Array(events.captures.prefix(2)) == [saved, undone])
+        #expect(events.captures.last == spam.last)
+    }
+
     @Test func cardRecordReturnsAndReplacesEntriesByKind() {
         let replaced = Alex.card.replacing(.email, with: [Alex.schoolEmail.entry])
         #expect(replaced.entries(.email) == [Alex.schoolEmail.entry])

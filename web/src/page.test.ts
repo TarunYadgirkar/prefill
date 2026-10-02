@@ -39,6 +39,7 @@ async function load(html: string, overrides: Partial<PageEnvironment> = {}) {
 function typeAndSubmit(): void {
   const input = document.querySelector("input");
   if (input === null) throw new Error("no input");
+  input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true }));
   input.value = "new.person@example.org";
   input.dispatchEvent(new Event("input", { bubbles: true }));
   document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));

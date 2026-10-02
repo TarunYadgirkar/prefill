@@ -1,7 +1,7 @@
 import Foundation
 
 public enum IgnoreReason: String, Sendable, Hashable {
-    case notContact, untyped, sensitive, someoneElse, partial, rejected, invalid
+    case notContact, untyped, sensitive, someoneElse, partial, rejected, invalid, tooMany
 }
 
 public enum CaptureDecision: Sendable, Hashable {

@@ -57,8 +57,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 // Control, format (bidi overrides, zero-width) and line or paragraph separator characters
 // never belong in contact data. A street may span lines, so it keeps plain newlines.
-const HIDDEN_CHARACTERS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
-const HIDDEN_EXCEPT_NEWLINE = /[^\P{Cc}\n]|[\p{Cf}\p{Zl}\p{Zp}]/u;
+export const HIDDEN_CHARACTERS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
+export const HIDDEN_EXCEPT_NEWLINE = /[^\P{Cc}\n]|[\p{Cf}\p{Zl}\p{Zp}]/u;
 const HOST = /^[a-z0-9.-]+$/u;
 const UUID = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/iu;
 

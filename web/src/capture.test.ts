@@ -5,7 +5,7 @@ import checkoutTagged from "./fixtures/checkout-tagged.html?raw";
 import checkoutUntagged from "./fixtures/checkout-untagged.html?raw";
 import gift from "./fixtures/gift.html?raw";
 import signup from "./fixtures/signup.html?raw";
-import type { CaptureRequest } from "./messages";
+import { parsePageRequest, type CaptureRequest } from "./messages";
 
 let uninstall: (() => void) | undefined;
 
@@ -44,8 +44,17 @@ function element(selector: string): Element {
   return found;
 }
 
+// A script's execCommand makes trusted input events with no tap or key before them.
+function insertText(selector: string, value: string): void {
+  const input = element(selector) as HTMLInputElement;
+  input.value = value;
+  input.dispatchEvent(new Event("input", { bubbles: true }));
+  input.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
 function type(selector: string, value: string): void {
   const input = element(selector) as HTMLInputElement;
+  input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, composed: true }));
   input.value = value;
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
@@ -58,6 +67,7 @@ function fill(selector: string, value: string): void {
 
 function choose(selector: string, value: string): void {
   const select = element(selector) as HTMLSelectElement;
+  select.dispatchEvent(new Event("pointerdown", { bubbles: true, composed: true }));
   select.value = value;
   select.dispatchEvent(new Event("change", { bubbles: true }));
 }
@@ -123,6 +133,33 @@ describe("capture on sign-up", () => {
     click("#create");
     submit("form");
     expect(send).not.toHaveBeenCalled();
+  });
+
+  it("sends nothing a script typed and submitted inside the person's tap", () => {
+    const send = setUp(signup);
+    insertText("#fullName", "Alex Rivera");
+    insertText("#signupEmail", "attacker@evil.example");
+    (element("form") as HTMLFormElement).requestSubmit();
+    submit("form");
+    hide();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("counts a tap on a field's label as touching the field", () => {
+    const send = setUp('<form><label id="l">Email <input type="email" name="e"></label><button>Go</button></form>');
+    element("#l").dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    insertText("[name=e]", "new.person@example.org");
+    click("button");
+    expect(sentFields(send).map((field) => field.value)).toEqual(["new.person@example.org"]);
+  });
+
+  it("reports at most three times from one page", () => {
+    const send = setUp('<form><input type="email" name="e"><button>Go</button></form>');
+    ["a", "b", "c", "d"].forEach((name) => {
+      type("[name=e]", `${name}@example.org`);
+      click("button");
+    });
+    expect(send).toHaveBeenCalledTimes(3);
   });
 
   it("skips a field the person can't edit", () => {
@@ -328,6 +365,21 @@ describe("capture metadata for the someone-else filter", () => {
   });
 });
 
+describe("hidden characters", () => {
+  it("drops them from labels and leaves out a value that holds them, so the rest still sends", () => {
+    const send = setUp(
+      '<form><label>E\u00admail <input type="email" name="e"></label>' +
+        '<label>Tele\u00adfon\u200f <input type="tel" name="p"></label><button>Go</button></form>',
+    );
+    type("[name=e]", "new.person@example.org");
+    type("[name=p]", "\u202a+49 30 1234567\u202c");
+    click("button");
+    const request = send.mock.calls[0]?.[0];
+    expect(request?.fields.map((field) => [field.kind, field.label])).toEqual([["email", "Email"]]);
+    expect(parsePageRequest(request)).toEqual(request);
+  });
+});
+
 describe("capture for forms that never submit", () => {
   it("flushes finished fields when the page is hidden, once, as not submitted", () => {
     const send = setUp(formHtml);
@@ -420,6 +472,7 @@ describe("fields inside an open shadow root", () => {
     shadow.innerHTML = '<label>Email <input type="email" name="email" autocomplete="email"></label>';
     const input = shadow.querySelector("input");
     if (input === null) throw new Error("no shadow input");
+    input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, composed: true }));
     input.value = "new.person@example.org";
     input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
     input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));

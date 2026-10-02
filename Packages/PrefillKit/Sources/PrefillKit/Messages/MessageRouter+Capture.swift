@@ -3,10 +3,12 @@ import os
 
 extension MessageRouter {
     // A page can only put so much on the card: a few new values per form, and a few more
-    // per hour across every site. The rest wait for review.
+    // per hour across every site. The rest wait for review, up to a daily limit per site.
     static let maxSavesPerCapture = 3
     static let maxSavesPerWindow = 6
     static let saveWindow: TimeInterval = 3_600
+    static let maxReviewsPerSite = 20
+    static let reviewWindow: TimeInterval = 86_400
 
     // Without a linked card there is nothing to compare against and nobody has agreed to
     // anything yet, without the card nothing can be compared either, and on a site the
@@ -28,7 +30,7 @@ extension MessageRouter {
         let filter = CaptureFilter(card: card, settings: state.settings, rejected: Set(state.rejectedValueIDs))
         let evaluated = limitingSaves(filter.evaluate(request, at: date), request: request, at: date)
         let context = CaptureContext(request: request, state: state, link: link, card: card, date: date)
-        let decisions = saveToCard(evaluated, context: context)
+        let decisions = limitingReviews(saveToCard(evaluated, context: context), host: request.host, at: date)
         record(decisions, context: context)
         return CaptureResponse(decisions: decisions)
     }
@@ -37,14 +39,32 @@ extension MessageRouter {
     private func limitingSaves(_ decisions: [CaptureDecision], request: CaptureRequest, at date: Date)
         -> [CaptureDecision] {
         guard request.trigger == .submit else { return decisions.map(\.reviewInsteadOfSave) }
-        let recent = events().captures.count {
-            $0.verdict == .saved && date.timeIntervalSince($0.date) < Self.saveWindow
-        }
+        let stored = events()
+        let isRecent = { (saved: Date) in date.timeIntervalSince(saved) < Self.saveWindow }
+        // Records written before `saves` existed still count.
+        let recent = max(
+            stored.saves.count(where: isRecent),
+            stored.captures.count { $0.verdict == .saved && isRecent($0.date) }
+        )
         let allowance = max(0, min(Self.maxSavesPerCapture, Self.maxSavesPerWindow - recent))
         return decisions.reduce(into: (kept: [CaptureDecision](), left: allowance)) { result, decision in
             guard decision.savedValue != nil else { return result.kept.append(decision) }
             result.kept.append(result.left > 0 ? decision : decision.reviewInsteadOfSave)
             result.left -= 1
+        }.kept
+    }
+
+    // A site that keeps filing values for review stops being heard for a day, so it can't
+    // bury the person's other captures.
+    private func limitingReviews(_ decisions: [CaptureDecision], host: String, at date: Date) -> [CaptureDecision] {
+        let site = Normalizer.registrableDomain(host)
+        let waiting = events().captures.count {
+            $0.host == site && $0.verdict == .needsReview && date.timeIntervalSince($0.date) < Self.reviewWindow
+        }
+        return decisions.reduce(into: (kept: [CaptureDecision](), left: Self.maxReviewsPerSite - waiting)) {
+            guard case .review = $1 else { return $0.kept.append($1) }
+            $0.kept.append($0.left > 0 ? $1 : .ignore(.tooMany))
+            $0.left -= 1
         }.kept
     }
 
@@ -69,8 +89,9 @@ extension MessageRouter {
     private func record(_ decisions: [CaptureDecision], context: CaptureContext) {
         let usage = context.usage(decisions)
         let captures = CaptureFilter.captures(from: decisions, host: context.request.host, at: context.date)
+        let saves = Array(repeating: context.date, count: decisions.count { $0.savedValue != nil })
         guard !usage.isEmpty || !captures.isEmpty else { return }
-        append(ExtensionEvents(usage: usage, captures: captures))
+        append(ExtensionEvents(usage: usage, captures: captures, saves: saves))
     }
 }
 

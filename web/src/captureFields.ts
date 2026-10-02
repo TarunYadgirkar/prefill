@@ -1,6 +1,9 @@
 import { labelText, placeholderText } from "./dom";
 import type { AddressPart, ContactField, FieldElement } from "./fieldTypes";
-import { LIMITS, type CaptureRequest, type CaptureTrigger, type CapturedField, type PostalAddress } from "./messages";
+import {
+  HIDDEN_CHARACTERS,
+  HIDDEN_EXCEPT_NEWLINE,
+  LIMITS, type CaptureRequest, type CaptureTrigger, type CapturedField, type PostalAddress } from "./messages";
 
 export interface FieldDescription {
   autocomplete: string;
@@ -21,15 +24,27 @@ interface AddressDraft {
 }
 
 const clip = (text: string, max: number): string => text.slice(0, max);
+const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
+
+// Soft hyphens and direction marks are common in labels and would fail the whole
+// message, so the words used only for classifying lose them.
+const visible = (text: string): string => text.replace(/\s+/gu, " ").replace(ALL_HIDDEN, "").trim();
 
 // Read from the DOM when the person types, so a report never touches an element the
 // page may have removed since.
 export function describeElement(element: FieldElement): FieldDescription {
   return {
-    autocomplete: element.getAttribute("autocomplete")?.trim() ?? "",
-    name: element.getAttribute("name") ?? element.id,
-    label: labelText(element) || placeholderText(element),
+    autocomplete: visible(element.getAttribute("autocomplete") ?? ""),
+    name: visible(element.getAttribute("name") ?? element.id),
+    label: visible(labelText(element) || placeholderText(element)),
   };
+}
+
+// A value with hidden characters can't be sent as typed, so its field is left out. A
+// street typed in a text area may span lines.
+function hasHidden(entry: EditedField): boolean {
+  const isStreet = entry.field.part === "street" || entry.field.part === "street2";
+  return (isStreet ? HIDDEN_EXCEPT_NEWLINE : HIDDEN_CHARACTERS).test(entry.value);
 }
 
 function nonEmpty(entries: Record<string, string>): Record<string, string> {
@@ -60,14 +75,15 @@ function withSection(field: CapturedField, members: readonly EditedField[]): Cap
   return section === undefined ? field : { ...field, section };
 }
 
-function single(entry: EditedField): CapturedField {
+function single(entry: EditedField): CapturedField[] {
+  if (hasHidden(entry)) return [];
   const field: CapturedField = {
     kind: entry.field.kind,
     value: clip(entry.value, LIMITS.value),
     ...describe([entry]),
     userTyped: true,
   };
-  return withSection(field, [entry]);
+  return [withSection(field, [entry])];
 }
 
 // A repeated part or a different autocomplete section starts the next address, so a
@@ -87,10 +103,15 @@ function addPart(draft: AddressDraft | undefined, entry: EditedField): AddressDr
 
 // An address flushed from a page that was only hidden must have its postal code too, so
 // a half-typed one never leaves the page.
+function isSendable(draft: AddressDraft, street: string, trigger: CaptureTrigger): boolean {
+  const isIncomplete = street === "" || (trigger === "flush" && draft.parts.postalCode === undefined);
+  return !isIncomplete && !draft.members.some(hasHidden);
+}
+
 function addressField(draft: AddressDraft, trigger: CaptureTrigger): CapturedField[] {
   const { parts } = draft;
   const street = [parts.street, parts.street2].filter(Boolean).join("\n");
-  if (street === "" || (trigger === "flush" && parts.postalCode === undefined)) return [];
+  if (!isSendable(draft, street, trigger)) return [];
   const address: PostalAddress = {
     street: clip(street, LIMITS.street),
     city: clip(parts.city ?? "", LIMITS.part),
@@ -106,7 +127,7 @@ function assemble(entries: readonly EditedField[], trigger: CaptureTrigger): Cap
   let draft: AddressDraft | undefined;
   for (const entry of entries) {
     if (entry.field.kind !== "address") {
-      fields.push(single(entry));
+      fields.push(...single(entry));
       continue;
     }
     if (draft !== undefined && startsNew(draft, entry)) {
