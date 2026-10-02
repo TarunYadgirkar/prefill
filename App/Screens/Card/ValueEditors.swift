@@ -1,45 +1,42 @@
 import PrefillKit
 import SwiftUI
 
+// A label of the person's own, from the label menu's "Custom label…". Contacts' labels are in
+// the menu itself.
 struct RelabelSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     let value: ContactValue
     @State private var custom = ""
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         NavigationStack {
-            List {
-                Section {
-                    ForEach(LabelChoices.system(for: value.kind), id: \.self) { label in
-                        choice(LabelChoices.caption(label, kind: value.kind), label: label)
-                    }
-                    choice(String(localized: "No label"), label: nil)
-                } header: {
-                    Text(value.display.breakableAtPunctuation)
-                        .textRole(.value)
-                        .textCase(nil)
-                }
-                Section("Your own label") {
-                    TextField("For example, Side project", text: $custom)
-                        .submitLabel(.done)
-                        .onSubmit(applyCustom)
-                    Button("Use this label", action: applyCustom)
-                        .disabled(trimmedCustom.isEmpty)
-                }
+            Form {
+                TextField("For example, Side project", text: $custom)
+                    .submitLabel(.done)
+                    .onSubmit(applyCustom)
+                    .focused($isFocused)
+                    .accessibilityLabel("Label")
             }
-            .navigationTitle("Change label")
+            .navigationTitle("Custom label")
+            .navigationSubtitle(value.display)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel", role: .cancel) { dismiss() }
                 }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Use label", action: applyCustom)
+                        .disabled(trimmedCustom.isEmpty)
+                }
             }
             .onAppear {
                 if !LabelChoices.isSystem(value.label, kind: value.kind) { custom = value.label ?? "" }
+                isFocused = true
             }
         }
-        .presentationDetents([.large])
+        .presentationDetents([.medium, .large])
         .presentationBackground(Palette.canvas)
     }
 
@@ -47,33 +44,10 @@ struct RelabelSheet: View {
         custom.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private func choice(_ title: String, label: String?) -> some View {
-        Button {
-            apply(label)
-        } label: {
-            HStack {
-                Text(title).textRole(.body)
-                Spacer()
-                if value.label == label {
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(Palette.accent)
-                        .accessibilityHidden(true)
-                }
-            }
-            .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(value.label == label ? .isSelected : [])
-    }
-
     private func applyCustom() {
         guard !trimmedCustom.isEmpty else { return }
-        apply(trimmedCustom)
-    }
-
-    private func apply(_ label: String?) {
         dismiss()
-        Task { await model.relabel(value, to: label) }
+        Task { await model.relabel(value, to: trimmedCustom) }
     }
 }
 
@@ -131,12 +105,15 @@ struct AddValueSheet: View {
                 .autocorrectionDisabled()
                 .focused($isFocused)
                 .accessibilityLabel("Email")
+                .spokenProblem(error, typed: draft.email)
         case .phone:
             TextField("Phone number", text: $draft.phone)
                 .keyboardType(.phonePad)
                 .focused($isFocused)
+                .spokenProblem(error, typed: draft.phone)
         case .address:
-            AddressField(title: "Street", prompt: "Required", text: $draft.street).focused($isFocused)
+            AddressField(title: "Street", prompt: "Required", text: $draft.street, problem: error)
+                .focused($isFocused)
             AddressField(title: "City", text: $draft.city)
             AddressField(title: "State", text: $draft.state)
             AddressField(title: "Postal code", text: $draft.postalCode)
@@ -147,14 +124,22 @@ struct AddValueSheet: View {
     private func submit() async {
         switch draft.payload(kind) {
         case .failure(let problem):
-            error = problem.message
+            report(problem.message)
         case .success(let payload):
             if await model.add(payload, label: label) {
                 dismiss()
             } else {
-                error = String(localized: "That’s already on your card.")
+                report(String(localized: "That’s already on your card."))
             }
         }
+    }
+
+    // The footer shows the problem; VoiceOver hears it now and again on the field, which
+    // takes focus back.
+    private func report(_ message: String) {
+        error = message
+        AccessibilityNotification.Announcement(message).post()
+        isFocused = true
     }
 }
 
@@ -165,6 +150,7 @@ private struct AddressField: View {
     let title: LocalizedStringKey
     var prompt: LocalizedStringKey = "Optional"
     @Binding var text: String
+    var problem: String?
     @Environment(\.dynamicTypeSize) private var typeSize
     @ScaledMetric(relativeTo: .body) private var labelWidth = Size.fieldLabel
 
@@ -182,7 +168,16 @@ private struct AddressField: View {
                 .accessibilityHidden(true)
             TextField(title, text: $text, prompt: Text(prompt))
                 .textInputAutocapitalization(.words)
+                .spokenProblem(problem, typed: text)
         }
+    }
+}
+
+private extension View {
+    // Adds a validation problem to what VoiceOver reads as the field's value, after the text.
+    func spokenProblem(_ problem: String?, typed: String) -> some View {
+        let spoken = [typed, problem ?? ""].filter { !$0.isEmpty }.joined(separator: ", ")
+        return accessibilityValue(Text(verbatim: spoken))
     }
 }
 

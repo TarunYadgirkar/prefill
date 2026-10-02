@@ -25,13 +25,13 @@ extension EmptyStateView where Actions == EmptyView {
 }
 
 // A setup step that is either confirmed or still waiting on the person. The symbol changes
-// shape and color, so the state never rests on color alone.
+// shape and color, so the state never rests on color alone. It takes the size of the text
+// around it; onboarding sets a larger one.
 struct StatusMark: View {
     let isDone: Bool
 
     var body: some View {
         Image(systemName: isDone ? "checkmark.circle.fill" : "circle.dashed")
-            .font(TextRole.statusIcon.font)
             .foregroundStyle(isDone ? Palette.positive : Palette.pending)
             .contentTransition(.symbolEffect(.replace))
             .accessibilityHidden(true)

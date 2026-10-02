@@ -43,6 +43,13 @@ extension AppModel {
         commit(state.rejecting(item.value.id))
     }
 
+    // Puts a value that was taken off or dismissed back on the card, and lets later forms
+    // save it again.
+    func putBack(_ item: RecentItem) async {
+        commit(state.unrejecting(item.value.id))
+        _ = await add(item.value.payload, label: item.value.label, source: .captured)
+    }
+
     // Takes a saved value off the card and remembers not to save it again.
     func undo(_ item: RecentItem) async {
         guard await edit(.remove(item.value)) else { return }

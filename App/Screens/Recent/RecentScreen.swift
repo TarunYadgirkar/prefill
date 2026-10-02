@@ -2,7 +2,8 @@ import PrefillKit
 import SwiftUI
 
 // Values the extension caught in Safari forms. Ones Prefill was sure about are already on
-// the card and can come off again; the rest wait for Save or Dismiss.
+// the card and can come off again; the rest wait for Save or Don't save. Nothing leaves the
+// list: a value taken off or not saved can still go on the card.
 struct RecentScreen: View {
     @Environment(AppModel.self) private var model
 
@@ -44,7 +45,7 @@ private struct RecentList: View {
                         RecentRow(item: item)
                     }
                 } header: {
-                    Text("Waiting for you")
+                    Text("Waiting for you").textRole(.groupHeader)
                 } footer: {
                     Text(model.state.settings.saveNewInfo
                         ? "Prefill wasn’t sure these are yours, so they aren’t on your card yet."
@@ -53,17 +54,21 @@ private struct RecentList: View {
                 }
             }
             if !saved.isEmpty {
-                Section("Saved to your card") {
+                Section {
                     ForEach(saved) { item in
                         RecentRow(item: item)
                     }
+                } header: {
+                    Text("Saved to your card").textRole(.groupHeader)
                 }
             }
             if !removed.isEmpty {
-                Section("Taken off your card") {
+                Section {
                     ForEach(removed) { item in
                         RecentRow(item: item)
                     }
+                } header: {
+                    Text("Not on your card").textRole(.groupHeader)
                 }
             }
         }
@@ -82,15 +87,26 @@ private struct RecentRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            ValueRow(value: item.value)
-            Text("Typed on \(item.host.breakableAtPunctuation) \(item.date.formatted(.relative(presentation: .named)))")
-                .textRole(.footnote)
+            VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                ValueRow(value: item.value, showsKindCaption: false)
+                Text("Typed on \(item.host.breakableAtPunctuation) \(typedWhen)")
+                    .textRole(.footnote)
+            }
             actions
+                .controlSize(.small)
+                // A list row would set the icon in its own column, apart from the title and in the accent.
+                .labelStyle(.titleAndIcon)
         }
         .padding(.vertical, Spacing.xxSmall)
+        // Without this the separator lines up with the action's title, past its icon.
+        .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
         .sensoryFeedback(.success, trigger: item.state) { _, new in new == .saved }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("recent-\(item.value.display)")
+    }
+
+    private var typedWhen: String {
+        item.date.formatted(.relative(presentation: .named))
     }
 
     @ViewBuilder private var actions: some View {
@@ -102,18 +118,22 @@ private struct RecentRow: View {
             }
             .disabled(isWorking)
         case .saved:
-            Button("Remove from card", systemImage: "minus.circle") { run { await model.undo(item) } }
-                .prefillButtonStyle(.rowSecondary)
-                .disabled(isWorking)
+            Button("Remove from card", systemImage: "minus.circle", role: .destructive) {
+                run { await model.undo(item) }
+            }
+            .prefillButtonStyle(.rowDestructive)
+            .disabled(isWorking)
         case .removed:
-            EmptyView()
+            Button("Save to card", systemImage: "arrow.uturn.backward") { run { await model.putBack(item) } }
+                .prefillButtonStyle(.rowPrimary)
+                .disabled(isWorking)
         }
     }
 
     @ViewBuilder private var reviewButtons: some View {
         Button("Save to card") { run { await model.save(item) } }
             .prefillButtonStyle(.rowPrimary)
-        Button("Dismiss") { model.dismiss(item) }
+        Button("Don’t save") { model.dismiss(item) }
             .prefillButtonStyle(.rowSecondary)
     }
 

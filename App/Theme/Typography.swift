@@ -12,7 +12,8 @@ struct TextRole {
     static let bodyEmphasis = TextRole(font: .body.weight(.semibold), color: Palette.textPrimary)
     static let secondary = TextRole(font: .subheadline, color: Palette.textSecondary)
     static let footnote = TextRole(font: .footnote, color: Palette.textSecondary)
-    static let groupHeader = TextRole(font: .subheadline.weight(.semibold), color: Palette.textPrimary)
+    // Matches the headers iOS draws over grouped list sections.
+    static let groupHeader = TextRole(font: .headline, color: Palette.textSecondary)
 
     static let value = TextRole(font: .body, color: Palette.textPrimary)
     static let valueCaption = TextRole(font: .footnote, color: Palette.textSecondary)
@@ -25,6 +26,7 @@ struct TextRole {
 
     static let statusIcon = TextRole(font: .title2, color: Palette.pending)
     static let action = TextRole(font: .body, color: Palette.accent)
+    static let captionAction = TextRole(font: .footnote, color: Palette.accentText)
     static let rowIcon = TextRole(font: .body, color: Palette.textSecondary)
 }
 

@@ -3,9 +3,10 @@ import SwiftUI
 
 // A replica of the row Safari shows above the keyboard on iOS 27: two slots, each with the
 // card's label over the value, on the keyboard's own surface. The full style adds the first
-// row of keys below, the way it looks in Safari; the compact style keeps a sliver of those
-// keys so it still reads as the top of a keyboard. Safari's bar doesn't grow with the text
-// size, so the replica stays at the default size and offers the large content viewer.
+// row of keys below, the way it looks in Safari; the compact style is the row alone, whose
+// rounded top corners and keyboard surface say where it comes from. Safari's bar doesn't
+// grow with the text size, so the replica stays at the default size and offers the large
+// content viewer.
 // When the values change order, each value slides to its new slot.
 struct QuickTypeBar: View {
     enum Style {
@@ -31,7 +32,7 @@ struct QuickTypeBar: View {
         ))
         .mask {
             if style == .full {
-                LinearGradient(stops: [.init(color: .black, location: 0.5), .init(color: .clear, location: 1)],
+                LinearGradient(stops: [.init(color: .black, location: 0.85), .init(color: .clear, location: 1)],
                                startPoint: .top, endPoint: .bottom)
             } else {
                 Color.black
@@ -49,13 +50,8 @@ struct QuickTypeBar: View {
     }
 
     @ViewBuilder private var keys: some View {
-        switch style {
-        case .full:
+        if style == .full {
             KeyRowPeek(kind: kind)
-        case .compact:
-            KeyRowPeek(kind: kind)
-                .frame(height: Size.keySliver, alignment: .top)
-                .clipped()
         }
     }
 
@@ -87,8 +83,8 @@ private struct SuggestionRow: View {
                 ForEach(frames.separators, id: \.self) { position in
                     Rectangle()
                         .fill(Palette.keyboardSeparator)
-                        .frame(width: Size.barSeparator)
-                        .padding(.vertical, Spacing.small)
+                        .frame(width: Size.barSeparator, height: Size.barSeparatorHeight)
+                        .frame(maxHeight: .infinity)
                         .offset(x: position)
                 }
             }

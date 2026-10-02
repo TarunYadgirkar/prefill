@@ -6,7 +6,7 @@ public struct RecentItem: Sendable, Hashable, Identifiable {
         case waiting
         // On the card now, so Undo takes it off again.
         case saved
-        // Saved once, then undone or deleted from the card.
+        // Not on the card: saved once and then taken off, or dismissed while waiting.
         case removed
     }
 
@@ -29,16 +29,15 @@ public enum RecentCaptures {
             .filter { $0.verdict == .saved || $0.verdict == .needsReview }
             .sorted { $0.date > $1.date }
             .filter { seen.insert($0.value.id).inserted }
-            .compactMap { capture in
+            .map { capture in
                 let isRejected = rejected.contains(capture.value.id)
-                return itemState(capture, isOnCard: onCard.contains(capture.value.key), isRejected: isRejected)
-                    .map { RecentItem(value: capture.value, host: capture.host, date: capture.date, state: $0) }
+                let status = itemState(capture, isOnCard: onCard.contains(capture.value.key), isRejected: isRejected)
+                return RecentItem(value: capture.value, host: capture.host, date: capture.date, state: status)
             }
     }
 
-    private static func itemState(_ capture: Capture, isOnCard: Bool, isRejected: Bool) -> RecentItem.State? {
+    private static func itemState(_ capture: Capture, isOnCard: Bool, isRejected: Bool) -> RecentItem.State {
         if isOnCard && !isRejected { return .saved }
-        if capture.verdict == .needsReview { return isRejected ? nil : .waiting }
-        return .removed
+        return capture.verdict == .needsReview && !isRejected ? .waiting : .removed
     }
 }

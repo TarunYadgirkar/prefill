@@ -8,9 +8,21 @@ enum Palette {
     static let canvas = Color(uiColor: .systemGroupedBackground)
     static let surface = Color(uiColor: .secondarySystemGroupedBackground)
     static let textPrimary = Color(uiColor: .label)
-    static let textSecondary = Color(uiColor: .secondaryLabel)
+    // The system's light secondaryLabel is 3.4:1 on white, short of 4.5:1 for the 13pt captions
+    // and footnotes it sets. This gray reaches 5.2:1 on white and 4.7:1 on the grouped canvas;
+    // dark mode keeps the system color, which already passes.
+    static let textSecondary = Color(uiColor: UIColor {
+        $0.userInterfaceStyle == .dark ? .secondaryLabel : UIColor(hex: 0x6C6C70)
+    })
+    static let highlight = Color(uiColor: .tertiarySystemFill)
+    static let fieldBorder = Color(uiColor: .opaqueSeparator)
+    static let focusRing = accent.opacity(0.4)
 
     static let accent = Color(uiColor: .systemBlue)
+    // systemBlue is 4.0:1 on white; small accent text needs 4.5:1, so light mode goes darker.
+    static let accentText = Color(uiColor: UIColor {
+        $0.userInterfaceStyle == .dark ? .systemBlue : UIColor(hex: 0x0068D6)
+    })
     static let positive = Color(uiColor: .systemGreen)
     static let pending = Color(uiColor: .secondaryLabel)
     static let destructive = Color(uiColor: .systemRed)

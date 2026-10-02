@@ -17,15 +17,18 @@ enum Radius {
     static let keyboard: CGFloat = 26
     static let key: CGFloat = 8
     static let listGroup: CGFloat = 26
-    static let diagram: CGFloat = 20
-    static let diagramInner: CGFloat = Radius.diagram - Spacing.small
+    static let diagramInner: CGFloat = Radius.listGroup - Spacing.small
+    static let field: CGFloat = 12
+    static let fieldRing: CGFloat = Radius.field + Size.fieldRing
 }
 
 enum Size {
     static let accessoryHeight: CGFloat = 48
-    static let suggestionHeight: CGFloat = 58
+    // Measured on iOS 27: the suggestion row is 52pt from the keyboard's top edge to the first
+    // key row, and its separator is 23pt tall (assets/generated/ios27-order-casey-email.png).
+    static let suggestionHeight: CGFloat = 52
+    static let barSeparatorHeight: CGFloat = 23
     static let keyRowPeek: CGFloat = 44
-    static let keySliver: CGFloat = 6
     // With one suggestion Safari centers it and pulls the separators out to the edges
     // (assets/generated/ios27-prefix-casey-4th-value.png).
     static let loneSlotGutter: CGFloat = 30
@@ -34,6 +37,9 @@ enum Size {
     static let barSeparator: CGFloat = 1
     static let readableWidth: CGFloat = 560
     static let fieldLabel: CGFloat = 100
+    static let fieldRing: CGFloat = 3
+    static let caret: CGFloat = 2
+    static let caretHeight: CGFloat = 22
 }
 
 enum Motion {

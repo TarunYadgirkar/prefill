@@ -10,13 +10,11 @@ struct SettingsScreen: View {
         NavigationStack {
             Form {
                 Section {
-                    Toggle("Match each site", isOn: matchEachSite)
+                    Toggle("Reorder for each site", isOn: matchEachSite)
                         .accessibilityIdentifier("match-each-site")
                 } footer: {
-                    Text("""
-                        Before you tap a field, Prefill moves the values you use on that site to the front of \
-                        your card. When it’s off, every site gets your own order.
-                        """)
+                    Text("Before you tap a field, Prefill puts the values you use on that site first.")
+                        .textRole(.footnote)
                 }
                 Section {
                     Toggle("Save new info", isOn: saveNewInfo)
@@ -26,8 +24,9 @@ struct SettingsScreen: View {
                         Adds new emails, phone numbers and addresses you type into Safari forms to your card. \
                         When it’s off, they wait in Recently added for you.
                         """)
+                    .textRole(.footnote)
                 }
-                Section("Safari") {
+                Section {
                     ForEach(safariSwitches) { item in
                         LabeledContent {
                             Text(item.setting)
@@ -44,6 +43,8 @@ struct SettingsScreen: View {
                     } label: {
                         Label("Open Safari settings", systemImage: "arrow.up.forward.app")
                     }
+                } header: {
+                    Text("Safari").textRole(.groupHeader)
                 }
                 cardSection
             }
@@ -79,9 +80,10 @@ struct SettingsScreen: View {
                     Text(restoreMessage)
                 }
         } header: {
-            Text("Contact card")
+            Text("Contact card").textRole(.groupHeader)
         } footer: {
             Text("Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill.")
+                .textRole(.footnote)
         }
     }
 
@@ -91,10 +93,7 @@ struct SettingsScreen: View {
 
     private var restoreMessage: String {
         let date = model.state.cardLink?.snapshotAt.formatted(date: .long, time: .omitted) ?? ""
-        return String(localized: """
-            Your card goes back to the emails, phone numbers and addresses it had on \(date). Anything added \
-            since then comes off.
-            """)
+        return String(localized: "Anything added to your card since \(date) comes off it.")
     }
 
     private var matchEachSite: Binding<Bool> {

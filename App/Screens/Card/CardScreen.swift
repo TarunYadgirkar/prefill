@@ -1,7 +1,7 @@
 import PrefillKit
 import SwiftUI
 
-// The card as Safari sees it: the bar at the top shows the two values Safari offers first,
+// The card as Safari sees it: the bar at the top shows the two values Safari suggests first,
 // and the list below is the person's order, with those two values grouped under their own
 // header. Edit shows the drag handles; a long press on a row drags it too.
 struct CardScreen: View {

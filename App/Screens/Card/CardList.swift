@@ -1,14 +1,13 @@
 import PrefillKit
 import SwiftUI
 
-// One reorderable list, drawn as two groups: the two values Safari offers first, then the
-// rest, each under a header row. The header rows can't be dragged, so dropping a value above
-// the second one puts that value in the bar.
+// One reorderable list, drawn as two groups: the two values Safari suggests first, then the
+// rest, each under a header row. Each value's label is a menu, the way Contacts edits one.
+// The header rows can't be dragged, so dropping a value above the second one puts that value
+// in the bar.
 struct CardList: View {
     @Environment(AppModel.self) private var model
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.editMode) private var editMode
-    @Environment(\.dynamicTypeSize) private var typeSize
     let kind: ContactKind
 
     @State private var relabeling: ContactValue?
@@ -64,18 +63,19 @@ struct CardList: View {
     }
 
     private func valueRow(_ value: ContactValue, placement: CardRow.Placement) -> some View {
-        Button {
-            relabeling = value
-        } label: {
-            ValueRow(value: value) {
-                if editMode?.wrappedValue.isEditing != true && !typeSize.isAccessibilitySize {
-                    Image(systemName: "chevron.forward")
-                        .textRole(.rowIcon)
-                        .accessibilityHidden(true)
+        VStack(alignment: .leading, spacing: Spacing.hairline) {
+            LabelMenu(value: value) { relabeling = value }
+            ValueText(value: value)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .accessibilityValue(placement.isInBar ? Text(BarPlacement.spoken) : Text(""))
+                .accessibilityActions {
+                    Button("Move up") { step(value, by: -1) }
+                    Button("Move down") { step(value, by: 1) }
+                    Button("Remove from card") { removing = value }
                 }
-            }
+                .accessibilityIdentifier("value-\(value.display)")
         }
-        .buttonStyle(.plain)
+        .padding(.vertical, Spacing.xxSmall)
         .listRowBackground(GroupedRowBackground(placement: placement))
         .listRowSeparator(placement.isGroupEnd ? .hidden : .automatic, edges: .bottom)
         .swipeActions(edge: .trailing) {
@@ -85,14 +85,6 @@ struct CardList: View {
                 Label("Remove", systemImage: "trash")
             }
         }
-        .accessibilityValue(placement.isInBar ? Text("Offered first in Safari") : Text(""))
-        .accessibilityHint("Changes its label")
-        .accessibilityActions {
-            Button("Move up") { step(value, by: -1) }
-            Button("Move down") { step(value, by: 1) }
-            Button("Remove from card") { removing = value }
-        }
-        .accessibilityIdentifier("value-\(value.display)")
     }
 
     private var addRow: some View {
@@ -218,8 +210,61 @@ struct BarGroupHeader: View {
 
     private var title: LocalizedStringKey {
         switch group {
-        case .bar: "Safari offers these first"
-        case .rest: "Safari offers these after you type the first letters of one"
+        case .bar: "Suggested first"
+        case .rest: "Suggested as you type"
+        }
+    }
+}
+
+// The value's label, as a menu of Contacts' labels. "Custom label…" opens a sheet for a label
+// of the person's own.
+private struct LabelMenu: View {
+    @Environment(AppModel.self) private var model
+    let value: ContactValue
+    let editCustom: () -> Void
+
+    private var caption: String { LabelChoices.caption(value.label, kind: value.kind) }
+    private var customLabel: String? {
+        LabelChoices.isSystem(value.label, kind: value.kind) ? nil : value.label
+    }
+
+    var body: some View {
+        Menu {
+            Picker("Label", selection: selection) {
+                ForEach(LabelChoices.system(for: value.kind), id: \.self) { label in
+                    Text(LabelChoices.caption(label, kind: value.kind)).tag(Optional(label))
+                }
+                if let customLabel {
+                    Text(customLabel).tag(Optional(customLabel))
+                }
+                Text("No label").tag(String?.none)
+            }
+            .pickerStyle(.inline)
+            Button("Custom label…", systemImage: "pencil", action: editCustom)
+        } label: {
+            HStack(spacing: Spacing.xxSmall) {
+                Text(caption)
+                Image(systemName: "chevron.up.chevron.down")
+                    .imageScale(.small)
+            }
+            .textRole(.captionAction)
+            .padding(.vertical, Spacing.small)
+            .padding(.trailing, Spacing.medium)
+            .contentShape(.rect)
+        }
+        .menuStyle(.button)
+        .buttonStyle(.borderless)
+        // The padding above widens the hit area; this keeps it out of the layout.
+        .padding(.vertical, -Spacing.small)
+        .padding(.trailing, -Spacing.medium)
+        .accessibilityLabel(Text("Change label for \(value.display)"))
+        .accessibilityValue(Text(caption))
+        .accessibilityIdentifier("label-\(value.display)")
+    }
+
+    private var selection: Binding<String?> {
+        Binding { value.label } set: { label in
+            Task { await model.relabel(value, to: label) }
         }
     }
 }

@@ -65,6 +65,14 @@ public extension AppState {
         )
     }
 
+    // Forgets that the person turned this value down, so it can be saved again.
+    func unrejecting(_ id: UUID) -> AppState {
+        AppState(
+            values: values, pins: pins, settings: settings, cardLink: cardLink,
+            rejectedValueIDs: rejectedValueIDs.filter { $0 != id }
+        )
+    }
+
     func with(values: [ContactValue]) -> AppState {
         AppState(values: values, pins: pins, settings: settings, cardLink: cardLink, rejectedValueIDs: rejectedValueIDs)
     }

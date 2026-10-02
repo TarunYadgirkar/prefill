@@ -2,7 +2,9 @@ import SwiftUI
 
 // One onboarding page: a title, an optional sentence under it, the page's own content, and
 // its actions pinned above the home indicator so they never scroll away. At accessibility
-// text sizes the actions are too tall to pin, so they follow the content instead.
+// text sizes the actions are too tall to pin, so they follow the content instead. A page that
+// fits on screen fills it, so its content can center itself in what's left with spacers; a
+// page that doesn't fit scrolls.
 struct OnboardingStepLayout<Content: View, Actions: View>: View {
     let title: LocalizedStringKey
     var message: LocalizedStringKey?
@@ -12,31 +14,14 @@ struct OnboardingStepLayout<Content: View, Actions: View>: View {
     @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Spacing.large) {
-                VStack(alignment: .leading, spacing: Spacing.small) {
-                    Text(title)
-                        .textRole(.stepTitle)
-                        .accessibilityAddTraits(.isHeader)
-                    if let message {
-                        Text(message)
-                            .textRole(.body)
-                    }
-                }
-                .fixedSize(horizontal: false, vertical: true)
-                content()
-                if typeSize.isAccessibilitySize {
-                    actionStack
-                        .padding(.top, Spacing.small)
-                }
+        ViewThatFits(in: .vertical) {
+            page
+                .frame(maxHeight: .infinity, alignment: .top)
+            ScrollView {
+                page
             }
-            .frame(maxWidth: Size.readableWidth, alignment: .leading)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, Spacing.page)
-            .padding(.top, Spacing.xLarge)
-            .padding(.bottom, Spacing.large)
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .scrollBounceBehavior(.basedOnSize)
         .safeAreaBar(edge: .bottom) {
             if !typeSize.isAccessibilitySize {
                 actionStack
@@ -46,6 +31,31 @@ struct OnboardingStepLayout<Content: View, Actions: View>: View {
             }
         }
         .background(Palette.canvas)
+    }
+
+    private var page: some View {
+        VStack(alignment: .leading, spacing: Spacing.large) {
+            VStack(alignment: .leading, spacing: Spacing.small) {
+                Text(title)
+                    .textRole(.stepTitle)
+                    .accessibilityAddTraits(.isHeader)
+                if let message {
+                    Text(message)
+                        .textRole(.body)
+                }
+            }
+            .fixedSize(horizontal: false, vertical: true)
+            content()
+            if typeSize.isAccessibilitySize {
+                actionStack
+                    .padding(.top, Spacing.small)
+            }
+        }
+        .frame(maxWidth: Size.readableWidth, alignment: .leading)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, Spacing.page)
+        .padding(.top, Spacing.xLarge)
+        .padding(.bottom, Spacing.large)
     }
 
     private var actionStack: some View {

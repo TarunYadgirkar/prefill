@@ -28,7 +28,7 @@ struct MyInfoPath: View {
         }
         .padding(Spacing.small)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Palette.surface, in: .rect(cornerRadius: Radius.diagram))
+        .background(Palette.surface, in: .rect(cornerRadius: Radius.listGroup))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("""
             In Settings, open Apps, then Safari, then AutoFill, and check that My Info is \(cardName).
@@ -57,7 +57,7 @@ struct MyInfoPath: View {
             }
         }
         .padding(Spacing.xSmall)
-        .background(Palette.canvas, in: .rect(cornerRadius: Radius.diagramInner))
+        .background(Palette.highlight, in: .rect(cornerRadius: Radius.diagramInner))
     }
 
     @ViewBuilder private var destinationParts: some View {

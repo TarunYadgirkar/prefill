@@ -8,6 +8,7 @@ final class AppTourTests: XCTestCase {
     private let env = ProcessInfo.processInfo.environment
     private let app = XCUIApplication()
     private let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+    private let tabBarTop: CGFloat = 0.88
 
     private var variant: String { env["PREFILL_VARIANT"] ?? "light" }
 
@@ -30,8 +31,8 @@ final class AppTourTests: XCTestCase {
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")
         app.launch()
-        let news = app.buttons["value-alex.news@example.com"]
-        let first = app.buttons["value-alex.rivera@example.com"]
+        let news = element("value-alex.news@example.com")
+        let first = element("value-alex.rivera@example.com")
         XCTAssertTrue(news.waitForExistence(timeout: 10))
         call("/record/start?name=motion-reorder-\(variant)")
         pause(2)
@@ -92,8 +93,8 @@ final class AppTourTests: XCTestCase {
     private func walkCard() {
         XCTAssertTrue(app.descendants(matching: .any)["quicktype-bar"].firstMatch.waitForExistence(timeout: 10))
         snap("card")
-        let school = app.buttons["value-alex.school@example.edu"]
-        let home = app.buttons["value-alex.rivera@example.com"]
+        let school = element("value-alex.school@example.edu")
+        let home = element("value-alex.rivera@example.com")
         swipeUp(until: school)
         XCTAssertTrue(school.waitForExistence(timeout: 5))
         if school.isHittable && home.isHittable {
@@ -101,10 +102,15 @@ final class AppTourTests: XCTestCase {
             pause(2)
             snap("card-reordered")
         }
-        swipeUp(until: school)
-        // At large text sizes the row's middle can sit under the pinned bar, so tap low.
-        school.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
-        XCTAssertTrue(app.navigationBars["Change label"].waitForExistence(timeout: 5))
+        let label = app.buttons["label-alex.school@example.edu"]
+        swipeUp(until: label)
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        label.tap()
+        let custom = app.buttons["Custom label…"]
+        XCTAssertTrue(custom.waitForExistence(timeout: 5))
+        snap("card-label-menu")
+        custom.tap()
+        XCTAssertTrue(app.navigationBars["Custom label"].waitForExistence(timeout: 5))
         snap("card-relabel")
         app.buttons["Cancel"].tap()
         pickKind("Address")
@@ -140,19 +146,30 @@ final class AppTourTests: XCTestCase {
         let waiting = app.buttons["Save to card"].firstMatch
         XCTAssertTrue(waiting.waitForExistence(timeout: 10))
         snap("recent")
-        swipeUp(until: waiting)
+        swipeUp(until: waiting, above: tabBarTop)
         waiting.tap()
         pause(2)
-        let dismiss = app.buttons["Dismiss"].firstMatch
-        swipeUp(until: dismiss)
-        dismiss.tap()
+        let skip = app.buttons["Don’t save"].firstMatch
+        swipeUp(until: skip, above: tabBarTop)
+        skip.tap()
         pause(1)
         let remove = app.buttons["Remove from card"].firstMatch
-        swipeUp(until: remove)
+        swipeUp(until: remove, above: tabBarTop)
         XCTAssertTrue(remove.waitForExistence(timeout: 5))
         remove.tap()
         pause(2)
         snap("recent-after")
+        // Everything not on the card can go back on it. Counting buttons needs every row on
+        // screen, which only the default text size gives.
+        guard variant != "large" else { return }
+        let saveAgain = app.buttons.matching(identifier: "Save to card")
+        let removeButtons = app.buttons.matching(identifier: "Remove from card")
+        XCTAssertEqual(saveAgain.count, 2)
+        let removable = removeButtons.count
+        swipeUp(until: saveAgain.firstMatch, above: tabBarTop)
+        saveAgain.firstMatch.tap()
+        pause(2)
+        XCTAssertEqual(removeButtons.count, removable + 1)
     }
 
     private func walkSettings() {
@@ -177,13 +194,19 @@ final class AppTourTests: XCTestCase {
         pause(1)
     }
 
+    private func element(_ identifier: String) -> XCUIElement {
+        app.descendants(matching: .any)[identifier].firstMatch
+    }
+
     private func pickKind(_ title: String) {
         app.segmentedControls["kind-picker"].buttons[title].tap()
         pause(1)
     }
 
-    private func swipeUp(until element: XCUIElement) {
-        for _ in 0..<8 where !(element.exists && element.isHittable && element.frame.maxY < app.frame.height * 0.8) {
+    // Recent's rows are taller than a swipe at accessibility sizes, so it stops at anything
+    // above the tab bar rather than risk scrolling the row out of the list.
+    private func swipeUp(until element: XCUIElement, above limit: CGFloat = 0.8) {
+        for _ in 0..<8 where !(element.exists && element.isHittable && element.frame.maxY < app.frame.height * limit) {
             app.swipeUp()
             pause(0.5)
         }

@@ -82,11 +82,12 @@ struct SafariSwitches: View {
                 if item.id > 0 {
                     Divider()
                         .padding(.leading, Spacing.medium + markWidth + Spacing.small)
+                        .padding(.trailing, Spacing.medium)
                 }
                 SwitchRow(item: item, markWidth: markWidth)
             }
         }
-        .background(Palette.surface, in: .rect(cornerRadius: Radius.diagram))
+        .background(Palette.surface, in: .rect(cornerRadius: Radius.listGroup))
         .animation(Motion.state(reduceMotion: reduceMotion), value: [isEnabled, isAllowedOnWebsites])
         .sensoryFeedback(.success, trigger: isEnabled) { _, new in new }
     }
@@ -99,6 +100,7 @@ private struct SwitchRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
             StatusMark(isDone: item.isDone)
+                .font(TextRole.statusIcon.font)
                 .frame(width: markWidth)
             VStack(alignment: .leading, spacing: Spacing.xxSmall) {
                 ViewThatFits(in: .horizontal) {

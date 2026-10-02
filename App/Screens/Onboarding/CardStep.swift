@@ -28,7 +28,9 @@ struct CardStep: View {
                 email, phone number and address that fit each site first.
                 """
         ) {
+            Spacer(minLength: 0)
             SiteDemo()
+            Spacer(minLength: 0)
             if model.access == .denied {
                 DeniedNote()
             }
@@ -55,7 +57,7 @@ struct CardStep: View {
         OnboardingStepLayout(
             title: "\(model.cardName)’s card",
             message: """
-                These are the two emails Safari suggests first today. Prefill reorders them on each site you \
+                Safari suggests these two emails first right now. Prefill reorders them on each site you \
                 visit.
                 """
         ) {
@@ -104,12 +106,13 @@ private struct DeniedNote: View {
                 .foregroundStyle(Palette.textSecondary)
         }
         .padding(Spacing.medium)
-        .background(Palette.surface, in: .rect(cornerRadius: Radius.diagram))
+        .background(Palette.surface, in: .rect(cornerRadius: Radius.listGroup))
     }
 }
 
-// Shows what Prefill does before it has any of the person's values: the same two emails
-// trade places when the site changes.
+// Shows what Prefill does before it has any of the person's values, as a scene from Safari:
+// a form's email field in focus, the site's address pill, and the bar over the keyboard. The
+// same two emails trade places when the site changes.
 private struct SiteDemo: View {
     private enum Site: Hashable, CaseIterable {
         case store, work
@@ -118,6 +121,13 @@ private struct SiteDemo: View {
             switch self {
             case .store: "Store checkout"
             case .work: "Work sign-in"
+            }
+        }
+
+        var host: String {
+            switch self {
+            case .store: "store.example"
+            case .work: "work.example"
             }
         }
     }
@@ -133,21 +143,59 @@ private struct SiteDemo: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.medium) {
-            QuickTypeBar(
-                kind: .email, values: site == .store ? [Self.personal, Self.work] : [Self.work, Self.personal],
-                isFullBleed: true
-            )
-            Picker("Example site", selection: $site.animation(Motion.reorder(reduceMotion: reduceMotion))) {
-                ForEach(Site.allCases, id: \.self) { site in
-                    Text(site.title).tag(site)
+        VStack(alignment: .leading, spacing: Spacing.large) {
+            VStack(alignment: .leading, spacing: Spacing.xSmall) {
+                Picker("Example site", selection: $site.animation(Motion.reorder(reduceMotion: reduceMotion))) {
+                    ForEach(Site.allCases, id: \.self) { site in
+                        Text(site.title).tag(site)
+                    }
                 }
+                .pickerStyle(.segmented)
+                Text("Switch sites to see which email Safari suggests first.")
+                    .textRole(.footnote)
             }
-            .pickerStyle(.segmented)
-            Text("Switch sites to see which email Safari offers first.")
-                .textRole(.footnote)
+            VStack(spacing: Spacing.medium) {
+                DemoField()
+                Text(site.host)
+                    .textRole(.footnote)
+                    .contentTransition(.opacity)
+                    .padding(.horizontal, Spacing.small)
+                    .padding(.vertical, Spacing.xxSmall)
+                    .background(Palette.surface, in: .capsule)
+                    .accessibilityLabel(Text("On \(site.host)"))
+                QuickTypeBar(
+                    kind: .email, values: site == .store ? [Self.personal, Self.work] : [Self.work, Self.personal],
+                    isFullBleed: true
+                )
+            }
         }
         .sensoryFeedback(.selection, trigger: site)
+    }
+}
+
+// A web form's email field with the cursor in it, ringed the way Safari shows focus.
+private struct DemoField: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
+            Text("Email")
+                .textRole(.body)
+            RoundedRectangle(cornerRadius: Radius.field, style: .continuous)
+                .fill(Palette.surface)
+                .strokeBorder(Palette.fieldBorder, lineWidth: Size.barSeparator)
+                .overlay(alignment: .leading) {
+                    Capsule()
+                        .fill(Palette.accent)
+                        .frame(width: Size.caret, height: Size.caretHeight)
+                        .padding(.leading, Spacing.small)
+                }
+                .frame(height: Size.hitTarget)
+                .background {
+                    RoundedRectangle(cornerRadius: Radius.fieldRing, style: .continuous)
+                        .fill(Palette.focusRing)
+                        .padding(-Size.fieldRing)
+                }
+        }
+        .accessibilityHidden(true)
     }
 }
 

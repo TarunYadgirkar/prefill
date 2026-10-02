@@ -12,7 +12,7 @@ struct KindHeader: View {
     var body: some View {
         VStack(spacing: Spacing.small) {
             QuickTypeBar(kind: kind, values: values, style: .compact)
-            Picker("Show", selection: $kind) {
+            Picker("Value type", selection: $kind) {
                 ForEach(ContactKind.allCases) { kind in
                     Text(kind.title).tag(kind)
                 }

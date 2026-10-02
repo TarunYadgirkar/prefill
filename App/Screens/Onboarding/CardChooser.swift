@@ -57,7 +57,7 @@ struct CardChooser: View {
                 } else if card.id == model.state.cardLink?.contactIdentifier {
                     Image(systemName: "checkmark")
                         .foregroundStyle(Palette.accent)
-                        .accessibilityLabel("Your card now")
+                        .accessibilityLabel("Current card")
                 }
             }
             .contentShape(.rect)

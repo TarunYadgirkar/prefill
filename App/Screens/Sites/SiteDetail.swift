@@ -1,7 +1,7 @@
 import PrefillKit
 import SwiftUI
 
-// One site: what Safari offers there for each kind, and the person's way to say "always
+// One site: what Safari suggests there for each kind, and the person's way to say "always
 // use this one here". A pin takes effect the next time the site's form loads.
 struct SiteDetail: View {
     @Environment(AppModel.self) private var model
@@ -22,12 +22,14 @@ struct SiteDetail: View {
                     case .header(let group): BarGroupHeader(group: group)
                     }
                 }
-            } header: {
-                Text(header)
+            } footer: {
+                Text(footer)
                     .textRole(.footnote)
-                    .textCase(nil)
             }
         }
+        .listStyle(.insetGrouped)
+        // Without a section header the list would leave a header's height above the first group.
+        .contentMargins(.top, 0, for: .scrollContent)
         .navigationTitle(host)
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaBar(edge: .top) {
@@ -36,10 +38,10 @@ struct SiteDetail: View {
         .sensoryFeedback(.selection, trigger: pinned)
     }
 
-    private var header: LocalizedStringKey {
+    private var footer: LocalizedStringKey {
         model.state.settings.matchEachSite
-            ? "Pin a value to always offer it first on \(host)."
-            : "Match each site is off, so pins wait until you turn it back on in Settings."
+            ? "Pin a value so Safari always suggests it first on \(host)."
+            : "Reorder for each site is off, so pins wait until you turn it back on in Settings."
     }
 
     private func row(_ value: ContactValue, placement: CardRow.Placement) -> some View {
@@ -71,7 +73,7 @@ private struct PinButton: View {
             Image(systemName: isPinned ? "pin.fill" : "pin")
                 .foregroundStyle(isPinned ? Palette.accent : Palette.textSecondary)
                 .contentTransition(.symbolEffect(.replace))
-                .frame(minWidth: Size.hitTarget, minHeight: Size.hitTarget)
+                .frame(minWidth: Size.hitTarget, minHeight: Size.hitTarget, alignment: .trailing)
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)

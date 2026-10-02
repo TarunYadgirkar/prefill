@@ -2,10 +2,11 @@ import SwiftUI
 
 // Full-width actions in onboarding and empty states. Primary is the one filled action on a
 // screen; secondary sits below it as plain text. The row kinds are for actions inside a list
-// row, where glass would read as floating chrome.
+// row, where glass would read as floating chrome. Row actions stay tinted rather than filled,
+// so a list of them never stacks several filled buttons.
 struct PrefillButton: View {
     enum Kind {
-        case primary, secondary, rowPrimary, rowSecondary
+        case primary, secondary, rowPrimary, rowSecondary, rowDestructive
     }
 
     let title: LocalizedStringKey
@@ -36,8 +37,9 @@ extension View {
         switch kind {
         case .primary: buttonStyle(.glassProminent)
         case .secondary: buttonStyle(.borderless)
-        case .rowPrimary: buttonStyle(.borderedProminent)
+        case .rowPrimary: buttonStyle(.bordered).tint(Palette.accent)
         case .rowSecondary: buttonStyle(.bordered).tint(Palette.textPrimary).foregroundStyle(Palette.textPrimary)
+        case .rowDestructive: buttonStyle(.bordered).tint(Palette.destructive)
         }
     }
 }

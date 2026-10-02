@@ -11,8 +11,8 @@ struct SitesScreen: View {
                     EmptyStateView(
                         title: "No sites yet", systemImage: "globe",
                         message: Text("""
-                            After you fill in a form in Safari, the site shows up here with the values Prefill \
-                            offers there.
+                            After you fill in a form in Safari, the site shows up here with the values Safari \
+                            suggests there.
                             """)
                     )
                 } else {
@@ -44,7 +44,7 @@ private struct SiteList: View {
                     NavigationLink(value: site.host) {
                         SiteRow(site: site)
                     }
-                    .accessibilityHint("Shows what Safari offers on this site")
+                    .accessibilityHint("Shows what Safari suggests on this site")
                     .accessibilityIdentifier("site-\(site.host)")
                 }
             }
@@ -52,7 +52,7 @@ private struct SiteList: View {
     }
 }
 
-// The site and the email Safari offers there first, written out in full so the list scans
+// The site and the email Safari suggests there first, written out in full so the list scans
 // by host and by value. The site screen shows the bar itself.
 private struct SiteRow: View {
     let site: SiteSummary
@@ -69,7 +69,7 @@ private struct SiteRow: View {
                 }
             }
             if let first = site.values(.email).first {
-                Text("Offers \(first.payload.barText.breakableAtPunctuation) first")
+                Text("Suggests \(first.payload.barText.breakableAtPunctuation) first")
                     .textRole(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -83,9 +83,9 @@ struct MatchOffNote: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            Text("Match each site is off, so every site gets your card’s own order.")
+            Text("Reorder for each site is off, so every site gets your card’s own order.")
                 .textRole(.body)
-            Button("Turn on Match each site") {
+            Button("Turn on Reorder for each site") {
                 model.setMatchEachSite(true)
             }
         }

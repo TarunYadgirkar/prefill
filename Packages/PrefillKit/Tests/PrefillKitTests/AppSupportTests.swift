@@ -139,14 +139,22 @@ struct RecentCapturesTests {
         #expect(RecentCaptures.items(events: events, state: AppState(), card: card).map(\.state) == [.saved])
     }
 
-    @Test func undoneShowsAsRemovedAndDismissedDisappears() {
+    @Test func undoneAndDismissedBothShowAsRemoved() {
         let events = ExtensionEvents(captures: [
             capture(added, .saved, daysAgo: 2), capture(review, .needsReview, daysAgo: 1)
         ])
         let state = AppState().rejecting(added.id).rejecting(review.id)
         let items = RecentCaptures.items(events: events, state: state, card: Alex.card)
-        #expect(items.map(\.value) == [added])
-        #expect(items.map(\.state) == [.removed])
+        #expect(items.map(\.value) == [review, added])
+        #expect(items.map(\.state) == [.removed, .removed])
+    }
+
+    @Test func aValuePutBackOnTheCardCountsAsSavedAgain() {
+        let card = Alex.card.replacing(.email, with: Alex.card.emails + [added.entry])
+        let events = ExtensionEvents(captures: [capture(added, .saved, daysAgo: 2)])
+        let state = AppState().rejecting(added.id).rejecting(review.id).unrejecting(added.id)
+        #expect(state.rejectedValueIDs == [review.id])
+        #expect(RecentCaptures.items(events: events, state: state, card: card).map(\.state) == [.saved])
     }
 
     @Test func aValueCapturedTwiceAppearsOnce() {
