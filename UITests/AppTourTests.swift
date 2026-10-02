@@ -27,6 +27,17 @@ final class AppTourTests: XCTestCase {
         walkSettings()
     }
 
+    // A school email caught on a form waits in Recently added with School already picked.
+    func testSchoolLabel() throws {
+        try XCTSkipUnless(env["PREFILL_TOUR"] == "school")
+        app.launch()
+        tab("Recently added")
+        let chip = element("suggested-label-alex.rivera@learn.example.edu")
+        XCTAssertTrue(chip.waitForExistence(timeout: 10))
+        XCTAssertTrue((chip.value as? String ?? "").hasPrefix("school"), "label is \(chip.value ?? "none")")
+        snap("recent-school-label")
+    }
+
     // Records the bar while its values trade places, for frame-by-frame checking.
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")

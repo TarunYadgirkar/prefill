@@ -35,7 +35,10 @@ struct SeedHostTests {
         )))
     ]
 
-    @Test func seedTheTour() async throws {
+    private static let mode = ProcessInfo.processInfo.environment["PREFILL_SEED"]
+
+    @Test(.enabled(if: mode != "school"))
+    func seedTheTour() async throws {
         let identifier = try alexIdentifier()
         try resetCard(identifier)
         // The host app reacts to the card change by storing its state; let that land first.
@@ -47,6 +50,33 @@ struct SeedHostTests {
         UserDefaults.standard.removeObject(forKey: "finishedOnboarding")
         #expect(try store.readAppState() == AppState())
         #expect(try store.readEvents().captures.count == events.captures.count)
+    }
+
+    // The tour's history plus a school email waiting for review, on a linked card past
+    // onboarding, so Recently added opens straight onto its suggested label.
+    @Test(.enabled(if: mode == "school"))
+    func seedSchoolCapture() async throws {
+        let identifier = try alexIdentifier()
+        try resetCard(identifier)
+        try await Task.sleep(for: .seconds(2))
+        let store = try #require(StoreFactory.make() as? KeychainStore)
+        try store.removeAll()
+        let card = try CNContactStoreGateway().fetchCard(identifier: identifier)
+        let link = CardLink(
+            contactIdentifier: identifier, containerIdentifier: nil, linkedIdentifiers: [],
+            original: card, snapshotAt: .now
+        )
+        try store.writeAppState(AppState(cardLink: link))
+        let school = ContactValue(
+            payload: .email("alex.rivera@learn.example.edu"), label: nil, source: .captured, createdAt: .now
+        )
+        let events = Self.events(now: .now)
+        let capture = Capture(host: "courses.example.edu", value: school, date: .now, verdict: .needsReview)
+        try store.appendEvents(usage: events.usage, captures: events.captures + [capture])
+        UserDefaults.standard.set(true, forKey: "finishedOnboarding")
+        // The test host quits right after, sometimes before the default is written out.
+        UserDefaults.standard.synchronize()
+        #expect(try store.readEvents().captures.last?.value.id == school.id)
     }
 
     private func alexIdentifier() throws -> String {
