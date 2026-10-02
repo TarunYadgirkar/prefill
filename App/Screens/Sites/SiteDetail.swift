@@ -33,7 +33,7 @@ struct SiteDetail: View {
         .navigationTitle(host)
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaBar(edge: .top) {
-            KindHeader(kind: $kind, values: values)
+            KindHeader(kind: $kind, values: values, kinds: ContactKind.siteKinds)
         }
         .sensoryFeedback(.selection, trigger: pinned)
     }

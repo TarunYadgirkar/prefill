@@ -74,7 +74,7 @@ struct AddValueSheet: View {
                 }
                 Section {
                     Picker("Label", selection: $label) {
-                        Text("No label").tag(String?.none)
+                        Text(kind == .link ? "Automatic" : "No label").tag(String?.none)
                         ForEach(LabelChoices.system(for: kind), id: \.self) { choice in
                             Text(LabelChoices.caption(choice, kind: kind)).tag(Optional(choice))
                         }
@@ -118,6 +118,15 @@ struct AddValueSheet: View {
             AddressField(title: "State", text: $draft.state)
             AddressField(title: "Postal code", text: $draft.postalCode)
             AddressField(title: "Country", text: $draft.country)
+        case .link:
+            TextField("github.com/yourname", text: $draft.link)
+                .keyboardType(.URL)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .focused($isFocused)
+                .accessibilityLabel("Link")
+                .accessibilityIdentifier("link-field")
+                .spokenProblem(error, typed: draft.link)
         }
     }
 
@@ -126,7 +135,7 @@ struct AddValueSheet: View {
         case .failure(let problem):
             report(problem.message)
         case .success(let payload):
-            if await model.add(payload, label: label) {
+            if await model.add(payload, label: label ?? payload.automaticLabel) {
                 dismiss()
             } else {
                 report(String(localized: "That’s already on your card."))
@@ -181,6 +190,14 @@ private extension View {
     }
 }
 
+private extension ContactPayload {
+    // A link with no label picked is labeled by its site, the way Prefill saves one from a form.
+    var automaticLabel: String? {
+        guard case .link(let url) = self else { return nil }
+        return LinkType.of(url).label
+    }
+}
+
 struct ValueDraft {
     struct Problem: Error {
         let message: String
@@ -195,13 +212,22 @@ struct ValueDraft {
     var state = ""
     var postalCode = ""
     var country = ""
+    var link = ""
 
     func payload(_ kind: ContactKind) -> Result<ContactPayload, Problem> {
         switch kind {
         case .email: emailPayload()
         case .phone: phonePayload()
         case .address: addressPayload()
+        case .link: linkPayload()
         }
+    }
+
+    private func linkPayload() -> Result<ContactPayload, Problem> {
+        guard let text = LinkType.cardText(link) else {
+            return .failure(Problem(message: String(localized: "Enter a web address like github.com/yourname.")))
+        }
+        return .success(.link(text))
     }
 
     private func emailPayload() -> Result<ContactPayload, Problem> {
@@ -251,6 +277,7 @@ struct EmptyKind: View {
         case .email: "No emails on your card"
         case .phone: "No phone numbers on your card"
         case .address: "No addresses on your card"
+        case .link: "No links on your card"
         }
     }
 }

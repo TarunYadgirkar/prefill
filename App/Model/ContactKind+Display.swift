@@ -9,6 +9,7 @@ extension ContactKind: @retroactive Identifiable {
         case .email: "Email"
         case .phone: "Phone"
         case .address: "Address"
+        case .link: "Links"
         }
     }
 
@@ -17,6 +18,7 @@ extension ContactKind: @retroactive Identifiable {
         case .email: "envelope"
         case .phone: "phone"
         case .address: "house"
+        case .link: "link"
         }
     }
 
@@ -25,6 +27,11 @@ extension ContactKind: @retroactive Identifiable {
         case .email: "Add email"
         case .phone: "Add phone number"
         case .address: "Add address"
+        case .link: "Add link"
         }
     }
+
+    // The kinds Safari's contact bar shows, which each site can order its own way. Links
+    // reach the bar through Prefill's suggestions instead, in the card's order everywhere.
+    static let siteKinds: [ContactKind] = [.email, .phone, .address]
 }
