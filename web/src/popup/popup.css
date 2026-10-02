@@ -128,6 +128,13 @@ h2 {
   box-shadow: inset 1px 0 0 var(--keyboard-separator);
 }
 
+.slot .lines {
+  display: grid;
+  justify-items: center;
+  max-width: 100%;
+  min-width: 0;
+}
+
 .slot .caption {
   font: -apple-system-footnote;
   color: var(--keyboard-caption);
