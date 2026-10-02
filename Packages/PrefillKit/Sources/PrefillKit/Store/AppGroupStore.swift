@@ -22,10 +22,11 @@ public struct AppGroupStore: SharedStore {
         try read(.events) ?? ExtensionEvents()
     }
 
-    public func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
+    public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
         try coordinate(.events, options: .forMerging) { url in
             let current = try Self.load(ExtensionEvents.self, at: url) ?? ExtensionEvents()
-            let data = try DocumentCoder.encode(current.appending(usage: usage, captures: captures))
+            let next = current.appending(usage: usage, captures: captures, cardWrites: cardWrites)
+            let data = try DocumentCoder.encode(next)
             try data.write(to: url, options: .atomic)
         }
     }

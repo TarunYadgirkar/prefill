@@ -32,13 +32,33 @@ public struct MessageRouter: Sendable {
         }
     }
 
+    // Every rewrite syncs the card to all of the person's devices, so pages together get a
+    // few rewrites a minute. Past that the card keeps its order until the next minute.
+    static let maxCardWritesPerWindow = 6
+    static let cardWriteWindow: TimeInterval = 60
+
     func pageContext(_ request: PageContextRequest) -> PageContextResponse {
         guard let state = appState() else { return PageContextResponse(outcome: .failed(.other)) }
         guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
         guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
-        let page = PageSignal(host: request.host, hints: request.hints, now: now(), matchEachSite: true)
+        let date = now()
+        let recent = events().cardWrites.count { date.timeIntervalSince($0) < Self.cardWriteWindow }
+        guard recent < Self.maxCardWritesPerWindow else {
+            Self.log.info("card rewrite skipped, too many this minute")
+            return PageContextResponse(status: .unchanged)
+        }
+        let page = PageSignal(host: request.host, hints: request.hints, now: date, matchEachSite: true)
         let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
+        if result.outcome == .saved { noteCardWrite(at: date) }
         return PageContextResponse(outcome: result.outcome)
+    }
+
+    private func noteCardWrite(at date: Date) {
+        do {
+            try store.appendEvents(usage: [], captures: [], cardWrites: [date])
+        } catch {
+            Self.log.error("card write not noted: \(String(describing: type(of: error)), privacy: .public)")
+        }
     }
 
     func appState() -> AppState? {

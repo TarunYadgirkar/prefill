@@ -23,13 +23,14 @@ afterEach(() => {
 
 type Send = (request: PageContextRequest) => Promise<unknown>;
 
-function start(reply: () => Promise<unknown> = () => new Promise(() => undefined)) {
+function start(reply: () => Promise<unknown> = () => new Promise(() => undefined), minIntervalMs = 0) {
   const send = vi.fn<Send>().mockImplementation(reply);
   uninstall = installContext(document, window, {
     host: () => "shop.example.net",
     send,
     debounceMs: DEBOUNCE,
     maxWaitMs: MAX_WAIT,
+    minIntervalMs,
   });
   return send;
 }
@@ -198,6 +199,29 @@ describe("installContext", () => {
     expect(send).toHaveBeenCalledTimes(3);
     focus(document.querySelector("[name=email]"));
     expect(send).toHaveBeenCalledTimes(4);
+  });
+
+  it("spaces reports at least two seconds apart and stops after five", async () => {
+    document.body.innerHTML = formHtml;
+    const send = start(() => Promise.resolve(UNCHANGED), 2_000);
+    await settle();
+    expect(send).toHaveBeenCalledTimes(1);
+    const comeBack = (): void => {
+      Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    };
+    comeBack();
+    expect(send).toHaveBeenCalledTimes(2);
+    comeBack();
+    comeBack();
+    expect(send).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(2_000);
+    expect(send).toHaveBeenCalledTimes(3);
+    for (let round = 0; round < 10; round += 1) {
+      comeBack();
+      await vi.advanceTimersByTimeAsync(2_000);
+    }
+    expect(send).toHaveBeenCalledTimes(5);
   });
 
   it("hears focus on a field inside an open shadow root", () => {

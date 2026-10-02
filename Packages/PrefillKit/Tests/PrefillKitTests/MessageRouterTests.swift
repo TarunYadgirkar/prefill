@@ -16,8 +16,10 @@ final class MemoryStore: SharedStore {
     func writeAppState(_ state: AppState) throws { documents.withLock { $0.state = state } }
     func readEvents() throws -> ExtensionEvents { documents.withLock { $0.events } }
 
-    func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
-        documents.withLock { $0.events = $0.events.appending(usage: usage, captures: captures) }
+    func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
+        documents.withLock {
+            $0.events = $0.events.appending(usage: usage, captures: captures, cardWrites: cardWrites)
+        }
     }
 }
 
@@ -129,6 +131,26 @@ struct MessageRouterTests {
         #expect(firstEmail == "alex.school@example.edu")
         #expect(router.route(Page.context(Page.siteA)) == .pageContext(PageContextResponse(status: .unchanged)))
         #expect(gateway.saves.count == 1)
+    }
+
+    @Test func pagesGetOnlyAFewCardRewritesAMinute() {
+        let busy = Array(repeating: Date.testNow.addingTimeInterval(-30), count: MessageRouter.maxCardWritesPerWindow)
+        let store = MemoryStore(
+            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: busy)
+        )
+        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
+        #expect(reply == .pageContext(PageContextResponse(status: .unchanged)))
+        #expect(gateway.saves.isEmpty)
+    }
+
+    @Test func aCardRewriteIsNotedAndOldOnesExpire() {
+        let old = Array(repeating: Date.testNow.addingTimeInterval(-61), count: MessageRouter.maxCardWritesPerWindow)
+        let store = MemoryStore(
+            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: old)
+        )
+        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
+        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
+        #expect(store.events.cardWrites.last == .testNow)
     }
 
     @Test func aWorkHintPutsTheWorkEmailFirst() {

@@ -7,7 +7,13 @@ public protocol SharedStore: Sendable {
     func readAppState() throws -> AppState
     func writeAppState(_ state: AppState) throws
     func readEvents() throws -> ExtensionEvents
-    func appendEvents(usage: [UsageEvent], captures: [Capture]) throws
+    func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws
+}
+
+extension SharedStore {
+    public func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
+        try appendEvents(usage: usage, captures: captures, cardWrites: [])
+    }
 }
 
 public enum StoreError: Error, Sendable, Hashable {
