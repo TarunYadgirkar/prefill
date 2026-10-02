@@ -44,16 +44,34 @@ public struct PageSignal: Sendable {
     public let hints: [ContactKind: SectionHint]
     public let now: Date
     public let matchEachSite: Bool
+    // AppState.siteKinds and Settings.focusLabel. Without them the host rules still apply.
+    public let siteKinds: [String: SiteKind]
+    public let focusLabel: String?
 
-    public init(host: String?, hints: [ContactKind: SectionHint], now: Date, matchEachSite: Bool) {
+    public init(
+        host: String?, hints: [ContactKind: SectionHint], now: Date, matchEachSite: Bool,
+        siteKinds: [String: SiteKind] = [:], focusLabel: String? = nil
+    ) {
         self.host = host
         self.hints = hints
         self.now = now
         self.matchEachSite = matchEachSite
+        self.siteKinds = siteKinds
+        self.focusLabel = focusLabel
     }
 
-    func context(for kind: ContactKind) -> RankingContext {
-        RankingContext(host: host, hint: hints[kind], now: now, matchEachSite: matchEachSite)
+    // The rules first, then what the app's model batch stored for hosts the rules can't place.
+    func siteKind(emailDomains: Set<String>) -> SiteKind {
+        guard let host else { return .unknown }
+        let rule = SiteSense.rules(host: host, emailDomains: emailDomains)
+        return rule == .unknown ? siteKinds[Normalizer.registrableDomain(host)] ?? .unknown : rule
+    }
+
+    func context(for kind: ContactKind, siteKind: SiteKind) -> RankingContext {
+        RankingContext(
+            host: host, hint: hints[kind], now: now, matchEachSite: matchEachSite,
+            siteKind: siteKind, focusLabel: focusLabel
+        )
     }
 }
 
@@ -141,8 +159,9 @@ struct CardPlan {
         }
         self.card = card
         self.imported = onCard.uniqued().filter { !knownIDs.contains($0.id) }
+        let siteKind = request.page.siteKind(emailDomains: SiteSense.workDomains(onCard))
         self.target = ContactKind.allCases.reduce(card) { partial, kind in
-            partial.replacing(kind, with: Self.targetEntries(kind, card: card, request: request))
+            partial.replacing(kind, with: Self.targetEntries(kind, card: card, request: request, siteKind: siteKind))
         }
     }
 
@@ -154,12 +173,14 @@ struct CardPlan {
         }
     }
 
-    private static func targetEntries(_ kind: ContactKind, card: CardRecord, request: CardSyncRequest) -> [CardEntry] {
+    private static func targetEntries(
+        _ kind: ContactKind, card: CardRecord, request: CardSyncRequest, siteKind: SiteKind
+    ) -> [CardEntry] {
         let entries = card.entries(kind)
         let onCard = Dictionary(entries.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
         let pool = manualOrder(kind, entries: entries, request: request)
             .map { value in onCard[value.key].map(value.with(entry:)) ?? value }
-        let context = request.page.context(for: kind)
+        let context = request.page.context(for: kind, siteKind: siteKind)
         let ranked = Ranker.rank(pool, usage: request.usage, pins: request.pins, context: context)
         return ranked.map { CardEntry(label: $0.label, payload: $0.payload) } + duplicates(in: entries)
     }

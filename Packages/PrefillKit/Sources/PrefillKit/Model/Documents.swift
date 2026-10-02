@@ -3,16 +3,21 @@ import Foundation
 public struct Settings: Codable, Sendable, Hashable {
     public let matchEachSite: Bool
     public let saveNewInfo: Bool
+    // The label a Focus filter asks Prefill to prefer everywhere, folded ("work"). Nil when
+    // no Focus filter is on.
+    public let focusLabel: String?
 
-    public init(matchEachSite: Bool = true, saveNewInfo: Bool = true) {
+    public init(matchEachSite: Bool = true, saveNewInfo: Bool = true, focusLabel: String? = nil) {
         self.matchEachSite = matchEachSite
         self.saveNewInfo = saveNewInfo
+        self.focusLabel = focusLabel
     }
 }
 
 // Written only by the app. `values` is in the person's manual order. `rejectedValueIDs`
 // holds values the person dismissed or undid, oldest first, so a later form that repeats
-// them is not saved again.
+// them is not saved again. `siteKinds` holds what the model made of sites the rules
+// couldn't place, by registrable domain, and `insights` caches model answers.
 public struct AppState: Codable, Sendable, Hashable {
     public static let maxRejected = 500
 
@@ -21,24 +26,53 @@ public struct AppState: Codable, Sendable, Hashable {
     public let settings: Settings
     public let cardLink: CardLink?
     public let rejectedValueIDs: [UUID]
+    public let siteKinds: [String: SiteKind]
+    public let insights: [CachedInsight]
 
     public init(
         values: [ContactValue] = [], pins: [SitePin] = [], settings: Settings = Settings(),
-        cardLink: CardLink? = nil, rejectedValueIDs: [UUID] = []
+        cardLink: CardLink? = nil, rejectedValueIDs: [UUID] = [], siteKinds: [String: SiteKind] = [:],
+        insights: [CachedInsight] = []
     ) {
         self.values = values
         self.pins = pins
         self.settings = settings
         self.cardLink = cardLink
         self.rejectedValueIDs = rejectedValueIDs
+        self.siteKinds = siteKinds
+        self.insights = insights
+    }
+
+    // State stored before site kinds and insights existed still reads.
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            values: try container.decode([ContactValue].self, forKey: .values),
+            pins: try container.decode([SitePin].self, forKey: .pins),
+            settings: try container.decode(Settings.self, forKey: .settings),
+            cardLink: try container.decodeIfPresent(CardLink.self, forKey: .cardLink),
+            rejectedValueIDs: try container.decode([UUID].self, forKey: .rejectedValueIDs),
+            siteKinds: try container.decodeIfPresent([String: SiteKind].self, forKey: .siteKinds) ?? [:],
+            insights: try container.decodeIfPresent([CachedInsight].self, forKey: .insights) ?? []
+        )
+    }
+
+    // A copy with the given fields replaced and everything else kept.
+    func copy(
+        values: [ContactValue]? = nil, pins: [SitePin]? = nil, settings: Settings? = nil,
+        cardLink: CardLink?? = nil, rejectedValueIDs: [UUID]? = nil, siteKinds: [String: SiteKind]? = nil,
+        insights: [CachedInsight]? = nil
+    ) -> AppState {
+        AppState(
+            values: values ?? self.values, pins: pins ?? self.pins, settings: settings ?? self.settings,
+            cardLink: cardLink ?? self.cardLink, rejectedValueIDs: rejectedValueIDs ?? self.rejectedValueIDs,
+            siteKinds: siteKinds ?? self.siteKinds, insights: insights ?? self.insights
+        )
     }
 
     public func rejecting(_ id: UUID) -> AppState {
         let kept = rejectedValueIDs.filter { $0 != id } + [id]
-        return AppState(
-            values: values, pins: pins, settings: settings, cardLink: cardLink,
-            rejectedValueIDs: Array(kept.suffix(Self.maxRejected))
-        )
+        return copy(rejectedValueIDs: Array(kept.suffix(Self.maxRejected)))
     }
 }
 

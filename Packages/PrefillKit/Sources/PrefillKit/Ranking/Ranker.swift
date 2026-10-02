@@ -9,12 +9,20 @@ public struct RankingContext: Sendable {
     public let hint: SectionHint?
     public let now: Date
     public let matchEachSite: Bool
+    public let siteKind: SiteKind
+    // The folded label a Focus filter prefers, on every site and in the global order.
+    public let focusLabel: String?
 
-    public init(host: String?, hint: SectionHint?, now: Date, matchEachSite: Bool) {
+    public init(
+        host: String?, hint: SectionHint?, now: Date, matchEachSite: Bool,
+        siteKind: SiteKind = .unknown, focusLabel: String? = nil
+    ) {
         self.host = host.map(Normalizer.registrableDomain)
         self.hint = hint
         self.now = now
         self.matchEachSite = matchEachSite
+        self.siteKind = siteKind
+        self.focusLabel = focusLabel
     }
 
     var isSiteSpecific: Bool { matchEachSite && host != nil }
@@ -22,10 +30,14 @@ public struct RankingContext: Sendable {
 
 public enum Ranker {
     static let recencyWeight = 0.5
+    // A page can get a captured value used, so its use counts for less until the person
+    // picks it in the app (security review M3).
+    static let capturedRecencyWeight = 0.2
     static let recencyHalfLife: TimeInterval = 14 * 86_400
 
+    // Site tiers (pinned through siteKindLabel) apply only with Match each site on and a host.
     private enum Tier: Int, Comparable {
-        case pinned, usedHere, hintLabel, hintRelated, other
+        case pinned, usedHere, hintLabel, hintRelated, siteKindLabel, focusLabel, other
 
         static func < (lhs: Tier, rhs: Tier) -> Bool { lhs.rawValue < rhs.rawValue }
     }
@@ -80,17 +92,39 @@ public enum Ranker {
         }
 
         func tier(_ value: ContactValue) -> Tier {
-            guard context.isSiteSpecific else { return .other }
-            if value.id == pinned { return .pinned }
-            if lastUseHere[value.id] != nil { return .usedHere }
-            return hintTier(value)
+            let label = LabelName.of(value.label)
+            let site = context.isSiteSpecific ? siteTier(value, label: label) : .other
+            guard site == .other else { return site }
+            return label != nil && label == context.focusLabel ? .focusLabel : .other
         }
 
         func globalScore(_ value: ContactValue, index: Int) -> Double {
             let manual = Double(count - index) / Double(count)
             guard let last = lastUseAnywhere[value.id] else { return manual }
             let age = max(0, context.now.timeIntervalSince(last))
-            return manual + recencyWeight * pow(0.5, age / recencyHalfLife)
+            let weight = value.source == .captured ? capturedRecencyWeight : recencyWeight
+            return manual + weight * pow(0.5, age / recencyHalfLife)
+        }
+
+        private func siteTier(_ value: ContactValue, label: String?) -> Tier {
+            if value.id == pinned { return .pinned }
+            if lastUseHere[value.id] != nil { return .usedHere }
+            let hinted = hintTier(value)
+            guard hinted == .other else { return hinted }
+            return fitsSiteKind(value, label: label) ? .siteKindLabel : .other
+        }
+
+        // The label the kind wants, or for school and work an email at a matching domain,
+        // so an unlabeled .edu address still counts on a school site.
+        private func fitsSiteKind(_ value: ContactValue, label: String?) -> Bool {
+            guard let wanted = context.siteKind.preferredLabel else { return false }
+            if label == wanted { return true }
+            guard let domain = value.emailDomain else { return false }
+            switch context.siteKind {
+            case .school: return SiteSense.isAcademic(domain.split(separator: ".").map(String.init))
+            case .work: return workDomains.contains(domain)
+            default: return false
+            }
         }
 
         private func hintTier(_ value: ContactValue) -> Tier {

@@ -6,6 +6,7 @@ public struct SiteSummary: Sendable, Hashable, Identifiable {
     // Every value of each kind in the order Prefill puts on the card for this site.
     public let ranked: [ContactKind: [ContactValue]]
     public let pinned: [ContactKind: UUID]
+    public let kind: SiteKind
 
     public var id: String { host }
 
@@ -25,7 +26,8 @@ public enum SiteDirectory {
                 SiteSummary(
                     host: host, lastSeen: date,
                     ranked: rank(orders, host: host, state: state, usage: events.usage, now: now),
-                    pinned: pinned(state.pins, host: host)
+                    pinned: pinned(state.pins, host: host),
+                    kind: state.siteKind(host)
                 )
             }
             .sorted { ($0.lastSeen, $1.host) > ($1.lastSeen, $0.host) }
@@ -34,7 +36,10 @@ public enum SiteDirectory {
     private static func rank(
         _ orders: [ContactKind: [ContactValue]], host: String, state: AppState, usage: [UsageEvent], now: Date
     ) -> [ContactKind: [ContactValue]] {
-        let context = RankingContext(host: host, hint: nil, now: now, matchEachSite: state.settings.matchEachSite)
+        let context = RankingContext(
+            host: host, hint: nil, now: now, matchEachSite: state.settings.matchEachSite,
+            siteKind: state.siteKind(host), focusLabel: state.settings.focusLabel
+        )
         return orders.mapValues { Ranker.rank($0, usage: usage, pins: state.pins, context: context) }
     }
 
@@ -59,29 +64,23 @@ public extension AppState {
         let site = Normalizer.registrableDomain(host)
         let others = pins.filter { !(Normalizer.registrableDomain($0.host) == site && $0.kind == kind) }
         let added = valueID.map { [SitePin(host: site, kind: kind, valueID: $0)] } ?? []
-        return AppState(
-            values: values, pins: others + added, settings: settings, cardLink: cardLink,
-            rejectedValueIDs: rejectedValueIDs
-        )
+        return copy(pins: others + added)
     }
 
     // Forgets that the person turned this value down, so it can be saved again.
     func unrejecting(_ id: UUID) -> AppState {
-        AppState(
-            values: values, pins: pins, settings: settings, cardLink: cardLink,
-            rejectedValueIDs: rejectedValueIDs.filter { $0 != id }
-        )
+        copy(rejectedValueIDs: rejectedValueIDs.filter { $0 != id })
     }
 
     func with(values: [ContactValue]) -> AppState {
-        AppState(values: values, pins: pins, settings: settings, cardLink: cardLink, rejectedValueIDs: rejectedValueIDs)
+        copy(values: values)
     }
 
     func with(settings: Settings) -> AppState {
-        AppState(values: values, pins: pins, settings: settings, cardLink: cardLink, rejectedValueIDs: rejectedValueIDs)
+        copy(settings: settings)
     }
 
     func with(cardLink: CardLink?) -> AppState {
-        AppState(values: values, pins: pins, settings: settings, cardLink: cardLink, rejectedValueIDs: rejectedValueIDs)
+        copy(cardLink: .some(cardLink))
     }
 }
