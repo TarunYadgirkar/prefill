@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Prefill Chrome check</title>
+    <style>
+      body { font: 16px -apple-system, system-ui, sans-serif; margin: 40px; max-width: 520px; }
+      label { display: grid; gap: 6px; margin-bottom: 16px; }
+      input { font: inherit; padding: 8px 10px; }
+      #readout { margin-top: 24px; padding: 12px; background: #eef2f7; border-radius: 8px; white-space: pre-line; }
+    </style>
+  </head>
+  <body>
+    <h1>Create your account</h1>
+    <form id="signup" action="/thanks" method="post">
+      <label>Email <input id="email" type="email" name="email" autocomplete="email"></label>
+      <label>Phone <input id="phone" type="tel" name="phone" autocomplete="tel"></label>
+      <button type="submit">Sign up</button>
+    </form>
+  </body>
+</html>

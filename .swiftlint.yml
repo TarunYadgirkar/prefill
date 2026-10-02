@@ -3,6 +3,9 @@ included:
   - Extension
   - UITests
   - HostTests
+  - MacApp
+  - MacHost
+  - MacShared
   - Packages/PrefillKit/Sources
   - Packages/PrefillKit/Tests
   - Packages/PrefillKit/Package.swift

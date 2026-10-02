@@ -30,6 +30,7 @@ public struct MessageRouter: Sendable {
         case .pageContext(let body): return .pageContext(pageContext(body))
         case .capture(let body): return .capture(capture(body))
         case .linkSuggestions(let body): return .linkSuggestions(linkSuggestions(body))
+        case .contactSuggestions(let body): return .contactSuggestions(contactSuggestions(body))
         default: return .popupState(sheet(request))
         }
     }

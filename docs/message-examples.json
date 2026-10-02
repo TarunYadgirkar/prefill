@@ -45,7 +45,12 @@
     "unpin": { "type": "unpin", "host": "shop.example.net", "kind": "email" },
     "undoCapture": { "type": "undoCapture", "host": "shop.example.net", "valueID": "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A" },
     "muteSite": { "type": "muteSite", "host": "shop.example.net", "muted": true },
-    "linkSuggestions": { "type": "linkSuggestions", "host": "boards.example.io", "types": ["github", "website"] }
+    "linkSuggestions": { "type": "linkSuggestions", "host": "boards.example.io", "types": ["github", "website"] },
+    "contactSuggestions": {
+      "type": "contactSuggestions",
+      "host": "shop.example.net",
+      "fields": [{ "kind": "email" }, { "kind": "address", "section": "shipping" }, { "kind": "name" }]
+    }
   },
   "responses": {
     "pong": { "type": "pong" },
@@ -84,6 +89,15 @@
         { "type": "github", "url": "https://github.com/alexrivera" },
         { "type": "website", "url": "https://alexrivera.dev" }
       ]
+    },
+    "contactSuggestionsResult": {
+      "type": "contactSuggestionsResult",
+      "emails": ["alex@work.example.org", "alex.rivera@example.com"],
+      "phones": [],
+      "addresses": [
+        { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
+      ],
+      "name": { "given": "Alex", "family": "Rivera" }
     },
     "error": { "type": "error", "reason": "unknown message" }
   }

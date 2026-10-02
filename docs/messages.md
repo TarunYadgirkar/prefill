@@ -6,7 +6,7 @@ The content script runs in the top frame of `https` pages only, plus plain `http
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. The other is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions`, sent only in Chrome and Arc, is another (see below). The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
 
@@ -22,6 +22,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | Other address parts | 200 characters each |
 | `linkSuggestions` types | 5 |
 | `linkSuggestionsResult` links | 10, at most 3 of a type |
+| `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
 
 ## Shared values
 
@@ -91,7 +92,7 @@ The reply is `pageContextResult`. Its `status` is `saved` when the card was rewr
 
 ## linkSuggestions
 
-The content script asks for the card's links of the types a page's `link` fields want once the page has loaded, because Safari reads a field's list as the field takes focus and the app's answer would come too late. It asks again each time the person focuses a `link` field (a focus event Safari marks as theirs, on a field without a `list` of its own), which also covers fields a page adds later. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
+The content script asks for the card's links of the types a page's `link` fields want once the page has loaded, because Safari reads a field's list as the field takes focus and the app's answer would come too late. It asks again each time the person focuses a `link` field (within a second of a click or tap on the field or its label, or a press of Tab, while the field is on screen and has no `list` of its own; a page that focuses a field from script gets nothing), which also covers fields a page adds later. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
@@ -113,6 +114,34 @@ The content script asks for the card's links of the types a page's `link` fields
 ```
 
 The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The content script attaches them when the field takes focus, from the links it already has, and the `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
+
+## contactSuggestions
+
+Chrome and Arc fill contact fields from their own saved addresses, never from the card, so in those browsers the content script doesn't send `pageContext` and the card's order never changes for a Chrome page. It sends `contactSuggestions` instead, once the page has loaded and again each time the person focuses a contact field (after a click, tap or Tab, as for links, on an `input` of type text, email, tel or search without a `list` of its own). `fields` has one entry per kind and section on the page. The reply holds the card's values of those kinds in the order the card would take on this site (the same ranking `pageContext` uses: pins, use on the site, section hints, site kind), up to five of each, without saving the card. `name` is the card's given and family name. Before the card is linked, or when it can't be read, every list is empty.
+
+```json
+{
+  "type": "contactSuggestions",
+  "host": "shop.example.net",
+  "fields": [{ "kind": "email" }, { "kind": "address", "section": "shipping" }, { "kind": "name" }]
+}
+```
+
+```json
+{
+  "type": "contactSuggestionsResult",
+  "emails": ["alex@work.example.org", "alex.rivera@example.com"],
+  "phones": [],
+  "addresses": [
+    { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
+  ],
+  "name": { "given": "Alex", "family": "Rivera" }
+}
+```
+
+The focused field gets a `list` and a `<datalist>` with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. Chrome shows the options in its own autofill dropdown under any addresses it has saved. As with links, any script on the page can read the datalist while it is there.
+
+In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 
 ## capture
 
