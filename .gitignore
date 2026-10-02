@@ -14,3 +14,4 @@ node_modules/
 /Extension/Resources/popup.css
 /Extension/Resources/popup.html
 .worktrees/
+.claude/worktrees/

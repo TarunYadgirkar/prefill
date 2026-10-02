@@ -3,8 +3,8 @@
     {
       "value": {
         "linear-gradient": [
-          "srgb:0.89412,0.90980,0.92941,1.00000",
-          "srgb:0.68235,0.71765,0.76078,1.00000"
+          "srgb:1.00000,0.30980,0.49412,1.00000",
+          "srgb:0.72157,0.07059,0.24706,1.00000"
         ]
       }
     },
@@ -12,8 +12,8 @@
       "appearance": "dark",
       "value": {
         "linear-gradient": [
-          "srgb:0.22745,0.25882,0.29804,1.00000",
-          "srgb:0.07843,0.09412,0.10980,1.00000"
+          "srgb:0.43137,0.03922,0.15686,1.00000",
+          "srgb:0.13333,0.01176,0.04706,1.00000"
         ]
       }
     }
@@ -22,37 +22,37 @@
     {
       "layers": [
         {
-          "image-name": "lift-text.svg",
-          "name": "lift-text",
+          "image-name": "front-text.svg",
+          "name": "front-text",
           "glass": false,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:1.00000,1.00000,1.00000,0.96000"
+                "solid": "srgb:0.89020,0.14118,0.36078,1.00000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:1.00000,1.00000,1.00000,0.96000"
+                "solid": "srgb:0.89020,0.14118,0.36078,1.00000"
               }
             }
           ]
         },
         {
-          "image-name": "lift.svg",
-          "name": "lift",
+          "image-name": "front.svg",
+          "name": "front",
           "glass": true,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:0.18824,0.81961,0.34510,1.00000"
+                "solid": "srgb:1.00000,1.00000,1.00000,1.00000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.18824,0.81961,0.34510,1.00000"
+                "solid": "srgb:1.00000,1.00000,1.00000,0.96000"
               }
             }
           ]
@@ -64,7 +64,7 @@
       },
       "translucency": {
         "enabled": true,
-        "value": 0.15
+        "value": 0.1
       },
       "specular": true,
       "blur-material": 0.3,
@@ -73,37 +73,19 @@
     {
       "layers": [
         {
-          "image-name": "card-text.svg",
-          "name": "card-text",
-          "glass": false,
-          "fill-specializations": [
-            {
-              "value": {
-                "solid": "srgb:0.10980,0.13333,0.15686,0.55000"
-              }
-            },
-            {
-              "appearance": "dark",
-              "value": {
-                "solid": "srgb:1.00000,1.00000,1.00000,0.55000"
-              }
-            }
-          ]
-        },
-        {
-          "image-name": "card.svg",
-          "name": "card",
+          "image-name": "mid.svg",
+          "name": "mid",
           "glass": true,
           "fill-specializations": [
             {
               "value": {
-                "solid": "srgb:1.00000,1.00000,1.00000,0.92000"
+                "solid": "srgb:1.00000,1.00000,1.00000,0.70000"
               }
             },
             {
               "appearance": "dark",
               "value": {
-                "solid": "srgb:0.78824,0.82353,0.86275,0.32000"
+                "solid": "srgb:1.00000,0.70196,0.78039,0.42000"
               }
             }
           ]
@@ -111,11 +93,44 @@
       ],
       "shadow": {
         "kind": "neutral",
-        "opacity": 0.35
+        "opacity": 0.3
       },
       "translucency": {
         "enabled": true,
-        "value": 0.35
+        "value": 0.5
+      },
+      "specular": true,
+      "blur-material": 0.3,
+      "lighting": "individual"
+    },
+    {
+      "layers": [
+        {
+          "image-name": "back.svg",
+          "name": "back",
+          "glass": true,
+          "fill-specializations": [
+            {
+              "value": {
+                "solid": "srgb:1.00000,1.00000,1.00000,0.45000"
+              }
+            },
+            {
+              "appearance": "dark",
+              "value": {
+                "solid": "srgb:1.00000,0.70196,0.78039,0.26000"
+              }
+            }
+          ]
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.2
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.6
       },
       "specular": true,
       "blur-material": 0.3,
