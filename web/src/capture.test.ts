@@ -5,7 +5,7 @@ import checkoutTagged from "./fixtures/checkout-tagged.html?raw";
 import checkoutUntagged from "./fixtures/checkout-untagged.html?raw";
 import gift from "./fixtures/gift.html?raw";
 import signup from "./fixtures/signup.html?raw";
-import type { CaptureRequest } from "./messages";
+import { parsePageRequest, type CaptureRequest } from "./messages";
 
 let uninstall: (() => void) | undefined;
 
@@ -362,6 +362,21 @@ describe("capture metadata for the someone-else filter", () => {
     expect(fields).toHaveLength(20);
     expect(fields[0]?.name).toHaveLength(100);
     expect(fields[0]?.label?.length).toBeLessThanOrEqual(100);
+  });
+});
+
+describe("hidden characters", () => {
+  it("drops them from labels and leaves out a value that holds them, so the rest still sends", () => {
+    const send = setUp(
+      '<form><label>E\u00admail <input type="email" name="e"></label>' +
+        '<label>Tele\u00adfon\u200f <input type="tel" name="p"></label><button>Go</button></form>',
+    );
+    type("[name=e]", "new.person@example.org");
+    type("[name=p]", "\u202a+49 30 1234567\u202c");
+    click("button");
+    const request = send.mock.calls[0]?.[0];
+    expect(request?.fields.map((field) => [field.kind, field.label])).toEqual([["email", "Email"]]);
+    expect(parsePageRequest(request)).toEqual(request);
   });
 });
 
