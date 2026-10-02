@@ -64,7 +64,8 @@ struct SeedHostTests {
             .replacing(.phone, with: Self.phones)
             .replacing(.address, with: Self.addresses)
         guard target != current else { return }
-        #expect(try gateway.save(target, basis: current, transactionAuthor: "prefill-seed") == .saved)
+        let result = try gateway.save(target, basis: current, scope: .personEdit, transactionAuthor: "prefill-seed")
+        #expect(result == .saved)
     }
 
     // A hand-written history: four sites with their own picks, one saved capture and two

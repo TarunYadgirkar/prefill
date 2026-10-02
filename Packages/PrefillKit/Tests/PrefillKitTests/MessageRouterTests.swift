@@ -16,8 +16,14 @@ final class MemoryStore: SharedStore {
     func writeAppState(_ state: AppState) throws { documents.withLock { $0.state = state } }
     func readEvents() throws -> ExtensionEvents { documents.withLock { $0.events } }
 
-    func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
-        documents.withLock { $0.events = $0.events.appending(usage: usage, captures: captures) }
+    func removeAll() throws {
+        documents.withLock { $0 = (AppState(), ExtensionEvents()) }
+    }
+
+    func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
+        documents.withLock {
+            $0.events = $0.events.appending(usage: usage, captures: captures, cardWrites: cardWrites)
+        }
     }
 }
 
@@ -37,24 +43,33 @@ private enum Page {
     }
 
     static func signup(_ host: String, emails: [String], submitted: Bool = true) -> [String: Any] {
-        let name: [String: Any] = ["kind": "name", "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"]
-        let typed = emails.map { ["kind": "email", "value": $0, "autocomplete": "email", "name": "email"] }
+        let name: [String: Any] = [
+            "kind": "name", "userTyped": true, "value": "Alex Rivera", "autocomplete": "name", "label": "Full name"
+        ]
+        let typed = emails.map {
+            ["kind": "email", "userTyped": true, "value": $0, "autocomplete": "email", "name": "email"]
+        }
         return [
-            "type": "capture", "host": host, "hasPassword": true, "submitted": submitted, "fields": [name] + typed
+            "type": "capture", "host": host, "hasPassword": true, "trigger": submitted ? "submit" : "flush",
+            "fields": [name] + typed
         ]
     }
 
     static var gift: [String: Any] {
         [
-            "type": "capture", "host": siteA, "hasPassword": false, "submitted": true,
+            "type": "capture", "host": siteA, "hasPassword": false, "trigger": "submit",
             "fields": [
-                ["kind": "name", "value": "Jordan Lee", "name": "recipient_name", "label": "Recipient's name"],
                 [
-                    "kind": "email", "value": "jordan.lee@example.net", "name": "recipient_email",
+                    "kind": "name", "userTyped": true, "value": "Jordan Lee", "name": "recipient_name",
+                    "label": "Recipient's name"
+                ],
+                [
+                    "kind": "email", "userTyped": true, "value": "jordan.lee@example.net", "name": "recipient_email",
                     "label": "Recipient's email"
                 ],
                 [
-                    "kind": "address", "name": "recipient_street recipient_city", "section": "shipping",
+                    "kind": "address", "userTyped": true, "name": "recipient_street recipient_city",
+                    "section": "shipping",
                     "address": [
                         "street": "77 Gift Way", "city": "Oakland", "state": "", "postalCode": "94612", "country": ""
                     ]
@@ -120,6 +135,26 @@ struct MessageRouterTests {
         #expect(firstEmail == "alex.school@example.edu")
         #expect(router.route(Page.context(Page.siteA)) == .pageContext(PageContextResponse(status: .unchanged)))
         #expect(gateway.saves.count == 1)
+    }
+
+    @Test func pagesGetOnlyAFewCardRewritesAMinute() {
+        let busy = Array(repeating: Date.testNow.addingTimeInterval(-30), count: MessageRouter.maxCardWritesPerWindow)
+        let store = MemoryStore(
+            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: busy)
+        )
+        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
+        #expect(reply == .pageContext(PageContextResponse(status: .unchanged)))
+        #expect(gateway.saves.isEmpty)
+    }
+
+    @Test func aCardRewriteIsNotedAndOldOnesExpire() {
+        let old = Array(repeating: Date.testNow.addingTimeInterval(-61), count: MessageRouter.maxCardWritesPerWindow)
+        let store = MemoryStore(
+            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: old)
+        )
+        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
+        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
+        #expect(store.events.cardWrites.last == .testNow)
     }
 
     @Test func aWorkHintPutsTheWorkEmailFirst() {

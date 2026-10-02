@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { relayToNative } from "./relay";
 
 const ID = "com.tarunyadgirkar.prefill.Extension";
-const fromPage = { id: ID, url: "https://shop.example.net/checkout" };
+const fromPage = { id: ID, url: "https://shop.example.net/checkout", frameId: 0, tab: { incognito: false } };
 
 describe("relayToNative", () => {
   it("forwards a ping and returns the native reply", async () => {
@@ -29,17 +29,28 @@ describe("relayToNative", () => {
     expect(sendNative).toHaveBeenCalledWith(expect.objectContaining({ host: "shop.example.net" }));
   });
 
-  it("keeps the message's host when the sender has no web address", async () => {
+  it.each([
+    ["another extension", { ...fromPage, id: "someone.else" }],
+    ["a sender with no extension id", { ...fromPage, id: undefined }],
+    ["a Private Browsing tab", { ...fromPage, tab: { incognito: true } }],
+    ["a tab that doesn't say whether it is private", { ...fromPage, tab: {} }],
+    ["a sender outside any tab", { ...fromPage, tab: undefined }],
+    ["a frame inside the page", { ...fromPage, frameId: 3 }],
+    ["a plain http page", { ...fromPage, url: "http://shop.example.net/" }],
+    ["a sender with no web address", { ...fromPage, url: undefined }],
+    ["a file", { ...fromPage, url: "file:///Users/alex/form.html" }],
+  ])("turns away messages from %s", (_, sender) => {
+    const sendNative = vi.fn();
     const request = { type: "pageContext", host: "shop.example.net", fields: [{ kind: "email" }] };
-    const sendNative = vi.fn().mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
-    await relayToNative(request, { id: ID }, ID, sendNative);
-    expect(sendNative).toHaveBeenCalledWith(expect.objectContaining({ host: "shop.example.net" }));
+    expect(relayToNative(request, sender, ID, sendNative)).toBeUndefined();
+    expect(sendNative).not.toHaveBeenCalled();
   });
 
-  it("turns away messages from another extension", () => {
-    const sendNative = vi.fn();
-    expect(relayToNative({ type: "ping" }, { id: "someone.else" }, ID, sendNative)).toBeUndefined();
-    expect(sendNative).not.toHaveBeenCalled();
+  it("accepts plain http from this device itself", async () => {
+    const request = { type: "pageContext", host: "localhost", fields: [{ kind: "email" }] };
+    const sendNative = vi.fn().mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+    await relayToNative(request, { ...fromPage, url: "http://localhost:8846/signup.html" }, ID, sendNative);
+    expect(sendNative).toHaveBeenCalledWith(expect.objectContaining({ host: "localhost" }));
   });
 
   it("turns a malformed native reply into an error", async () => {

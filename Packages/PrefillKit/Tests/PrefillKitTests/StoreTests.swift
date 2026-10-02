@@ -28,6 +28,11 @@ private func checkContract(_ store: any SharedStore) throws {
     #expect(events.usage.map(\.valueID) == [Alex.homeEmail.id, Alex.workEmail.id])
     #expect(events.captures == [capture])
     #expect(try store.readAppState() == sampleState)
+
+    try store.removeAll()
+    try store.removeAll()
+    #expect(try store.readAppState() == AppState())
+    #expect(try store.readEvents() == ExtensionEvents())
 }
 
 struct AppGroupStoreTests {
@@ -60,6 +65,12 @@ struct AppGroupStoreTests {
             }
         }
         #expect(try store.readEvents().usage.count == writers)
+    }
+
+    @Test func staysOutOfBackups() throws {
+        defer { try? FileManager.default.removeItem(at: directory) }
+        try AppGroupStore(directory: directory).writeAppState(sampleState)
+        #expect(try directory.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true)
     }
 
     @Test func appendsStayCapped() throws {

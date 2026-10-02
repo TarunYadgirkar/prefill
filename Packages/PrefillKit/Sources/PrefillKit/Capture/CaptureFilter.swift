@@ -1,7 +1,7 @@
 import Foundation
 
 public enum IgnoreReason: String, Sendable, Hashable {
-    case notContact, sensitive, someoneElse, partial, rejected, invalid
+    case notContact, untyped, sensitive, someoneElse, partial, rejected, invalid
 }
 
 public enum CaptureDecision: Sendable, Hashable {
@@ -12,8 +12,6 @@ public enum CaptureDecision: Sendable, Hashable {
 }
 
 public struct CaptureFilter: Sendable {
-    private static let fullPhoneTokens: Set<String> = ["tel", "tel-national"]
-
     private let cardIDs: Set<UUID>
     private let rejected: Set<UUID>
     private let owner: OwnerName
@@ -30,10 +28,10 @@ public struct CaptureFilter: Sendable {
 
     public func evaluate(_ request: CaptureRequest, at date: Date) -> [CaptureDecision] {
         let parsed = request.fields.map { Self.parse($0, at: date) }
-        let form = FormFacts(request: request, parsed: parsed, owner: owner)
+        let reasons = request.fields.indices.map { Self.ignoreReason(request.fields[$0], parsed: parsed[$0]) }
+        let form = FormFacts(request: request, parsed: parsed, kept: reasons.map { $0 == nil }, owner: owner)
         return request.fields.indices.map { index in
-            Self.ignoreReason(request.fields[index], parsed: parsed[index]).map(CaptureDecision.ignore)
-                ?? decide(index, form: form)
+            reasons[index].map(CaptureDecision.ignore) ?? decide(index, form: form)
         }
     }
 
@@ -59,18 +57,22 @@ public struct CaptureFilter: Sendable {
         }
     }
 
+    // A new value goes straight onto the card only from a form the person submitted that
+    // also holds something already on the card they typed themselves: one of its emails,
+    // phones or addresses, or its full name. Anything less waits for review, since a page
+    // controls its fields, tags and password boxes.
     private func decide(_ index: Int, form: FormFacts) -> CaptureDecision {
         guard let value = form.parsed[index] else { return .ignore(.invalid) }
         if cardIDs.contains(value.id) { return .duplicate(value.id) }
         if rejected.contains(value.id) { return .ignore(.rejected) }
         if form.parsed[..<index].contains(where: { $0?.id == value.id }) { return .duplicate(value.id) }
-        guard settings.saveNewInfo, !form.isContested(index) else { return .review(value) }
-        let isTied = form.isCorroborated(except: index, cardIDs: cardIDs) || form.isTaggedInAccountForm(index)
-        return isTied ? .save(value) : .review(value)
+        guard settings.saveNewInfo, form.trigger == .submit, !form.isContested(index) else { return .review(value) }
+        return form.isCorroborated(except: index, cardIDs: cardIDs) ? .save(value) : .review(value)
     }
 
     private static func ignoreReason(_ field: CapturedField, parsed: ContactValue?) -> IgnoreReason? {
         if field.kind == .name { return .notContact }
+        if !field.userTyped { return .untyped }
         let words = FieldWords(field)
         if words.isSensitive { return .sensitive }
         if words.isForSomeoneElse { return .someoneElse }
@@ -101,19 +103,23 @@ public struct CaptureFilter: Sendable {
     private struct FormFacts {
         let fields: [CapturedField]
         let parsed: [ContactValue?]
-        let hasPassword: Bool
+        let kept: [Bool]
+        let trigger: CaptureTrigger
         let ownSections: [SectionHint?]
         let foreignSections: [SectionHint?]
+        let hasOwnFullName: Bool
 
-        init(request: CaptureRequest, parsed: [ContactValue?], owner: OwnerName) {
+        init(request: CaptureRequest, parsed: [ContactValue?], kept: [Bool], owner: OwnerName) {
             let names = request.fields.filter {
-                owner.isKnown && $0.kind == .name && !Normalizer.fold($0.value ?? "").isEmpty
+                owner.isKnown && $0.kind == .name && $0.userTyped && !Normalizer.fold($0.value ?? "").isEmpty
             }
             self.fields = request.fields
             self.parsed = parsed
-            self.hasPassword = request.hasPassword
+            self.kept = kept
+            self.trigger = request.trigger
             self.ownSections = names.filter { owner.matches($0.value ?? "") }.map(\.section)
             self.foreignSections = names.filter { !owner.matches($0.value ?? "") }.map(\.section)
+            self.hasOwnFullName = owner.coversFullName(names.compactMap(\.value))
         }
 
         func isContested(_ index: Int) -> Bool {
@@ -123,17 +129,11 @@ public struct CaptureFilter: Sendable {
             return !ownSections.contains { Self.overlaps($0, field.section) }
         }
 
+        // Only kept fields count, and those were typed by the person.
         func isCorroborated(except index: Int, cardIDs: Set<UUID>) -> Bool {
-            !ownSections.isEmpty || parsed.indices.contains { other in
-                other != index && parsed[other].map { cardIDs.contains($0.id) } == true
+            hasOwnFullName || parsed.indices.contains { other in
+                other != index && kept[other] && parsed[other].map { cardIDs.contains($0.id) } == true
             }
-        }
-
-        func isTaggedInAccountForm(_ index: Int) -> Bool {
-            let field = fields[index]
-            let tokens = FieldWords.tokens(field.autocomplete)
-            let isTagged = field.kind == .email ? tokens.contains("email") : !tokens.isDisjoint(with: fullPhoneTokens)
-            return field.kind != .address && isTagged && (hasPassword || !ownSections.isEmpty)
         }
 
         private static func overlaps(_ lhs: SectionHint?, _ rhs: SectionHint?) -> Bool {

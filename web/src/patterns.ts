@@ -38,10 +38,15 @@ export const SENSITIVE: readonly RegExp[] = [
   /verification|card.?identification|security.?code|card.?code|security.?value|security.?number|card.?pin|c-v-v|(?:cvn|cvv|cvc|csc|cvd|ccv)|\bcid\b|cccid/iu,
   /\botp\b|one.?time|verification.code|2fa|six.digit/iu,
   /card.?(?:holder|owner)|name.*on.*card|(?:card|cc).?name|expir|exp.*date/iu,
-  /password|passwort|passcode|contraseña|mot de passe|\bssn\b|social.?security/iu,
+  /password|passwort|passcode|passwd|\bpwd\b|contraseña|mot de passe|\bssn\b|social.?security|secret|\bmfa\b/iu,
   /account.?(?:number|no\b|num|#)|routing|\biban\b|\bbic\b|swift.?code|sort.?code|\bpin\b(?!.?code)|token|(?:backup|recovery|access|auth).?code/iu,
   /\bdob\b|date.?of.?birth|birth.?date|national.?id|passport|tax.?id|driver.?s?.?licen[cs]e|\b(?:ein|itin|nin)\b/iu,
 ];
+
+// Words that rule a box out as a phone number, whatever its type or tags say: stores and
+// banks use type=tel for card numbers, codes, account numbers and birth dates.
+export const NOT_PHONE =
+  /card|(?:^|[^a-z])cc|cvv|\bpan\b|expir|routing|account|acct|iban|ssn|social|\btax|\bdob\b|birth|\bpin\b|otp|code|token|secret|pass|pwd/iu;
 
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.

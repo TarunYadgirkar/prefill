@@ -8,6 +8,7 @@ export interface ContextOptions {
   send: (request: PageContextRequest) => Promise<unknown>;
   debounceMs?: number;
   maxWaitMs?: number;
+  minIntervalMs?: number;
 }
 
 const DEFAULT_DEBOUNCE_MS = 300;
@@ -16,6 +17,10 @@ const DEFAULT_MAX_WAIT_MS = 1_000;
 // holds a contact form costs a bounded amount of work.
 const MAX_INSPECTED = 200;
 const MAX_SCANS = 30;
+// Each report can rewrite the card, which syncs to every device, so a page gets a few
+// reports at most, spaced out. A report asked for too soon waits and goes out once.
+const DEFAULT_MIN_INTERVAL_MS = 2_000;
+const MAX_REPORTS = 5;
 
 // Name fields never change the card's order, so they don't make a page worth reporting.
 function pageField(field: ContactField): PageField | undefined {
@@ -80,9 +85,30 @@ export function installContext(doc: Document, win: Window, options: ContextOptio
   let reported = new Set<string>();
   let focusResend = true;
   let scans = 0;
+  let reports = 0;
+  let lastReport = -Infinity;
+  let waiting: ReturnType<typeof setTimeout> | undefined;
+  let waitingFields: PageField[] = [];
+  const minInterval = options.minIntervalMs ?? DEFAULT_MIN_INTERVAL_MS;
 
   const deliver = (fields: PageField[]): void => {
     reported = new Set([...reported, ...fields.map(keyOf)]);
+    if (reports >= MAX_REPORTS) return;
+    const wait = lastReport + minInterval - Date.now();
+    if (wait <= 0) {
+      post(fields);
+      return;
+    }
+    waitingFields = fields;
+    waiting ??= setTimeout(() => {
+      waiting = undefined;
+      post(waitingFields);
+    }, wait);
+  };
+
+  const post = (fields: PageField[]): void => {
+    reports += 1;
+    lastReport = Date.now();
     const retry = (): void => {
       focusResend = true;
     };
@@ -144,6 +170,7 @@ export function installContext(doc: Document, win: Window, options: ContextOptio
   win.addEventListener("pageshow", onPageShow, true);
 
   return () => {
+    clearTimeout(waiting);
     settle.cancel();
     observer.disconnect();
     doc.removeEventListener("DOMContentLoaded", start);

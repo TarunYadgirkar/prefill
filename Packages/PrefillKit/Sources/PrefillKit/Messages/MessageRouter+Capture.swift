@@ -33,7 +33,7 @@ extension MessageRouter {
     // Values from a page that was only hidden were never submitted, so they wait for review.
     private func limitingSaves(_ decisions: [CaptureDecision], request: CaptureRequest, at date: Date)
         -> [CaptureDecision] {
-        guard request.submitted else { return decisions.map(\.reviewInsteadOfSave) }
+        guard request.trigger == .submit else { return decisions.map(\.reviewInsteadOfSave) }
         let recent = events().captures.count {
             $0.verdict == .saved && date.timeIntervalSince($0.date) < Self.saveWindow
         }

@@ -74,7 +74,7 @@ nonisolated final class PreviewGateway: ContactsGateway {
     }
 
     func save(
-        _ target: CardRecord, basis: CardRecord, transactionAuthor: String
+        _ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String
     ) throws(CardWriteFailure) -> CardSaveResult {
         card.withLock { $0 = target }
         return .saved

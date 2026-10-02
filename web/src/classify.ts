@@ -10,7 +10,7 @@ import {
   type FieldPart,
 } from "./fieldTypes";
 import type { FieldKind, SectionHint } from "./messages";
-import { RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
+import { NOT_PHONE, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
 
 type ControlOrVerdict = Control | "sensitive" | "ignored";
 
@@ -114,16 +114,23 @@ function fromPatterns(sources: readonly string[][], control: Control): Classific
   return undefined;
 }
 
+function positive(el: FieldElement, control: Control, sources: readonly string[][]): Classification {
+  const detail = parseAutocomplete(el.getAttribute("autocomplete"));
+  if (detail !== undefined) return fromAutocomplete(detail, control);
+  if (control === "email") return contact({ kind: "email" });
+  return fromPatterns(sources, control) ?? IGNORED;
+}
+
 // Sensitive words first, whatever the tags say, then autocomplete tokens (WHATWG grammar),
 // then the input type, then label, name and id patterns. `type=tel` alone proves nothing:
-// stores use it for ZIP codes, and banks for account numbers and codes.
+// stores use it for ZIP codes, and banks for account numbers and codes, so a phone also
+// needs a tel token or phone words, and none of the words that mark something else.
 export function classify(el: FieldElement): Classification {
   const control = controlOf(el);
   if (control === "sensitive" || control === "ignored") return { kind: control };
   const sources = sourcesOf(el);
   if (isSensitiveText(sources)) return SENSITIVE;
-  const detail = parseAutocomplete(el.getAttribute("autocomplete"));
-  if (detail !== undefined) return fromAutocomplete(detail, control);
-  if (control === "email") return contact({ kind: "email" });
-  return fromPatterns(sources, control) ?? IGNORED;
+  const found = positive(el, control, sources);
+  if (found.kind === "phone" && sources.flat().some((text) => NOT_PHONE.test(text))) return SENSITIVE;
+  return found;
 }

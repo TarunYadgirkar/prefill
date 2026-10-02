@@ -28,6 +28,7 @@ async function load(html: string, overrides: Partial<PageEnvironment> = {}) {
     protocol: "https:",
     hostname: "shop.example.net",
     isSecureContext: true,
+    isTopFrame: true,
     send,
     ...overrides,
   });
@@ -58,15 +59,18 @@ it.each(["file:", "about:", "data:", "blob:"])("does nothing on a %s page", asyn
   expect(send).not.toHaveBeenCalled();
 });
 
-it("listens for submits on a secure page and not on plain http", async () => {
-  const html = '<form><input type="email" autocomplete="email"></form>';
-  const listening = vi.spyOn(document, "addEventListener");
-  await load(html, { protocol: "http:", isSecureContext: false });
-  expect(listening.mock.calls.map(([type]) => type)).not.toContain("submit");
-  stop?.();
-  listening.mockClear();
-  await load(html);
-  expect(listening.mock.calls.map(([type]) => type)).toContain("submit");
+it.each([
+  ["plain http", { protocol: "http:", isSecureContext: false }],
+  ["http on another host that claims to be secure", { protocol: "http:", hostname: "shop.example.net" }],
+  ["a frame", { isTopFrame: false }],
+])("does nothing on %s", async (_, overrides: Partial<PageEnvironment>) => {
+  const send = await load('<form><input type="email" autocomplete="email"></form>', overrides);
+  expect(send).not.toHaveBeenCalled();
+});
+
+it("runs on http only on this device itself", async () => {
+  const send = await load('<input type="email" autocomplete="email">', { protocol: "http:", hostname: "localhost" });
+  expect(send).toHaveBeenCalledTimes(1);
 });
 
 it("ignores events the page dispatches itself", async () => {
@@ -79,14 +83,16 @@ it("ignores events the page dispatches itself", async () => {
 it("sends what the person typed as a capture when the form is submitted", async () => {
   // happy-dom leaves isTrusted undefined; a browser sets it on events the person makes.
   Object.defineProperty(Event.prototype, "isTrusted", { get: () => true, configurable: true });
+  Object.defineProperty(navigator, "userActivation", { value: { isActive: true }, configurable: true });
   try {
     const send = await load('<form><input type="email" autocomplete="email"></form>');
     typeAndSubmit();
     expect(send).toHaveBeenLastCalledWith(
-      expect.objectContaining({ type: "capture", host: "shop.example.net", submitted: true }),
+      expect.objectContaining({ type: "capture", host: "shop.example.net", trigger: "submit" }),
     );
   } finally {
     Reflect.deleteProperty(Event.prototype, "isTrusted");
+    Reflect.deleteProperty(navigator, "userActivation");
   }
 });
 

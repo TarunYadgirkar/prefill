@@ -28,10 +28,11 @@ public struct KeychainStore: SharedStore {
         try read(.events).map { try DocumentCoder.decode(ExtensionEvents.self, from: $0) } ?? ExtensionEvents()
     }
 
-    public func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
+    public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date]) throws {
         try Self.appendLock.withLock { _ in
             let current = try readEventsReplacingDamage()
-            try write(.events, data: DocumentCoder.encode(current.appending(usage: usage, captures: captures)))
+            let next = current.appending(usage: usage, captures: captures, cardWrites: cardWrites)
+            try write(.events, data: DocumentCoder.encode(next))
         }
     }
 

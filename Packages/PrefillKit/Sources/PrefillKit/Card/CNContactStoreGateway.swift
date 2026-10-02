@@ -4,6 +4,7 @@ import Foundation
 // Never calls requestAccess: the Safari extension inherits the app's grant, and a prompt
 // from the extension can deny the app permanently (REPORT.md, Spike results).
 public struct CNContactStoreGateway: ContactsGateway {
+    private static let log = PrefillLog.logger("contacts")
     #if os(iOS)
     private static let grantedStatuses: Set<CNAuthorizationStatus> = [.authorized, .limited]
     #else
@@ -17,25 +18,54 @@ public struct CNContactStoreGateway: ContactsGateway {
     }
 
     // Contacts has no compare-and-swap, so the basis check narrows the race with another
-    // writer to the save call itself rather than closing it.
+    // writer to the save call itself rather than closing it. A save that may not remove
+    // values is refused if it would, and checked again afterwards: a value lost to a write
+    // that landed in between is put back.
     public func save(
-        _ target: CardRecord, basis: CardRecord, transactionAuthor: String
+        _ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String
     ) throws(CardWriteFailure) -> CardSaveResult {
+        if scope == .keepEveryValue, !target.keepsEveryValue(of: basis) {
+            Self.log.error("save refused, it would drop or flood values")
+            throw .other
+        }
         let store = CNContactStore()
         let current = try fetch(target.identifier, store: store)
         let record = CNCardMapping.record(from: current, identifier: target.identifier)
         guard record == basis else { return .stale(current: record) }
+        try execute(target, on: current, store: store, author: transactionAuthor)
+        if scope == .keepEveryValue {
+            restoreLostValues(of: basis, identifier: target.identifier, author: transactionAuthor)
+        }
+        return .saved
+    }
+
+    private func execute(
+        _ target: CardRecord, on current: CNContact, store: CNContactStore, author: String
+    ) throws(CardWriteFailure) {
         guard let contact = current.mutableCopy() as? CNMutableContact else { throw .other }
         CNCardMapping.apply(target, to: contact)
         let request = CNSaveRequest()
-        request.transactionAuthor = transactionAuthor
+        request.transactionAuthor = author
         request.update(contact)
         do {
             try store.execute(request)
         } catch {
             throw CNCardMapping.failure(for: error)
         }
-        return .saved
+    }
+
+    private func restoreLostValues(of basis: CardRecord, identifier: String, author: String) {
+        let store = CNContactStore()
+        do throws(CardWriteFailure) {
+            let saved = try fetch(identifier, store: store)
+            let record = CNCardMapping.record(from: saved, identifier: identifier)
+            let restored = record.restoringValues(of: basis)
+            guard restored != record else { return }
+            Self.log.error("a value went missing during a save, putting it back")
+            try execute(restored, on: saved, store: store, author: author)
+        } catch {
+            Self.log.error("save check failed: \(String(describing: error), privacy: .public)")
+        }
     }
 
     private func fetch(_ identifier: String, store: CNContactStore) throws(CardWriteFailure) -> CNContact {

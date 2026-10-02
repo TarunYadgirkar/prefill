@@ -1,6 +1,6 @@
 import { labelText, placeholderText } from "./dom";
 import type { AddressPart, ContactField, FieldElement } from "./fieldTypes";
-import { LIMITS, type CaptureRequest, type CapturedField, type PostalAddress } from "./messages";
+import { LIMITS, type CaptureRequest, type CaptureTrigger, type CapturedField, type PostalAddress } from "./messages";
 
 export interface FieldDescription {
   autocomplete: string;
@@ -61,7 +61,12 @@ function withSection(field: CapturedField, members: readonly EditedField[]): Cap
 }
 
 function single(entry: EditedField): CapturedField {
-  const field: CapturedField = { kind: entry.field.kind, value: clip(entry.value, LIMITS.value), ...describe([entry]) };
+  const field: CapturedField = {
+    kind: entry.field.kind,
+    value: clip(entry.value, LIMITS.value),
+    ...describe([entry]),
+    userTyped: true,
+  };
   return withSection(field, [entry]);
 }
 
@@ -82,10 +87,10 @@ function addPart(draft: AddressDraft | undefined, entry: EditedField): AddressDr
 
 // An address flushed from a page that was only hidden must have its postal code too, so
 // a half-typed one never leaves the page.
-function addressField(draft: AddressDraft, submitted: boolean): CapturedField[] {
+function addressField(draft: AddressDraft, trigger: CaptureTrigger): CapturedField[] {
   const { parts } = draft;
   const street = [parts.street, parts.street2].filter(Boolean).join("\n");
-  if (street === "" || (!submitted && parts.postalCode === undefined)) return [];
+  if (street === "" || (trigger === "flush" && parts.postalCode === undefined)) return [];
   const address: PostalAddress = {
     street: clip(street, LIMITS.street),
     city: clip(parts.city ?? "", LIMITS.part),
@@ -93,10 +98,10 @@ function addressField(draft: AddressDraft, submitted: boolean): CapturedField[] 
     postalCode: clip(parts.postalCode ?? "", LIMITS.part),
     country: clip(parts.country ?? "", LIMITS.part),
   };
-  return [withSection({ kind: "address", address, ...describe(draft.members) }, draft.members)];
+  return [withSection({ kind: "address", address, ...describe(draft.members), userTyped: true }, draft.members)];
 }
 
-function assemble(entries: readonly EditedField[], submitted: boolean): CapturedField[] {
+function assemble(entries: readonly EditedField[], trigger: CaptureTrigger): CapturedField[] {
   const fields: CapturedField[] = [];
   let draft: AddressDraft | undefined;
   for (const entry of entries) {
@@ -105,24 +110,24 @@ function assemble(entries: readonly EditedField[], submitted: boolean): Captured
       continue;
     }
     if (draft !== undefined && startsNew(draft, entry)) {
-      fields.push(...addressField(draft, submitted));
+      fields.push(...addressField(draft, trigger));
       draft = undefined;
     }
     draft = addPart(draft, entry);
   }
-  return draft === undefined ? fields : [...fields, ...addressField(draft, submitted)];
+  return draft === undefined ? fields : [...fields, ...addressField(draft, trigger)];
 }
 
 export interface CaptureFacts {
   host: string;
   hasPassword: boolean;
-  submitted: boolean;
+  trigger: CaptureTrigger;
 }
 
 // Names alone are never saved, so a form with nothing else typed sends nothing.
 export function buildCapture(facts: CaptureFacts, entries: readonly EditedField[]): CaptureRequest | undefined {
   const typed = entries.filter((entry) => entry.value !== "");
-  const fields = assemble(typed, facts.submitted).slice(0, LIMITS.captureFields);
+  const fields = assemble(typed, facts.trigger).slice(0, LIMITS.captureFields);
   if (!fields.some((field) => field.kind !== "name")) return undefined;
-  return { type: "capture", host: facts.host, hasPassword: facts.hasPassword, submitted: facts.submitted, fields };
+  return { type: "capture", host: facts.host, hasPassword: facts.hasPassword, trigger: facts.trigger, fields };
 }

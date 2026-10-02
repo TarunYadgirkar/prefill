@@ -6,6 +6,9 @@
 export const FIELD_KINDS = ["email", "phone", "address", "name"] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
 export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off", "notSetUp"] as const;
+// "submit" is a form the person sent. "flush" is what they typed before the page was hidden,
+// which is never saved straight to the card.
+export const CAPTURE_TRIGGERS = ["submit", "flush"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -22,6 +25,7 @@ export const LIMITS = {
 export type FieldKind = (typeof FIELD_KINDS)[number];
 export type SectionHint = (typeof SECTION_HINTS)[number];
 export type SyncStatus = (typeof SYNC_STATUSES)[number];
+export type CaptureTrigger = (typeof CAPTURE_TRIGGERS)[number];
 
 const INVALID: unique symbol = Symbol("invalid");
 type Parser<T> = (value: unknown) => T | typeof INVALID;
@@ -40,10 +44,18 @@ type ObjectOf<S extends Record<string, Field>> = Flat<
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
+// Control, format (bidi overrides, zero-width) and line or paragraph separator characters
+// never belong in contact data. A street may span lines, so it keeps plain newlines.
+const HIDDEN_CHARACTERS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
+const HIDDEN_EXCEPT_NEWLINE = /[^\P{Cc}\n]|[\p{Cf}\p{Zl}\p{Zp}]/u;
+const HOST = /^[a-z0-9.-]+$/u;
+
 const text =
-  (max: number): Parser<string> =>
+  (max: number, hidden: RegExp = HIDDEN_CHARACTERS): Parser<string> =>
   (value) =>
-    typeof value === "string" && value.length <= max ? value : INVALID;
+    typeof value === "string" && value.length <= max && !hidden.test(value) ? value : INVALID;
+const hostName: Parser<string> = (value) =>
+  typeof value === "string" && value.length <= LIMITS.host && HOST.test(value) ? value : INVALID;
 const boolean: Parser<boolean> = (value) => (typeof value === "boolean" ? value : INVALID);
 const count: Parser<number> = (value) =>
   typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : INVALID;
@@ -61,7 +73,8 @@ const arrayOf =
   <T>(item: Parser<T>, max: number): Parser<T[]> =>
   (value) => {
     if (!Array.isArray(value) || value.length > max) return INVALID;
-    const items = value.map(item);
+    // Array.from visits holes too, so a sparse array fails instead of slipping through.
+    const items = Array.from(value, item);
     return items.some((parsed) => parsed === INVALID) ? INVALID : (items as T[]);
   };
 
@@ -80,10 +93,17 @@ const object =
     return Object.fromEntries(entries.filter(([, parsed]) => parsed !== undefined)) as ObjectOf<S>;
   };
 
+const refine =
+  <T>(parser: Parser<T>, holds: (parsed: T) => boolean): Parser<T> =>
+  (value) => {
+    const parsed = parser(value);
+    return parsed !== INVALID && holds(parsed) ? parsed : INVALID;
+  };
+
 const section = optional(oneOf(SECTION_HINTS));
 
 const postalAddress = object({
-  street: text(LIMITS.street),
+  street: text(LIMITS.street, HIDDEN_EXCEPT_NEWLINE),
   city: text(LIMITS.part),
   state: text(LIMITS.part),
   postalCode: text(LIMITS.part),
@@ -92,28 +112,36 @@ const postalAddress = object({
 
 const pageField = object({ kind: oneOf(FIELD_KINDS), section });
 
-const capturedField = object({
-  kind: oneOf(FIELD_KINDS),
-  value: optional(text(LIMITS.value)),
-  address: optional(postalAddress),
-  autocomplete: optional(text(LIMITS.text)),
-  name: optional(text(LIMITS.text)),
-  label: optional(text(LIMITS.text)),
-  section,
-});
+// An address arrives in parts and every other kind as one value, never both.
+const capturedField = refine(
+  object({
+    kind: oneOf(FIELD_KINDS),
+    value: optional(text(LIMITS.value)),
+    address: optional(postalAddress),
+    autocomplete: optional(text(LIMITS.text)),
+    name: optional(text(LIMITS.text)),
+    label: optional(text(LIMITS.text)),
+    section,
+    userTyped: boolean,
+  }),
+  (field) =>
+    field.kind === "address"
+      ? field.address !== undefined && field.value === undefined
+      : field.address === undefined && field.value !== undefined,
+);
 
 const requests = {
   ping: object({ type: literal("ping") }),
   pageContext: object({
     type: literal("pageContext"),
-    host: text(LIMITS.host),
+    host: hostName,
     fields: arrayOf(pageField, LIMITS.pageFields),
   }),
   capture: object({
     type: literal("capture"),
-    host: text(LIMITS.host),
+    host: hostName,
     hasPassword: boolean,
-    submitted: boolean,
+    trigger: oneOf(CAPTURE_TRIGGERS),
     fields: arrayOf(capturedField, LIMITS.captureFields),
   }),
 };

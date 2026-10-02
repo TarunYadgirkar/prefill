@@ -44,23 +44,38 @@ public struct AppState: Codable, Sendable, Hashable {
 
 // Written only by the extension, append-only. The caps keep the Keychain item small
 // (about 120 bytes per usage event, 400 per capture, so well under 150 KB in total)
-// while still covering months of form fills.
+// while still covering months of form fills. `cardWrites` holds when page context last
+// rewrote the card, so a page can't make it churn.
 public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxUsage = 500
     public static let maxCaptures = 200
+    public static let maxCardWrites = 20
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
+    public let cardWrites: [Date]
 
-    public init(usage: [UsageEvent] = [], captures: [Capture] = []) {
+    public init(usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = []) {
         self.usage = usage
         self.captures = captures
+        self.cardWrites = cardWrites
     }
 
-    public func appending(usage newUsage: [UsageEvent], captures newCaptures: [Capture]) -> ExtensionEvents {
+    // Documents written before `cardWrites` existed still read.
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        usage = try container.decode([UsageEvent].self, forKey: .usage)
+        captures = try container.decode([Capture].self, forKey: .captures)
+        cardWrites = try container.decodeIfPresent([Date].self, forKey: .cardWrites) ?? []
+    }
+
+    public func appending(
+        usage newUsage: [UsageEvent], captures newCaptures: [Capture], cardWrites newWrites: [Date] = []
+    ) -> ExtensionEvents {
         ExtensionEvents(
             usage: Array((usage + newUsage).suffix(Self.maxUsage)),
-            captures: Array((captures + newCaptures).suffix(Self.maxCaptures))
+            captures: Array((captures + newCaptures).suffix(Self.maxCaptures)),
+            cardWrites: Array((cardWrites + newWrites).suffix(Self.maxCardWrites))
         )
     }
 }

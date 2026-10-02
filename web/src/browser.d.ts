@@ -1,6 +1,8 @@
 interface MessageSender {
-  id?: string;
-  url?: string;
+  id?: string | undefined;
+  url?: string | undefined;
+  frameId?: number | undefined;
+  tab?: { incognito?: boolean | undefined } | undefined;
 }
 
 type MessageListener = (message: unknown, sender: MessageSender) => Promise<unknown> | undefined;

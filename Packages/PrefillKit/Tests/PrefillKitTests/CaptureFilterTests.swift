@@ -58,8 +58,8 @@ struct CaptureFilterTests: CaptureTesting {
     ] as [(String?, String?)])
     func yourOwnFieldsThatSayToAreKept(label: String?, name: String?) {
         let email = field(.email, newEmail, autocomplete: "email", name: name, label: label)
-        let decisions = decide([email], hasPassword: true)
-        #expect(decisions == [.save(newValue(.email(newEmail)))])
+        let decisions = decide([field(.name, "Alex Rivera"), email], hasPassword: true)
+        #expect(decisions[1] == .save(newValue(.email(newEmail))))
     }
 
     @Test(arguments: ["shipToAddress1", "shipTo.street"])
@@ -98,7 +98,7 @@ struct CaptureFilterTests: CaptureTesting {
             field(.email, newEmail.uppercased(), name: "confirm_email")
         ], hasPassword: true)
         let value = newValue(.email(newEmail))
-        #expect(decisions == [.save(value), .duplicate(value.id)])
+        #expect(decisions == [.review(value), .duplicate(value.id)])
     }
 
     @Test func aNewValueNextToOneOnTheCardIsSaved() {
@@ -111,9 +111,9 @@ struct CaptureFilterTests: CaptureTesting {
         #expect(decisions[1] == .save(newValue(.email(newEmail))))
     }
 
-    @Test func aTaggedEmailInASignUpFormIsSaved() {
+    @Test func aTaggedEmailInASignUpFormWaitsForReview() {
         let decisions = decide([field(.email, newEmail, autocomplete: "username email")], hasPassword: true)
-        #expect(decisions == [.save(newValue(.email(newEmail)))])
+        #expect(decisions == [.review(newValue(.email(newEmail)))])
     }
 
     @Test func aTaggedPhoneInACheckoutWithYourNameIsSaved() {
@@ -160,7 +160,7 @@ struct CaptureFilterTests: CaptureTesting {
 
     @Test func theSectionBecomesTheLabel() {
         let decisions = decide([field(.email, newEmail, autocomplete: "work email", section: .work)], hasPassword: true)
-        #expect(decisions == [.save(newValue(.email(newEmail), label: "_$!<Work>!$_"))])
+        #expect(decisions == [.review(newValue(.email(newEmail), label: "_$!<Work>!$_"))])
     }
 
     @Test func capturesKeepEverythingButIgnoredFields() {

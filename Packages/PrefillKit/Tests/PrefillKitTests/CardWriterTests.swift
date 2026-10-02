@@ -40,7 +40,7 @@ final class FakeGateway: ContactsGateway {
     }
 
     func save(
-        _ target: CardRecord, basis: CardRecord, transactionAuthor: String
+        _ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String
     ) throws(CardWriteFailure) -> CardSaveResult {
         let result: Result<CardSaveResult, CardWriteFailure> = state.withLock { state in
             if let error = state.saveError { return .failure(error) }
@@ -311,5 +311,37 @@ struct CardWriterTests {
             page: PageSignal(host: nil, hints: [:], now: .testNow, matchEachSite: true)
         )
         #expect(CardWriter(gateway: gateway).sync(request).outcome == .failed(.cardMissing))
+    }
+}
+
+// The gateway's own check, whatever planned the save.
+struct CardSaveGuardTests {
+    private func email(_ text: String) -> CardEntry {
+        CardEntry(label: nil, payload: .email(text))
+    }
+
+    @Test func aReorderKeepsEveryValue() {
+        let target = Alex.card.replacing(.email, with: Alex.card.emails.reversed())
+        #expect(target.keepsEveryValue(of: Alex.card))
+    }
+
+    @Test func droppingAValueIsRefused() {
+        let target = Alex.card.replacing(.email, with: Array(Alex.card.emails.dropLast()))
+        #expect(!target.keepsEveryValue(of: Alex.card))
+    }
+
+    @Test func addingMoreThanAFewValuesAtOnceIsRefused() {
+        let added = (1...4).map { email("new\($0)@example.net") }
+        #expect(Alex.card.replacing(.email, with: Alex.card.emails + added.prefix(3)).keepsEveryValue(of: Alex.card))
+        #expect(!Alex.card.replacing(.email, with: Alex.card.emails + added).keepsEveryValue(of: Alex.card))
+    }
+
+    @Test func aLostValueIsPutBackAtTheEnd() {
+        let lost = Alex.card.emails[0]
+        let saved = Alex.card.replacing(.email, with: Array(Alex.card.emails.dropFirst()) + [email("new@example.net")])
+        let restored = saved.restoringValues(of: Alex.card)
+        #expect(restored.emails.last == lost)
+        #expect(restored.keepsEveryValue(of: Alex.card))
+        #expect(Alex.card.restoringValues(of: Alex.card) == Alex.card)
     }
 }

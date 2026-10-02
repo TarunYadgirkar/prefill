@@ -6,8 +6,22 @@ public protocol ContactsGateway: Sendable {
     func fetchCard(identifier: String) throws(CardWriteFailure) -> CardRecord
     // Saves `target` only if the card still reads as `basis`, the record the target was
     // planned from. Otherwise returns the card as it is now, so nothing added in between is lost.
-    func save(_ target: CardRecord, basis: CardRecord, transactionAuthor: String) throws(CardWriteFailure)
-        -> CardSaveResult
+    func save(_ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String)
+        throws(CardWriteFailure) -> CardSaveResult
+}
+
+// What a save may change. Reordering and adding never removes a value; only an edit the
+// person asked for in the app (remove, relabel, restore) may.
+public enum CardSaveScope: Sendable, Hashable {
+    case keepEveryValue, personEdit
+}
+
+extension ContactsGateway {
+    public func save(
+        _ target: CardRecord, basis: CardRecord, transactionAuthor: String
+    ) throws(CardWriteFailure) -> CardSaveResult {
+        try save(target, basis: basis, scope: .keepEveryValue, transactionAuthor: transactionAuthor)
+    }
 }
 
 public enum CardSaveResult: Sendable, Hashable {
