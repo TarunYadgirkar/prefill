@@ -47,7 +47,10 @@ public struct MessageRouter: Sendable {
             Self.log.info("card rewrite skipped, too many this minute")
             return PageContextResponse(status: .unchanged)
         }
-        let page = PageSignal(host: request.host, hints: request.hints, now: date, matchEachSite: true)
+        let page = PageSignal(
+            host: request.host, hints: request.hints, now: date, matchEachSite: true,
+            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+        )
         let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
         if result.outcome == .saved { noteCardWrite(at: date) }
         return PageContextResponse(outcome: result.outcome)
