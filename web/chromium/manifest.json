@@ -29,5 +29,6 @@
       "run_at": "document_idle"
     }
   ],
-  "permissions": ["nativeMessaging"]
+  "permissions": ["nativeMessaging", "scripting"],
+  "host_permissions": ["https://*/*", "http://localhost/*", "http://127.0.0.1/*"]
 }

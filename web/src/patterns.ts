@@ -25,7 +25,9 @@ export interface Rule {
 
 const TEXT: readonly Control[] = ["text"];
 const WEB: readonly Control[] = ["text", "url"];
-const TEXT_EMAIL: readonly Control[] = ["text", "email"];
+// Some forms (Airtable's) ask for a name or an email in a text area.
+const TEXT_EMAIL: readonly Control[] = ["text", "email", "textarea"];
+const NAME: readonly Control[] = ["text", "textarea"];
 const NUMERIC: readonly Control[] = ["text", "tel", "number"];
 const CHOICE: readonly Control[] = ["text", "select"];
 const STREET: readonly Control[] = ["text", "textarea"];
@@ -40,6 +42,9 @@ export const LINK_WORDS: readonly (readonly [LinkType, RegExp])[] = [
   ["other", /other.?(?:web.?site|url|link)/iu],
   ["website", /portfolio|web.?site|personal.?(?:site|page)|home.?page|\burl\b|\bblog\b/iu],
 ];
+// Words that ask for a link to something other than a profile or website: a field that
+// says "Resume Link" wants a document, whatever its autocomplete token says.
+export const OTHER_LINKS = /r[eé]sum[eé]|\bcv\b|project|demo|video|paper|publication|writing.?sample|calendly|schedul/iu;
 const LINK = new RegExp(LINK_WORDS.map(([, pattern]) => pattern.source).join("|"), "iu");
 
 const nameIgnored = /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|用户名/iu;
@@ -125,25 +130,25 @@ export const RULES: readonly Rule[] = [
     pattern:
       /last.*name|lname|surname(?!\d)|last$|secondname|family.*name|nachname|apellidos?|famille|^nom(?![a-z])|cognome|sobrenome|姓/iu,
     negative: nameIgnored,
-    controls: TEXT,
+    controls: NAME,
   },
   {
     result: { kind: "name", part: "given" },
     pattern: /first.*name|initials|fname|first$|given.*name|vorname|nombre|forename|prénom|prenom|\bnome\b|名/iu,
     negative: nameIgnored,
-    controls: TEXT,
+    controls: NAME,
   },
   {
     result: { kind: "name", part: "middle" },
     pattern: /middle.*name|mname|middle$/iu,
     negative: nameIgnored,
-    controls: TEXT,
+    controls: NAME,
   },
   {
     result: { kind: "name", part: "full" },
     pattern:
       /^name|full.?name|your.?name|customer.?name|bill.?name|ship.?name|name.*first.*last|firstandlastname|contact.?(name|person)|receiver|(^|\W)name$|姓名|氏名/iu,
     negative: nameIgnored,
-    controls: TEXT,
+    controls: NAME,
   },
 ];

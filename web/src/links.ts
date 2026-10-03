@@ -1,5 +1,7 @@
+import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
-import { attachList } from "./datalist";
+import { attachDatalist } from "./datalist";
+import type { Attach } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { eventOrigin, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
@@ -10,11 +12,21 @@ export interface LinkOptions {
   send: (request: LinkSuggestionsRequest) => Promise<unknown>;
   // Only focus the browser made counts. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
+  // How the links are shown: a datalist for Safari's bar unless the caller draws its own list.
+  attach?: Attach;
 }
 
 // Safari's bar shows at most three datalist options.
 const MAX_OPTIONS = 3;
 const MAX_INSPECTED = 200;
+
+const TYPE_LABELS: Readonly<Record<LinkType, string>> = {
+  github: "GitHub",
+  linkedin: "LinkedIn",
+  x: "X",
+  website: "Website",
+  other: "Link",
+};
 
 // Shorter in the bar: no scheme and no trailing slash.
 export function shown(url: string): string {
@@ -39,7 +51,9 @@ function linkTypesOf(element: FieldElement): readonly LinkType[] {
   return field.kind === "link" ? (field.linkTypes ?? []) : [];
 }
 
+// A url input, or a field tagged autocomplete="url" (Airtable's), wants a whole address.
 function wantsUrl(element: FieldElement): boolean {
+  if (parseAutocomplete(element.getAttribute("autocomplete"))?.field === "url") return true;
   return element.localName === "input" && (element as HTMLInputElement).type.toLowerCase() === "url";
 }
 
@@ -55,6 +69,7 @@ function wantedOnPage(doc: Document): LinkType[] {
 // gets its list once the app answers. A field with a list of its own is left alone.
 export function installLinks(doc: Document, options: LinkOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+  const attach = options.attach ?? attachDatalist;
   const gestures = trackGestures(doc, isUserEvent);
   let known: { types: ReadonlySet<LinkType>; links: readonly SuggestedLink[] } | undefined;
   let detach: (() => void) | undefined;
@@ -79,15 +94,19 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
 
   const offer = (element: HTMLInputElement, wanted: readonly LinkType[], links: readonly SuggestedLink[] | undefined): void => {
     if (focused !== element || detach !== undefined || links === undefined) return;
-    const choices = linkOptions(wanted, links, wantsUrl(element));
-    if (choices.length > 0) detach = attachList(element, choices);
+    const values = linkOptions(wanted, links, wantsUrl(element));
+    const detail = (value: string): string => {
+      const link = links.find((candidate) => value === candidate.url || value === shown(candidate.url));
+      return link === undefined ? wanted.map((type) => TYPE_LABELS[type]).join(" and ") : TYPE_LABELS[link.type];
+    };
+    if (values.length > 0) detach = attach(element, values.map((value) => ({ value, detail: detail(value) })));
   };
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
     if (!isFieldElement(target) || target.hasAttribute("list")) return;
     const wanted = linkTypesOf(target);
-    if (wanted.length === 0 || !gestures.allows(target as HTMLInputElement)) return;
+    if (wanted.length === 0 || !gestures.allows(target)) return;
     clear();
     focused = target;
     suggest(target as HTMLInputElement, wanted);

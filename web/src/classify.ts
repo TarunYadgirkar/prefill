@@ -10,7 +10,7 @@ import {
   type FieldPart,
 } from "./fieldTypes";
 import type { FieldKind, LinkType, SectionHint } from "./messages";
-import { LINK_WORDS, NOT_PHONE, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
+import { LINK_WORDS, NOT_PHONE, OTHER_LINKS, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
 
 type ControlOrVerdict = Control | "sensitive" | "ignored";
 
@@ -74,17 +74,20 @@ function contact(mapped: Mapped, detail?: AutocompleteDetail): ContactField {
 }
 
 // The link types the words name, in the order they name them: "GitHub/Portfolio" asks for
-// a GitHub link first, then a website. Words that name none ask for a website.
+// a GitHub link first, then a website.
 function linkTypesIn(texts: readonly string[]): LinkType[] {
   const found = LINK_WORDS.flatMap(([type, pattern]) => {
     const at = Math.min(...texts.map((text) => text.search(pattern)).filter((index) => index >= 0));
     return Number.isFinite(at) ? [{ type, at }] : [];
   });
-  return found.length === 0 ? ["website"] : found.sort((first, second) => first.at - second.at).map(({ type }) => type);
+  return found.sort((first, second) => first.at - second.at).map(({ type }) => type);
 }
 
-function link(texts: readonly string[]): ContactField {
-  return { kind: "link", group: "", linkTypes: linkTypesIn(texts) };
+// Words that name no link type ask for a website, unless they name something else.
+function link(texts: readonly string[]): Classification {
+  const named = linkTypesIn(texts);
+  if (named.length > 0) return { kind: "link", group: "", linkTypes: named };
+  return texts.some((text) => OTHER_LINKS.test(text)) ? IGNORED : { kind: "link", group: "", linkTypes: ["website"] };
 }
 
 function fromAutocomplete(detail: AutocompleteDetail, control: Control, sources: readonly string[][]): Classification {

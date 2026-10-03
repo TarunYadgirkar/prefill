@@ -1,6 +1,7 @@
 import { installCapture } from "./capture";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
+import { showDropdown } from "./dropdown";
 import { installLinks } from "./links";
 import type { ExtensionRequest } from "./messages";
 import { isTrustedPage } from "./origin";
@@ -15,7 +16,7 @@ export interface PageEnvironment {
   isTopFrame: boolean;
   send: (request: ExtensionRequest) => Promise<unknown>;
   // Safari fills contact fields from the card, so there Prefill reorders the card for the
-  // page. Chrome and Arc don't read the card, so there the values go into a datalist.
+  // page. Chrome and Arc don't read the card, so there Prefill shows its own list of values.
   browser?: "safari" | "chromium";
 }
 
@@ -27,15 +28,20 @@ export function startPage(env: PageEnvironment): () => void {
   const send = (request: ExtensionRequest): void => {
     env.send(request).catch(() => undefined);
   };
+  const isChromium = env.browser === "chromium";
+  // Chrome mixes a datalist into its own autofill menu, doesn't open it when Tab brings
+  // focus, never shows one on a text area, and leaves its values in the page for scripts to
+  // read. So there every list is Prefill's own, in a closed shadow root.
+  const shown = isChromium ? { attach: showDropdown } : {};
   const values =
-    env.browser === "chromium"
+    isChromium
       ? installSuggestions(env.doc, { host, send: env.send })
       : installContext(env.doc, env.win, { host, send: env.send });
   const stops = [
     values,
     installCapture(env.doc, env.win, { host, send }),
-    installLinks(env.doc, { host, send: env.send }),
-    installCustom(env.doc, { host, send: env.send }),
+    installLinks(env.doc, { host, send: env.send, ...shown }),
+    installCustom(env.doc, { host, send: env.send, ...shown, textAreas: isChromium }),
   ];
   return () => {
     stops.forEach((stop) => {

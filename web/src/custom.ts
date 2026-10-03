@@ -1,6 +1,7 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify, isSignIn } from "./classify";
-import { attachList } from "./datalist";
+import { attachDatalist } from "./datalist";
+import type { Attach, TextField } from "./dropdown";
 import { eventOrigin, fieldElements, isFieldElement, labelText, nameTexts, placeholderText } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { trackGestures } from "./gesture";
@@ -11,6 +12,10 @@ export interface CustomOptions {
   send: (request: CustomSuggestionsRequest) => Promise<unknown>;
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
+  // How the values are shown: a datalist for Safari's bar unless the caller draws its own
+  // list, which also works on text areas.
+  attach?: Attach;
+  textAreas?: boolean;
 }
 
 const MAX_INSPECTED = 200;
@@ -21,8 +26,9 @@ const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
 
 // A field only gets custom values when nothing else claims it: no contact or link meaning,
 // no autofill token, not sensitive, and not on a sign-in form.
-export function isCustomCandidate(element: FieldElement): element is HTMLInputElement {
-  if (element.localName !== "input" || !LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase())) return false;
+export function isCustomCandidate(element: FieldElement, textAreas = false): element is TextField {
+  const isTextArea = textAreas && element.localName === "textarea";
+  if (!isTextArea && (element.localName !== "input" || !LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase()))) return false;
   if (parseAutocomplete(element.getAttribute("autocomplete")) !== undefined || isSignIn(element)) return false;
   return classify(element).kind === "ignored";
 }
@@ -46,10 +52,12 @@ export function fieldText(element: FieldElement): string {
 // fields a page adds later. The list goes away when the field loses focus.
 export function installCustom(doc: Document, options: CustomOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+  const attach = options.attach ?? attachDatalist;
+  const isCandidate = (element: FieldElement): element is TextField => isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);
   const known = new Map<string, readonly string[]>();
   let detach: (() => void) | undefined;
-  let focused: { element: HTMLInputElement; text: string } | undefined;
+  let focused: { element: TextField; text: string } | undefined;
 
   const clear = (): void => {
     detach?.();
@@ -60,7 +68,7 @@ export function installCustom(doc: Document, options: CustomOptions): () => void
   const offer = (): void => {
     const values = focused === undefined ? undefined : known.get(focused.text);
     if (focused === undefined || detach !== undefined || values === undefined || values.length === 0) return;
-    detach = attachList(focused.element, values);
+    detach = attach(focused.element, values.map((value) => ({ value, detail: "Custom field" })));
   };
 
   const fetchValues = (texts: readonly string[]): void => {
@@ -77,13 +85,13 @@ export function installCustom(doc: Document, options: CustomOptions): () => void
   };
 
   const prefetch = (): void => {
-    const texts = fieldElements(doc, MAX_INSPECTED).filter(isCustomCandidate).map(fieldText);
+    const texts = fieldElements(doc, MAX_INSPECTED).filter(isCandidate).map(fieldText);
     fetchValues([...new Set(texts)].filter(Boolean).slice(0, LIMITS.pageFields));
   };
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (!isFieldElement(target) || target.hasAttribute("list") || !isCustomCandidate(target)) return;
+    if (!isFieldElement(target) || target.hasAttribute("list") || !isCandidate(target)) return;
     const text = fieldText(target);
     if (text === "" || !gestures.allows(target)) return;
     clear();

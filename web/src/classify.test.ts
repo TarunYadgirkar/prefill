@@ -5,6 +5,7 @@ import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
 import { fieldElements } from "./dom";
 import type { Classification, FieldElement } from "./fieldTypes";
+import airtable from "./fixtures/airtable-form.html?raw";
 import checkoutTagged from "./fixtures/checkout-tagged.html?raw";
 import checkoutUntagged from "./fixtures/checkout-untagged.html?raw";
 import signup from "./fixtures/signup.html?raw";
@@ -198,5 +199,33 @@ describe("classify link fields", () => {
     page('<input id="a" type="url"><label>Company website <input id="b"></label>');
     expect(classify(field("#a"))).toMatchObject({ kind: "link", linkTypes: ["website"] });
     expect(classify(field("#b")).kind).toBe("ignored");
+  });
+});
+
+describe("Airtable's form", () => {
+  const byLabel = (): Record<string, string> =>
+    Object.fromEntries(
+      fieldElements(document)
+        .filter((element) => element.labels?.[0] !== undefined)
+        .map((element) => {
+          const found = classify(element);
+          const types = "linkTypes" in found ? (found.linkTypes ?? []).join(",") : "";
+          return [element.labels?.[0]?.textContent.trim() ?? "", [summary(found), types].filter(Boolean).join(" ")];
+        }),
+    );
+
+  it("reads names and emails in text areas, and a resume link as no profile", () => {
+    page(airtable);
+    expect(byLabel()).toMatchObject({
+      "Full Name": "name full",
+      "Student Email": "email",
+      "Personal Email": "email",
+      Phone: "phone",
+      Linkedin: "link linkedin",
+      Github: "link github",
+      "Resume Link": "ignored",
+      University: "ignored",
+      "Optional project website or link": "link website",
+    });
   });
 });
