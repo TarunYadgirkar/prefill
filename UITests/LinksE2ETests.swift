@@ -57,6 +57,7 @@ final class LinksE2ETests: XCTestCase {
         let move = app.buttons["move-off-card"].firstMatch
         XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 10), "no list of values on the card")
         keepOnlyLinksChosen()
+        XCTAssertFalse(app.buttons["Move 0 off your card"].exists, "nothing left chosen")
         for _ in 0..<8 where !(move.exists && move.isHittable) { app.swipeUp() }
         XCTAssertTrue(move.waitForExistence(timeout: 5), "no Move button")
         E2EServer.screenshot("links-sharing")
@@ -71,11 +72,20 @@ final class LinksE2ETests: XCTestCase {
 
     // The list also offers emails, phones and addresses; this test moves links alone.
     private func keepOnlyLinksChosen() {
-        let format = "identifier BEGINSWITH 'extra-' AND NOT identifier BEGINSWITH 'extra-link-'"
-        for toggle in app.switches.matching(NSPredicate(format: format)).allElementsBoundByIndex {
-            for _ in 0..<6 where !toggle.isHittable { app.swipeUp() }
-            guard toggle.value as? String == "1" else { continue }
-            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        // The list loads rows as they scroll in, so turn off what is on screen, then scroll on.
+        let format = "identifier BEGINSWITH 'extra-' AND NOT identifier BEGINSWITH 'extra-link-' AND value == '1'"
+        let chosen = app.switches.matching(NSPredicate(format: format))
+        // Rows behind the floating tab bar count as hittable, but a tap there lands on the bar.
+        let barTop = app.tabBars.firstMatch.frame.minY
+        for _ in 0..<20 {
+            let toggle = chosen.firstMatch
+            if toggle.exists, toggle.isHittable, toggle.frame.maxY < barTop {
+                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+            } else if app.buttons["move-off-card"].isHittable {
+                return
+            } else {
+                app.swipeUp(velocity: .slow)
+            }
         }
     }
 
