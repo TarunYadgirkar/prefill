@@ -1,6 +1,6 @@
 import { classify } from "./classify";
-import { attachList } from "./datalist";
 import { eventOrigin, fieldElements, isFieldElement } from "./dom";
+import { showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { isContact, type ContactField, type FieldElement, type FieldPart } from "./fieldTypes";
 import {
@@ -22,10 +22,12 @@ export interface SuggestionOptions {
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
+  attach?: Attach;
 }
 
 const MAX_INSPECTED = 200;
-// Input types a datalist works on; selects and text areas never show one.
+// Single-line inputs that take typed contact details. Text areas count too: Prefill draws
+// its own list under them, and forms like Airtable's ask for a name or email in one.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "search"]);
 const SUGGESTED_KINDS: ReadonlySet<FieldKind> = new Set(["email", "phone", "address", "name"]);
 
@@ -64,8 +66,15 @@ export function suggestionOptions(field: ContactField, values: Suggestions): str
   return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
 }
 
+const KIND_LABELS: Partial<Record<FieldKind, string>> = { email: "Email", phone: "Phone", address: "Address", name: "Name" };
+
+function isTextField(element: FieldElement): element is TextField {
+  if (element.localName === "textarea") return true;
+  return element.localName === "input" && LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase());
+}
+
 function suggestedField(element: FieldElement): ContactField | undefined {
-  if (element.localName !== "input" || !LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase())) return undefined;
+  if (!isTextField(element)) return undefined;
   const field = classify(element);
   return isContact(field) && SUGGESTED_KINDS.has(field.kind) ? field : undefined;
 }
@@ -82,17 +91,18 @@ function pageFields(doc: Document): PageField[] {
   return [...seen.values()].slice(0, LIMITS.pageFields);
 }
 
-// Offers the card's emails, phone numbers, addresses and name in the browser's own
-// dropdown through a datalist, on browsers whose autofill doesn't read the card (Chrome,
-// Arc). The values are fetched when the page loads, ranked for the site, and a field gets
-// its list when the person focuses it; the list goes away when the field loses focus. A
-// field with a list of its own is left alone.
+// Offers the card's emails, phone numbers, addresses and name in Prefill's own dropdown,
+// on browsers whose autofill doesn't read the card (Chrome, Arc). The values are fetched
+// when the page loads, ranked for the site, and a field gets its list when the person
+// focuses it; the list goes away when the field loses focus. A field with a datalist of
+// its own is left alone.
 export function installSuggestions(doc: Document, options: SuggestionOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+  const attach = options.attach ?? showDropdown;
   const gestures = trackGestures(doc, isUserEvent, options.now);
   let known: Suggestions | undefined;
   let detach: (() => void) | undefined;
-  let focused: { element: HTMLInputElement; field: ContactField } | undefined;
+  let focused: { element: TextField; field: ContactField } | undefined;
 
   const clear = (): void => {
     detach?.();
@@ -102,8 +112,9 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
 
   const offer = (): void => {
     if (focused === undefined || detach !== undefined || known === undefined) return;
-    const choices = suggestionOptions(focused.field, known);
-    if (choices.length > 0) detach = attachList(focused.element, choices);
+    const detail = KIND_LABELS[focused.field.kind] ?? "";
+    const choices: Choice[] = suggestionOptions(focused.field, known).map((value) => ({ value, detail }));
+    if (choices.length > 0) detach = attach(focused.element, choices);
   };
 
   const fetchValues = (): void => {
@@ -122,12 +133,11 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (!isFieldElement(target) || target.hasAttribute("list")) return;
+    if (!isFieldElement(target) || target.hasAttribute("list") || !isTextField(target)) return;
     const field = suggestedField(target);
-    const element = target as HTMLInputElement;
-    if (field === undefined || !gestures.allows(element)) return;
+    if (field === undefined || !gestures.allows(target)) return;
     clear();
-    focused = { element, field };
+    focused = { element: target, field };
     offer();
     fetchValues();
   };

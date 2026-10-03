@@ -1,6 +1,8 @@
+import type { Attach, TextField } from "./dropdown";
+
 // Gives `element` a datalist of `options` and returns what takes it away again. The list
 // sits outside the page's own markup but in the field's tree, where its list id resolves.
-export function attachList(element: HTMLInputElement, options: readonly string[]): () => void {
+export function attachList(element: TextField, options: readonly string[]): () => void {
   const doc = element.ownerDocument;
   const list = doc.createElement("datalist");
   list.id = `prefill-${crypto.randomUUID()}`;
@@ -19,3 +21,6 @@ export function attachList(element: HTMLInputElement, options: readonly string[]
     list.remove();
   };
 }
+
+// The same list for callers that also carry what each value is, which a datalist can't show.
+export const attachDatalist: Attach = (element, choices) => attachList(element, choices.map((choice) => choice.value));

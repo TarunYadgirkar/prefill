@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { installCustom } from "./custom";
+import { installCustom, isCustomCandidate } from "./custom";
 import type { CustomSuggestionsRequest } from "./messages";
 
 const GREENHOUSE = `
@@ -47,5 +47,12 @@ describe("installCustom", () => {
     await Promise.resolve();
     expect(send).not.toHaveBeenCalled();
     stop();
+  });
+
+  it("takes text areas only where Prefill draws its own list", () => {
+    document.body.innerHTML = '<label for="u">University</label><textarea id="u"></textarea>';
+    const university = document.getElementById("u") as HTMLTextAreaElement;
+    expect(isCustomCandidate(university)).toBe(false);
+    expect(isCustomCandidate(university, true)).toBe(true);
   });
 });

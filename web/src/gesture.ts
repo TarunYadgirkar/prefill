@@ -1,4 +1,5 @@
 import { eventOrigin, isInView } from "./dom";
+import type { FieldElement } from "./fieldTypes";
 
 // A page can focus a field from script, and the browser marks that focus as trusted too.
 // So a field only gets a datalist of the person's values when they just clicked or tapped
@@ -12,11 +13,11 @@ interface Gesture {
 }
 
 export interface GestureGate {
-  allows: (element: HTMLInputElement) => boolean;
+  allows: (element: FieldElement) => boolean;
   stop: () => void;
 }
 
-function isPointedAt(gesture: Gesture, element: HTMLInputElement): boolean {
+function isPointedAt(gesture: Gesture, element: FieldElement): boolean {
   const target = gesture.target;
   if (!(target instanceof Node)) return false;
   if (element.contains(target)) return true;
@@ -24,7 +25,7 @@ function isPointedAt(gesture: Gesture, element: HTMLInputElement): boolean {
   return label?.control === element;
 }
 
-function follows(gesture: Gesture | undefined, element: HTMLInputElement, now: number): boolean {
+function follows(gesture: Gesture | undefined, element: FieldElement, now: number): boolean {
   if (gesture === undefined || now - gesture.at > GESTURE_MS) return false;
   return gesture.key === "Tab" || (gesture.key === undefined && isPointedAt(gesture, element));
 }

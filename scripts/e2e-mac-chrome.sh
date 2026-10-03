@@ -4,7 +4,8 @@
 # Chrome for Testing and uses the Alex Rivera card in testbed/mac-e2e, runs it with its own
 # store, loads the extension into a headless Chrome for Testing profile whose native
 # messaging host is that copy's, focuses an email field and submits a new email.
-# Screenshot: assets/generated/mac-chrome-datalist.png
+# Screenshots: assets/generated/mac-chrome-dropdown.png, and with PREFILL_E2E_AIRTABLE=1 also
+# assets/generated/airtable-chrome.png from a real Airtable form (filled, never submitted).
 source ${0:A:h}/lib.sh
 
 PORT=8847
@@ -54,8 +55,10 @@ sleep 1
 
 step "Driving Chrome for Testing"
 mkdir -p $ROOT/assets/generated
+airtable=()
+[[ ${PREFILL_E2E_AIRTABLE:-0} == 1 ]] && airtable=($ROOT/assets/generated/airtable-chrome.png)
 node $ROOT/web/src/e2e/macChrome.ts $ROOT/web/dist-chrome $WORK/profile "http://localhost:$PORT/" \
-  $ROOT/assets/generated/mac-chrome-datalist.png
+  $ROOT/assets/generated/mac-chrome-dropdown.png $airtable
 
 step "Checking that the typed email reached the card"
 grep -q "alex.new@example.net" $WORK/store/* && print "ok  the submitted email was captured" || {

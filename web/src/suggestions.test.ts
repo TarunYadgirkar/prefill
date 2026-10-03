@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { Choice, TextField } from "./dropdown";
 import type { ContactSuggestionsRequest } from "./messages";
 import { installSuggestions, suggestionOptions, type Suggestions } from "./suggestions";
 
@@ -33,9 +34,17 @@ describe("installSuggestions", () => {
     vi.restoreAllMocks();
   });
 
+  // What each field is showing, in place of the dropdown, which draws in a closed shadow root.
+  let showing: Map<TextField, readonly Choice[]>;
+  const attach = (element: TextField, choices: readonly Choice[]) => {
+    showing.set(element, choices);
+    return () => showing.delete(element);
+  };
+
   const start = (send: (request: ContactSuggestionsRequest) => Promise<unknown>) => {
+    showing = new Map();
     vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
-    return installSuggestions(document, { host: () => "shop.example.net", send, isUserEvent: () => true });
+    return installSuggestions(document, { host: () => "shop.example.net", send, isUserEvent: () => true, attach });
   };
 
   const firstInput = (): HTMLInputElement => {
@@ -44,10 +53,7 @@ describe("installSuggestions", () => {
     return input;
   };
 
-  const optionsOf = (input: HTMLInputElement): string[] => {
-    const list = document.getElementById(input.getAttribute("list") ?? "");
-    return [...(list?.querySelectorAll("option") ?? [])].map((option) => option.value);
-  };
+  const optionsOf = (element: TextField): string[] => (showing.get(element) ?? []).map((choice) => choice.value);
 
   const reply = () =>
     vi
@@ -60,7 +66,7 @@ describe("installSuggestions", () => {
     await Promise.resolve();
     const field = firstInput();
     field.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-    expect(field.hasAttribute("list")).toBe(false);
+    expect(showing.size).toBe(0);
     stop();
   });
 
@@ -79,8 +85,24 @@ describe("installSuggestions", () => {
       "alex.rivera@example.com",
     ]);
 
+    expect(showing.get(field)?.[0]?.detail).toBe("Email");
+
     field.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
-    expect(field.hasAttribute("list")).toBe(false);
+    expect(showing.size).toBe(0);
+    stop();
+  });
+
+  it("offers a name in a text area, as Airtable asks for one", async () => {
+    document.body.innerHTML = '<label for="n">Full Name</label><textarea id="n"></textarea>';
+    const send = reply();
+    const stop = start(send);
+    await Promise.resolve();
+    const field = document.querySelector("textarea");
+    if (field === null) throw new Error("no textarea");
+    field.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    field.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    await Promise.resolve();
+    expect(optionsOf(field)).toEqual(["Alex Rivera"]);
     stop();
   });
 });
