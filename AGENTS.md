@@ -1,0 +1,97 @@
+# Working on Prefill
+
+Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the way they are, and [research/REPORT.md](research/REPORT.md) for the evidence behind the platform facts below.
+
+## Platform facts (verified, don't re-litigate)
+
+- **No public API adds third-party values to Safari's iPhone QuickType bar.** Safari fills it from the My Info card.
+- **Safari's My Info and the Contacts My Card are one setting.** Both settings screens call the same private `setMeContact`. So the card Safari reads is the card NameDrop and Share Contact send.
+- **Bar order:**
+  - Slot 1 is the value whose stored identifier is 0.
+  - Slot 2 is the next value in array order.
+  - A fresh rewrite in one `CNSaveRequest` renumbers identifiers.
+  - Safari picks the change up on the next field focus.
+- **Datalist injection reaches the real bar only where Safari has no contact suggestion of its own:**
+  - At most 3 values, no labels.
+  - WebKit also opens its own list under the field.
+  - On sign-up forms the bar shows Passwords instead, so the values appear only in WebKit's list.
+- **Safari never offers to save typed contact values.** Prefill's extension captures them instead.
+- **The free personal team (5AKJYZ7USP) can't use App Groups,** and its apps expire after 7 days.
+  - Personal bundle IDs end in `.dev`.
+  - The AppStore config exists in case the user ever pays.
+  - Assume they won't: all sync goes through iCloud Contacts.
+- **Chrome extensions can't reach Contacts.** On the Mac, data flows: native host → Unix socket → Mac app.
+- **Chromium exposes web fields to Accessibility only after `AXManualAccessibility`/`AXEnhancedUserInterface` is set,** and builds that view a few seconds later. Browsers don't expose the `autocomplete` or `name` attributes.
+
+## Data model
+
+- **The person's own card (Me card):** what Safari's bar reads.
+  - In **minimal mode** it holds only the name and the phone numbers the person chose to keep.
+  - Otherwise it also holds emails, phones and addresses.
+- **The Prefill contact:**
+  - An organization card named `Prefill · <Name>`, in the same account as the Me card.
+  - Recognized by its department field: `Links and custom fields for Prefill`, or `Contact details for Prefill` when minimal mode is on.
+  - Holds links (urlAddresses), custom fields (contactRelations labeled `<Label> · Prefill[ · match words]`) and, in minimal mode, the moved emails, addresses and phones.
+  - Copies from two devices merge, and copies are never deleted.
+- **`CNContactStoreGateway`:**
+  - Reads both contacts as one `CardRecord` and writes each part back to its own contact.
+  - Callers (`CardWriter`, never-drop guard, readers, Siri, Mac) don't know about the split.
+- **Per-device app state** (pins, usage, muted sites, review queue):
+  - iPhone: the Keychain store for Personal, the App Group store for AppStore.
+  - Mac: `~/Library/Application Support/Prefill/Store`.
+  - It does not sync.
+
+## Layout
+
+| Path | What |
+|---|---|
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. |
+| `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
+| `App/` | iPhone app: Card (Emails/Phones/Addresses/Links/Custom), Sites, Recent, Settings (Sharing your card, Restore), Siri intents. |
+| `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
+| `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu and settings. |
+| `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
+| `MacShared/` | Code identity checks and the socket used by both sides. |
+| `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
+| `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
+| `scripts/` | build, test, install-device, install-mac, e2e-mac-chrome, e2e-mac-ax. |
+
+## Rules that keep it safe
+
+- **Field rules:**
+  - Never act on password, card, code, bank or government-ID fields.
+  - Never act on sign-in forms (a `current-password` field in the form).
+- **Values reach a page only after a real click or Tab on that field,** within 1 second, and only while the field is visible (`gesture.ts`). One Tab unlocks one field.
+- **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
+- **Never drop data:**
+  - Card rewrites go through `CardWriter` plus the never-drop guard.
+  - Moves are one save request, read back afterwards.
+  - Nothing comes off the Me card without the person confirming the exact list.
+- **Mac relay:** the app answers only Prefill's own signed host, and the host talks only to Prefill's own app.
+- **The extension's `key` in `web/chromium/manifest.json` is a public key.** It's in `.gitleaksignore` on purpose.
+
+## Workflow
+
+- **Testing:** the user wants it lean. Add a few unit tests plus one real end-to-end check per feature. Don't build big test suites, and never tune field rules on generated data; use real page markup as fixtures.
+- **Before pushing:** run `pnpm --dir web test`, `pnpm --dir web lint`, `pnpm --dir web typecheck`, `swift test` in `Packages/PrefillKit`, `swiftlint --strict`, `scripts/build.sh` and the Mac build.
+- **Commits:** conventional, short subjects, no Co-Authored-By. Merge with `--no-ff` into `main` and push. The repo is public.
+- **Parallel agents:** work in your own worktree under `.claude/worktrees/`. Never switch the branch of the main checkout.
+- **Devices:**
+  - The user's iPhone 17 Pro has UDID `00008150-000A3C241108401C`.
+  - CoreDevice error 4016 or 10002 means it's locked.
+  - Main test simulator: `D03EE1A5-5538-4E81-BB43-5ABF852199F4`; its My Info is the Alex Rivera test card.
+- **Your own permissions:** you can't toggle Accessibility, Contacts or other privacy settings for the user, and computer-use can only look at browsers, not click in them. Hand those steps to the user.
+
+## Open items
+
+- **Device-only checks not yet done:** Siri, the Focus filter, snippet buttons, and iCloud carrying custom-field labels between devices.
+- **Minimal mode:**
+  - At most 3 values with no labels.
+  - WebKit's in-page list always shows.
+  - AutoFill Contact no longer fills emails and addresses.
+  - The Mac has no "put back on card" or Restore yet.
+- **Mac Accessibility mode:**
+  - It doesn't save new values; only the extension does.
+  - Arc, Safari, Electron apps and Firefox are untested.
+  - The first field clicked right after switching to Chrome may get nothing.
+- **Weekly reinstall:** the free-team iPhone build expires every 7 days. An automated launchd reinstall was offered but not set up.
