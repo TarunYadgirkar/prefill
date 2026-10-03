@@ -27,8 +27,8 @@ struct E2ESetupHostTests {
     }
 
     // Puts the card's emails back to the vCard's three and takes off any links and custom
-    // fields, which also drops anything an earlier run added. Phones and addresses are left
-    // as they are.
+    // fields, on the card or on Prefill's contact, which also drops anything an earlier run
+    // added. Phones and addresses are left as they are.
     private func resetEmails(_ identifier: String) throws {
         let keys = [CNContactEmailAddressesKey, CNContactUrlAddressesKey, CNContactRelationsKey]
             .map { $0 as CNKeyDescriptor }
@@ -41,7 +41,18 @@ struct E2ESetupHostTests {
         }
         let request = CNSaveRequest()
         request.update(card)
+        try prefillContacts().forEach(request.delete)
         try CNContactStore().execute(request)
+    }
+
+    // Prefill's own contact holds the links and custom fields an earlier run added.
+    private func prefillContacts() throws -> [CNMutableContact] {
+        let keys = [CNContactDepartmentNameKey as CNKeyDescriptor]
+        return try CNContactStore().unifiedContacts(
+            matching: CNContact.predicateForContacts(matchingName: PrefillContact.searchName), keysToFetch: keys
+        )
+        .filter { $0.departmentName == PrefillContact.marker }
+        .compactMap { $0.mutableCopy() as? CNMutableContact }
     }
 
     private func sharedStore() throws -> KeychainStore {

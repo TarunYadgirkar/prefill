@@ -8,6 +8,10 @@ public protocol ContactsGateway: Sendable {
     // planned from. Otherwise returns the card as it is now, so nothing added in between is lost.
     func save(_ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String)
         throws(CardWriteFailure) -> CardSaveResult
+    // Links and custom fields still on the person's own card, which Share Contact sends.
+    func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra]
+    // Moves the chosen ones to Prefill's own contact. Only the person asks for this.
+    func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure)
 }
 
 // What a save may change. Reordering and adding never removes a value; only an edit the
@@ -17,6 +21,9 @@ public enum CardSaveScope: Sendable, Hashable {
 }
 
 extension ContactsGateway {
+    public func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra] { [] }
+    public func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure) {}
+
     public func save(
         _ target: CardRecord, basis: CardRecord, transactionAuthor: String
     ) throws(CardWriteFailure) -> CardSaveResult {

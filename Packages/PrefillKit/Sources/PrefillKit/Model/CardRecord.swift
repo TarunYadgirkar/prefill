@@ -29,7 +29,6 @@ public struct CardRecord: Codable, Sendable, Hashable {
     private let storedCustomFields: [CustomField]?
 
     public var links: [CardEntry] { storedLinks ?? [] }
-    var knowsLinks: Bool { storedLinks != nil }
     public var customFields: [CustomField] { storedCustomFields ?? [] }
     var knowsCustomFields: Bool { storedCustomFields != nil }
 

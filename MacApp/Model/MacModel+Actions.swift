@@ -46,6 +46,22 @@ extension MacModel {
         await refresh()
     }
 
+    // Moves the links and custom fields the person chose off My Card onto Prefill's contact.
+    func moveOffCard(_ chosen: [CardExtra]) async {
+        guard let identifier = state.cardLink?.contactIdentifier else { return }
+        let gateway = gateway
+        let failure = await Task.detached { () -> CardWriteFailure? in
+            do throws(CardWriteFailure) {
+                try gateway.moveOffCard(chosen, identifier: identifier)
+                return nil
+            } catch {
+                return error
+            }
+        }.value
+        if let failure { problem = failure.reason }
+        await refresh()
+    }
+
     func dismiss(_ item: RecentItem) {
         commit(state.rejecting(item.value.id))
     }
