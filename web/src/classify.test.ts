@@ -136,6 +136,8 @@ describe("classify single fields", () => {
   it.each([
     ['<input autocomplete="work email">', "email work"],
     ['<input type="email" autocomplete="username">', "email"],
+    ['<form><input type="email" name="email"><input type="password" autocomplete="current-password"></form>', "ignored"],
+    ['<input type="email" autocomplete="username webauthn">', "ignored"],
     ['<input autocomplete="username">', "ignored"],
     ['<input autocomplete="one-time-code">', "sensitive"],
     ['<input autocomplete="tel-area-code">', "phone partial"],

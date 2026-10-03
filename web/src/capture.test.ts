@@ -238,7 +238,6 @@ describe("what counts as a sign-up", () => {
   it.each([
     ['<input type="password" autocomplete="new-password">', true],
     ['<input type="password">', true],
-    ['<input type="password" autocomplete="current-password">', false],
     ['<input type="password" style="display:none">', false],
     ['<input type="password" hidden>', false],
   ])("%s gives hasPassword %s", (password, expected) => {
@@ -246,6 +245,13 @@ describe("what counts as a sign-up", () => {
     type("[name=email]", "new.person@example.org");
     click("button");
     expect(send.mock.calls[0]?.[0].hasPassword).toBe(expected);
+  });
+
+  it("leaves sign-in forms to Passwords", () => {
+    const send = setUp('<form><input type="email" name="email"><input type="password" autocomplete="current-password"><button>Go</button></form>');
+    type("[name=email]", "new.person@example.org");
+    click("button");
+    expect(send).not.toHaveBeenCalled();
   });
 });
 
