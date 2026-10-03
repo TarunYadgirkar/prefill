@@ -32,23 +32,43 @@ public struct CNContactStoreGateway: ContactsGateway {
         let store = CNContactStore()
         let loaded = try load(target.identifier, store: store)
         guard loaded.split.record == basis else { return .stale(current: loaded.split.record) }
-        try execute(loaded.split.writes(for: target), on: loaded, store: store, author: transactionAuthor)
+        let writes = loaded.split.writes(for: target)
+        guard !writes.isEmpty else { return .unchanged }
+        try execute(writes, on: loaded, store: store, author: transactionAuthor)
         if scope == .keepEveryValue {
             restoreLostValues(of: basis, identifier: target.identifier, author: transactionAuthor)
         }
         return .saved
     }
 
-    public func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra] {
-        try load(identifier, store: CNContactStore()).split.extrasOnCard
+    public func placement(identifier: String) throws(CardWriteFailure) -> CardPlacement {
+        try load(identifier, store: CNContactStore()).split.placement
     }
 
     // One save request: Prefill's contact gains the chosen values, and only then does the
-    // card lose them, so a failed save leaves both as they were.
+    // card lose them, so a failed save leaves both as they were. Read back afterwards: a
+    // value that isn't on either contact any more is put back.
     public func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure) {
         let store = CNContactStore()
         let loaded = try load(identifier, store: store)
         guard let writes = loaded.split.moving(chosen) else { return }
+        let before = loaded.split.record
+        try execute(writes, on: loaded, store: store, author: CardWriter.transactionAuthor)
+        let after = try load(identifier, store: CNContactStore())
+        let held = Set(after.split.placement.onPrefill.map(\.id))
+        guard chosen.allSatisfy({ held.contains($0.id) }) else {
+            Self.log.error("a moved value is missing from Prefill's contact")
+            restoreLostValues(of: before, identifier: identifier, author: CardWriter.transactionAuthor)
+            throw .other
+        }
+    }
+
+    public func moveOntoCard(
+        _ chosen: [CardExtra]?, identifier: String, leavingMinimal: Bool
+    ) throws(CardWriteFailure) {
+        let store = CNContactStore()
+        let loaded = try load(identifier, store: store)
+        guard let writes = loaded.split.movingOntoCard(chosen, leavingMinimal: leavingMinimal) else { return }
         try execute(writes, on: loaded, store: store, author: CardWriter.transactionAuthor)
     }
 
@@ -63,7 +83,12 @@ public struct CNContactStoreGateway: ContactsGateway {
         let copies = try PrefillContactStore.find(besideCard: identifier, in: store, keys: CNCardMapping.keys)
         let split = CardSplit(
             card: CNCardMapping.record(from: card, identifier: identifier),
-            copies: copies.map { CardExtras(CNCardMapping.record(from: $0, identifier: $0.identifier)) }
+            copies: copies.map { copy in
+                CardExtras(
+                    CNCardMapping.record(from: copy, identifier: copy.identifier),
+                    isMinimal: copy.departmentName == PrefillContact.minimalMarker
+                )
+            }
         )
         return Loaded(card: card, copies: copies, split: split)
     }
@@ -78,7 +103,9 @@ public struct CNContactStoreGateway: ContactsGateway {
         if let card = writes.card {
             guard let contact = loaded.card.mutableCopy() as? CNMutableContact else { throw .other }
             CNCardMapping.applyCore(card, to: contact)
-            if writes.includesCardExtras { CNCardMapping.applyExtras(CardExtras(card), to: contact) }
+            if writes.includesCardExtras {
+                CNCardMapping.applyExtras(CardExtras(links: card.links, customFields: card.customFields), to: contact)
+            }
             request.update(contact)
         }
         if let extras = writes.extras {
@@ -184,26 +211,32 @@ enum CNCardMapping {
         applyCore(record, to: contact)
         // A record stored before Prefill read custom fields says nothing about them.
         if record.knowsCustomFields {
-            applyExtras(CardExtras(record), to: contact)
+            applyExtras(CardExtras(links: record.links, customFields: record.customFields), to: contact)
         } else {
             applyLinks(record.links, to: contact)
         }
     }
 
     static func applyCore(_ record: CardRecord, to contact: CNMutableContact) {
-        contact.emailAddresses = fresh(record.emails, originals: contact.emailAddresses) {
+        applyCore(emails: record.emails, phones: record.phones, addresses: record.addresses, to: contact)
+    }
+
+    static func applyCore(
+        emails: [CardEntry], phones: [CardEntry], addresses: [CardEntry], to contact: CNMutableContact
+    ) {
+        contact.emailAddresses = fresh(emails, originals: contact.emailAddresses) {
             Normalizer.email($0 as String)
         } make: { entry in
             guard case .email(let text) = entry.payload else { return nil }
             return text as NSString
         }
-        contact.phoneNumbers = fresh(record.phones, originals: contact.phoneNumbers) {
+        contact.phoneNumbers = fresh(phones, originals: contact.phoneNumbers) {
             Normalizer.phone($0.stringValue)
         } make: { entry in
             guard case .phone(let text) = entry.payload else { return nil }
             return CNPhoneNumber(stringValue: text)
         }
-        contact.postalAddresses = fresh(record.addresses, originals: contact.postalAddresses) {
+        contact.postalAddresses = fresh(addresses, originals: contact.postalAddresses) {
             Normalizer.address(postal($0))
         } make: { entry in
             guard case .address(let address) = entry.payload else { return nil }
@@ -211,9 +244,17 @@ enum CNCardMapping {
         }
     }
 
+    // Links and custom fields only, the part of CardExtras the person's own card can hold.
     static func applyExtras(_ extras: CardExtras, to contact: CNMutableContact) {
         applyLinks(extras.links, to: contact)
         applyCustomFields(extras.customFields, to: contact)
+    }
+
+    // Everything Prefill's contact holds, and the marker that says whether the card is minimal.
+    static func applyPrefill(_ extras: CardExtras, to contact: CNMutableContact) {
+        applyExtras(extras, to: contact)
+        applyCore(emails: extras.emails, phones: extras.phones, addresses: extras.addresses, to: contact)
+        contact.departmentName = extras.isMinimal ? PrefillContact.minimalMarker : PrefillContact.marker
     }
 
     private static func applyLinks(_ links: [CardEntry], to contact: CNMutableContact) {

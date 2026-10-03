@@ -55,14 +55,28 @@ final class LinksE2ETests: XCTestCase {
         for _ in 0..<6 where !row.isHittable { app.swipeUp() }
         row.tap()
         let move = app.buttons["move-off-card"].firstMatch
-        XCTAssertTrue(move.waitForExistence(timeout: 10), "no Move button")
+        XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 10), "no list of values on the card")
+        keepOnlyLinksChosen()
+        for _ in 0..<8 where !(move.exists && move.isHittable) { app.swipeUp() }
+        XCTAssertTrue(move.waitForExistence(timeout: 5), "no Move button")
         E2EServer.screenshot("links-sharing")
         move.tap()
         let confirm = app.buttons["Move off your card"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5), "no confirmation")
         confirm.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["card-is-clean"].waitForExistence(timeout: 10))
+        let links = app.switches.matching(NSPredicate(format: "identifier BEGINSWITH 'extra-link-'"))
+        XCTAssertTrue(links.firstMatch.waitForNonExistence(timeout: 10), "links stayed in the list")
         E2EServer.screenshot("links-sharing-clean")
+    }
+
+    // The list also offers emails, phones and addresses; this test moves links alone.
+    private func keepOnlyLinksChosen() {
+        let format = "identifier BEGINSWITH 'extra-' AND NOT identifier BEGINSWITH 'extra-link-'"
+        for toggle in app.switches.matching(NSPredicate(format: format)).allElementsBoundByIndex {
+            for _ in 0..<6 where !toggle.isHittable { app.swipeUp() }
+            guard toggle.value as? String == "1" else { continue }
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        }
     }
 
     private func addLink(_ link: String) {

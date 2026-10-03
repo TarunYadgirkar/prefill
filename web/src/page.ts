@@ -1,6 +1,7 @@
 import { installCapture } from "./capture";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
+import { attachDatalist } from "./datalist";
 import { showDropdown } from "./dropdown";
 import { installLinks } from "./links";
 import type { ExtensionRequest } from "./messages";
@@ -33,12 +34,16 @@ export function startPage(env: PageEnvironment): () => void {
   // focus, never shows one on a text area, and leaves its values in the page for scripts to
   // read. So there every list is Prefill's own, in a closed shadow root.
   const shown = isChromium ? { attach: showDropdown } : {};
-  const values =
-    isChromium
-      ? installSuggestions(env.doc, { host, send: env.send })
-      : installContext(env.doc, env.win, { host, send: env.send });
+  // In Safari the card's order still follows the page, and values a minimal card left on
+  // Prefill's contact come through a datalist for Safari's bar.
+  const values = isChromium
+    ? [installSuggestions(env.doc, { host, send: env.send })]
+    : [
+        installContext(env.doc, env.win, { host, send: env.send }),
+        installSuggestions(env.doc, { host, send: env.send, attach: attachDatalist, offCard: true }),
+      ];
   const stops = [
-    values,
+    ...values,
     installCapture(env.doc, env.win, { host, send }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
     installCustom(env.doc, { host, send: env.send, ...shown, textAreas: isChromium }),

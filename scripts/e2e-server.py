@@ -67,7 +67,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         url = urllib.parse.urlparse(self.path)
         query = urllib.parse.parse_qs(url.query)
         if url.path == "/snap":
-            dest = SHOTS / f"e2e-ext-{safe_name(query.get('name', [''])[0])}.png"
+            name = safe_name(query.get("name", [""])[0])
+            dest = SHOTS / f"{name if name.startswith('minimal-card-') else 'e2e-ext-' + name}.png"
             done = subprocess.run(["xcrun", "simctl", "io", UDID, "screenshot", str(dest)], capture_output=True)
             return self.reply(200 if done.returncode == 0 else 500, str(dest))
         if url.path == "/card":

@@ -71,7 +71,12 @@ it.each([
 
 it("runs on http only on this device itself", async () => {
   const send = await load('<input type="email" autocomplete="email">', { protocol: "http:", hostname: "localhost" });
-  expect(send).toHaveBeenCalledTimes(1);
+  expect(send.mock.calls.map(([request]) => (request as { type: string }).type)).toEqual(["contactSuggestions", "pageContext"]);
+});
+
+it("asks Safari's app only for values a minimal card left off", async () => {
+  const send = await load('<input type="email" autocomplete="email">');
+  expect(send).toHaveBeenCalledWith({ type: "contactSuggestions", host: "shop.example.net", fields: [{ kind: "email" }], offCard: true });
 });
 
 it("ignores events the page dispatches itself", async () => {

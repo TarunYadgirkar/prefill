@@ -8,10 +8,14 @@ public protocol ContactsGateway: Sendable {
     // planned from. Otherwise returns the card as it is now, so nothing added in between is lost.
     func save(_ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String)
         throws(CardWriteFailure) -> CardSaveResult
-    // Links and custom fields still on the person's own card, which Share Contact sends.
-    func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra]
+    // What is on the person's own card, which Share Contact sends, and what Prefill's
+    // contact holds.
+    func placement(identifier: String) throws(CardWriteFailure) -> CardPlacement
     // Moves the chosen ones to Prefill's own contact. Only the person asks for this.
     func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure)
+    // Puts the chosen emails, phones and addresses (nil: all of them) back on the card, and
+    // when leaving a minimal card, sends new ones to the card again. Only the person asks.
+    func moveOntoCard(_ chosen: [CardExtra]?, identifier: String, leavingMinimal: Bool) throws(CardWriteFailure)
 }
 
 // What a save may change. Reordering and adding never removes a value; only an edit the
@@ -21,8 +25,13 @@ public enum CardSaveScope: Sendable, Hashable {
 }
 
 extension ContactsGateway {
-    public func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra] { [] }
+    public func placement(identifier: String) throws(CardWriteFailure) -> CardPlacement {
+        CardPlacement(onCard: [])
+    }
     public func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure) {}
+    public func moveOntoCard(
+        _ chosen: [CardExtra]?, identifier: String, leavingMinimal: Bool
+    ) throws(CardWriteFailure) {}
 
     public func save(
         _ target: CardRecord, basis: CardRecord, transactionAuthor: String
@@ -33,6 +42,8 @@ extension ContactsGateway {
 
 public enum CardSaveResult: Sendable, Hashable {
     case saved
+    // Nothing needed writing: only Prefill's contact's order would have changed.
+    case unchanged
     case stale(current: CardRecord)
 }
 
@@ -154,6 +165,8 @@ public struct CardWriter: Sendable {
             case .saved:
                 Self.log.info("card saved, \(plan.target.emails.count, privacy: .public) emails")
                 return CardWriteResult(outcome: .saved, imported: plan.imported)
+            case .unchanged:
+                return CardWriteResult(outcome: .unchanged, imported: plan.imported)
             case .stale(let current) where attempt < Self.attempts:
                 return write(CardPlan(card: current, request: request), request: request, attempt: attempt + 1)
             case .stale:
