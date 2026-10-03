@@ -26,14 +26,19 @@ struct E2ESetupHostTests {
         return try #require(matches.first?.identifier, "Alex Rivera is missing from this simulator")
     }
 
-    // Puts the card's emails back to the vCard's three and takes off any links, which also
-    // drops anything an earlier run added. Phones and addresses are left as they are.
+    // Puts the card's emails back to the vCard's three and takes off any links and custom
+    // fields, which also drops anything an earlier run added. Phones and addresses are left
+    // as they are.
     private func resetEmails(_ identifier: String) throws {
-        let keys = [CNContactEmailAddressesKey, CNContactUrlAddressesKey].map { $0 as CNKeyDescriptor }
+        let keys = [CNContactEmailAddressesKey, CNContactUrlAddressesKey, CNContactRelationsKey]
+            .map { $0 as CNKeyDescriptor }
         let contact = try CNContactStore().unifiedContact(withIdentifier: identifier, keysToFetch: keys)
         let card = try #require(contact.mutableCopy() as? CNMutableContact)
         card.emailAddresses = Self.emails.map { CNLabeledValue(label: $0.label, value: $0.value as NSString) }
         card.urlAddresses = []
+        card.contactRelations = card.contactRelations.filter {
+            CustomFieldLabel.decode(label: $0.label, value: $0.value.name) == nil
+        }
         let request = CNSaveRequest()
         request.update(card)
         try CNContactStore().execute(request)
