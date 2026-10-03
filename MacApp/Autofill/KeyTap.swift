@@ -16,6 +16,7 @@ final class KeyTap {
     // Returns whether the key was used, which keeps it from the app.
     private let handle: (Key) -> Bool
     private var tap: CFMachPort?
+    private var isActive = false
 
     init(handle: @escaping (Key) -> Bool) {
         self.handle = handle
@@ -36,6 +37,7 @@ final class KeyTap {
 
     // On only while the panel shows, so typing elsewhere never passes through Prefill.
     func setActive(_ isActive: Bool) {
+        self.isActive = isActive
         guard let tap else { return }
         CGEvent.tapEnable(tap: tap, enable: isActive)
     }
@@ -49,7 +51,7 @@ final class KeyTap {
 
     fileprivate func decide(_ type: CGEventType, keyCode: Int64, flags: CGEventFlags) -> Bool {
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-            if let tap { CGEvent.tapEnable(tap: tap, enable: true) }
+            if let tap, isActive { CGEvent.tapEnable(tap: tap, enable: true) }
             return false
         }
         guard type == .keyDown, flags.isDisjoint(with: Self.modifiers), let key = Self.keys[keyCode] else {
@@ -68,14 +70,15 @@ final class KeyTap {
     }
 }
 
-// Remembers the person's last click or Tab, so a field gets the panel only when they just
-// moved to it themselves and not when a page or app moved focus from a script.
+// Remembers the person's last click and Tab, so a field gets the panel only when they just
+// clicked in it or tabbed to it, and not when a page or app moved focus from a script.
 @MainActor
 final class GestureMonitor {
     static let window: TimeInterval = 1
     private static let tabKey: UInt16 = 48
 
-    private var lastGesture: Date?
+    private var lastClick: (at: Date, point: CGPoint)?
+    private var lastTab: Date?
     private var monitors: [Any] = []
     private let onScroll: () -> Void
     private let onClick: () -> Void
@@ -85,20 +88,24 @@ final class GestureMonitor {
         self.onClick = onClick
     }
 
-    var isRecent: Bool {
-        lastGesture.map { Date.now.timeIntervalSince($0) <= Self.window } ?? false
+    // `field` is in AppKit coordinates.
+    func led(to field: CGRect) -> Bool {
+        if let lastTab, Date.now.timeIntervalSince(lastTab) <= Self.window { return true }
+        guard let lastClick, Date.now.timeIntervalSince(lastClick.at) <= Self.window else { return false }
+        return field.contains(lastClick.point)
     }
 
     func start() {
         let clicks = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            let point = NSEvent.mouseLocation
             MainActor.assumeIsolated {
-                self?.lastGesture = .now
+                self?.lastClick = (.now, point)
                 self?.onClick()
             }
         }
         let keys = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
             let isTab = event.keyCode == Self.tabKey
-            MainActor.assumeIsolated { if isTab { self?.lastGesture = .now } }
+            MainActor.assumeIsolated { if isTab { self?.lastTab = .now } }
         }
         let scrolls = NSEvent.addGlobalMonitorForEvents(matching: .scrollWheel) { [weak self] _ in
             MainActor.assumeIsolated { self?.onScroll() }
@@ -110,8 +117,4 @@ final class GestureMonitor {
         monitors.forEach(NSEvent.removeMonitor)
         monitors = []
     }
-
-    #if PREFILL_TEST_BROWSERS
-    func noteTestGesture() { lastGesture = .now }
-    #endif
 }

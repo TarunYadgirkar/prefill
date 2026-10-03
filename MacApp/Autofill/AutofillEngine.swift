@@ -128,14 +128,17 @@ final class AutofillEngine {
         #if PREFILL_TEST_BROWSERS
         e2eLog("focus \(element.role) \(element.subrole) \(element.string(kAXRoleDescriptionAttribute) ?? "")")
         #endif
-        guard isGesture, let bundleID = app.bundleIdentifier, let worker,
-              let field = FieldReader.read(element, bundleID: bundleID) else { return }
+        guard let bundleID = app.bundleIdentifier, let worker,
+              let field = FieldReader.read(element, bundleID: bundleID), isGesture(toward: field.frame) else { return }
         let token = focusToken
         #if PREFILL_TEST_BROWSERS
         e2eLog("field \(field.description) on \(field.host)")
         #endif
         Task {
             let rows = await worker.rows(for: field.description, host: field.host)
+            #if PREFILL_TEST_BROWSERS
+            e2eLog("\(rows.count) rows, value \(field.value.count) long, current \(token == self.focusToken)")
+            #endif
             guard token == self.focusToken, !rows.isEmpty else { return }
             self.current = (field, rows)
             self.offer(typed: field.value)
@@ -145,11 +148,11 @@ final class AutofillEngine {
         }
     }
 
-    private var isGesture: Bool {
+    private func isGesture(toward frame: CGRect) -> Bool {
         #if PREFILL_TEST_BROWSERS
         if ProcessInfo.processInfo.environment["PREFILL_E2E_AX_NO_GESTURE"] == "1" { return true }
         #endif
-        return gestures?.isRecent ?? false
+        return gestures?.led(to: appKit(frame)) ?? false
     }
 
     private func offer(typed: String) {
@@ -210,9 +213,13 @@ final class AutofillEngine {
     private func pick(_ row: AutofillRow) {
         guard let element = current?.field.element else { return }
         hide()
-        guard let focused = watcher?.currentFocus(), CFEqual(focused, element) else { return }
+        let isStillFocused = { [weak self] in
+            guard let focused = self?.watcher?.currentFocus() else { return false }
+            return CFEqual(focused, element)
+        }
+        guard isStillFocused() else { return }
         Task {
-            let method = await FieldFiller.fill(element, with: row.value)
+            let method = await FieldFiller.fill(element, with: row.value, isStillFocused: isStillFocused)
             Self.log.info("filled a \(row.kind, privacy: .public) field by \(method.rawValue, privacy: .public)")
             #if PREFILL_TEST_BROWSERS
             e2eLog("filled \(row.kind) by \(method.rawValue)")

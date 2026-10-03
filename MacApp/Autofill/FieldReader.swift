@@ -22,6 +22,10 @@ enum FieldReader {
     private static let formClimb = 6
     private static let formBudget = 400
     private static let loopback: Set<String> = ["localhost", "127.0.0.1", "[::1]"]
+    private static let browsers = FocusWatcher.chromium.union([
+        "com.apple.Safari", "com.apple.SafariTechnologyPreview", "org.mozilla.firefox",
+        "org.mozilla.firefoxdeveloperedition", "app.zen-browser.zen", "com.kagi.kagimacOS"
+    ])
 
     static func read(_ element: AXUIElement, bundleID: String) -> FocusedField? {
         guard textRoles.contains(element.role), element.subrole != secureSubrole,
@@ -46,7 +50,8 @@ enum FieldReader {
     // same pages the extension does (https, or plain http on this Mac).
     static func host(of element: AXUIElement, bundleID: String) -> String? {
         let webArea = element.ancestors(limit: webAreaSearch).first { $0.role == "AXWebArea" }
-        guard let webArea else { return appHost(bundleID) }
+        // A browser's own fields (the address bar, find) are never a form.
+        guard let webArea else { return browsers.contains(bundleID) ? nil : appHost(bundleID) }
         let url = (webArea.value(kAXURLAttribute) as? URL)
             ?? webArea.string(kAXURLAttribute).flatMap(URL.init(string:))
             ?? windowDocument(of: element)

@@ -15,7 +15,7 @@ const EMAILS = ["alex.rivera@example.com", "alex@work.example.org", "alex.school
 const PICK_WAIT_MS = 4_000;
 // Chrome builds its web content's Accessibility tree a few seconds after the app asks.
 const TREE_WAIT_MS = 5_000;
-const DEBUG_PORT = 9334;
+const DEBUG_PORT = "9334";
 
 function check(condition: boolean, message: string): void {
   if (!condition) throw new Error(message);

@@ -12,17 +12,20 @@ enum FieldFiller {
 
     private static let settleChecks = 6
     private static let settleStep: Duration = .milliseconds(50)
-    private static let restoreDelay: Duration = .milliseconds(500)
+    private static let pasteChecks = 20
     private static let vKey: CGKeyCode = 9
     // Clipboard managers skip items marked with these (nspasteboard.org).
     private static let transient = NSPasteboard.PasteboardType("org.nspasteboard.TransientType")
     private static let concealed = NSPasteboard.PasteboardType("org.nspasteboard.ConcealedType")
 
-    static func fill(_ element: AXUIElement, with value: String) async -> Method {
+    // `isStillFocused` is asked again right before a paste, which goes to whatever the
+    // app has focused rather than to the element.
+    static func fill(_ element: AXUIElement, with value: String, isStillFocused: () -> Bool) async -> Method {
         if element.set(kAXValueAttribute, value as CFString), await holds(element, value) {
             moveCaretToEnd(element, length: value.utf16.count)
             return .setValue
         }
+        guard isStillFocused(), element.subrole != "AXSecureTextField" else { return .failed }
         return await paste(value, into: element) ? .paste : .failed
     }
 
@@ -62,12 +65,18 @@ enum FieldFiller {
         let ours = board.changeCount
         selectAll(element)
         pressPaste(pid: element.pid)
-        try? await Task.sleep(for: restoreDelay)
+        // The person's own clipboard goes back only once the paste has landed (or plainly
+        // won't), so a slow app never pastes what they had copied instead.
+        var landed = false
+        for _ in 0..<pasteChecks where !landed {
+            try? await Task.sleep(for: settleStep)
+            landed = element.string(kAXValueAttribute) == value
+        }
         if board.changeCount == ours {
             board.clearContents()
             if !saved.isEmpty { board.writeObjects(saved) }
         }
-        return element.string(kAXValueAttribute) == value
+        return landed
     }
 
     private static func snapshot(_ board: NSPasteboard) -> [NSPasteboardItem] {

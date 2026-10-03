@@ -21,7 +21,7 @@ final class FocusWatcher {
         "com.dashlane.dashlanephonefinal", "com.apple.SecurityAgent", "com.apple.loginwindow",
         "com.tarunyadgirkar.prefill.mac"
     ]
-    static let chromium: Set<String> = [
+    nonisolated static let chromium: Set<String> = [
         "com.google.Chrome", "com.google.Chrome.beta", "com.google.Chrome.dev", "com.google.Chrome.canary",
         "com.google.chrome.for.testing", "org.chromium.Chromium", "company.thebrowser.Browser",
         "company.thebrowser.dia", "com.brave.Browser", "com.microsoft.edgemac", "com.vivaldi.Vivaldi",
