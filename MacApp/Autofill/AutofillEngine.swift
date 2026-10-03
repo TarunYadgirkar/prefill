@@ -1,0 +1,262 @@
+import AppKit
+import ApplicationServices
+import Observation
+import os
+import PrefillKit
+
+// Prefill in every app: when the person clicks or tabs into a field that asks for their
+// email, phone, address, name, a profile link or a custom field, a panel under it offers
+// their values; picking one fills the field. Needs Accessibility. New values typed this
+// way aren't saved yet; the Chrome extension still saves them where it's installed.
+@MainActor
+@Observable
+final class AutofillEngine {
+    static let shared = AutofillEngine()
+    private static let enabledKey = "suggestEverywhere"
+    private static let trustPoll: Duration = .seconds(2)
+    private static let rescroll: Duration = .milliseconds(120)
+    private static let log = PrefillLog.logger("autofill")
+
+    private(set) var isTrusted = AccessibilityTrust.isTrusted
+    private(set) var isRunning = false
+    var isEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(isEnabled, forKey: Self.enabledKey)
+            update()
+        }
+    }
+
+    @ObservationIgnored private var worker: AutofillWorker?
+    @ObservationIgnored private var watcher: FocusWatcher?
+    @ObservationIgnored private var keys: KeyTap?
+    @ObservationIgnored private var gestures: GestureMonitor?
+    @ObservationIgnored private let panel = SuggestionPanel()
+    @ObservationIgnored private var current: (field: FocusedField, rows: [AutofillRow])?
+    @ObservationIgnored private var focusToken = 0
+    @ObservationIgnored private var trustTask: Task<Void, Never>?
+    @ObservationIgnored private var scrollTask: Task<Void, Never>?
+    @ObservationIgnored private var router: MessageRouter?
+
+    private init() {
+        isEnabled = UserDefaults.standard.object(forKey: Self.enabledKey) as? Bool ?? true
+        panel.model.pick = { [weak self] row in self?.pick(row) }
+    }
+
+    func start(router: MessageRouter) {
+        self.router = router
+        update()
+    }
+
+    func askForAccess() {
+        AccessibilityTrust.ask()
+        watchTrust()
+    }
+
+    private func update() {
+        isTrusted = AccessibilityTrust.isTrusted
+        #if PREFILL_TEST_BROWSERS
+        e2eLog("enabled \(isEnabled) trusted \(isTrusted) router \(router != nil)")
+        #endif
+        if isEnabled, isTrusted { run() } else { halt() }
+        if isEnabled, !isTrusted { watchTrust() }
+    }
+
+    // macOS doesn't announce the grant, so Prefill checks every few seconds until it lands.
+    private func watchTrust() {
+        guard trustTask == nil else { return }
+        trustTask = Task { [weak self] in
+            while !Task.isCancelled, !AccessibilityTrust.isTrusted {
+                try? await Task.sleep(for: Self.trustPoll)
+            }
+            self?.trustTask = nil
+            self?.update()
+        }
+    }
+
+    private func run() {
+        #if PREFILL_TEST_BROWSERS
+        // The browser test copies run only against the browser their script opened.
+        guard Self.testApp != nil else { return }
+        #endif
+        guard !isRunning, let router, let source = AutofillWorker.bundledSource,
+              let worker = AutofillWorker(source: source, router: router) else { return }
+        self.worker = worker
+        let keys = KeyTap { [weak self] key in self?.press(key) ?? false }
+        guard keys.start() else {
+            Self.log.error("key tap not created")
+            return
+        }
+        self.keys = keys
+        gestures = GestureMonitor(onScroll: { [weak self] in self?.scrolled() }, onClick: { [weak self] in
+            self?.clicked()
+        })
+        gestures?.start()
+        watcher = FocusWatcher(onlyBundleID: Self.testApp) { [weak self] event in self?.handle(event) }
+        watcher?.start()
+        isRunning = true
+        AutofillMode.isActive = true
+        #if PREFILL_TEST_BROWSERS
+        e2eLog("running")
+        #endif
+    }
+
+    private func halt() {
+        watcher?.stop()
+        gestures?.stop()
+        keys?.stop()
+        hide()
+        watcher = nil
+        gestures = nil
+        keys = nil
+        worker = nil
+        isRunning = false
+        AutofillMode.isActive = false
+    }
+
+    private func handle(_ event: FocusWatcher.Event) {
+        switch event {
+        case .focused(let element, let app): focused(element, in: app)
+        case .valueChanged(let element): typed(in: element)
+        case .moved: reanchor()
+        case .left: hide()
+        }
+    }
+
+    private func focused(_ element: AXUIElement, in app: NSRunningApplication) {
+        hide()
+        focusToken += 1
+        #if PREFILL_TEST_BROWSERS
+        e2eLog("focus \(element.role) \(element.subrole) \(element.string(kAXRoleDescriptionAttribute) ?? "")")
+        #endif
+        guard isGesture, let bundleID = app.bundleIdentifier, let worker,
+              let field = FieldReader.read(element, bundleID: bundleID) else { return }
+        let token = focusToken
+        #if PREFILL_TEST_BROWSERS
+        e2eLog("field \(field.description) on \(field.host)")
+        #endif
+        Task {
+            let rows = await worker.rows(for: field.description, host: field.host)
+            guard token == self.focusToken, !rows.isEmpty else { return }
+            self.current = (field, rows)
+            self.offer(typed: field.value)
+            #if PREFILL_TEST_BROWSERS
+            self.autopick(field.element)
+            #endif
+        }
+    }
+
+    private var isGesture: Bool {
+        #if PREFILL_TEST_BROWSERS
+        if ProcessInfo.processInfo.environment["PREFILL_E2E_AX_NO_GESTURE"] == "1" { return true }
+        #endif
+        return gestures?.isRecent ?? false
+    }
+
+    private func offer(typed: String) {
+        guard let current else { return }
+        let shown = RowFilter.matching(current.rows, typed: typed)
+        guard !shown.isEmpty else {
+            hidePanel()
+            return
+        }
+        panel.show(rows: shown, under: current.field.element.frame ?? current.field.frame)
+        keys?.setActive(true)
+    }
+
+    private func typed(in element: AXUIElement) {
+        guard let current, CFEqual(element, current.field.element) else { return }
+        offer(typed: element.string(kAXValueAttribute) ?? "")
+    }
+
+    private func reanchor() {
+        guard panel.isVisible, let current else { return }
+        guard let frame = current.field.element.frame, frame.width > 1,
+              NSScreen.screens.contains(where: { $0.frame.intersects(appKit(frame)) }) else { return hide() }
+        panel.place(under: frame)
+    }
+
+    private func scrolled() {
+        guard panel.isVisible else { return }
+        scrollTask?.cancel()
+        scrollTask = Task { [weak self] in
+            try? await Task.sleep(for: Self.rescroll)
+            guard !Task.isCancelled else { return }
+            self?.reanchor()
+        }
+    }
+
+    private func clicked() {
+        guard panel.isVisible, let frame = current?.field.element.frame else { return }
+        if !appKit(frame).contains(NSEvent.mouseLocation) { hide() }
+    }
+
+    private func appKit(_ frame: CGRect) -> CGRect {
+        PanelGeometry.appKitRect(fromAX: frame, primaryHeight: NSScreen.screens.first?.frame.height ?? 0)
+    }
+
+    private func press(_ key: KeyTap.Key) -> Bool {
+        guard panel.isVisible else { return false }
+        switch key {
+        case .next: panel.model.move(by: 1)
+        case .previous: panel.model.move(by: -1)
+        case .dismiss: hide()
+        case .choose:
+            guard let index = panel.model.selected, panel.model.rows.indices.contains(index) else { return false }
+            pick(panel.model.rows[index])
+        }
+        return true
+    }
+
+    private func pick(_ row: AutofillRow) {
+        guard let element = current?.field.element else { return }
+        hide()
+        guard let focused = watcher?.currentFocus(), CFEqual(focused, element) else { return }
+        Task {
+            let method = await FieldFiller.fill(element, with: row.value)
+            Self.log.info("filled a \(row.kind, privacy: .public) field by \(method.rawValue, privacy: .public)")
+            #if PREFILL_TEST_BROWSERS
+            e2eLog("filled \(row.kind) by \(method.rawValue)")
+            #endif
+        }
+    }
+
+    private func hidePanel() {
+        panel.hide()
+        keys?.setActive(false)
+    }
+
+    private func hide() {
+        hidePanel()
+        current = nil
+    }
+
+    private static var testApp: String? {
+        #if PREFILL_TEST_BROWSERS
+        ProcessInfo.processInfo.environment["PREFILL_E2E_AX_APP"]
+        #else
+        nil
+        #endif
+    }
+
+    #if PREFILL_TEST_BROWSERS
+    // scripts/e2e-mac-ax.sh never presses keys on the person's screen, so the test copy
+    // picks the first row itself a moment after showing it.
+    private func autopick(_ field: AXUIElement) {
+        guard let delay = ProcessInfo.processInfo.environment["PREFILL_E2E_AX_AUTOPICK"].flatMap(Double.init) else {
+            return
+        }
+        e2eLog("shown \(panel.model.rows.map(\.kind)) at \(panel.frame)")
+        Task {
+            try? await Task.sleep(for: .seconds(delay))
+            guard let current, CFEqual(current.field.element, field), let first = panel.model.rows.first else { return }
+            pick(first)
+        }
+    }
+    #endif
+}
+
+#if PREFILL_TEST_BROWSERS
+func e2eLog(_ line: String) {
+    FileHandle.standardError.write(Data("prefill-e2e \(line)\n".utf8))
+}
+#endif
