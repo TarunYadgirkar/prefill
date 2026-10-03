@@ -1,7 +1,7 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
 import { attachDatalist } from "./datalist";
-import type { Attach } from "./dropdown";
+import type { Attach, Choice } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { eventOrigin, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
@@ -43,6 +43,15 @@ export function linkOptions(wanted: readonly LinkType[], links: readonly Suggest
   const combined = !fullUrl && first !== undefined && second !== undefined ? [`${text(first)} - ${text(second)}`] : [];
   const rest = wanted.flatMap((type) => links.filter((link) => link.type === type));
   return [...new Set([...combined, ...firsts.map(text), ...rest.map(text)])].slice(0, MAX_OPTIONS);
+}
+
+// Each option with the kind of link it is, or both kinds for a combined one.
+export function linkChoices(wanted: readonly LinkType[], links: readonly SuggestedLink[], fullUrl: boolean): Choice[] {
+  const detail = (value: string): string => {
+    const link = links.find((candidate) => value === candidate.url || value === shown(candidate.url));
+    return link === undefined ? wanted.map((type) => TYPE_LABELS[type]).join(" and ") : TYPE_LABELS[link.type];
+  };
+  return linkOptions(wanted, links, fullUrl).map((value) => ({ value, detail: detail(value) }));
 }
 
 function linkTypesOf(element: FieldElement): readonly LinkType[] {
@@ -94,12 +103,8 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
 
   const offer = (element: HTMLInputElement, wanted: readonly LinkType[], links: readonly SuggestedLink[] | undefined): void => {
     if (focused !== element || detach !== undefined || links === undefined) return;
-    const values = linkOptions(wanted, links, wantsUrl(element));
-    const detail = (value: string): string => {
-      const link = links.find((candidate) => value === candidate.url || value === shown(candidate.url));
-      return link === undefined ? wanted.map((type) => TYPE_LABELS[type]).join(" and ") : TYPE_LABELS[link.type];
-    };
-    if (values.length > 0) detach = attach(element, values.map((value) => ({ value, detail: detail(value) })));
+    const choices = linkChoices(wanted, links, wantsUrl(element));
+    if (choices.length > 0) detach = attach(element, choices);
   };
 
   const onFocus = (event: Event): void => {

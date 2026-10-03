@@ -29,7 +29,7 @@ const MAX_INSPECTED = 200;
 // Single-line inputs that take typed contact details. Text areas count too: Prefill draws
 // its own list under them, and forms like Airtable's ask for a name or email in one.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "search"]);
-const SUGGESTED_KINDS: ReadonlySet<FieldKind> = new Set(["email", "phone", "address", "name"]);
+export const SUGGESTED_KINDS: ReadonlySet<FieldKind> = new Set(["email", "phone", "address", "name"]);
 
 const ADDRESS_PARTS: Partial<Record<FieldPart, (address: PostalAddress) => string>> = {
   street: (address) => address.street.split("\n")[0] ?? "",
@@ -66,7 +66,7 @@ export function suggestionOptions(field: ContactField, values: Suggestions): str
   return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
 }
 
-const KIND_LABELS: Partial<Record<FieldKind, string>> = { email: "Email", phone: "Phone", address: "Address", name: "Name" };
+export const KIND_LABELS: Partial<Record<FieldKind, string>> = { email: "Email", phone: "Phone", address: "Address", name: "Name" };
 
 function isTextField(element: FieldElement): element is TextField {
   if (element.localName === "textarea") return true;

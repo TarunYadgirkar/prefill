@@ -3,14 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "pnpm run build:content && pnpm run build:background && pnpm run build:popup && pnpm run build:chrome",
+    "build": "pnpm run build:content && pnpm run build:background && pnpm run build:popup && pnpm run build:chrome && pnpm run build:mac",
     "build:content": "esbuild src/content.ts --bundle --format=iife --target=safari26 --minify --outfile=../Extension/Resources/content.js",
     "build:background": "esbuild src/background.ts --bundle --format=esm --target=safari26 --minify --outfile=../Extension/Resources/background.js",
     "build:popup": "esbuild src/popup/popup.ts src/popup/popup.css src/popup/popup.html --bundle --loader:.html=copy --format=esm --target=safari26 --minify --outdir=../Extension/Resources",
     "build:chrome": "rm -rf dist-chrome && mkdir -p dist-chrome/images && cp chromium/manifest.json dist-chrome/ && cp ../Extension/Resources/images/icon-*.png ../Extension/Resources/images/toolbar-icon-*.png dist-chrome/images/ && esbuild src/chromium/content.ts --bundle --format=iife --target=chrome120 --minify --inject:src/chromium/shim.ts --outfile=dist-chrome/content.js && esbuild src/chromium/background.ts --bundle --format=esm --target=chrome120 --minify --inject:src/chromium/shim.ts --outfile=dist-chrome/background.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:mac": "rm -rf dist-mac && esbuild src/mac/autofill.ts --bundle --format=iife --target=safari26 --minify --outfile=dist-mac/autofill.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
