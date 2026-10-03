@@ -139,13 +139,16 @@ targets:
         copy:
           destination: executables
     postCompileScripts:
-      - name: Copy the Chrome extension
+      - name: Copy the Chrome extension and the field rules
         basedOnDependencyAnalysis: false
         script: |
           src="$SRCROOT/web/dist-chrome"
           dst="$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/ChromeExtension"
           if [ ! -f "$src/manifest.json" ]; then echo "error: run pnpm --dir web build first"; exit 1; fi
           rm -rf "$dst" && mkdir -p "$dst" && cp -R "$src/" "$dst/"
+          rules="$SRCROOT/web/dist-mac/autofill.js"
+          if [ ! -f "$rules" ]; then echo "error: run pnpm --dir web build first"; exit 1; fi
+          cp "$rules" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/autofill.js"
   PrefillHost:
     type: tool
     platform: macOS

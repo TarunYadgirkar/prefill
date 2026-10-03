@@ -1,4 +1,5 @@
 import AppKit
+import PrefillKit
 import SwiftUI
 
 @main
@@ -30,6 +31,10 @@ struct PrefillMacApp: App {
 // have started the app to answer a page.
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        Task { await MacModel.shared.start() }
+        Task {
+            await MacModel.shared.start()
+            let model = MacModel.shared
+            AutofillEngine.shared.start(router: MessageRouter(store: model.store, gateway: model.gateway))
+        }
     }
 }

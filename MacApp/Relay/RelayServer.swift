@@ -66,8 +66,9 @@ final class RelayServer: Sendable {
         }
         guard let body = FrameIO.read(connection, max: NativeFraming.maxRequest) else { return }
         let checked = try? MessageCoding.validatedRequest(body)
-        let response = checked.map { router.route(try? JSONSerialization.jsonObject(with: $0)) }
-            ?? .error(reason: "unknown message")
+        let message = checked.flatMap { try? JSONSerialization.jsonObject(with: $0) }
+        let standingDown = (try? MessageCoding.request(from: message)).flatMap(AutofillMode.standDown)
+        let response = standingDown ?? checked.map { _ in router.route(message) } ?? .error(reason: "unknown message")
         _ = FrameIO.write(connection, body: MessageCoding.replyData(response))
         answered()
     }

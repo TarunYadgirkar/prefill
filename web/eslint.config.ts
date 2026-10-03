@@ -3,7 +3,7 @@ import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
 export default defineConfig(
-  { ignores: ["node_modules", "dist-chrome"] },
+  { ignores: ["node_modules", "dist-chrome", "dist-mac"] },
   js.configs.recommended,
   tseslint.configs.strictTypeChecked,
   {

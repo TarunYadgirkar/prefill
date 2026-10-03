@@ -17,3 +17,4 @@ node_modules/
 /web/dist-chrome/
 .claude/worktrees/
 /Chrome Extension
+/web/dist-mac/
