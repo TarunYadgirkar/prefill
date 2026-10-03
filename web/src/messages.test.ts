@@ -28,6 +28,8 @@ import {
   type LinkSuggestionsResult,
   type ContactSuggestionsRequest,
   type ContactSuggestionsResult,
+  type CustomSuggestionsRequest,
+  type CustomSuggestionsResult,
   parsePageRequest,
 } from "./messages";
 
@@ -61,6 +63,17 @@ const contactSuggestionsResult: ContactSuggestionsResult = {
   phones: [],
   addresses: [{ street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" }],
   name: { given: "Alex", family: "Rivera" },
+};
+
+const customSuggestions: CustomSuggestionsRequest = {
+  type: "customSuggestions",
+  host: "boards.example.io",
+  fields: [{ text: "School job_application[educations][0][school_name_id]" }, { text: "Cover letter" }],
+};
+
+const customSuggestionsResult: CustomSuggestionsResult = {
+  type: "customSuggestionsResult",
+  fields: [{ values: ["UC Berkeley"] }, { values: [] }],
 };
 
 const pageContext: PageContextRequest = {
@@ -150,13 +163,13 @@ describe("message contract", () => {
     expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(true);
   });
 
-  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions, contactSuggestions }))("request %s matches the shared example", (name, typed) => {
+  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions, contactSuggestions, customSuggestions }))("request %s matches the shared example", (name, typed) => {
     const example: unknown = examples.requests[name as keyof typeof examples.requests];
     expect(example).toEqual(typed);
     expect(isExtensionRequest(example)).toBe(true);
   });
 
-  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, contactSuggestionsResult, error }))(
+  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, contactSuggestionsResult, customSuggestionsResult, error }))(
     "response %s matches the shared example",
     (name, typed) => {
       const example: unknown = examples.responses[name as keyof typeof examples.responses];
@@ -190,6 +203,7 @@ describe("message contract", () => {
     { type: "popupState", host: "example.net", kinds: ["email", "phone", "address", "email"] },
     { type: "pin", host: "example.net", kind: "email", valueID: "not-a-uuid" },
     { type: "muteSite", host: "example.net", muted: "yes" },
+    { type: "customSuggestions", host: "example.net", fields: [{ text: "School\u200b" }] },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });

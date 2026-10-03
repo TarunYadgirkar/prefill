@@ -96,7 +96,7 @@ enum CNCardMapping {
         [
             CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey,
             CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey,
-            CNContactUrlAddressesKey
+            CNContactUrlAddressesKey, CNContactRelationsKey
         ].map { $0 as CNKeyDescriptor }
     }
 
@@ -116,8 +116,26 @@ enum CNCardMapping {
             emails: contact.emailAddresses.map { CardEntry(label: $0.label, payload: .email($0.value as String)) },
             phones: contact.phoneNumbers.map { CardEntry(label: $0.label, payload: .phone($0.value.stringValue)) },
             addresses: contact.postalAddresses.map { CardEntry(label: $0.label, payload: .address(postal($0.value))) },
-            links: contact.urlAddresses.map { CardEntry(label: $0.label, payload: .link($0.value as String)) }
+            links: contact.urlAddresses.map { CardEntry(label: $0.label, payload: .link($0.value as String)) },
+            customFields: customFields(of: contact)
         )
+    }
+
+    static func customFields(of contact: CNContact) -> [CustomField] {
+        contact.contactRelations.compactMap { CustomFieldLabel.decode(label: $0.label, value: $0.value.name) }
+    }
+
+    // Related names Prefill didn't make keep their place and their objects; Prefill's own
+    // follow them in the record's order. Untouched when they already match, so a save that
+    // only reorders values never rewrites them.
+    private static func applyCustomFields(_ fields: [CustomField], to contact: CNMutableContact) {
+        guard customFields(of: contact) != fields else { return }
+        let others = contact.contactRelations.filter {
+            CustomFieldLabel.decode(label: $0.label, value: $0.value.name) == nil
+        }
+        contact.contactRelations = others + fields.map {
+            CNLabeledValue(label: CustomFieldLabel.encode($0), value: CNContactRelation(name: $0.value))
+        }
     }
 
     // Every value goes out as a fresh CNLabeledValue so the save renumbers stored
@@ -148,6 +166,8 @@ enum CNCardMapping {
             guard case .link(let text) = entry.payload else { return nil }
             return text as NSString
         }
+        // A record stored before Prefill read custom fields says nothing about them.
+        if record.knowsCustomFields { applyCustomFields(record.customFields, to: contact) }
     }
 
     static func failure(for error: any Error) -> CardWriteFailure {

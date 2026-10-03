@@ -6,7 +6,7 @@ The content script runs in the top frame of `https` pages only, plus plain `http
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions`, sent only in Chrome and Arc, is another (see below). The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions`, sent only in Chrome and Arc, is another (see below), and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
 
@@ -23,6 +23,8 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `linkSuggestions` types | 5 |
 | `linkSuggestionsResult` links | 10, at most 3 of a type |
 | `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
+| `customSuggestions` fields | 40, each `text` 200 characters |
+| `customSuggestionsResult` | one entry per field asked about, each with at most 3 values of 200 characters |
 
 ## Shared values
 
@@ -140,6 +142,30 @@ Chrome and Arc fill contact fields from their own saved addresses, never from th
 ```
 
 The focused field gets a `list` and a `<datalist>` with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. Chrome shows the options in its own autofill dropdown under any addresses it has saved. As with links, any script on the page can read the datalist while it is there.
+
+## customSuggestions
+
+A custom field is an answer of the person's own that has no place on a contact card, such as "School" = "UC Berkeley", "Major" = "EECS" or "How did you hear about us" = "LinkedIn". Each has a label, a value and optional extra match words ("university, college" for School). The person adds them in the app's Custom tab on iPhone or in the Mac app's settings.
+
+They live on the card itself, so iCloud Contacts carries them between the iPhone and the Mac without an App Group or CloudKit. Each one is one of the card's related names: the value is the name, and the label is the field's label followed by ` · Prefill` and any match words, such as `School · Prefill · university, college`. Contacts shows that as an ordinary related name ("School · Prefill" over "UC Berkeley"). Prefill only reads and writes related names whose label carries that marker, so a spouse or parent on the card is never touched, and a card rewrite that reorders values leaves every related name exactly as it was (the save is refused if it wouldn't). A custom label or value may not hold line breaks or the `·` character. The limits: 20 fields, a label of 40 characters, a value of 200, and 100 characters of match words.
+
+The content script sends `customSuggestions` once the page has loaded, and again for one field each time the person focuses it (after a click, tap or Tab, as for links). It covers text inputs without a `list` of their own that nothing else claims: not a contact or link field, no `autocomplete` token, nothing sensitive or of `type=password`, not a search box, and not on a sign-in form. Text areas and selects never show a datalist, so they are left out. Each entry's `text` is the field's label, placeholder, name and id, joined, with hidden characters turned into spaces and cut to 200 characters.
+
+The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Before the card is linked, or when it can't be read, every list is empty.
+
+```json
+{
+  "type": "customSuggestions",
+  "host": "boards.example.io",
+  "fields": [{ "text": "School job_application[educations][0][school_name_id]" }, { "text": "Cover letter" }]
+}
+```
+
+```json
+{ "type": "customSuggestionsResult", "fields": [{ "values": ["UC Berkeley"] }, { "values": [] }] }
+```
+
+The focused field gets a `list` and a `<datalist>` of its values, which Safari's QuickType bar shows (Safari has no contact suggestion of its own for such a field) and Chrome and Arc show in their dropdown. As with links, any script on the page can read the datalist while it is there.
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 

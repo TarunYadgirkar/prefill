@@ -20,6 +20,10 @@ public enum MessageLimits {
     static let linksPerType = 3
     static let links = 10
     static let suggestions = 5
+    // A field's label, name, id and placeholder, and what a custom field may answer.
+    static let fieldText = 200
+    static let customValue = CustomField.maxValue
+    static let customOptions = 3
 }
 
 extension ExtensionRequest {
@@ -39,6 +43,9 @@ extension ExtensionRequest {
             body.host.count <= MessageLimits.host && body.types.count <= MessageLimits.linkTypes
         case .contactSuggestions(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
+        case .customSuggestions(let body):
+            body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
+                && body.fields.allSatisfy { $0.text.count <= MessageLimits.fieldText }
         }
     }
 }
@@ -71,6 +78,8 @@ extension ExtensionRequest {
         case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
         case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions, .contactSuggestions:
             MessageText.isHost(host)
+        case .customSuggestions(let body):
+            MessageText.isHost(body.host) && body.fields.allSatisfy { MessageText.isPlain($0.text) }
         }
     }
 
@@ -87,6 +96,7 @@ extension ExtensionRequest {
         case .muteSite(let body): body.host
         case .linkSuggestions(let body): body.host
         case .contactSuggestions(let body): body.host
+        case .customSuggestions(let body): body.host
         }
     }
 }

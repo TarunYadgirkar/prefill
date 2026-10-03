@@ -8,6 +8,8 @@ public struct CardEditor: Sendable {
         case remove(ContactValue)
         case relabel(ContactValue, label: String?)
         case restore(CardRecord)
+        // The person's custom fields, in their order, in place of the card's.
+        case setCustomFields([CustomField])
     }
 
     private static let attempts = 2
@@ -46,7 +48,11 @@ public struct CardEditor: Sendable {
                 entry.key == value.key ? CardEntry(label: label, payload: entry.payload) : entry
             }
             return card.replacing(value.kind, with: entries)
+        case .setCustomFields(let fields):
+            return card.replacingCustomFields(with: fields)
         case .restore(let original):
+            // Custom fields stay as they are: Prefill made them for the person, so the card
+            // before Prefill never had them to put back.
             // A snapshot taken before Prefill read links leaves the card's links as they are.
             let kinds = ContactKind.allCases.filter { $0 != .link || original.knowsLinks }
             return kinds.reduce(card) { partial, kind in

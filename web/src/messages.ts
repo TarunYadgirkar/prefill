@@ -33,6 +33,9 @@ export const LIMITS = {
   linkTypes: 5,
   links: 10,
   suggestions: 5,
+  fieldText: 200,
+  customValue: 200,
+  customOptions: 3,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -179,6 +182,11 @@ const pageRequests = {
     host: hostName,
     fields: arrayOf(pageField, LIMITS.pageFields),
   }),
+  customSuggestions: object({
+    type: literal("customSuggestions"),
+    host: hostName,
+    fields: arrayOf(object({ text: text(LIMITS.fieldText) }), LIMITS.pageFields),
+  }),
 };
 
 const contactKind = oneOf(CONTACT_KINDS);
@@ -220,6 +228,10 @@ const pageResponses = {
     addresses: arrayOf(postalAddress, LIMITS.suggestions),
     name: optional(object({ given: text(LIMITS.part), family: text(LIMITS.part) })),
   }),
+  customSuggestionsResult: object({
+    type: literal("customSuggestionsResult"),
+    fields: arrayOf(object({ values: arrayOf(text(LIMITS.customValue), LIMITS.customOptions) }), LIMITS.pageFields),
+  }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -243,7 +255,14 @@ export type PageContextRequest = Parsed<typeof pageRequests.pageContext>;
 export type CaptureRequest = Parsed<typeof pageRequests.capture>;
 export type LinkSuggestionsRequest = Parsed<typeof pageRequests.linkSuggestions>;
 export type ContactSuggestionsRequest = Parsed<typeof pageRequests.contactSuggestions>;
-export type PageRequest = Ping | PageContextRequest | CaptureRequest | LinkSuggestionsRequest | ContactSuggestionsRequest;
+export type CustomSuggestionsRequest = Parsed<typeof pageRequests.customSuggestions>;
+export type PageRequest =
+  | Ping
+  | PageContextRequest
+  | CaptureRequest
+  | LinkSuggestionsRequest
+  | ContactSuggestionsRequest
+  | CustomSuggestionsRequest;
 export type PopupStateRequest = Parsed<typeof sheetRequests.popupState>;
 export type PinRequest = Parsed<typeof sheetRequests.pin>;
 export type UnpinRequest = Parsed<typeof sheetRequests.unpin>;
@@ -258,12 +277,14 @@ export type ErrorResponse = Parsed<typeof pageResponses.error>;
 export type SuggestedLink = Parsed<typeof suggestedLink>;
 export type LinkSuggestionsResult = Parsed<typeof pageResponses.linkSuggestionsResult>;
 export type ContactSuggestionsResult = Parsed<typeof pageResponses.contactSuggestionsResult>;
+export type CustomSuggestionsResult = Parsed<typeof pageResponses.customSuggestionsResult>;
 export type PageResponse =
   | Pong
   | PageContextResult
   | CaptureResult
   | LinkSuggestionsResult
   | ContactSuggestionsResult
+  | CustomSuggestionsResult
   | ErrorResponse;
 export type PopupValue = Parsed<typeof popupValue>;
 export type PopupKind = Parsed<typeof popupKind>;
