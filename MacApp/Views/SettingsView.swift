@@ -28,6 +28,7 @@ struct SettingsView: View {
                     """)
                 .foregroundStyle(.secondary)
             }
+            CustomFieldsSection()
             Section {
                 BrowserList(browsers: model.browsers.filter(\.isInstalled))
                 ExtensionFolder()
