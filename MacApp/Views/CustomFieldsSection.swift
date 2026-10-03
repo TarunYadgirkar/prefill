@@ -1,8 +1,9 @@
 import PrefillKit
 import SwiftUI
 
-// Answers forms ask for that aren't on the card, like a school or a major. They live on the
-// card as related names, so the iPhone app shows the same list.
+// Answers forms ask for that aren't on the card, like a school or a major. They live on
+// Prefill's own contact as related names, so the iPhone app shows the same list and sharing
+// My Card leaves them out.
 struct CustomFieldsSection: View {
     @Environment(MacModel.self) private var model
     @State private var editing: CustomField?

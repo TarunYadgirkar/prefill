@@ -8,6 +8,7 @@ struct E2EServer {
         let emails: [String]
         let phones: [String]
         let addressCount: Int
+        let linkCount: Int
     }
 
     static let port = 8846

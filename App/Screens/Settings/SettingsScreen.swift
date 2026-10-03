@@ -78,6 +78,13 @@ struct SettingsScreen: View {
     private var cardSection: some View {
         Section {
             LabeledContent("Your card", value: model.cardName)
+            NavigationLink {
+                SharingScreen()
+            } label: {
+                LabeledContent("Sharing your card", value: sharingStatus)
+            }
+            .disabled(model.card == nil)
+            .accessibilityIdentifier("sharing-your-card")
             Button("Choose a different card") { isChoosingCard = true }
             Button("Restore original card", role: .destructive) { isConfirmingRestore = true }
                 .disabled(model.state.cardLink == nil)
@@ -94,7 +101,10 @@ struct SettingsScreen: View {
         } header: {
             Text("Contact card").textRole(.groupHeader)
         } footer: {
-            Text("Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill.")
+            Text("""
+                Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill. It's the same \
+                card NameDrop and Share Contact send.
+                """)
                 .textRole(.footnote)
         }
     }
@@ -123,6 +133,11 @@ struct SettingsScreen: View {
 
     private var safariSwitches: [SafariSwitch] {
         SafariSwitch.all(isEnabled: model.extensionEnabled == true, isAllowedOnWebsites: model.isAllowedOnWebsites)
+    }
+
+    private var sharingStatus: String {
+        let count = model.extrasOnCard.count
+        return count == 0 ? "" : String(localized: "\(count) to move")
     }
 
     private var restoreMessage: String {

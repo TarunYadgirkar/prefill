@@ -44,12 +44,14 @@ nonisolated struct LiveContactsSource: ContactsSource {
         let keys = [
             CNContactFormatter.descriptorForRequiredKeys(for: .fullName),
             CNContactEmailAddressesKey as CNKeyDescriptor,
-            CNContactPhoneNumbersKey as CNKeyDescriptor
+            CNContactPhoneNumbersKey as CNKeyDescriptor,
+            CNContactDepartmentNameKey as CNKeyDescriptor
         ]
         let request = CNContactFetchRequest(keysToFetch: keys)
         request.sortOrder = .userDefault
         var choices: [CardChoice] = []
         try? CNContactStore().enumerateContacts(with: request) { contact, _ in
+            guard contact.departmentName != PrefillContact.marker else { return }
             choices.append(Self.choice(contact))
         }
         return choices

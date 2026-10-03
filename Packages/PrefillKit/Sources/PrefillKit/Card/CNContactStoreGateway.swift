@@ -13,8 +13,9 @@ public struct CNContactStoreGateway: ContactsGateway {
 
     public init() {}
 
+    // The person's card with the links and custom fields from Prefill's own contact.
     public func fetchCard(identifier: String) throws(CardWriteFailure) -> CardRecord {
-        CNCardMapping.record(from: try fetch(identifier, store: CNContactStore()), identifier: identifier)
+        try load(identifier, store: CNContactStore()).split.record
     }
 
     // Contacts has no compare-and-swap, so the basis check narrows the race with another
@@ -29,24 +30,62 @@ public struct CNContactStoreGateway: ContactsGateway {
             throw .other
         }
         let store = CNContactStore()
-        let current = try fetch(target.identifier, store: store)
-        let record = CNCardMapping.record(from: current, identifier: target.identifier)
-        guard record == basis else { return .stale(current: record) }
-        try execute(target, on: current, store: store, author: transactionAuthor)
+        let loaded = try load(target.identifier, store: store)
+        guard loaded.split.record == basis else { return .stale(current: loaded.split.record) }
+        try execute(loaded.split.writes(for: target), on: loaded, store: store, author: transactionAuthor)
         if scope == .keepEveryValue {
             restoreLostValues(of: basis, identifier: target.identifier, author: transactionAuthor)
         }
         return .saved
     }
 
+    public func extrasOnCard(identifier: String) throws(CardWriteFailure) -> [CardExtra] {
+        try load(identifier, store: CNContactStore()).split.extrasOnCard
+    }
+
+    // One save request: Prefill's contact gains the chosen values, and only then does the
+    // card lose them, so a failed save leaves both as they were.
+    public func moveOffCard(_ chosen: [CardExtra], identifier: String) throws(CardWriteFailure) {
+        let store = CNContactStore()
+        let loaded = try load(identifier, store: store)
+        guard let writes = loaded.split.moving(chosen) else { return }
+        try execute(writes, on: loaded, store: store, author: CardWriter.transactionAuthor)
+    }
+
+    private struct Loaded {
+        let card: CNContact
+        let copies: [CNContact]
+        let split: CardSplit
+    }
+
+    private func load(_ identifier: String, store: CNContactStore) throws(CardWriteFailure) -> Loaded {
+        let card = try fetch(identifier, store: store)
+        let copies = try PrefillContactStore.find(besideCard: identifier, in: store, keys: CNCardMapping.keys)
+        let split = CardSplit(
+            card: CNCardMapping.record(from: card, identifier: identifier),
+            copies: copies.map { CardExtras(CNCardMapping.record(from: $0, identifier: $0.identifier)) }
+        )
+        return Loaded(card: card, copies: copies, split: split)
+    }
+
+    // One save request, which Contacts applies as a whole or not at all.
     private func execute(
-        _ target: CardRecord, on current: CNContact, store: CNContactStore, author: String
+        _ writes: CardSplit.Writes, on loaded: Loaded, store: CNContactStore, author: String
     ) throws(CardWriteFailure) {
-        guard let contact = current.mutableCopy() as? CNMutableContact else { throw .other }
-        CNCardMapping.apply(target, to: contact)
+        guard writes.card != nil || writes.extras != nil else { return }
         let request = CNSaveRequest()
         request.transactionAuthor = author
-        request.update(contact)
+        if let card = writes.card {
+            guard let contact = loaded.card.mutableCopy() as? CNMutableContact else { throw .other }
+            CNCardMapping.applyCore(card, to: contact)
+            if writes.includesCardExtras { CNCardMapping.applyExtras(CardExtras(card), to: contact) }
+            request.update(contact)
+        }
+        if let extras = writes.extras {
+            try PrefillContactStore.write(
+                extras, copies: loaded.copies, beside: loaded.split.card, store: store, request: request
+            )
+        }
         do {
             try store.execute(request)
         } catch {
@@ -57,12 +96,12 @@ public struct CNContactStoreGateway: ContactsGateway {
     private func restoreLostValues(of basis: CardRecord, identifier: String, author: String) {
         let store = CNContactStore()
         do throws(CardWriteFailure) {
-            let saved = try fetch(identifier, store: store)
-            let record = CNCardMapping.record(from: saved, identifier: identifier)
+            let loaded = try load(identifier, store: store)
+            let record = loaded.split.record
             let restored = record.restoringValues(of: basis)
             guard restored != record else { return }
             Self.log.error("a value went missing during a save, putting it back")
-            try execute(restored, on: saved, store: store, author: author)
+            try execute(loaded.split.writes(for: restored), on: loaded, store: store, author: author)
         } catch {
             Self.log.error("save check failed: \(String(describing: error), privacy: .public)")
         }
@@ -96,7 +135,7 @@ enum CNCardMapping {
         [
             CNContactIdentifierKey, CNContactGivenNameKey, CNContactFamilyNameKey,
             CNContactEmailAddressesKey, CNContactPhoneNumbersKey, CNContactPostalAddressesKey,
-            CNContactUrlAddressesKey, CNContactRelationsKey
+            CNContactUrlAddressesKey, CNContactRelationsKey, CNContactDepartmentNameKey
         ].map { $0 as CNKeyDescriptor }
     }
 
@@ -142,6 +181,16 @@ enum CNCardMapping {
     // identifiers 0..n in array order, which is the order Safari's bar follows.
     // Existing value objects are reused so fields the record doesn't model survive.
     static func apply(_ record: CardRecord, to contact: CNMutableContact) {
+        applyCore(record, to: contact)
+        // A record stored before Prefill read custom fields says nothing about them.
+        if record.knowsCustomFields {
+            applyExtras(CardExtras(record), to: contact)
+        } else {
+            applyLinks(record.links, to: contact)
+        }
+    }
+
+    static func applyCore(_ record: CardRecord, to contact: CNMutableContact) {
         contact.emailAddresses = fresh(record.emails, originals: contact.emailAddresses) {
             Normalizer.email($0 as String)
         } make: { entry in
@@ -160,14 +209,20 @@ enum CNCardMapping {
             guard case .address(let address) = entry.payload else { return nil }
             return cnPostal(address)
         }
-        contact.urlAddresses = fresh(record.links, originals: contact.urlAddresses) {
+    }
+
+    static func applyExtras(_ extras: CardExtras, to contact: CNMutableContact) {
+        applyLinks(extras.links, to: contact)
+        applyCustomFields(extras.customFields, to: contact)
+    }
+
+    private static func applyLinks(_ links: [CardEntry], to contact: CNMutableContact) {
+        contact.urlAddresses = fresh(links, originals: contact.urlAddresses) {
             Normalizer.link($0 as String)
         } make: { entry in
             guard case .link(let text) = entry.payload else { return nil }
             return text as NSString
         }
-        // A record stored before Prefill read custom fields says nothing about them.
-        if record.knowsCustomFields { applyCustomFields(record.customFields, to: contact) }
     }
 
     static func failure(for error: any Error) -> CardWriteFailure {

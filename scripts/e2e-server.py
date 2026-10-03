@@ -20,7 +20,7 @@ SITES = Path(__file__).resolve().parent.parent / "testbed" / "sites"
 CONTACTS = (
     Path.home() / "Library/Developer/CoreSimulator/Devices" / UDID / "data/Library/AddressBook/AddressBook.sqlitedb"
 )
-EMAIL, PHONE, ADDRESS = 4, 3, 5
+EMAIL, PHONE, ADDRESS, URL = 4, 3, 5, 22
 TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css"}
 
 
@@ -35,7 +35,7 @@ def card():
             query = "select value from ABMultiValue where record_id = ? and property = ? order by identifier"
             return [value for (value,) in db.execute(query, (row[0], prop))]
 
-        return {"emails": values(EMAIL), "phones": values(PHONE), "addressCount": len(values(ADDRESS))}
+        return {"emails": values(EMAIL), "phones": values(PHONE), "addressCount": len(values(ADDRESS)), "linkCount": len(values(URL))}
     finally:
         db.close()
 

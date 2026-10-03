@@ -3,7 +3,9 @@ import XCTest
 // Profile links end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=LinksE2ETests)
 // after a host test has linked the Alex Rivera card: add a GitHub link, a website and a
 // LinkedIn link in the app's Links tab, then focus a Greenhouse-style "GitHub/Portfolio:"
-// field and read Safari's bar, which should offer both links in one option first.
+// field and read Safari's bar, which should offer both links in one option first. On the way,
+// Settings > Sharing your card moves the links off the card Safari and NameDrop read onto
+// Prefill's own contact, and the bar still offers the links and the card's emails.
 @MainActor
 final class LinksE2ETests: XCTestCase {
     private let app = XCUIApplication()
@@ -22,7 +24,10 @@ final class LinksE2ETests: XCTestCase {
         app.launch()
         links.forEach(addLink)
         E2EServer.screenshot("links-card")
+        XCTAssertEqual(E2EServer.card()?.linkCount, links.count, "links never reached the card")
+        moveLinksOffCard()
         app.terminate()
+        XCTAssertEqual(E2EServer.card()?.linkCount, 0, "links stayed on the card")
 
         SafariDriver.open(E2EServer.Site.siteA.page("greenhouse.html"), waitingFor: "GitHub/Portfolio")
         Thread.sleep(forTimeInterval: 3)
@@ -37,6 +42,27 @@ final class LinksE2ETests: XCTestCase {
         E2EServer.screenshot("links-greenhouse-bar")
         XCTAssertEqual(slots, [combined, "github.com/alexrivera", "alexrivera.dev"])
         SafariDriver.dismissKeyboard()
+
+        let emails = SafariDriver.suggestions(focusing: "Email")
+        E2EServer.screenshot("links-greenhouse-email-bar")
+        XCTAssertTrue(emails.contains { $0.contains("alex.rivera@example.com") }, "email bar was \(emails)")
+        SafariDriver.dismissKeyboard()
+    }
+
+    private func moveLinksOffCard() {
+        app.tabBars.buttons["Settings"].tap()
+        let row = app.buttons["sharing-your-card"].firstMatch
+        for _ in 0..<6 where !row.isHittable { app.swipeUp() }
+        row.tap()
+        let move = app.buttons["move-off-card"].firstMatch
+        XCTAssertTrue(move.waitForExistence(timeout: 10), "no Move button")
+        E2EServer.screenshot("links-sharing")
+        move.tap()
+        let confirm = app.buttons["Move off your card"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "no confirmation")
+        confirm.tap()
+        XCTAssertTrue(app.descendants(matching: .any)["card-is-clean"].waitForExistence(timeout: 10))
+        E2EServer.screenshot("links-sharing-clean")
     }
 
     private func addLink(_ link: String) {

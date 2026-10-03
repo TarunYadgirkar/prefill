@@ -78,6 +78,15 @@ extension AppModel {
         commit(state.with(values: ManualOrder.allValues(card: original, known: state.values, now: .now)))
     }
 
+    // Moves links and custom fields the person chose off their card onto Prefill's contact.
+    func moveOffCard(_ chosen: [CardExtra]) async {
+        guard let link = state.cardLink else { return }
+        if let failure = await CardWork.moveOffCard(gateway, chosen, identifier: link.contactIdentifier) {
+            report(failure)
+        }
+        await refreshCard()
+    }
+
     func link(_ choice: CardChoice) async {
         do throws(CardWriteFailure) {
             let link = try await contacts.link(choice.id)

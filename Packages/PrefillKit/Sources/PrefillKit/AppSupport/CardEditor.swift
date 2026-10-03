@@ -51,10 +51,9 @@ public struct CardEditor: Sendable {
         case .setCustomFields(let fields):
             return card.replacingCustomFields(with: fields)
         case .restore(let original):
-            // Custom fields stay as they are: Prefill made them for the person, so the card
-            // before Prefill never had them to put back.
-            // A snapshot taken before Prefill read links leaves the card's links as they are.
-            let kinds = ContactKind.allCases.filter { $0 != .link || original.knowsLinks }
+            // Links and custom fields stay as they are: they live on Prefill's own contact,
+            // which the card before Prefill never had.
+            let kinds: [ContactKind] = [.email, .phone, .address]
             return kinds.reduce(card) { partial, kind in
                 partial.replacing(kind, with: original.entries(kind))
             }

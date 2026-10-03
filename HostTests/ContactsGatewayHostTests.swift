@@ -102,4 +102,61 @@ struct ContactsGatewayHostTests {
             #expect(writer.sync(request).outcome == .unchanged)
         }
     }
+
+    private func prefillContacts() throws -> [CNContact] {
+        let keys = [CNContactDepartmentNameKey, CNContactOrganizationNameKey, CNContactUrlAddressesKey,
+                    CNContactRelationsKey].map { $0 as CNKeyDescriptor }
+        return try CNContactStore().unifiedContacts(
+            matching: CNContact.predicateForContacts(matchingName: PrefillContact.searchName), keysToFetch: keys
+        ).filter { $0.departmentName == PrefillContact.marker }
+    }
+
+    private func removePrefillContacts() throws {
+        let request = CNSaveRequest()
+        for contact in try prefillContacts() {
+            if let mutable = contact.mutableCopy() as? CNMutableContact { request.delete(mutable) }
+        }
+        try CNContactStore().execute(request)
+    }
+
+    private func storedLinks(_ identifier: String) throws -> [String] {
+        let keys = [CNContactUrlAddressesKey as CNKeyDescriptor]
+        return try CNContactStore().unifiedContact(withIdentifier: identifier, keysToFetch: keys)
+            .urlAddresses.map { $0.value as String }
+    }
+
+    @Test func movingOffTheCardCopiesFirstThenRemoves() throws {
+        try removePrefillContacts()
+        defer { try? removePrefillContacts() }
+        try withThrowawayCard { identifier in
+            let keys = [CNContactUrlAddressesKey as CNKeyDescriptor]
+            let stored = try CNContactStore().unifiedContact(withIdentifier: identifier, keysToFetch: keys)
+            let edited = try #require(stored.mutableCopy() as? CNMutableContact)
+            edited.urlAddresses = [CNLabeledValue(label: "homepage", value: "https://casey.example.com")]
+            let update = CNSaveRequest()
+            update.update(edited)
+            try CNContactStore().execute(update)
+
+            let onCard = try gateway.extrasOnCard(identifier: identifier)
+            #expect(onCard.count == 1)
+            try gateway.moveOffCard(onCard, identifier: identifier)
+            #expect(try storedLinks(identifier).isEmpty)
+            #expect(try gateway.extrasOnCard(identifier: identifier).isEmpty)
+            #expect(try gateway.fetchCard(identifier: identifier).links.map(\.payload) == [
+                .link("https://casey.example.com")
+            ])
+            #expect(try storedEmails(identifier).map { $0.value as String } == emails)
+
+            let copies = try prefillContacts()
+            #expect(copies.count == 1)
+            #expect(copies.first?.organizationName == "Prefill · Casey Prefill-Host-Test")
+
+            let card = try gateway.fetchCard(identifier: identifier)
+            let github = CardEntry(label: "GitHub", payload: .link("https://github.com/casey"))
+            let target = card.replacing(.link, with: card.links + [github])
+            #expect(try gateway.save(target, basis: card, transactionAuthor: CardWriter.transactionAuthor) == .saved)
+            #expect(try storedLinks(identifier).isEmpty)
+            #expect(try prefillContacts().first?.urlAddresses.count == 2)
+        }
+    }
 }

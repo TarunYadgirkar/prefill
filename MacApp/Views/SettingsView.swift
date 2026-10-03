@@ -15,6 +15,7 @@ struct SettingsView: View {
                 Text("Prefill uses the card set as My Card in Contacts. iCloud keeps it in sync with your iPhone.")
                     .foregroundStyle(.secondary)
             }
+            SharingSection()
             Section {
                 @Bindable var model = model
                 Toggle("Reorder for each site", isOn: $model.matchEachSite)

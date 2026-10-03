@@ -24,6 +24,8 @@ final class AppModel {
     private(set) var events = ExtensionEvents()
     private(set) var card: CardRecord?
     private(set) var cardFailure: CardWriteFailure?
+    // Links and custom fields still on the person's own card, which Share Contact sends.
+    private(set) var extrasOnCard: [CardExtra] = []
     private(set) var access: ContactsAccess
     private(set) var extensionEnabled: Bool?
     private(set) var hasFinishedOnboarding: Bool
@@ -138,6 +140,9 @@ final class AppModel {
             card = fresh
             cardFailure = nil
             adoptCardValues(fresh)
+            if let extras = await CardWork.extrasOnCard(gateway, identifier: link.contactIdentifier) {
+                extrasOnCard = extras
+            }
         case .failure(let failure):
             cardFailure = failure
         }
@@ -238,6 +243,22 @@ nonisolated enum CardWork {
             return .success(try gateway.fetchCard(identifier: identifier))
         } catch {
             return .failure(error)
+        }
+    }
+
+    // Nil when the card couldn't be read, so the screen doesn't claim it is clean.
+    @concurrent static func extrasOnCard(_ gateway: any ContactsGateway, identifier: String) async -> [CardExtra]? {
+        try? gateway.extrasOnCard(identifier: identifier)
+    }
+
+    @concurrent static func moveOffCard(
+        _ gateway: any ContactsGateway, _ chosen: [CardExtra], identifier: String
+    ) async -> CardWriteFailure? {
+        do throws(CardWriteFailure) {
+            try gateway.moveOffCard(chosen, identifier: identifier)
+            return nil
+        } catch {
+            return error
         }
     }
 
