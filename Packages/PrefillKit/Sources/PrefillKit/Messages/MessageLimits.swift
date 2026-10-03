@@ -45,7 +45,7 @@ extension ExtensionRequest {
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
         case .customSuggestions(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
-                && body.fields.allSatisfy { $0.text.count <= MessageLimits.fieldText }
+                && body.fields.allSatisfy { $0.text.utf16.count <= MessageLimits.fieldText }
         }
     }
 }

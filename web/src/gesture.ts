@@ -43,7 +43,13 @@ export function trackGestures(
   doc.addEventListener("pointerdown", record, true);
   doc.addEventListener("keydown", record, true);
   return {
-    allows: (element) => follows(last, element, now()) && isInView(element),
+    // A Tab press isn't tied to a field, so it lets one field through: a page that moves
+    // focus from script after it can't collect a list on every field it focuses.
+    allows: (element) => {
+      if (!follows(last, element, now()) || !isInView(element)) return false;
+      if (last?.key === "Tab") last = undefined;
+      return true;
+    },
     stop: () => {
       doc.removeEventListener("pointerdown", record, true);
       doc.removeEventListener("keydown", record, true);

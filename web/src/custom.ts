@@ -33,6 +33,7 @@ export function fieldText(element: FieldElement): string {
   const text = [labelText(element), placeholderText(element), ...nameTexts(element)]
     .join(" ")
     .replace(ALL_HIDDEN, " ")
+    .replace(/\p{Cs}/gu, " ")
     .replace(/\s+/gu, " ")
     .trim();
   return text.slice(0, LIMITS.fieldText).replace(/[\uD800-\uDBFF]$/u, "");
