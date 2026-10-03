@@ -29,6 +29,11 @@ struct SettingsView: View {
                     """)
                 .foregroundStyle(.secondary)
             }
+            Section {
+                AutofillSection()
+            } header: {
+                Text("Every app")
+            }
             CustomFieldsSection()
             Section {
                 BrowserList(browsers: model.browsers.filter(\.isInstalled))

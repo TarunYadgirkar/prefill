@@ -76,7 +76,10 @@ export function placeholderText(el: FieldElement): string {
 // The field's name and id as written, plus each split at camelCase, digits and
 // punctuation, so "billingAddressLine2" also reads as "billing address line 2".
 export function nameTexts(el: FieldElement): string[] {
-  const raw = [el.getAttribute("name") ?? "", el.id].filter(Boolean);
+  return splitNames([el.getAttribute("name") ?? "", el.id].filter(Boolean));
+}
+
+export function splitNames(raw: readonly string[]): string[] {
   const split = raw.map((text) =>
     text
       .replace(/([a-z])([A-Z])/gu, "$1 $2")

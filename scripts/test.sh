@@ -24,6 +24,9 @@ shutdown_if_we_booted() {
 trap shutdown_if_we_booted EXIT
 
 unit() {
+  step "Building extension scripts (PrefillKit's autofill tests run the built field rules)"
+  pnpm --dir $ROOT/web build >/dev/null
+
   step "PrefillKit on macOS"
   local log=$LOGS/test-prefillkit-macos.log
   swift test --package-path $ROOT/Packages/PrefillKit >$log 2>&1 || fail_with_log $log

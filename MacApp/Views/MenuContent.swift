@@ -13,6 +13,8 @@ struct MenuContent: View {
                 ReviewList(items: model.waiting)
             }
             Divider()
+            AutofillSection()
+            Divider()
             BrowserList(browsers: model.browsers.filter(\.isInstalled))
             Divider()
             HStack {

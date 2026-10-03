@@ -19,6 +19,7 @@ export interface CustomOptions {
 }
 
 const MAX_INSPECTED = 200;
+export const CUSTOM_DETAIL = "Custom field";
 // A datalist shows on text inputs; text areas and selects never show one, and a search box
 // never wants a saved answer.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text"]);
@@ -36,7 +37,11 @@ export function isCustomCandidate(element: FieldElement, textAreas = false): ele
 // What the app matches against the person's custom fields: label first, then placeholder,
 // then name and id, cut to the message limit without splitting a character.
 export function fieldText(element: FieldElement): string {
-  const text = [labelText(element), placeholderText(element), ...nameTexts(element)]
+  return joinFieldText([labelText(element), placeholderText(element), ...nameTexts(element)]);
+}
+
+export function joinFieldText(parts: readonly string[]): string {
+  const text = parts
     .join(" ")
     .replace(ALL_HIDDEN, " ")
     .replace(/\p{Cs}/gu, " ")
@@ -68,7 +73,7 @@ export function installCustom(doc: Document, options: CustomOptions): () => void
   const offer = (): void => {
     const values = focused === undefined ? undefined : known.get(focused.text);
     if (focused === undefined || detach !== undefined || values === undefined || values.length === 0) return;
-    detach = attach(focused.element, values.map((value) => ({ value, detail: "Custom field" })));
+    detach = attach(focused.element, values.map((value) => ({ value, detail: CUSTOM_DETAIL })));
   };
 
   const fetchValues = (texts: readonly string[]): void => {

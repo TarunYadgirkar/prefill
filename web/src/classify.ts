@@ -1,5 +1,5 @@
 import { parseAutocomplete, type AutocompleteDetail } from "./autocomplete";
-import { labelText, nameTexts, placeholderText } from "./dom";
+import { labelText, placeholderText, splitNames } from "./dom";
 import {
   IGNORED,
   SENSITIVE,
@@ -56,10 +56,24 @@ const AUTOCOMPLETE_FIELDS: Readonly<Record<string, Mapped>> = {
 const SENSITIVE_FIELDS: ReadonlySet<string> = new Set(["new-password", "current-password", "one-time-code"]);
 const SECTION_CONTACTS: ReadonlySet<string> = new Set(["home", "work"]);
 
-function controlOf(el: FieldElement): ControlOrVerdict {
-  if (el.localName === "select") return "select";
-  if (el.localName === "textarea") return "textarea";
-  return INPUT_CONTROLS[el.type.toLowerCase()] ?? "ignored";
+// A field as plain data: what the DOM says about it, or what the Mac app reads from the
+// field through Accessibility, which has no DOM to ask.
+export interface FieldDescription {
+  tag: "input" | "select" | "textarea";
+  // The input type; ignored for selects and text areas.
+  type: string;
+  autocomplete: string | null;
+  label: string;
+  // The name and id as written.
+  names: readonly string[];
+  placeholder: string;
+  signIn: boolean;
+}
+
+function controlOf(field: FieldDescription): ControlOrVerdict {
+  if (field.tag === "select") return "select";
+  if (field.tag === "textarea") return "textarea";
+  return INPUT_CONTROLS[field.type.toLowerCase()] ?? "ignored";
 }
 
 function sectionOf(detail: AutocompleteDetail | undefined): SectionHint | undefined {
@@ -115,8 +129,8 @@ function matchRules(texts: readonly string[], control: Control): Classification 
   return rule === undefined ? undefined : fromRule(rule.result, texts);
 }
 
-function sourcesOf(el: FieldElement): string[][] {
-  return [[labelText(el)], nameTexts(el), [placeholderText(el)]].map((texts) => texts.filter(Boolean));
+function sourcesOf(field: FieldDescription): string[][] {
+  return [[field.label], splitNames(field.names), [field.placeholder]].map((texts) => texts.filter(Boolean));
 }
 
 function isSensitiveText(sources: readonly string[][]): boolean {
@@ -133,8 +147,8 @@ function fromPatterns(sources: readonly string[][], control: Control): Classific
   return undefined;
 }
 
-function positive(el: FieldElement, control: Control, sources: readonly string[][]): Classification {
-  const detail = parseAutocomplete(el.getAttribute("autocomplete"));
+function positive(field: FieldDescription, control: Control, sources: readonly string[][]): Classification {
+  const detail = parseAutocomplete(field.autocomplete);
   if (detail !== undefined) return fromAutocomplete(detail, control, sources);
   if (control === "email") return contact({ kind: "email" });
   return fromPatterns(sources, control) ?? (control === "url" ? link([]) : IGNORED);
@@ -151,13 +165,29 @@ export function isSignIn(el: FieldElement): boolean {
   return el.form?.querySelector('input[autocomplete~="current-password" i]') != null;
 }
 
+export function describe(el: FieldElement): FieldDescription {
+  return {
+    tag: el.localName === "select" ? "select" : el.localName === "textarea" ? "textarea" : "input",
+    type: el.type,
+    autocomplete: el.getAttribute("autocomplete"),
+    label: labelText(el),
+    names: [el.getAttribute("name") ?? "", el.id].filter(Boolean),
+    placeholder: placeholderText(el),
+    signIn: isSignIn(el),
+  };
+}
+
 export function classify(el: FieldElement): Classification {
-  const control = controlOf(el);
+  return classifyDescription(describe(el));
+}
+
+export function classifyDescription(field: FieldDescription): Classification {
+  const control = controlOf(field);
   if (control === "sensitive" || control === "ignored") return { kind: control };
-  if (isSignIn(el)) return IGNORED;
-  const sources = sourcesOf(el);
+  if (field.signIn) return IGNORED;
+  const sources = sourcesOf(field);
   if (isSensitiveText(sources)) return SENSITIVE;
-  const found = positive(el, control, sources);
+  const found = positive(field, control, sources);
   if (found.kind === "phone" && sources.flat().some((text) => NOT_PHONE.test(text))) return SENSITIVE;
   return found;
 }

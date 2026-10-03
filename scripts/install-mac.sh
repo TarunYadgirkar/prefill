@@ -25,8 +25,12 @@ ditto $MAC_DERIVED/Build/Products/Personal/Prefill.app $INSTALLED
 open $INSTALLED
 
 print
-print "Prefill is in the menu bar. Allow Contacts access from its menu the first time."
-print "Add the extension in Chrome and in Arc: open chrome://extensions (arc://extensions in Arc),"
+print "Prefill is in the menu bar. Allow Contacts access from its menu the first time, then"
+print "choose Open Accessibility settings there and turn Prefill on, so it suggests in every app."
+print "The signature stays the same across installs, so both grants carry over."
+print
+print "The extension is optional while Suggest in every app is on. To add it anyway:"
+print "open chrome://extensions (arc://extensions in Arc),"
 print "turn on Developer mode, choose Load unpacked, press Command-Shift-G and paste:"
 print
 print "  $INSTALLED/Contents/Resources/ChromeExtension"
