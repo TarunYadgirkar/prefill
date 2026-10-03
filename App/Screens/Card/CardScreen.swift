@@ -7,6 +7,7 @@ import SwiftUI
 struct CardScreen: View {
     @Environment(AppModel.self) private var model
     @State private var kind = ContactKind.email
+    @State private var isCustom = false
     @State private var editMode = EditMode.inactive
 
     var body: some View {
@@ -14,6 +15,8 @@ struct CardScreen: View {
             Group {
                 if let failure = model.cardFailure {
                     CardUnavailable(failure: failure)
+                } else if isCustom {
+                    CustomFieldList()
                 } else {
                     CardList(kind: kind)
                 }
@@ -22,7 +25,7 @@ struct CardScreen: View {
             .screenTitleDisplay()
             .safeAreaBar(edge: .top) {
                 if model.cardFailure == nil {
-                    KindHeader(kind: $kind, values: model.values(kind))
+                    KindHeader(kind: $kind, values: model.values(kind), isCustom: $isCustom)
                 }
             }
             .toolbar {
