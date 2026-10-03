@@ -105,10 +105,10 @@ struct ContactsGatewayHostTests {
 
     private func prefillContacts() throws -> [CNContact] {
         let keys = [CNContactDepartmentNameKey, CNContactOrganizationNameKey, CNContactUrlAddressesKey,
-                    CNContactRelationsKey].map { $0 as CNKeyDescriptor }
+                    CNContactRelationsKey, CNContactEmailAddressesKey].map { $0 as CNKeyDescriptor }
         return try CNContactStore().unifiedContacts(
             matching: CNContact.predicateForContacts(matchingName: PrefillContact.searchName), keysToFetch: keys
-        ).filter { $0.departmentName == PrefillContact.marker }
+        ).filter { [PrefillContact.marker, PrefillContact.minimalMarker].contains($0.departmentName) }
     }
 
     private func removePrefillContacts() throws {
@@ -137,11 +137,12 @@ struct ContactsGatewayHostTests {
             update.update(edited)
             try CNContactStore().execute(update)
 
-            let onCard = try gateway.extrasOnCard(identifier: identifier)
+            let onCard = try gateway.placement(identifier: identifier).onCard.filter { $0.kind == .link }
             #expect(onCard.count == 1)
             try gateway.moveOffCard(onCard, identifier: identifier)
             #expect(try storedLinks(identifier).isEmpty)
-            #expect(try gateway.extrasOnCard(identifier: identifier).isEmpty)
+            #expect(try gateway.placement(identifier: identifier).onCard.allSatisfy { $0.kind == .email })
+            #expect(try gateway.placement(identifier: identifier).isMinimal == false)
             #expect(try gateway.fetchCard(identifier: identifier).links.map(\.payload) == [
                 .link("https://casey.example.com")
             ])
@@ -157,6 +158,32 @@ struct ContactsGatewayHostTests {
             #expect(try gateway.save(target, basis: card, transactionAuthor: CardWriter.transactionAuthor) == .saved)
             #expect(try storedLinks(identifier).isEmpty)
             #expect(try prefillContacts().first?.urlAddresses.count == 2)
+        }
+    }
+
+    @Test func aMinimalCardKeepsNewEmailsOffTheCardUntilThePersonLeavesIt() throws {
+        try removePrefillContacts()
+        defer { try? removePrefillContacts() }
+        try withThrowawayCard { identifier in
+            try gateway.moveOffCard(try gateway.placement(identifier: identifier).onCard, identifier: identifier)
+            #expect(try storedEmails(identifier).isEmpty)
+            let placement = try gateway.placement(identifier: identifier)
+            #expect(placement.isMinimal)
+            #expect(placement.onPrefill.count == emails.count)
+            #expect(try prefillContacts().first?.departmentName == PrefillContact.minimalMarker)
+
+            let card = try gateway.fetchCard(identifier: identifier)
+            #expect(card.emails.map(\.payload) == emails.map(ContactPayload.email))
+            let added = CardEntry(label: nil, payload: .email("casey.new@example.net"))
+            let target = card.replacing(.email, with: card.emails + [added])
+            #expect(try gateway.save(target, basis: card, transactionAuthor: CardWriter.transactionAuthor) == .saved)
+            #expect(try storedEmails(identifier).isEmpty)
+            #expect(try prefillContacts().first?.emailAddresses.count == emails.count + 1)
+
+            try gateway.moveOntoCard(nil, identifier: identifier, leavingMinimal: true)
+            #expect(try storedEmails(identifier).map { $0.value as String } == emails + ["casey.new@example.net"])
+            #expect(try gateway.placement(identifier: identifier).isMinimal == false)
+            #expect(try prefillContacts().first?.emailAddresses.isEmpty == true)
         }
     }
 }

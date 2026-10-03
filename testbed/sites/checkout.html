@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checkout</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<!-- A hosted checkout's contact and shipping block: every field tagged. -->
+<h1>Checkout</h1>
+<form action="thanks.html" method="post">
+  <label>Email <input type="email" name="email" autocomplete="email"></label>
+  <label>Street address <input name="street" autocomplete="shipping address-line1"></label>
+  <label>City <input name="city" autocomplete="shipping address-level2"></label>
+  <label>ZIP <input name="zip" autocomplete="shipping postal-code"></label>
+  <label>Phone <input type="tel" name="phone" autocomplete="shipping tel"></label>
+  <button type="submit">Pay now</button>
+</form>
+</body>
+</html>

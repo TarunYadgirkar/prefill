@@ -11,7 +11,7 @@ struct CardSplitTests {
     @Test func withoutAPrefillContactTheCardsOwnLinksStandIn() {
         let split = CardSplit(card: cardWithExtras, copies: [])
         #expect(split.record == cardWithExtras)
-        #expect(split.extrasOnCard.count == 3)
+        #expect(split.extrasOnCard.count == 10)
     }
 
     @Test func linksAndCustomFieldsComeFromThePrefillContact() {
@@ -58,7 +58,7 @@ struct CardSplitTests {
 
     @Test func movingOffTheCardKeepsEveryValueOnThePrefillContact() throws {
         let split = CardSplit(card: cardWithExtras, copies: [CardExtras(links: [homepage], customFields: [])])
-        let writes = try #require(split.moving([.link(github), .customField(school)]))
+        let writes = try #require(split.moving([.entry(github), .customField(school)]))
         #expect(writes.card?.links == [homepage])
         #expect(writes.card?.customFields.isEmpty == true)
         #expect(writes.card?.emails == Alex.card.emails)
@@ -66,7 +66,53 @@ struct CardSplitTests {
     }
 
     @Test func movingWhatIsAlreadyOffTheCardDoesNothing() {
-        #expect(CardSplit(card: Alex.card, copies: []).moving([.link(github)]) == nil)
+        #expect(CardSplit(card: Alex.card, copies: []).moving([.entry(github)]) == nil)
+    }
+
+    // The person keeps their name and mobile number on the card; the rest moves.
+    private var minimalSplit: CardSplit {
+        let moved = CardExtras(
+            links: [], customFields: [], emails: Alex.card.emails, phones: [Alex.workPhone.entry],
+            addresses: Alex.card.addresses, isMinimal: true
+        )
+        let card = Alex.card.replacing(.email, with: []).replacing(.phone, with: [Alex.mobile.entry])
+            .replacing(.address, with: [])
+        return CardSplit(card: card, copies: [moved])
+    }
+
+    @Test func movingEmailsPhonesAndAddressesLeavesNameAndPhoneAndMakesTheCardMinimal() throws {
+        let split = CardSplit(card: Alex.card, copies: [])
+        let chosen = split.extrasOnCard.filter { $0.id != CardExtra.entry(Alex.mobile.entry).id }
+        let writes = try #require(split.moving(chosen))
+        #expect(writes.card?.emails.isEmpty == true)
+        #expect(writes.card?.addresses.isEmpty == true)
+        #expect(writes.card?.phones == [Alex.mobile.entry])
+        #expect(writes.extras == minimalSplit.extras)
+        #expect(minimalSplit.record.emails == Alex.card.emails)
+        #expect(Set(minimalSplit.record.phones) == Set(Alex.card.phones))
+    }
+
+    @Test func onAMinimalCardANewEmailGoesToThePrefillContact() {
+        let split = minimalSplit
+        let added = CardEntry(label: nil, payload: .email("alex@new.example.com"))
+        let writes = split.writes(for: split.record.replacing(.email, with: split.record.emails + [added]))
+        #expect(writes.card == nil)
+        #expect(writes.extras?.emails == Alex.card.emails + [added])
+        #expect(writes.extras?.isMinimal == true)
+    }
+
+    @Test func rankingAPageNeverRewritesThePrefillContact() {
+        let split = minimalSplit
+        let writes = split.writes(for: split.record.replacing(.email, with: Array(Alex.card.emails.reversed())))
+        #expect(writes.isEmpty)
+        #expect(split.placement.cardKeys == [Alex.mobile.entry.key])
+    }
+
+    @Test func leavingAMinimalCardPutsEverythingBackOnIt() throws {
+        let writes = try #require(minimalSplit.movingOntoCard(nil, leavingMinimal: true))
+        #expect(writes.card?.emails == Alex.card.emails)
+        #expect(writes.card?.phones == [Alex.mobile.entry, Alex.workPhone.entry])
+        #expect(writes.extras == CardExtras(links: [], customFields: []))
     }
 
     @Test func theMappingWritesExtrasWithoutTouchingTheCoreFields() {

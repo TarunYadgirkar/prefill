@@ -42,7 +42,7 @@ struct E2EServer {
         fetch("card").flatMap { try? JSONDecoder().decode(Card.self, from: $0) }
     }
 
-    // Saved as assets/generated/e2e-ext-<name>.png by the helper.
+    // Saved as assets/generated/e2e-ext-<name>.png by the helper (minimal-card-* names keep theirs).
     static func screenshot(_ name: String) {
         _ = fetch("snap?name=\(name)")
     }

@@ -55,14 +55,38 @@ final class LinksE2ETests: XCTestCase {
         for _ in 0..<6 where !row.isHittable { app.swipeUp() }
         row.tap()
         let move = app.buttons["move-off-card"].firstMatch
-        XCTAssertTrue(move.waitForExistence(timeout: 10), "no Move button")
+        XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 10), "no list of values on the card")
+        keepOnlyLinksChosen()
+        XCTAssertFalse(app.buttons["Move 0 off your card"].exists, "nothing left chosen")
+        for _ in 0..<8 where !(move.exists && move.isHittable) { app.swipeUp() }
+        XCTAssertTrue(move.waitForExistence(timeout: 5), "no Move button")
         E2EServer.screenshot("links-sharing")
         move.tap()
         let confirm = app.buttons["Move off your card"].firstMatch
         XCTAssertTrue(confirm.waitForExistence(timeout: 5), "no confirmation")
         confirm.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["card-is-clean"].waitForExistence(timeout: 10))
+        let links = app.switches.matching(NSPredicate(format: "identifier BEGINSWITH 'extra-link-'"))
+        XCTAssertTrue(links.firstMatch.waitForNonExistence(timeout: 10), "links stayed in the list")
         E2EServer.screenshot("links-sharing-clean")
+    }
+
+    // The list also offers emails, phones and addresses; this test moves links alone.
+    private func keepOnlyLinksChosen() {
+        // The list loads rows as they scroll in, so turn off what is on screen, then scroll on.
+        let format = "identifier BEGINSWITH 'extra-' AND NOT identifier BEGINSWITH 'extra-link-' AND value == '1'"
+        let chosen = app.switches.matching(NSPredicate(format: format))
+        // Rows behind the floating tab bar count as hittable, but a tap there lands on the bar.
+        let barTop = app.tabBars.firstMatch.frame.minY
+        for _ in 0..<20 {
+            let toggle = chosen.firstMatch
+            if toggle.exists, toggle.isHittable, toggle.frame.maxY < barTop {
+                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+            } else if app.buttons["move-off-card"].isHittable {
+                return
+            } else {
+                app.swipeUp(velocity: .slow)
+            }
+        }
     }
 
     private func addLink(_ link: String) {

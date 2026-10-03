@@ -6,7 +6,7 @@ import Foundation
 // account as the person's card so iCloud carries it to their other devices.
 enum PrefillContactStore {
     static func isPrefillContact(_ contact: CNContact) -> Bool {
-        contact.isKeyAvailable(CNContactDepartmentNameKey) && contact.departmentName == PrefillContact.marker
+        contact.isKeyAvailable(CNContactDepartmentNameKey) && PrefillContact.isMarker(contact.departmentName)
     }
 
     // Every copy in the card's own account, oldest identifier first so each device picks the
@@ -42,14 +42,13 @@ enum PrefillContactStore {
             let contact = CNMutableContact()
             contact.contactType = .organization
             contact.organizationName = PrefillContact.name(for: card)
-            contact.departmentName = PrefillContact.marker
-            CNCardMapping.applyExtras(extras, to: contact)
+            CNCardMapping.applyPrefill(extras, to: contact)
             request.add(contact, toContainerWithIdentifier: try container(of: card.identifier, store: store))
             return
         }
         for copy in copies {
             guard let contact = copy.mutableCopy() as? CNMutableContact else { throw .other }
-            CNCardMapping.applyExtras(extras, to: contact)
+            CNCardMapping.applyPrefill(extras, to: contact)
             request.update(contact)
         }
     }

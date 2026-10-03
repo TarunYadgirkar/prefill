@@ -181,6 +181,7 @@ const pageRequests = {
     type: literal("contactSuggestions"),
     host: hostName,
     fields: arrayOf(pageField, LIMITS.pageFields),
+    offCard: optional(boolean),
   }),
   customSuggestions: object({
     type: literal("customSuggestions"),

@@ -73,15 +73,36 @@ extension AppModel {
         )))
     }
 
+    // Puts what a minimal card moved to Prefill's contact back on the card first, so the
+    // restore starts from a card that holds everything again.
     func restoreOriginalCard() async {
-        guard let original = state.cardLink?.original, await edit(.restore(original)) else { return }
-        commit(state.with(values: ManualOrder.allValues(card: original, known: state.values, now: .now)))
+        guard let link = state.cardLink else { return }
+        if let failure = await CardWork.moveOntoCard(
+            gateway, nil, identifier: link.contactIdentifier, leavingMinimal: true
+        ) {
+            report(failure)
+            await refreshCard()
+            return
+        }
+        guard await edit(.restore(link.original)) else { return }
+        commit(state.with(values: ManualOrder.allValues(card: link.original, known: state.values, now: .now)))
     }
 
-    // Moves links and custom fields the person chose off their card onto Prefill's contact.
+    // Moves the values and custom fields the person chose off their card onto Prefill's contact.
     func moveOffCard(_ chosen: [CardExtra]) async {
         guard let link = state.cardLink else { return }
         if let failure = await CardWork.moveOffCard(gateway, chosen, identifier: link.contactIdentifier) {
+            report(failure)
+        }
+        await refreshCard()
+    }
+
+    // Puts a phone number Prefill's contact holds on the card, where Safari's bar offers it.
+    func putOnCard(_ extra: CardExtra) async {
+        guard let link = state.cardLink else { return }
+        if let failure = await CardWork.moveOntoCard(
+            gateway, [extra], identifier: link.contactIdentifier, leavingMinimal: false
+        ) {
             report(failure)
         }
         await refreshCard()

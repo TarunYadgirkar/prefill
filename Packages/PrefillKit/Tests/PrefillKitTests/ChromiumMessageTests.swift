@@ -27,6 +27,22 @@ struct ChromiumMessageTests {
         #expect(gateway.saves.isEmpty)
     }
 
+    @Test func safariGetsOnlyWhatAMinimalCardLeftOff() {
+        let message: [String: Any] = [
+            "type": "contactSuggestions", "host": "portal.example.org", "offCard": true,
+            "fields": [["kind": "email", "section": "work"], ["kind": "phone"], ["kind": "name"]]
+        ]
+        #expect(route(message) == .contactSuggestions(ContactSuggestionsResponse()))
+        gateway.state.withLock {
+            $0.placement = CardPlacement(onCard: [.entry(Alex.mobile.entry)], isMinimal: true)
+        }
+        let expected = ContactSuggestionsResponse(
+            emails: ["alex@work.example.org", "alex.rivera@example.com", "alex.school@example.edu"],
+            phones: ["+1 (415) 555-0199"]
+        )
+        #expect(route(message) == .contactSuggestions(expected))
+    }
+
     @Test func framesCarryTheirLengthAndRefuseOversizedBodies() {
         let body = Data(#"{"type":"ping"}"#.utf8)
         let framed = NativeFraming.frame(body)

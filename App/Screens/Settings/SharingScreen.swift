@@ -2,12 +2,12 @@ import ContactsUI
 import PrefillKit
 import SwiftUI
 
-// What people get when the person shares their card, and the links and custom fields still
-// on it. Safari reads emails, phones and addresses from the card itself, so those stay;
-// links and custom fields move to Prefill's own contact, but only when the person says so.
+// What people get when the person shares their card, and what is still on it. The screen
+// recommends a minimal card: only the name and the phone number the person keeps stay on
+// it, and everything else moves to Prefill's own contact, but only once they confirm.
 struct SharingScreen: View {
     @Environment(AppModel.self) private var model
-    @State private var skipped: Set<String> = []
+    @State private var choices: [String: Bool] = [:]
     @State private var isConfirming = false
 
     var body: some View {
@@ -15,7 +15,10 @@ struct SharingScreen: View {
             Section {
                 ShareFact(
                     title: "NameDrop", systemImage: "iphone.radiowaves.left.and.right",
-                    text: "Sends your name, your Contact Poster and the one phone number or email you pick."
+                    text: """
+                        Sends your name, your Contact Poster and one phone number or email you pick. \
+                        Pick your phone number.
+                        """
                 )
                 ShareFact(
                     title: "Share Contact", systemImage: "square.and.arrow.up",
@@ -28,6 +31,9 @@ struct SharingScreen: View {
                 Text("What people get").textRole(.groupHeader)
             }
             onCardSection
+            if !heldPhones.isEmpty {
+                heldPhonesSection
+            }
             if model.access == .limited {
                 macSection
             }
@@ -37,17 +43,20 @@ struct SharingScreen: View {
     }
 
     @ViewBuilder private var onCardSection: some View {
-        if model.extrasOnCard.isEmpty {
+        if model.placement.suggestedMoves.isEmpty {
             Section {
-                Label("Your links and custom fields are off your card", systemImage: "checkmark.circle")
+                Label("Your card holds only your name and phone number", systemImage: "checkmark.circle")
                     .accessibilityIdentifier("card-is-clean")
             } footer: {
-                Text("Prefill keeps them on its own contact, \(prefillName), so sharing your card leaves them out.")
-                    .textRole(.footnote)
+                Text("""
+                    Prefill keeps everything else on its own contact, \(prefillName), and offers it in Safari \
+                    as its own suggestions.
+                    """)
+                .textRole(.footnote)
             }
         } else {
             Section {
-                ForEach(model.extrasOnCard) { extra in
+                ForEach(model.placement.onCard) { extra in
                     Toggle(isOn: chosen(extra)) {
                         VStack(alignment: .leading) {
                             Text(extra.title).textRole(.body)
@@ -70,14 +79,31 @@ struct SharingScreen: View {
                         Text(confirmMessage)
                     }
             } header: {
-                Text("Still on your card").textRole(.groupHeader)
+                Text("Keep only your name and phone").textRole(.groupHeader)
             } footer: {
-                Text("""
-                    Share Contact sends these. Prefill copies the ones you turn on to its own contact, \
-                    \(prefillName), then takes them off your card. Prefill still fills them in.
-                    """)
-                .textRole(.footnote)
+                Text(minimalFooter).textRole(.footnote)
             }
+        }
+    }
+
+    private var heldPhonesSection: some View {
+        Section {
+            ForEach(heldPhones) { extra in
+                LabeledContent {
+                    Button("Put on your card") {
+                        Task { await model.putOnCard(extra) }
+                    }
+                    .accessibilityIdentifier("promote-\(extra.id)")
+                } label: {
+                    Text(extra.title).textRole(.body)
+                    Text(extra.value).textRole(.footnote)
+                }
+            }
+        } header: {
+            Text("Phone numbers on Prefill’s contact").textRole(.groupHeader)
+        } footer: {
+            Text("Safari’s bar offers the phone numbers on your card. Prefill doesn’t replace them there.")
+                .textRole(.footnote)
         }
     }
 
@@ -91,10 +117,23 @@ struct SharingScreen: View {
         } footer: {
             Text("""
                 If your Mac already made the \(PrefillContact.searchName) contact, tap it here so this \
-                iPhone uses the same links and custom fields.
+                iPhone uses the same values.
                 """)
             .textRole(.footnote)
         }
+    }
+
+    private var minimalFooter: String {
+        String(localized: """
+            Prefill copies the ones you turn on to its own contact, \(prefillName), then takes them off your \
+            card, so sharing your card sends only what stays. In Safari, emails and addresses then show as \
+            Prefill’s suggestions, at most 3 at a time, and AutoFill Contact no longer fills them in with the \
+            rest of a form.
+            """)
+    }
+
+    private var heldPhones: [CardExtra] {
+        model.placement.onPrefill.filter { $0.kind == .phone }
     }
 
     private var prefillName: String {
@@ -102,7 +141,7 @@ struct SharingScreen: View {
     }
 
     private var chosenExtras: [CardExtra] {
-        model.extrasOnCard.filter { !skipped.contains($0.id) }
+        model.placement.onCard.filter(isChosen)
     }
 
     private var confirmMessage: String {
@@ -110,10 +149,12 @@ struct SharingScreen: View {
         return String(localized: "These come off your card and stay on \(prefillName):\n\(list)")
     }
 
+    private func isChosen(_ extra: CardExtra) -> Bool {
+        choices[extra.id] ?? model.placement.suggestedMoves.contains(extra)
+    }
+
     private func chosen(_ extra: CardExtra) -> Binding<Bool> {
-        Binding { !skipped.contains(extra.id) } set: { isOn in
-            skipped = isOn ? skipped.subtracting([extra.id]) : skipped.union([extra.id])
-        }
+        Binding { isChosen(extra) } set: { choices[extra.id] = $0 }
     }
 }
 

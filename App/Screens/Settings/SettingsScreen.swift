@@ -136,13 +136,18 @@ struct SettingsScreen: View {
     }
 
     private var sharingStatus: String {
-        let count = model.extrasOnCard.count
-        return count == 0 ? "" : String(localized: "\(count) to move")
+        let count = model.placement.suggestedMoves.count
+        if count > 0 { return String(localized: "\(count) to move") }
+        return model.placement.isMinimal ? String(localized: "Name and phone") : ""
     }
 
     private var restoreMessage: String {
         let date = model.state.cardLink?.snapshotAt.formatted(date: .long, time: .omitted) ?? ""
-        return String(localized: "Anything added to your card since \(date) comes off it.")
+        let restored = String(localized: "Anything added to your card since \(date) comes off it.")
+        guard model.placement.isMinimal else { return restored }
+        return String(localized: """
+            Emails, phone numbers and addresses on Prefill’s contact go back on your card first. \(restored)
+            """)
     }
 
     private var matchEachSite: Binding<Bool> {

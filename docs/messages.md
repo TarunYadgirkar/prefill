@@ -6,7 +6,7 @@ The content script runs in the top frame of `https` pages only, plus plain `http
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions`, sent only in Chrome and Arc, is another (see below), and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
 
@@ -141,7 +141,13 @@ Chrome and Arc fill contact fields from their own saved addresses, never from th
 }
 ```
 
-The focused field gets a `list` and a `<datalist>` with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. Chrome shows the options in its own autofill dropdown under any addresses it has saved. As with links, any script on the page can read the datalist while it is there.
+In Safari, where the bar fills contact fields from the card, the content script still sends `pageContext` and also sends `contactSuggestions` with `"offCard": true`, asking only for values the person moved off a minimal card (Settings > Sharing your card). The reply then leaves out every value still on the card and the name, and is empty unless the card is minimal. Safari's bar shows a datalist only when the card has nothing for the field (REPORT.md, Spike results), so these emails and address parts reach the bar on a card that holds just a name and phone number; the phone field keeps the card's own suggestion.
+
+```json
+{ "type": "contactSuggestions", "host": "boards.example.io", "fields": [{ "kind": "email" }], "offCard": true }
+```
+
+The focused field gets a `list` and a `<datalist>` with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. Safari shows at most three of them in its bar, values only, and WebKit also opens its own list under the field. In Chrome and Arc Prefill draws its own list instead. As with links, any script on the page can read the datalist while it is there.
 
 ## customSuggestions
 

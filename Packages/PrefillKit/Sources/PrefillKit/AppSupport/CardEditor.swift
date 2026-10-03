@@ -33,6 +33,7 @@ public struct CardEditor: Sendable {
         let author = CardWriter.transactionAuthor
         switch try gateway.save(target, basis: card, scope: .personEdit, transactionAuthor: author) {
         case .saved: return .saved
+        case .unchanged: return .unchanged
         case .stale(let current) where attempt < Self.attempts:
             return try write(edit, card: current, attempt: attempt + 1)
         case .stale: return .failed(.changedDuringSave)

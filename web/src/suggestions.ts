@@ -19,6 +19,10 @@ type Name = NonNullable<Suggestions["name"]>;
 export interface SuggestionOptions {
   host: () => string;
   send: (request: ContactSuggestionsRequest) => Promise<unknown>;
+  // Safari fills contact fields from the card itself, so there Prefill asks only for what a
+  // minimal card left on Prefill's contact, shows it through a datalist, and skips text
+  // areas, which never show one.
+  offCard?: boolean;
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
@@ -68,22 +72,22 @@ export function suggestionOptions(field: ContactField, values: Suggestions): str
 
 export const KIND_LABELS: Partial<Record<FieldKind, string>> = { email: "Email", phone: "Phone", address: "Address", name: "Name" };
 
-function isTextField(element: FieldElement): element is TextField {
-  if (element.localName === "textarea") return true;
+function isTextField(element: FieldElement, textAreas = true): element is TextField {
+  if (element.localName === "textarea") return textAreas;
   return element.localName === "input" && LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase());
 }
 
-function suggestedField(element: FieldElement): ContactField | undefined {
-  if (!isTextField(element)) return undefined;
+function suggestedField(element: FieldElement, textAreas = true): ContactField | undefined {
+  if (!isTextField(element, textAreas)) return undefined;
   const field = classify(element);
   return isContact(field) && SUGGESTED_KINDS.has(field.kind) ? field : undefined;
 }
 
 // One entry per kind and section, so the request stays small on long forms.
-function pageFields(doc: Document): PageField[] {
+function pageFields(doc: Document, fieldOf: (element: FieldElement) => ContactField | undefined): PageField[] {
   const seen = new Map<string, PageField>();
   for (const element of fieldElements(doc, MAX_INSPECTED)) {
-    const field = suggestedField(element);
+    const field = fieldOf(element);
     if (field === undefined) continue;
     const entry: PageField = field.section === undefined ? { kind: field.kind } : { kind: field.kind, section: field.section };
     seen.set(`${entry.kind} ${entry.section ?? ""}`, entry);
@@ -92,13 +96,16 @@ function pageFields(doc: Document): PageField[] {
 }
 
 // Offers the card's emails, phone numbers, addresses and name in Prefill's own dropdown,
-// on browsers whose autofill doesn't read the card (Chrome, Arc). The values are fetched
-// when the page loads, ranked for the site, and a field gets its list when the person
-// focuses it; the list goes away when the field loses focus. A field with a datalist of
-// its own is left alone.
+// on browsers whose autofill doesn't read the card (Chrome, Arc), and in Safari the values
+// a minimal card left on Prefill's contact, through a datalist that Safari's bar shows when
+// the card has nothing for the field. The values are fetched when the page loads, ranked
+// for the site, and a field gets its list when the person focuses it; the list goes away
+// when the field loses focus. A field with a datalist of its own is left alone.
 export function installSuggestions(doc: Document, options: SuggestionOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
   const attach = options.attach ?? showDropdown;
+  const offCard = options.offCard === true;
+  const fieldOf = (element: FieldElement): ContactField | undefined => suggestedField(element, !offCard);
   const gestures = trackGestures(doc, isUserEvent, options.now);
   let known: Suggestions | undefined;
   let detach: (() => void) | undefined;
@@ -118,10 +125,10 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
   };
 
   const fetchValues = (): void => {
-    const fields = pageFields(doc);
+    const fields = pageFields(doc, fieldOf);
     if (fields.length === 0) return;
     options
-      .send({ type: "contactSuggestions", host: options.host(), fields })
+      .send({ type: "contactSuggestions", host: options.host(), fields, ...(offCard ? { offCard } : {}) })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
         if (response?.type !== "contactSuggestionsResult") return;
@@ -133,8 +140,8 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (!isFieldElement(target) || target.hasAttribute("list") || !isTextField(target)) return;
-    const field = suggestedField(target);
+    if (!isFieldElement(target) || target.hasAttribute("list") || !isTextField(target, !offCard)) return;
+    const field = fieldOf(target);
     if (field === undefined || !gestures.allows(target)) return;
     clear();
     focused = { element: target, field };

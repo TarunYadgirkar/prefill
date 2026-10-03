@@ -14,6 +14,7 @@ final class FakeGateway: ContactsGateway {
         // Edits that land on the card between the fetch and the save, one per save call.
         var editsBeforeSave: [(CardRecord) -> CardRecord] = []
         var fetchDelay: TimeInterval = 0
+        var placement = CardPlacement(onCard: [])
     }
 
     let state: Mutex<State>
@@ -37,6 +38,10 @@ final class FakeGateway: ContactsGateway {
             return .success(state.card)
         }
         return try result.get()
+    }
+
+    func placement(identifier: String) throws(CardWriteFailure) -> CardPlacement {
+        state.withLock { $0.placement }
     }
 
     func save(

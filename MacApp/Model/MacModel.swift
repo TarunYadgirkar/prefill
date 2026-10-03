@@ -20,8 +20,8 @@ final class MacModel {
 
     private(set) var access = Access.notDetermined
     private(set) var card: CardRecord?
-    // Links and custom fields still on My Card, which sharing the card sends along.
-    private(set) var extrasOnCard: [CardExtra] = []
+    // What is on My Card, which sharing the card sends along, and what Prefill's contact holds.
+    private(set) var placement = CardPlacement(onCard: [])
     private(set) var hasMeCard = true
     private(set) var state = AppState()
     private(set) var events = ExtensionEvents()
@@ -155,11 +155,11 @@ final class MacModel {
             return
         }
         let gateway = gateway
-        let (fetched, extras) = await Task.detached {
-            (try? gateway.fetchCard(identifier: identifier), try? gateway.extrasOnCard(identifier: identifier))
+        let (fetched, fresh) = await Task.detached {
+            (try? gateway.fetchCard(identifier: identifier), try? gateway.placement(identifier: identifier))
         }.value
         card = fetched
-        if let extras { extrasOnCard = extras }
+        if let fresh { placement = fresh }
         guard let fetched else { return }
         let merged = ManualOrder.allValues(card: fetched, known: state.values, now: .now)
         if merged.map(\.id) != state.values.map(\.id) { commit(state.with(values: merged)) }
