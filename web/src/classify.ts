@@ -143,7 +143,7 @@ function positive(el: FieldElement, control: Control, sources: readonly string[]
 // needs a tel token or phone words, and none of the words that mark something else.
 // Sign-in forms belong to Passwords: Prefill stays off them so Safari's saved logins own
 // the bar. Sign-up forms stay in, since that is where new emails and phones show up.
-function isSignIn(el: FieldElement): boolean {
+export function isSignIn(el: FieldElement): boolean {
   if (/\bwebauthn\b/iu.test(el.getAttribute("autocomplete") ?? "")) return true;
   return el.form?.querySelector('input[autocomplete~="current-password" i]') != null;
 }

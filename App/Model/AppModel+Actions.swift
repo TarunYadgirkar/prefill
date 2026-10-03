@@ -107,6 +107,30 @@ extension AppModel {
         return outcome
     }
 
+    var customFields: [CustomField] { card?.customFields ?? [] }
+
+    // Returns why the field can't be saved, or nil once it is on the card (or the card
+    // couldn't take it, which the app reports on its own).
+    func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
+        switch customFields.saving(field, replacing: old) {
+        case .failure(let problem): return problem.message
+        case .success(let fields):
+            await edit(.setCustomFields(fields))
+            return nil
+        }
+    }
+
+    func removeCustomField(_ field: CustomField) async {
+        await edit(.setCustomFields(customFields.filter { $0.id != field.id }))
+    }
+
+    func moveCustomFields(from source: IndexSet, to destination: Int) async {
+        var fields = customFields
+        fields.move(fromOffsets: source, toOffset: destination)
+        await edit(.setCustomFields(fields))
+    }
+
+    @discardableResult
     private func edit(_ edit: CardEditor.Edit) async -> Bool {
         guard let link = state.cardLink else { return false }
         let outcome = await CardWork.edit(gateway, edit, identifier: link.contactIdentifier)

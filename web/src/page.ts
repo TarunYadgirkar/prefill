@@ -1,5 +1,6 @@
 import { installCapture } from "./capture";
 import { installContext } from "./context";
+import { installCustom } from "./custom";
 import { installLinks } from "./links";
 import type { ExtensionRequest } from "./messages";
 import { isTrustedPage } from "./origin";
@@ -30,7 +31,12 @@ export function startPage(env: PageEnvironment): () => void {
     env.browser === "chromium"
       ? installSuggestions(env.doc, { host, send: env.send })
       : installContext(env.doc, env.win, { host, send: env.send });
-  const stops = [values, installCapture(env.doc, env.win, { host, send }), installLinks(env.doc, { host, send: env.send })];
+  const stops = [
+    values,
+    installCapture(env.doc, env.win, { host, send }),
+    installLinks(env.doc, { host, send: env.send }),
+    installCustom(env.doc, { host, send: env.send }),
+  ];
   return () => {
     stops.forEach((stop) => {
       stop();

@@ -11,7 +11,8 @@ extension MessageRouter {
         case .unpin(let body): choose(nil, kind: body.kind, host: body.host)
         case .undoCapture(let body): undoCapture(body)
         case .muteSite(let body): muteSite(body)
-        case .ping, .pageContext, .capture, .linkSuggestions, .contactSuggestions: PopupStateResponse(failure: .other)
+        case .ping, .pageContext, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions:
+            PopupStateResponse(failure: .other)
         }
     }
 

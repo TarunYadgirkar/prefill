@@ -50,6 +50,11 @@
       "type": "contactSuggestions",
       "host": "shop.example.net",
       "fields": [{ "kind": "email" }, { "kind": "address", "section": "shipping" }, { "kind": "name" }]
+    },
+    "customSuggestions": {
+      "type": "customSuggestions",
+      "host": "boards.example.io",
+      "fields": [{ "text": "School job_application[educations][0][school_name_id]" }, { "text": "Cover letter" }]
     }
   },
   "responses": {
@@ -98,6 +103,10 @@
         { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
       ],
       "name": { "given": "Alex", "family": "Rivera" }
+    },
+    "customSuggestionsResult": {
+      "type": "customSuggestionsResult",
+      "fields": [{ "values": ["UC Berkeley"] }, { "values": [] }]
     },
     "error": { "type": "error", "reason": "unknown message" }
   }
