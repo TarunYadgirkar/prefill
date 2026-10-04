@@ -6,7 +6,9 @@ let stop: (() => void) | undefined;
 
 beforeEach(() => {
   vi.useFakeTimers();
-  vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+  vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(
+    new DOMRect(10, 10, 200, 30),
+  );
 });
 
 afterEach(() => {
@@ -42,12 +44,18 @@ function typeAndSubmit(): void {
   input.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true }));
   input.value = "new.person@example.org";
   input.dispatchEvent(new Event("input", { bubbles: true }));
-  document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
+  document
+    .querySelector("form")
+    ?.dispatchEvent(new Event("submit", { bubbles: true }));
 }
 
 it("tells the app which contact fields a page has", async () => {
   const send = await load('<input type="email" autocomplete="email">');
-  expect(send).toHaveBeenCalledWith({ type: "pageContext", host: "shop.example.net", fields: [{ kind: "email" }] });
+  expect(send).toHaveBeenCalledWith({
+    type: "pageContext",
+    host: "shop.example.net",
+    fields: [{ kind: "email" }],
+  });
 });
 
 it("stays silent on a page without contact fields", async () => {
@@ -55,32 +63,55 @@ it("stays silent on a page without contact fields", async () => {
   expect(send).not.toHaveBeenCalled();
 });
 
-it.each(["file:", "about:", "data:", "blob:"])("does nothing on a %s page", async (protocol) => {
-  const send = await load('<input type="email" autocomplete="email">', { protocol });
-  expect(send).not.toHaveBeenCalled();
-});
+it.each(["file:", "about:", "data:", "blob:"])(
+  "does nothing on a %s page",
+  async (protocol) => {
+    const send = await load('<input type="email" autocomplete="email">', {
+      protocol,
+    });
+    expect(send).not.toHaveBeenCalled();
+  },
+);
 
 it.each([
   ["plain http", { protocol: "http:", isSecureContext: false }],
-  ["http on another host that claims to be secure", { protocol: "http:", hostname: "shop.example.net" }],
+  [
+    "http on another host that claims to be secure",
+    { protocol: "http:", hostname: "shop.example.net" },
+  ],
   ["a frame", { isTopFrame: false }],
 ])("does nothing on %s", async (_, overrides: Partial<PageEnvironment>) => {
-  const send = await load('<form><input type="email" autocomplete="email"></form>', overrides);
+  const send = await load(
+    '<form><input type="email" autocomplete="email"></form>',
+    overrides,
+  );
   expect(send).not.toHaveBeenCalled();
 });
 
 it("runs on http only on this device itself", async () => {
-  const send = await load('<input type="email" autocomplete="email">', { protocol: "http:", hostname: "localhost" });
-  expect(send.mock.calls.map(([request]) => (request as { type: string }).type)).toEqual(["contactSuggestions", "pageContext"]);
+  const send = await load('<input type="email" autocomplete="email">', {
+    protocol: "http:",
+    hostname: "localhost",
+  });
+  expect(
+    send.mock.calls.map(([request]) => (request as { type: string }).type),
+  ).toEqual(["contactSuggestions", "pageContext"]);
 });
 
 it("asks Safari's app only for values a minimal card left off", async () => {
   const send = await load('<input type="email" autocomplete="email">');
-  expect(send).toHaveBeenCalledWith({ type: "contactSuggestions", host: "shop.example.net", fields: [{ kind: "email" }], offCard: true });
+  expect(send).toHaveBeenCalledWith({
+    type: "contactSuggestions",
+    host: "shop.example.net",
+    fields: [{ kind: "email" }],
+    offCard: true,
+  });
 });
 
 it("ignores events the page dispatches itself", async () => {
-  const send = await load('<form><input type="email" autocomplete="email"></form>');
+  const send = await load(
+    '<form><input type="email" autocomplete="email"></form>',
+  );
   send.mockClear();
   typeAndSubmit();
   expect(send).not.toHaveBeenCalled();
@@ -88,13 +119,25 @@ it("ignores events the page dispatches itself", async () => {
 
 it("sends what the person typed as a capture when the form is submitted", async () => {
   // happy-dom leaves isTrusted undefined; a browser sets it on events the person makes.
-  Object.defineProperty(Event.prototype, "isTrusted", { get: () => true, configurable: true });
-  Object.defineProperty(navigator, "userActivation", { value: { isActive: true }, configurable: true });
+  Object.defineProperty(Event.prototype, "isTrusted", {
+    get: () => true,
+    configurable: true,
+  });
+  Object.defineProperty(navigator, "userActivation", {
+    value: { isActive: true },
+    configurable: true,
+  });
   try {
-    const send = await load('<form><input type="email" autocomplete="email"></form>');
+    const send = await load(
+      '<form><input type="email" autocomplete="email"></form>',
+    );
     typeAndSubmit();
     expect(send).toHaveBeenLastCalledWith(
-      expect.objectContaining({ type: "capture", host: "shop.example.net", trigger: "submit" }),
+      expect.objectContaining({
+        type: "capture",
+        host: "shop.example.net",
+        trigger: "submit",
+      }),
     );
   } finally {
     Reflect.deleteProperty(Event.prototype, "isTrusted");
@@ -106,7 +149,12 @@ it("removes everything it installed when stopped", async () => {
   const send = await load('<div id="app"></div>');
   stop?.();
   stop = undefined;
-  document.querySelector("#app")?.insertAdjacentHTML("beforeend", '<input type="email" autocomplete="email">');
+  document
+    .querySelector("#app")
+    ?.insertAdjacentHTML(
+      "beforeend",
+      '<input type="email" autocomplete="email">',
+    );
   await vi.advanceTimersByTimeAsync(5_000);
   expect(send).not.toHaveBeenCalled();
 });

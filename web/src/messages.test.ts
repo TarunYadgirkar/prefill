@@ -54,21 +54,36 @@ const linkSuggestionsResult: LinkSuggestionsResult = {
 const contactSuggestions: ContactSuggestionsRequest = {
   type: "contactSuggestions",
   host: "shop.example.net",
-  fields: [{ kind: "email" }, { kind: "address", section: "shipping" }, { kind: "name" }],
+  fields: [
+    { kind: "email" },
+    { kind: "address", section: "shipping" },
+    { kind: "name" },
+  ],
 };
 
 const contactSuggestionsResult: ContactSuggestionsResult = {
   type: "contactSuggestionsResult",
   emails: ["alex@work.example.org", "alex.rivera@example.com"],
   phones: [],
-  addresses: [{ street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" }],
+  addresses: [
+    {
+      street: "2400 Durant Ave",
+      city: "Berkeley",
+      state: "CA",
+      postalCode: "94704",
+      country: "United States",
+    },
+  ],
   name: { given: "Alex", family: "Rivera" },
 };
 
 const customSuggestions: CustomSuggestionsRequest = {
   type: "customSuggestions",
   host: "boards.example.io",
-  fields: [{ text: "School job_application[educations][0][school_name_id]" }, { text: "Cover letter" }],
+  fields: [
+    { text: "School job_application[educations][0][school_name_id]" },
+    { text: "Cover letter" },
+  ],
 };
 
 const customSuggestionsResult: CustomSuggestionsResult = {
@@ -79,7 +94,11 @@ const customSuggestionsResult: CustomSuggestionsResult = {
 const pageContext: PageContextRequest = {
   type: "pageContext",
   host: "shop.example.net",
-  fields: [{ kind: "email", section: "work" }, { kind: "phone" }, { kind: "address", section: "shipping" }],
+  fields: [
+    { kind: "email", section: "work" },
+    { kind: "phone" },
+    { kind: "address", section: "shipping" },
+  ],
 };
 
 const capture: CaptureRequest = {
@@ -88,8 +107,22 @@ const capture: CaptureRequest = {
   hasPassword: true,
   trigger: "submit",
   fields: [
-    { kind: "name", value: "Alex Rivera", autocomplete: "name", name: "full_name", label: "Full name", userTyped: true },
-    { kind: "email", value: "alex.new@example.net", autocomplete: "email", name: "email", label: "Email", userTyped: true },
+    {
+      kind: "name",
+      value: "Alex Rivera",
+      autocomplete: "name",
+      name: "full_name",
+      label: "Full name",
+      userTyped: true,
+    },
+    {
+      kind: "email",
+      value: "alex.new@example.net",
+      autocomplete: "email",
+      name: "email",
+      label: "Email",
+      userTyped: true,
+    },
     {
       kind: "address",
       section: "shipping",
@@ -106,23 +139,53 @@ const capture: CaptureRequest = {
 };
 
 const pong: Pong = { type: "pong" };
-const pageContextResult: PageContextResult = { type: "pageContextResult", status: "saved" };
+const pageContextResult: PageContextResult = {
+  type: "pageContextResult",
+  status: "saved",
+};
 const pageContextFailed: PageContextResult = {
   type: "pageContextResult",
   status: "failed",
-  reason: "Prefill can't reach your contact card. Open Prefill to give it access again.",
+  reason:
+    "Prefill can't reach your contact card. Open Prefill to give it access again.",
 };
-const captureResult: CaptureResult = { type: "captureResult", saved: 1, review: 0, ignored: 1 };
+const captureResult: CaptureResult = {
+  type: "captureResult",
+  saved: 1,
+  review: 0,
+  ignored: 1,
+};
 const error: ErrorResponse = { type: "error", reason: "unknown message" };
 
 const WORK = "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B";
 const HOME = "0B3E5A7C-9D1F-5B2A-8C4E-6F8A0B2C4D6E";
 const ADDED = "7A9C1E3B-5D7F-5A1C-8E2B-4D6F8A0C2E4A";
-const popupState: PopupStateRequest = { type: "popupState", host: "shop.example.net", kinds: ["email"] };
-const pin: PinRequest = { type: "pin", host: "shop.example.net", kind: "email", valueID: WORK };
-const unpin: UnpinRequest = { type: "unpin", host: "shop.example.net", kind: "email" };
-const undoCapture: UndoCaptureRequest = { type: "undoCapture", host: "shop.example.net", valueID: ADDED };
-const muteSite: MuteSiteRequest = { type: "muteSite", host: "shop.example.net", muted: true };
+const popupState: PopupStateRequest = {
+  type: "popupState",
+  host: "shop.example.net",
+  kinds: ["email"],
+};
+const pin: PinRequest = {
+  type: "pin",
+  host: "shop.example.net",
+  kind: "email",
+  valueID: WORK,
+};
+const unpin: UnpinRequest = {
+  type: "unpin",
+  host: "shop.example.net",
+  kind: "email",
+};
+const undoCapture: UndoCaptureRequest = {
+  type: "undoCapture",
+  host: "shop.example.net",
+  valueID: ADDED,
+};
+const muteSite: MuteSiteRequest = {
+  type: "muteSite",
+  host: "shop.example.net",
+  muted: true,
+};
 const popupStateResult: PopupStateResult = {
   type: "popupStateResult",
   status: "ready",
@@ -136,7 +199,13 @@ const popupStateResult: PopupStateResult = {
       ],
     },
   ],
-  recent: [{ kind: "email", state: "saved", value: { id: ADDED, caption: "email", text: "alex.new@example.net" } }],
+  recent: [
+    {
+      kind: "email",
+      state: "saved",
+      value: { id: ADDED, caption: "email", text: "alex.new@example.net" },
+    },
+  ],
   muted: false,
 };
 
@@ -156,27 +225,60 @@ describe("message contract", () => {
     ...FIELD_KINDS.map((kind) => ({ kind })),
     ...SECTION_HINTS.map((section) => ({ kind: "address" as const, section })),
   ])("accepts the page field %j", (field) => {
-    expect(isExtensionRequest({ type: "pageContext", host: "example.net", fields: [field] })).toBe(true);
+    expect(
+      isExtensionRequest({
+        type: "pageContext",
+        host: "example.net",
+        fields: [field],
+      }),
+    ).toBe(true);
   });
 
   it.each(SYNC_STATUSES)("accepts the sync status %s", (status) => {
-    expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(true);
+    expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(
+      true,
+    );
   });
 
-  it.each(Object.entries({ ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions, contactSuggestions, customSuggestions }))("request %s matches the shared example", (name, typed) => {
-    const example: unknown = examples.requests[name as keyof typeof examples.requests];
+  it.each(
+    Object.entries({
+      ping,
+      pageContext,
+      capture,
+      popupState,
+      pin,
+      unpin,
+      undoCapture,
+      muteSite,
+      linkSuggestions,
+      contactSuggestions,
+      customSuggestions,
+    }),
+  )("request %s matches the shared example", (name, typed) => {
+    const example: unknown =
+      examples.requests[name as keyof typeof examples.requests];
     expect(example).toEqual(typed);
     expect(isExtensionRequest(example)).toBe(true);
   });
 
-  it.each(Object.entries({ pong, pageContextResult, pageContextFailed, captureResult, popupStateResult, linkSuggestionsResult, contactSuggestionsResult, customSuggestionsResult, error }))(
-    "response %s matches the shared example",
-    (name, typed) => {
-      const example: unknown = examples.responses[name as keyof typeof examples.responses];
-      expect(example).toEqual(typed);
-      expect(isExtensionResponse(example)).toBe(true);
-    },
-  );
+  it.each(
+    Object.entries({
+      pong,
+      pageContextResult,
+      pageContextFailed,
+      captureResult,
+      popupStateResult,
+      linkSuggestionsResult,
+      contactSuggestionsResult,
+      customSuggestionsResult,
+      error,
+    }),
+  )("response %s matches the shared example", (name, typed) => {
+    const example: unknown =
+      examples.responses[name as keyof typeof examples.responses];
+    expect(example).toEqual(typed);
+    expect(isExtensionResponse(example)).toBe(true);
+  });
 
   it.each([
     null,
@@ -186,7 +288,11 @@ describe("message contract", () => {
     { type: "toString" },
     { type: "pageContext", host: "example.net" },
     { type: "pageContext", host: "example.net", fields: [{ kind: "fax" }] },
-    { type: "pageContext", host: "example.net", fields: [{ kind: "email", section: "school" }] },
+    {
+      type: "pageContext",
+      host: "example.net",
+      fields: [{ kind: "email", section: "school" }],
+    },
     { type: "capture", host: "example.net", fields: [] },
     {
       type: "capture",
@@ -196,14 +302,34 @@ describe("message contract", () => {
       fields: [{ kind: "email", value: 7, userTyped: true }],
     },
     { type: "capture", host: "example.net", hasPassword: false, fields: [] },
-    { type: "capture", host: "example.net", hasPassword: false, submitted: true, fields: [] },
-    { type: "capture", host: "example.net", hasPassword: false, trigger: "script", fields: [] },
+    {
+      type: "capture",
+      host: "example.net",
+      hasPassword: false,
+      submitted: true,
+      fields: [],
+    },
+    {
+      type: "capture",
+      host: "example.net",
+      hasPassword: false,
+      trigger: "script",
+      fields: [],
+    },
     { type: "pageContext", host: "Example.net/path", fields: [] },
     { type: "popupState", host: "example.net", kinds: ["name"] },
-    { type: "popupState", host: "example.net", kinds: ["email", "phone", "address", "email"] },
+    {
+      type: "popupState",
+      host: "example.net",
+      kinds: ["email", "phone", "address", "email"],
+    },
     { type: "pin", host: "example.net", kind: "email", valueID: "not-a-uuid" },
     { type: "muteSite", host: "example.net", muted: "yes" },
-    { type: "customSuggestions", host: "example.net", fields: [{ text: "School\u200b" }] },
+    {
+      type: "customSuggestions",
+      host: "example.net",
+      fields: [{ text: "School\u200b" }],
+    },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });
@@ -220,7 +346,9 @@ describe("message contract", () => {
     const message = {
       ...capture,
       extra: "x",
-      fields: [{ kind: "email", value: "a@example.net", userTyped: true, html: "<b>" }],
+      fields: [
+        { kind: "email", value: "a@example.net", userTyped: true, html: "<b>" },
+      ],
     };
     expect(parseExtensionRequest(message)).toEqual({
       ...capture,
@@ -230,7 +358,12 @@ describe("message contract", () => {
 });
 
 describe("message limits, mirrored in MessageLimits.swift", () => {
-  const field = (extra: Record<string, unknown>) => ({ kind: "email", value: "a@example.net", userTyped: true, ...extra });
+  const field = (extra: Record<string, unknown>) => ({
+    kind: "email",
+    value: "a@example.net",
+    userTyped: true,
+    ...extra,
+  });
   const request = (fields: unknown[], host = "shop.example.net") => ({
     type: "capture",
     host,
@@ -240,22 +373,62 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
   });
 
   it("accepts a capture right at the limits", () => {
-    const full = field({ value: "a".repeat(LIMITS.value), label: "b".repeat(LIMITS.text) });
-    expect(isExtensionRequest(request(Array<unknown>(LIMITS.captureFields).fill(full)))).toBe(true);
+    const full = field({
+      value: "a".repeat(LIMITS.value),
+      label: "b".repeat(LIMITS.text),
+    });
+    expect(
+      isExtensionRequest(
+        request(Array<unknown>(LIMITS.captureFields).fill(full)),
+      ),
+    ).toBe(true);
   });
 
   it.each([
     ["a long value", request([field({ value: "a".repeat(LIMITS.value + 1) })])],
     ["a long name", request([field({ name: "n".repeat(LIMITS.text + 1) })])],
-    ["a long autocomplete", request([field({ autocomplete: "x".repeat(LIMITS.text + 1) })])],
-    ["too many fields", request(Array<unknown>(LIMITS.captureFields + 1).fill(field({})))],
+    [
+      "a long autocomplete",
+      request([field({ autocomplete: "x".repeat(LIMITS.text + 1) })]),
+    ],
+    [
+      "too many fields",
+      request(Array<unknown>(LIMITS.captureFields + 1).fill(field({}))),
+    ],
     ["a long host", request([field({})], "h".repeat(LIMITS.host + 1))],
-    ["a right-to-left override", request([field({ value: "a\u202E@example.net" })])],
+    [
+      "a right-to-left override",
+      request([field({ value: "a\u202E@example.net" })]),
+    ],
     ["a zero-width space", request([field({ value: "a\u200B@example.net" })])],
-    ["a newline in an email", request([field({ value: "a@example.net\nBcc: b@example.net" })])],
-    ["an email sent as an address", request([{ kind: "email", userTyped: true, address: { street: "1 Main St", city: "", state: "", postalCode: "", country: "" } }])],
-    ["an address sent as one value", request([{ kind: "address", value: "1 Main St", userTyped: true }])],
-    ["a field without provenance", request([{ kind: "email", value: "a@example.net" }])],
+    [
+      "a newline in an email",
+      request([field({ value: "a@example.net\nBcc: b@example.net" })]),
+    ],
+    [
+      "an email sent as an address",
+      request([
+        {
+          kind: "email",
+          userTyped: true,
+          address: {
+            street: "1 Main St",
+            city: "",
+            state: "",
+            postalCode: "",
+            country: "",
+          },
+        },
+      ]),
+    ],
+    [
+      "an address sent as one value",
+      request([{ kind: "address", value: "1 Main St", userTyped: true }]),
+    ],
+    [
+      "a field without provenance",
+      request([{ kind: "email", value: "a@example.net" }]),
+    ],
     // eslint-disable-next-line no-sparse-arrays
     ["a sparse field list", request([field({}), , field({})])],
     [
@@ -264,7 +437,13 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
         {
           kind: "address",
           userTyped: true,
-          address: { street: "1 Main St", city: "c".repeat(LIMITS.part + 1), state: "", postalCode: "", country: "" },
+          address: {
+            street: "1 Main St",
+            city: "c".repeat(LIMITS.part + 1),
+            state: "",
+            postalCode: "",
+            country: "",
+          },
         },
       ]),
     ],
@@ -283,14 +462,38 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
 
 describe("sheet messages", () => {
   it("are never page requests, so the background script won't relay them", () => {
-    for (const message of [popupState, pin, unpin, undoCapture, muteSite]) expect(parsePageRequest(message)).toBeUndefined();
+    for (const message of [popupState, pin, unpin, undoCapture, muteSite])
+      expect(parsePageRequest(message)).toBeUndefined();
   });
 
   it.each([
-    ["too many values", { kind: "email", values: Array<unknown>(LIMITS.popupValues + 1).fill({ id: WORK, caption: "work", text: "a" }) }],
-    ["a value over the display limit", { kind: "email", values: [{ id: WORK, caption: "work", text: "a".repeat(LIMITS.display + 1) }] }],
-    ["a line break in a value", { kind: "email", values: [{ id: WORK, caption: "work", text: "a\nb" }] }],
+    [
+      "too many values",
+      {
+        kind: "email",
+        values: Array<unknown>(LIMITS.popupValues + 1).fill({
+          id: WORK,
+          caption: "work",
+          text: "a",
+        }),
+      },
+    ],
+    [
+      "a value over the display limit",
+      {
+        kind: "email",
+        values: [
+          { id: WORK, caption: "work", text: "a".repeat(LIMITS.display + 1) },
+        ],
+      },
+    ],
+    [
+      "a line break in a value",
+      { kind: "email", values: [{ id: WORK, caption: "work", text: "a\nb" }] },
+    ],
   ])("turns away a reply with %s", (_, kind) => {
-    expect(isExtensionResponse({ ...popupStateResult, kinds: [kind] })).toBe(false);
+    expect(isExtensionResponse({ ...popupStateResult, kinds: [kind] })).toBe(
+      false,
+    );
   });
 });

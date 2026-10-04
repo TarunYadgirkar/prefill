@@ -11,7 +11,10 @@ interface MessageSender {
   tab?: Tab | undefined;
 }
 
-type MessageListener = (message: unknown, sender: MessageSender) => Promise<unknown> | undefined;
+type MessageListener = (
+  message: unknown,
+  sender: MessageSender,
+) => Promise<unknown> | undefined;
 
 interface ExtensionRuntime {
   id: string;
@@ -31,4 +34,8 @@ interface ExtensionAction {
   setBadgeText(details: { tabId: number; text: string }): Promise<void>;
 }
 
-declare const browser: { runtime: ExtensionRuntime; tabs: ExtensionTabs; action: ExtensionAction };
+declare const browser: {
+  runtime: ExtensionRuntime;
+  tabs: ExtensionTabs;
+  action: ExtensionAction;
+};

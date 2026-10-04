@@ -1,6 +1,17 @@
-import { buildCapture, describeElement, type EditedField, type FieldDescription } from "./captureFields";
+import {
+  buildCapture,
+  describeElement,
+  type EditedField,
+  type FieldDescription,
+} from "./captureFields";
 import { classify } from "./classify";
-import { eventOrigin, fieldValue, isFieldElement, isInView, isRendered } from "./dom";
+import {
+  eventOrigin,
+  fieldValue,
+  isFieldElement,
+  isInView,
+  isRendered,
+} from "./dom";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import type { CaptureRequest, CaptureTrigger } from "./messages";
 
@@ -36,8 +47,14 @@ const HIDDEN: Trigger = { trigger: "flush", consume: false };
 
 // Only a tap, a key or an input method on a field marks it as the person's. A script can
 // make trusted input events with execCommand, but none of these.
-const TOUCH_EVENTS = ["pointerdown", "touchstart", "keydown", "compositionstart"] as const;
-// A page reports a few times at most, so one page can't flood the review list.
+const TOUCH_EVENTS = [
+  "pointerdown",
+  "touchstart",
+  "keydown",
+  "compositionstart",
+] as const;
+// A page reports a few times at most, so one page can't flood the review list. Flushes on
+// a tab switch have their own allowance, so they never use up the real submit's.
 const MAX_REPORTS = 3;
 
 const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
@@ -46,16 +63,26 @@ const SUBMIT_WORDS =
 // How far up from a form-less button to look for the fields it would send.
 const NEARBY_LEVELS = 4;
 
-function submitControl(target: EventTarget | null): HTMLButtonElement | HTMLInputElement | undefined {
+function submitControl(
+  target: EventTarget | null,
+): HTMLButtonElement | HTMLInputElement | undefined {
   if (!(target instanceof Element)) return undefined;
   const control = target.closest(SUBMIT_CONTROLS);
   if (control === null) return undefined;
-  if (control.localName === "button" && (control as HTMLButtonElement).type !== "submit") return undefined;
+  if (
+    control.localName === "button" &&
+    (control as HTMLButtonElement).type !== "submit"
+  )
+    return undefined;
   return control as HTMLButtonElement | HTMLInputElement;
 }
 
 function controlText(control: HTMLButtonElement | HTMLInputElement): string {
-  return [control.textContent, control.getAttribute("aria-label"), control.getAttribute("value")].join(" ");
+  return [
+    control.textContent,
+    control.getAttribute("aria-label"),
+    control.getAttribute("value"),
+  ].join(" ");
 }
 
 function isNear(control: Element, fields: readonly Element[]): boolean {
@@ -70,8 +97,13 @@ function isNear(control: Element, fields: readonly Element[]): boolean {
 
 // A button outside any form submits nothing by itself, so it only counts when it says it
 // submits and sits next to the fields the person typed in.
-function isLooseSubmit(control: HTMLButtonElement | HTMLInputElement, fields: readonly Element[]): boolean {
-  const says = control.getAttribute("type")?.toLowerCase() === "submit" || SUBMIT_WORDS.test(controlText(control));
+function isLooseSubmit(
+  control: HTMLButtonElement | HTMLInputElement,
+  fields: readonly Element[],
+): boolean {
+  const says =
+    control.getAttribute("type")?.toLowerCase() === "submit" ||
+    SUBMIT_WORDS.test(controlText(control));
   return says && isNear(control, fields);
 }
 
@@ -81,27 +113,42 @@ function isValid(element: Element): boolean {
 }
 
 // Checks validity the way the browser will, without firing the page's invalid handlers.
-function willSubmit(form: HTMLFormElement, control: HTMLButtonElement | HTMLInputElement): boolean {
-  return form.noValidate || control.formNoValidate || [...form.elements].every(isValid);
+function willSubmit(
+  form: HTMLFormElement,
+  control: HTMLButtonElement | HTMLInputElement,
+): boolean {
+  return (
+    form.noValidate ||
+    control.formNoValidate ||
+    [...form.elements].every(isValid)
+  );
 }
 
 // A visible password box that isn't a sign-in's current password marks a sign-up.
 function hasNewPassword(scope: ParentNode): boolean {
   return [...scope.querySelectorAll("input[type=password]")].some(
-    (input) => isRendered(input) && !/current-password/iu.test(input.getAttribute("autocomplete") ?? ""),
+    (input) =>
+      isRendered(input) &&
+      !/current-password/iu.test(input.getAttribute("autocomplete") ?? ""),
   );
 }
 
 function inDocumentOrder(elements: readonly FieldElement[]): FieldElement[] {
   return [...elements].sort((first, second) =>
-    first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_PRECEDING ? 1 : -1,
+    first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_PRECEDING
+      ? 1
+      : -1,
   );
 }
 
 // Phone formatting may change spaces and dashes, never digits.
 function sameValue(field: ContactField, typed: string, now: string): boolean {
-  if (field.kind === "phone") return typed.replace(/\D/gu, "") === now.replace(/\D/gu, "");
-  return typed.replace(/\s+/gu, " ").toLowerCase() === now.replace(/\s+/gu, " ").toLowerCase();
+  if (field.kind === "phone")
+    return typed.replace(/\D/gu, "") === now.replace(/\D/gu, "");
+  return (
+    typed.replace(/\s+/gu, " ").toLowerCase() ===
+    now.replace(/\s+/gu, " ").toLowerCase()
+  );
 }
 
 // Judged when the person types, like visibility: a page may lock fields while it submits.
@@ -111,21 +158,27 @@ function isEditable(element: FieldElement): boolean {
 }
 
 function activationOf(win: Window): () => boolean {
-  return () => (win.navigator as Partial<Navigator>).userActivation?.isActive === true;
+  return () =>
+    (win.navigator as Partial<Navigator>).userActivation?.isActive === true;
 }
 
 // A password box stays one after a "show password" toggle turns it into a text box, so
 // every element that was ever type=password is remembered and never read.
-function watchPasswords(doc: Document): { isPassword: (element: Element) => boolean; stop: () => void } {
+function watchPasswords(doc: Document): {
+  isPassword: (element: Element) => boolean;
+  stop: () => void;
+} {
   const seen = new WeakSet<Element>();
   const note = (element: Element): void => {
-    if (element.getAttribute("type")?.toLowerCase() === "password") seen.add(element);
+    if (element.getAttribute("type")?.toLowerCase() === "password")
+      seen.add(element);
   };
   doc.querySelectorAll("input[type]").forEach(note);
   const observer = new MutationObserver((records) => {
     for (const record of records) {
       if (!(record.target instanceof Element)) continue;
-      if (record.oldValue?.toLowerCase() === "password") seen.add(record.target);
+      if (record.oldValue?.toLowerCase() === "password")
+        seen.add(record.target);
       note(record.target);
     }
   });
@@ -150,12 +203,17 @@ function watchPasswords(doc: Document): { isPassword: (element: Element) => bool
 function touchedField(event: Event): FieldElement | undefined {
   for (const target of event.composedPath()) {
     if (isFieldElement(target)) return target;
-    if (target instanceof HTMLLabelElement && isFieldElement(target.control)) return target.control;
+    if (target instanceof HTMLLabelElement && isFieldElement(target.control))
+      return target.control;
   }
   return undefined;
 }
 
-function reportable(element: FieldElement, entry: Tracked, trigger: Trigger): EditedField | undefined {
+function reportable(
+  element: FieldElement,
+  entry: Tracked,
+  trigger: Trigger,
+): EditedField | undefined {
   const value = fieldValue(element);
   if (!sameValue(entry.field, entry.typed, value)) return undefined;
   if (trigger.trigger === "flush" && !entry.settled) return undefined;
@@ -167,15 +225,22 @@ function reportable(element: FieldElement, entry: Tracked, trigger: Trigger): Ed
 // Forms that post with fetch may never submit, so fields the person finished are also
 // reported when the page is hidden; those reports never go straight onto the card.
 // Sensitive fields are never read.
-export function installCapture(doc: Document, win: Window, options: CaptureOptions): () => void {
-  const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+export function installCapture(
+  doc: Document,
+  win: Window,
+  options: CaptureOptions,
+): () => void {
+  const isUserEvent =
+    options.isUserEvent ?? ((event: Event) => event.isTrusted);
   const hasActivation = options.hasActivation ?? activationOf(win);
-  const isPersonSubmit = (event: Event): boolean => isUserEvent(event) && hasActivation();
+  const isPersonSubmit = (event: Event): boolean =>
+    isUserEvent(event) && hasActivation();
   const passwords = watchPasswords(doc);
   const edited = new Map<FieldElement, Tracked>();
   const touched = new WeakSet<FieldElement>();
   let lastSignature = "";
   let reports = 0;
+  let flushes = 0;
 
   const track = (target: FieldElement, settled: boolean): void => {
     if (passwords.isPassword(target) || !isEditable(target)) {
@@ -191,7 +256,12 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
     // Visibility is judged when the person types: a multi-step form may hide the field
     // again before it submits.
     if (!isContact(field) || !isInView(target)) return;
-    edited.set(target, { field, description: describeElement(target), typed: fieldValue(target), settled });
+    edited.set(target, {
+      field,
+      description: describeElement(target),
+      typed: fieldValue(target),
+      settled,
+    });
   };
 
   const touch = (event: Event): void => {
@@ -201,24 +271,35 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
 
   const remember = (event: Event): void => {
     const target = eventOrigin(event);
-    if (!isUserEvent(event) || !isFieldElement(target) || !touched.has(target)) return;
+    if (!isUserEvent(event) || !isFieldElement(target) || !touched.has(target))
+      return;
     track(target, event.type === "change");
   };
 
-  const report = (elements: readonly FieldElement[], scope: ParentNode, trigger: Trigger): void => {
+  const report = (
+    elements: readonly FieldElement[],
+    scope: ParentNode,
+    trigger: Trigger,
+  ): void => {
     const entries = inDocumentOrder(elements).flatMap((element) => {
       const entry = edited.get(element);
       if (entry === undefined || passwords.isPassword(element)) return [];
       if (trigger.consume) edited.delete(element);
       return reportable(element, entry, trigger) ?? [];
     });
-    const facts = { host: options.host(), hasPassword: hasNewPassword(scope), trigger: trigger.trigger };
+    const facts = {
+      host: options.host(),
+      hasPassword: hasNewPassword(scope),
+      trigger: trigger.trigger,
+    };
     const request = buildCapture(facts, entries);
     if (request === undefined) return;
     const signature = JSON.stringify(request);
-    if (signature === lastSignature || reports >= MAX_REPORTS) return;
+    const used = trigger.trigger === "flush" ? flushes : reports;
+    if (signature === lastSignature || used >= MAX_REPORTS) return;
     lastSignature = signature;
-    reports += 1;
+    if (trigger.trigger === "flush") flushes += 1;
+    else reports += 1;
     options.send(request);
   };
 
@@ -232,11 +313,14 @@ export function installCapture(doc: Document, win: Window, options: CaptureOptio
   };
 
   const onSubmit = (event: Event): void => {
-    if (isPersonSubmit(event) && event.target instanceof HTMLFormElement) reportForm(event.target);
+    if (isPersonSubmit(event) && event.target instanceof HTMLFormElement)
+      reportForm(event.target);
   };
 
   const onClick = (event: Event): void => {
-    const control = isPersonSubmit(event) ? submitControl(eventOrigin(event)) : undefined;
+    const control = isPersonSubmit(event)
+      ? submitControl(eventOrigin(event))
+      : undefined;
     if (control === undefined) return;
     const form = control.form;
     const fields = [...edited.keys()];

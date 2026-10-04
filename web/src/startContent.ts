@@ -11,7 +11,9 @@ function isConnected(): boolean {
   }
 }
 
-export function startContent(kind: NonNullable<PageEnvironment["browser"]>): void {
+export function startContent(
+  kind: NonNullable<PageEnvironment["browser"]>,
+): void {
   // Registered before the page's own listeners, so a cut-off copy steps aside before it
   // shows anything from what it fetched earlier.
   const retire = (): void => {

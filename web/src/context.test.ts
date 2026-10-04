@@ -23,7 +23,10 @@ afterEach(() => {
 
 type Send = (request: PageContextRequest) => Promise<unknown>;
 
-function start(reply: () => Promise<unknown> = () => new Promise(() => undefined), minIntervalMs = 0) {
+function start(
+  reply: () => Promise<unknown> = () => new Promise(() => undefined),
+  minIntervalMs = 0,
+) {
   const send = vi.fn<Send>().mockImplementation(reply);
   uninstall = installContext(document, window, {
     host: () => "shop.example.net",
@@ -36,7 +39,9 @@ function start(reply: () => Promise<unknown> = () => new Promise(() => undefined
 }
 
 function focus(target: Element | null): void {
-  target?.dispatchEvent(new FocusEvent("focusin", { bubbles: true, composed: true }));
+  target?.dispatchEvent(
+    new FocusEvent("focusin", { bubbles: true, composed: true }),
+  );
 }
 
 function kinds(send: ReturnType<typeof start>, call: number): string[] {
@@ -68,10 +73,14 @@ describe("contactFields", () => {
 
   it("finds fields inside open shadow roots", () => {
     document.body.innerHTML = "<x-signup></x-signup>";
-    const shadow = document.querySelector("x-signup")?.attachShadow({ mode: "open" });
+    const shadow = document
+      .querySelector("x-signup")
+      ?.attachShadow({ mode: "open" });
     if (shadow === undefined) throw new Error("no shadow root");
     shadow.innerHTML = '<input type="email" autocomplete="work email">';
-    expect(contactFields(document)).toEqual([{ kind: "email", section: "work" }]);
+    expect(contactFields(document)).toEqual([
+      { kind: "email", section: "work" },
+    ]);
   });
 });
 
@@ -82,12 +91,22 @@ describe("installContext", () => {
     expect(send).not.toHaveBeenCalled();
     await settle();
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0]?.[0]).toMatchObject({ type: "pageContext", host: "shop.example.net" });
-    expect(kinds(send, 0)).toEqual(["email", "phone", ...Array<string>(4).fill("address"), "email", "phone"]);
+    expect(send.mock.calls[0]?.[0]).toMatchObject({
+      type: "pageContext",
+      host: "shop.example.net",
+    });
+    expect(kinds(send, 0)).toEqual([
+      "email",
+      "phone",
+      ...Array<string>(4).fill("address"),
+      "email",
+      "phone",
+    ]);
   });
 
   it("sends nothing from a page without contact fields", async () => {
-    document.body.innerHTML = '<form><input name="q" type="search"><input type="password"></form>';
+    document.body.innerHTML =
+      '<form><input name="q" type="search"><input type="password"></form>';
     const send = start();
     await settle();
     document.body.insertAdjacentHTML("beforeend", "<p>More text</p>");
@@ -99,42 +118,66 @@ describe("installContext", () => {
     document.body.innerHTML = '<div id="app"></div>';
     const send = start();
     await settle();
-    document.querySelector("#app")?.insertAdjacentHTML("beforeend", '<input type="email" autocomplete="work email">');
+    document
+      .querySelector("#app")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        '<input type="email" autocomplete="work email">',
+      );
     await settle();
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0]?.[0].fields).toEqual([{ kind: "email", section: "work" }]);
+    expect(send.mock.calls[0]?.[0].fields).toEqual([
+      { kind: "email", section: "work" },
+    ]);
   });
 
   it("sends again when a later step adds a new kind of field, and not for more of the same", async () => {
-    document.body.innerHTML = '<div id="app"><input type="email" autocomplete="email"></div>';
+    document.body.innerHTML =
+      '<div id="app"><input type="email" autocomplete="email"></div>';
     const send = start();
     await settle();
-    document.querySelector("#app")?.insertAdjacentHTML("beforeend", '<input type="email" name="confirm_email">');
+    document
+      .querySelector("#app")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        '<input type="email" name="confirm_email">',
+      );
     await settle();
     expect(send).toHaveBeenCalledTimes(1);
-    document.querySelector("#app")?.insertAdjacentHTML("beforeend", '<input autocomplete="shipping street-address">');
+    document
+      .querySelector("#app")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        '<input autocomplete="shipping street-address">',
+      );
     await settle();
     expect(send).toHaveBeenCalledTimes(2);
     expect(kinds(send, 1)).toEqual(["email", "email", "address"]);
   });
 
   it("still sends on a page that never stops changing", async () => {
-    document.body.innerHTML = '<input type="email" autocomplete="email"><div id="ticker"></div>';
+    document.body.innerHTML =
+      '<input type="email" autocomplete="email"><div id="ticker"></div>';
     const send = start();
     const ticker = document.querySelector("#ticker");
     for (let elapsed = 0; elapsed < 2_000; elapsed += 100) {
-      ticker?.replaceChildren(Object.assign(document.createElement("input"), { type: "search" }));
+      ticker?.replaceChildren(
+        Object.assign(document.createElement("input"), { type: "search" }),
+      );
       await vi.advanceTimersByTimeAsync(100);
     }
     expect(send).toHaveBeenCalledTimes(1);
   });
 
   it("doesn't look again for changes that add no fields", async () => {
-    document.body.innerHTML = '<input type="email" autocomplete="email"><p id="clock"></p>';
+    document.body.innerHTML =
+      '<input type="email" autocomplete="email"><p id="clock"></p>';
     const send = start();
     await settle();
     const scheduled = vi.getTimerCount();
-    document.querySelector("#clock")?.append(document.createElement("span"), "12:01");
+    document
+      .querySelector("#clock")
+      ?.append(document.createElement("span"), "12:01");
     await Promise.resolve();
     expect(vi.getTimerCount()).toBe(scheduled);
     expect(send).toHaveBeenCalledTimes(1);
@@ -162,8 +205,19 @@ describe("installContext", () => {
   });
 
   it.each([
-    ["an error", () => Promise.resolve({ type: "error", reason: "unreadable reply" })],
-    ["a failure", () => Promise.resolve({ type: "pageContextResult", status: "failed", reason: "no access" })],
+    [
+      "an error",
+      () => Promise.resolve({ type: "error", reason: "unreadable reply" }),
+    ],
+    [
+      "a failure",
+      () =>
+        Promise.resolve({
+          type: "pageContextResult",
+          status: "failed",
+          reason: "no access",
+        }),
+    ],
     ["a rejection", () => Promise.reject(new Error("no handler"))],
   ])("keeps a focus retry after %s", async (_, reply) => {
     document.body.innerHTML = formHtml;
@@ -191,10 +245,16 @@ describe("installContext", () => {
     await settle();
     focus(document.querySelector("[name=email]"));
     expect(send).toHaveBeenCalledTimes(2);
-    Object.defineProperty(document, "visibilityState", { value: "hidden", configurable: true });
+    Object.defineProperty(document, "visibilityState", {
+      value: "hidden",
+      configurable: true,
+    });
     document.dispatchEvent(new Event("visibilitychange"));
     expect(send).toHaveBeenCalledTimes(2);
-    Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
+    Object.defineProperty(document, "visibilityState", {
+      value: "visible",
+      configurable: true,
+    });
     document.dispatchEvent(new Event("visibilitychange"));
     expect(send).toHaveBeenCalledTimes(3);
     focus(document.querySelector("[name=email]"));
@@ -207,7 +267,10 @@ describe("installContext", () => {
     await settle();
     expect(send).toHaveBeenCalledTimes(1);
     const comeBack = (): void => {
-      Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
+      Object.defineProperty(document, "visibilityState", {
+        value: "visible",
+        configurable: true,
+      });
       document.dispatchEvent(new Event("visibilitychange"));
     };
     comeBack();
@@ -226,7 +289,9 @@ describe("installContext", () => {
 
   it("hears focus on a field inside an open shadow root", () => {
     document.body.innerHTML = "<x-signup></x-signup>";
-    const shadow = document.querySelector("x-signup")?.attachShadow({ mode: "open" });
+    const shadow = document
+      .querySelector("x-signup")
+      ?.attachShadow({ mode: "open" });
     if (shadow === undefined) throw new Error("no shadow root");
     shadow.innerHTML = '<input type="email" autocomplete="email">';
     const send = start();
@@ -239,7 +304,12 @@ describe("installContext", () => {
     const send = start();
     uninstall?.();
     uninstall = undefined;
-    document.querySelector("#app")?.insertAdjacentHTML("beforeend", '<input type="email" autocomplete="email">');
+    document
+      .querySelector("#app")
+      ?.insertAdjacentHTML(
+        "beforeend",
+        '<input type="email" autocomplete="email">',
+      );
     focus(document.querySelector("input"));
     pageshow(true);
     await settle();

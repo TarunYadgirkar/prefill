@@ -1,5 +1,5 @@
 import { parseAutocomplete, type AutocompleteDetail } from "./autocomplete";
-import { labelText, placeholderText, splitNames } from "./dom";
+import { isRendered, labelText, placeholderText, splitNames } from "./dom";
 import {
   IGNORED,
   SENSITIVE,
@@ -10,7 +10,15 @@ import {
   type FieldPart,
 } from "./fieldTypes";
 import type { FieldKind, LinkType, SectionHint } from "./messages";
-import { LINK_WORDS, NOT_PHONE, OTHER_LINKS, RULES, SENSITIVE as SENSITIVE_PATTERNS, type RuleResult } from "./patterns";
+import {
+  GENERIC_LINK,
+  LINK_WORDS,
+  NOT_PHONE,
+  OTHER_LINKS,
+  RULES,
+  SENSITIVE as SENSITIVE_PATTERNS,
+  type RuleResult,
+} from "./patterns";
 
 type ControlOrVerdict = Control | "sensitive" | "ignored";
 
@@ -53,7 +61,11 @@ const AUTOCOMPLETE_FIELDS: Readonly<Record<string, Mapped>> = {
   "country-name": { kind: "address", part: "country" },
 };
 
-const SENSITIVE_FIELDS: ReadonlySet<string> = new Set(["new-password", "current-password", "one-time-code"]);
+const SENSITIVE_FIELDS: ReadonlySet<string> = new Set([
+  "new-password",
+  "current-password",
+  "one-time-code",
+]);
 const SECTION_CONTACTS: ReadonlySet<string> = new Set(["home", "work"]);
 
 // A field as plain data: what the DOM says about it, or what the Mac app reads from the
@@ -76,8 +88,11 @@ function controlOf(field: FieldDescription): ControlOrVerdict {
   return INPUT_CONTROLS[field.type.toLowerCase()] ?? "ignored";
 }
 
-function sectionOf(detail: AutocompleteDetail | undefined): SectionHint | undefined {
-  if (detail?.contact !== undefined && SECTION_CONTACTS.has(detail.contact)) return detail.contact as SectionHint;
+function sectionOf(
+  detail: AutocompleteDetail | undefined,
+): SectionHint | undefined {
+  if (detail?.contact !== undefined && SECTION_CONTACTS.has(detail.contact))
+    return detail.contact as SectionHint;
   return detail?.mode;
 }
 
@@ -89,37 +104,70 @@ function contact(mapped: Mapped, detail?: AutocompleteDetail): ContactField {
 
 // The link types the words name, in the order they name them: "GitHub/Portfolio" asks for
 // a GitHub link first, then a website.
+// "Other website" asks for the other link, so the words "other" claims don't name a website too.
 function linkTypesIn(texts: readonly string[]): LinkType[] {
+  const other = LINK_WORDS.find(([type]) => type === "other")?.[1];
   const found = LINK_WORDS.flatMap(([type, pattern]) => {
-    const at = Math.min(...texts.map((text) => text.search(pattern)).filter((index) => index >= 0));
+    const searched =
+      type === "website" && other !== undefined
+        ? texts.map((text) =>
+            text.replace(other, (match) => " ".repeat(match.length)),
+          )
+        : texts;
+    const at = Math.min(
+      ...searched
+        .map((text) => text.search(pattern))
+        .filter((index) => index >= 0),
+    );
     return Number.isFinite(at) ? [{ type, at }] : [];
   });
-  return found.sort((first, second) => first.at - second.at).map(({ type }) => type);
+  return found
+    .sort((first, second) => first.at - second.at)
+    .map(({ type }) => type);
 }
 
 // Words that name no link type ask for a website, unless they name something else.
 function link(texts: readonly string[]): Classification {
   const named = linkTypesIn(texts);
   if (named.length > 0) return { kind: "link", group: "", linkTypes: named };
-  return texts.some((text) => OTHER_LINKS.test(text)) ? IGNORED : { kind: "link", group: "", linkTypes: ["website"] };
+  const isDocument = texts.some(
+    (text) =>
+      OTHER_LINKS.test(text) &&
+      !GENERIC_LINK.test(text.replace(OTHER_LINKS, "")),
+  );
+  return isDocument
+    ? IGNORED
+    : { kind: "link", group: "", linkTypes: ["website"] };
 }
 
-function fromAutocomplete(detail: AutocompleteDetail, control: Control, sources: readonly string[][]): Classification {
+function fromAutocomplete(
+  detail: AutocompleteDetail,
+  control: Control,
+  sources: readonly string[][],
+): Classification {
   if (detail.field === "url") return link(sources.flat());
-  if (SENSITIVE_FIELDS.has(detail.field) || detail.field.startsWith("cc-")) return SENSITIVE;
-  if (detail.field === "username") return control === "email" ? contact({ kind: "email" }, detail) : IGNORED;
+  if (SENSITIVE_FIELDS.has(detail.field) || detail.field.startsWith("cc-"))
+    return SENSITIVE;
+  if (detail.field === "username")
+    return control === "email" ? contact({ kind: "email" }, detail) : IGNORED;
   const mapped = AUTOCOMPLETE_FIELDS[detail.field];
   return mapped === undefined ? IGNORED : contact(mapped, detail);
 }
 
-function fromRule(result: RuleResult, texts: readonly string[]): Classification {
+function fromRule(
+  result: RuleResult,
+  texts: readonly string[],
+): Classification {
   if (result.kind === "link") return link(texts);
   return result.kind === "ignored" ? IGNORED : contact(result);
 }
 
 // A source's texts are its raw and split forms, so a negative that matches any of them
 // (the "ext" in "phone ext") rules the source out.
-function matchRules(texts: readonly string[], control: Control): Classification | undefined {
+function matchRules(
+  texts: readonly string[],
+  control: Control,
+): Classification | undefined {
   const rule = RULES.find(
     (candidate) =>
       candidate.controls.includes(control) &&
@@ -130,16 +178,23 @@ function matchRules(texts: readonly string[], control: Control): Classification 
 }
 
 function sourcesOf(field: FieldDescription): string[][] {
-  return [[field.label], splitNames(field.names), [field.placeholder]].map((texts) => texts.filter(Boolean));
+  return [[field.label], splitNames(field.names), [field.placeholder]].map(
+    (texts) => texts.filter(Boolean),
+  );
 }
 
 function isSensitiveText(sources: readonly string[][]): boolean {
-  return sources.flat().some((text) => SENSITIVE_PATTERNS.some((pattern) => pattern.test(text)));
+  return sources
+    .flat()
+    .some((text) => SENSITIVE_PATTERNS.some((pattern) => pattern.test(text)));
 }
 
 // Label first, then name and id, then placeholder: the first source that matches a
 // pattern decides, the way a person reading the form would.
-function fromPatterns(sources: readonly string[][], control: Control): Classification | undefined {
+function fromPatterns(
+  sources: readonly string[][],
+  control: Control,
+): Classification | undefined {
   for (const texts of sources) {
     const match = matchRules(texts, control);
     if (match !== undefined) return match;
@@ -147,11 +202,17 @@ function fromPatterns(sources: readonly string[][], control: Control): Classific
   return undefined;
 }
 
-function positive(field: FieldDescription, control: Control, sources: readonly string[][]): Classification {
+function positive(
+  field: FieldDescription,
+  control: Control,
+  sources: readonly string[][],
+): Classification {
   const detail = parseAutocomplete(field.autocomplete);
   if (detail !== undefined) return fromAutocomplete(detail, control, sources);
   if (control === "email") return contact({ kind: "email" });
-  return fromPatterns(sources, control) ?? (control === "url" ? link([]) : IGNORED);
+  return (
+    fromPatterns(sources, control) ?? (control === "url" ? link([]) : IGNORED)
+  );
 }
 
 // Sensitive words first, whatever the tags say, then autocomplete tokens (WHATWG grammar),
@@ -160,14 +221,70 @@ function positive(field: FieldDescription, control: Control, sources: readonly s
 // needs a tel token or phone words, and none of the words that mark something else.
 // Sign-in forms belong to Passwords: Prefill stays off them so Safari's saved logins own
 // the bar. Sign-up forms stay in, since that is where new emails and phones show up.
+// A field outside any form belongs to the nearest few ancestors that hold a password box,
+// which is how single-page apps build their sign-in screens.
+const SIGN_IN_LEVELS = 5;
+const NOT_TYPED =
+  /^(?:hidden|checkbox|radio|submit|button|image|reset|file|password)$/iu;
+const SIGN_IN_WORDS =
+  /sign.?in|log.?in|anmelden|iniciar sesi|connexion|se connecter|ログイン|登录/iu;
+
+function signInScope(el: FieldElement): ParentNode | undefined {
+  if (el.form !== null) return el.form;
+  let scope = el.parentElement;
+  for (let level = 0; scope !== null && level < SIGN_IN_LEVELS; level += 1) {
+    if (scope.querySelector("input[type=password]") !== null) return scope;
+    scope = scope.parentElement;
+  }
+  return undefined;
+}
+
+const isTypedBox = (field: Element): boolean =>
+  field.localName !== "input" ||
+  !NOT_TYPED.test((field as HTMLInputElement).type);
+
+// Without tokens: one visible password box beside one other box, under a button that says
+// sign in or log in.
+function looksLikeSignIn(scope: ParentNode): boolean {
+  const passwords = [...scope.querySelectorAll("input[type=password]")].filter(
+    isRendered,
+  );
+  if (
+    passwords.length !== 1 ||
+    /new-password/iu.test(passwords[0]?.getAttribute("autocomplete") ?? "")
+  )
+    return false;
+  if (
+    [...scope.querySelectorAll("input, select, textarea")].filter(isTypedBox)
+      .length > 1
+  )
+    return false;
+  return [...scope.querySelectorAll("button, input[type=submit]")].some(
+    (button) =>
+      SIGN_IN_WORDS.test(
+        `${button.textContent} ${button.getAttribute("value") ?? ""}`,
+      ),
+  );
+}
+
 export function isSignIn(el: FieldElement): boolean {
   if (/\bwebauthn\b/iu.test(el.getAttribute("autocomplete") ?? "")) return true;
-  return el.form?.querySelector('input[autocomplete~="current-password" i]') != null;
+  const scope = signInScope(el);
+  if (scope === undefined) return false;
+  return (
+    scope.querySelector('input[autocomplete~="current-password" i]') !== null ||
+    looksLikeSignIn(scope)
+  );
 }
 
 export function describe(el: FieldElement): FieldDescription {
   return {
-    tag: el.localName === "select" ? "select" : el.localName === "textarea" ? "textarea" : "input",
+    tag:
+      el.localName === "select"
+        ? "select"
+        : el.localName === "textarea"
+          ? "textarea"
+          : "input",
     type: el.type,
     autocomplete: el.getAttribute("autocomplete"),
     label: labelText(el),
@@ -183,11 +300,16 @@ export function classify(el: FieldElement): Classification {
 
 export function classifyDescription(field: FieldDescription): Classification {
   const control = controlOf(field);
-  if (control === "sensitive" || control === "ignored") return { kind: control };
+  if (control === "sensitive" || control === "ignored")
+    return { kind: control };
   if (field.signIn) return IGNORED;
   const sources = sourcesOf(field);
   if (isSensitiveText(sources)) return SENSITIVE;
   const found = positive(field, control, sources);
-  if (found.kind === "phone" && sources.flat().some((text) => NOT_PHONE.test(text))) return SENSITIVE;
+  if (
+    found.kind === "phone" &&
+    sources.flat().some((text) => NOT_PHONE.test(text))
+  )
+    return SENSITIVE;
   return found;
 }

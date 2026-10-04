@@ -13,7 +13,13 @@ export interface AutocompleteDetail {
   section?: string;
 }
 
-const CONTACT_TOKENS: ReadonlySet<string> = new Set(["home", "work", "mobile", "fax", "pager"]);
+const CONTACT_TOKENS: ReadonlySet<string> = new Set([
+  "home",
+  "work",
+  "mobile",
+  "fax",
+  "pager",
+]);
 
 const CONTACT_FIELDS: ReadonlySet<string> = new Set([
   "tel",
@@ -75,9 +81,15 @@ const OTHER_FIELDS = [
   "photo",
 ];
 
-const FIELD_NAMES: ReadonlySet<string> = new Set([...OTHER_FIELDS, ...CONTACT_FIELDS]);
+const FIELD_NAMES: ReadonlySet<string> = new Set([
+  ...OTHER_FIELDS,
+  ...CONTACT_FIELDS,
+]);
 
-type Step = (detail: AutocompleteDetail, token: string) => AutocompleteDetail | undefined;
+type Step = (
+  detail: AutocompleteDetail,
+  token: string,
+) => AutocompleteDetail | undefined;
 
 const contactStep: Step = (detail, token) =>
   CONTACT_TOKENS.has(token) && CONTACT_FIELDS.has(detail.field)
@@ -85,17 +97,23 @@ const contactStep: Step = (detail, token) =>
     : undefined;
 
 const modeStep: Step = (detail, token) =>
-  token === "shipping" || token === "billing" ? { ...detail, mode: token } : undefined;
+  token === "shipping" || token === "billing"
+    ? { ...detail, mode: token }
+    : undefined;
 
 const sectionStep: Step = (detail, token) =>
-  token.startsWith("section-") && token.length > "section-".length ? { ...detail, section: token } : undefined;
+  token.startsWith("section-") && token.length > "section-".length
+    ? { ...detail, section: token }
+    : undefined;
 
 // Each optional token may appear at most once and only in this order, right to left.
 const STEPS: readonly Step[] = [contactStep, modeStep, sectionStep];
 
 // Returns undefined for an absent, empty, "on", "off" or otherwise invalid value, which
 // sends the field on to the input type and pattern checks.
-export function parseAutocomplete(raw: string | null): AutocompleteDetail | undefined {
+export function parseAutocomplete(
+  raw: string | null,
+): AutocompleteDetail | undefined {
   const tokens = (raw ?? "").trim().toLowerCase().split(/\s+/u).filter(Boolean);
   if (tokens.at(-1) === "webauthn") tokens.pop();
   const field = tokens.pop();

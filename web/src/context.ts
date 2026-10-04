@@ -1,7 +1,17 @@
 import { classify } from "./classify";
-import { eventOrigin, fieldElements, isFieldElement, mayHoldFields } from "./dom";
+import {
+  eventOrigin,
+  fieldElements,
+  isFieldElement,
+  mayHoldFields,
+} from "./dom";
 import { isContact, type ContactField } from "./fieldTypes";
-import { LIMITS, parseExtensionResponse, type PageContextRequest, type PageField } from "./messages";
+import {
+  LIMITS,
+  parseExtensionResponse,
+  type PageContextRequest,
+  type PageField,
+} from "./messages";
 
 export interface ContextOptions {
   host: () => string;
@@ -25,14 +35,18 @@ const MAX_REPORTS = 5;
 // Name and link fields never change the card's order, so they don't make a page worth reporting.
 function pageField(field: ContactField): PageField | undefined {
   if (field.kind === "name" || field.kind === "link") return undefined;
-  return field.section === undefined ? { kind: field.kind } : { kind: field.kind, section: field.section };
+  return field.section === undefined
+    ? { kind: field.kind }
+    : { kind: field.kind, section: field.section };
 }
 
 export function contactFields(root: ParentNode): PageField[] {
   const fields: PageField[] = [];
   for (const element of fieldElements(root, MAX_INSPECTED)) {
     const classification = classify(element);
-    const field = isContact(classification) ? pageField(classification) : undefined;
+    const field = isContact(classification)
+      ? pageField(classification)
+      : undefined;
     if (field !== undefined) fields.push(field);
     if (fields.length >= LIMITS.pageFields) break;
   }
@@ -42,14 +56,23 @@ export function contactFields(root: ParentNode): PageField[] {
 function isRankedField(target: EventTarget | null): boolean {
   if (!isFieldElement(target)) return false;
   const classification = classify(target);
-  return isContact(classification) && classification.kind !== "name" && classification.kind !== "link";
+  return (
+    isContact(classification) &&
+    classification.kind !== "name" &&
+    classification.kind !== "link"
+  );
 }
 
-const keyOf = (field: PageField): string => `${field.kind} ${field.section ?? ""}`;
+const keyOf = (field: PageField): string =>
+  `${field.kind} ${field.section ?? ""}`;
 
 function isAnswered(reply: unknown): boolean {
   const response = parseExtensionResponse(reply);
-  return response !== undefined && response.type !== "error" && !("status" in response && response.status === "failed");
+  return (
+    response !== undefined &&
+    response.type !== "error" &&
+    !("status" in response && response.status === "failed")
+  );
 }
 
 // Waits for `waitMs` of quiet, but never longer than `maxWaitMs` after the first call.
@@ -81,7 +104,11 @@ function debounce(run: () => void, waitMs: number, maxWaitMs: number) {
 // form with a new kind or section appears. The card's order is shared by every page and
 // tab, so it also reports when the page comes back from the back-forward cache or into
 // view, and on the first focus of a contact field after any of those.
-export function installContext(doc: Document, win: Window, options: ContextOptions): () => void {
+export function installContext(
+  doc: Document,
+  win: Window,
+  options: ContextOptions,
+): () => void {
   let reported = new Set<string>();
   let focusResend = true;
   let scans = 0;
@@ -132,10 +159,15 @@ export function installContext(doc: Document, win: Window, options: ContextOptio
     if (fields.some((field) => !reported.has(keyOf(field)))) deliver(fields);
   };
 
-  const settle = debounce(scan, options.debounceMs ?? DEFAULT_DEBOUNCE_MS, options.maxWaitMs ?? DEFAULT_MAX_WAIT_MS);
+  const settle = debounce(
+    scan,
+    options.debounceMs ?? DEFAULT_DEBOUNCE_MS,
+    options.maxWaitMs ?? DEFAULT_MAX_WAIT_MS,
+  );
 
   const observer = new MutationObserver((records) => {
-    if (records.some((record) => [...record.addedNodes].some(mayHoldFields))) settle.schedule();
+    if (records.some((record) => [...record.addedNodes].some(mayHoldFields)))
+      settle.schedule();
   });
 
   const onFocus = (event: Event): void => {
@@ -163,7 +195,8 @@ export function installContext(doc: Document, win: Window, options: ContextOptio
     settle.schedule();
   };
 
-  if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", start, { once: true });
+  if (doc.readyState === "loading")
+    doc.addEventListener("DOMContentLoaded", start, { once: true });
   else start();
   doc.addEventListener("focusin", onFocus, true);
   doc.addEventListener("visibilitychange", onVisibility, true);

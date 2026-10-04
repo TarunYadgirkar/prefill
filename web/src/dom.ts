@@ -1,14 +1,46 @@
 import type { FieldElement } from "./fieldTypes";
 
-const FIELD_TAGS: ReadonlySet<string> = new Set(["input", "select", "textarea"]);
+const FIELD_TAGS: ReadonlySet<string> = new Set([
+  "input",
+  "select",
+  "textarea",
+]);
 const FIELD_SELECTOR = "input, select, textarea";
-const SKIPPED_TEXT: ReadonlySet<string> = new Set(["select", "option", "script", "style", "textarea", "input"]);
+const SKIPPED_TEXT: ReadonlySet<string> = new Set([
+  "select",
+  "option",
+  "script",
+  "style",
+  "textarea",
+  "input",
+]);
 const MAX_TEXT = 200;
 // Smaller than this, a field is a honeypot or a tracking trick, not something a person types into.
 const MIN_SIZE = 4;
 
 export function isFieldElement(node: unknown): node is FieldElement {
-  return typeof node === "object" && node !== null && "localName" in node && FIELD_TAGS.has(String(node.localName));
+  return (
+    typeof node === "object" &&
+    node !== null &&
+    "localName" in node &&
+    FIELD_TAGS.has(String(node.localName))
+  );
+}
+
+// A field that already opens a list of its own: a datalist, or a page's combobox such as
+// react-select or a places lookup. A second list on top would cover it and confuse it.
+export function hasOwnList(el: Element): boolean {
+  if (
+    el.hasAttribute("list") ||
+    el.getAttribute("role")?.toLowerCase() === "combobox"
+  )
+    return true;
+  const autocomplete = el.getAttribute("aria-autocomplete")?.toLowerCase();
+  return (
+    autocomplete === "list" ||
+    autocomplete === "both" ||
+    el.getAttribute("aria-haspopup")?.toLowerCase() === "listbox"
+  );
 }
 
 // The element an event really started on. Events from inside an open shadow root reach
@@ -24,10 +56,18 @@ function shadowRoots(root: ParentNode): ShadowRoot[] {
 }
 
 // Fields in page order, including those inside open shadow roots, up to `limit`.
-export function fieldElements(root: ParentNode, limit = Infinity): FieldElement[] {
-  const own = [...root.querySelectorAll(FIELD_SELECTOR)].filter(isFieldElement).slice(0, limit);
+export function fieldElements(
+  root: ParentNode,
+  limit = Infinity,
+): FieldElement[] {
+  const own = [...root.querySelectorAll(FIELD_SELECTOR)]
+    .filter(isFieldElement)
+    .slice(0, limit);
   return shadowRoots(root).reduce<FieldElement[]>(
-    (found, shadow) => (found.length >= limit ? found : [...found, ...fieldElements(shadow, limit - found.length)]),
+    (found, shadow) =>
+      found.length >= limit
+        ? found
+        : [...found, ...fieldElements(shadow, limit - found.length)],
     own,
   );
 }
@@ -35,7 +75,11 @@ export function fieldElements(root: ParentNode, limit = Infinity): FieldElement[
 // Whether added nodes could hold a field: one itself, one inside, or a shadow host.
 export function mayHoldFields(node: Node): boolean {
   if (!(node instanceof Element)) return false;
-  return isFieldElement(node) || node.shadowRoot !== null || node.querySelector(FIELD_SELECTOR) !== null;
+  return (
+    isFieldElement(node) ||
+    node.shadowRoot !== null ||
+    node.querySelector(FIELD_SELECTOR) !== null
+  );
 }
 
 function squash(text: string): string {
@@ -50,7 +94,9 @@ function ownText(node: Node): string {
 }
 
 function labelledByText(el: FieldElement): string {
-  const ids = (el.getAttribute("aria-labelledby") ?? "").split(/\s+/u).filter(Boolean);
+  const ids = (el.getAttribute("aria-labelledby") ?? "")
+    .split(/\s+/u)
+    .filter(Boolean);
   // A detached element's root is the element itself, which can't look up ids.
   const root = el.getRootNode();
   if (!("getElementById" in root)) return "";
@@ -66,7 +112,9 @@ function labelledByText(el: FieldElement): string {
 // Label text in the order browsers use: <label> elements, aria-labelledby, aria-label.
 export function labelText(el: FieldElement): string {
   const labels = [...(el.labels ?? [])].map(ownText).join(" ");
-  return squash([labels, labelledByText(el), el.getAttribute("aria-label") ?? ""].join(" "));
+  return squash(
+    [labels, labelledByText(el), el.getAttribute("aria-label") ?? ""].join(" "),
+  );
 }
 
 export function placeholderText(el: FieldElement): string {
@@ -95,7 +143,10 @@ export function splitNames(raw: readonly string[]): string[] {
 function isClipped(el: Element): boolean {
   const style = el.ownerDocument.defaultView?.getComputedStyle(el);
   const clipPath = style?.getPropertyValue("clip-path") ?? "";
-  return (clipPath !== "" && clipPath !== "none") || /^rect/u.test(style?.getPropertyValue("clip") ?? "");
+  return (
+    (clipPath !== "" && clipPath !== "none") ||
+    /^rect/u.test(style?.getPropertyValue("clip") ?? "")
+  );
 }
 
 function isStyledVisible(el: Element): boolean {
@@ -106,14 +157,21 @@ function isStyledVisible(el: Element): boolean {
 }
 
 function isOnPage(rect: DOMRect, view: Window | null): boolean {
-  return rect.right + (view?.scrollX ?? 0) > 0 && rect.bottom + (view?.scrollY ?? 0) > 0;
+  return (
+    rect.right + (view?.scrollX ?? 0) > 0 &&
+    rect.bottom + (view?.scrollY ?? 0) > 0
+  );
 }
 
 // Drawn at a usable size and not pushed off the page's top or left edge.
 export function isRendered(el: Element): boolean {
   if (!isStyledVisible(el)) return false;
   const rect = el.getBoundingClientRect();
-  return rect.width >= MIN_SIZE && rect.height >= MIN_SIZE && isOnPage(rect, el.ownerDocument.defaultView);
+  return (
+    rect.width >= MIN_SIZE &&
+    rect.height >= MIN_SIZE &&
+    isOnPage(rect, el.ownerDocument.defaultView)
+  );
 }
 
 // Rendered and at least partly inside the layout viewport, as a field is while someone
@@ -122,7 +180,9 @@ export function isInView(el: Element): boolean {
   if (!isRendered(el)) return false;
   const rect = el.getBoundingClientRect();
   const { width, height } = viewportSize(el.ownerDocument);
-  return rect.right > 0 && rect.bottom > 0 && rect.left < width && rect.top < height;
+  return (
+    rect.right > 0 && rect.bottom > 0 && rect.left < width && rect.top < height
+  );
 }
 
 function viewportSize(doc: Document): { width: number; height: number } {

@@ -31,24 +31,50 @@ const NAME: readonly Control[] = ["text", "textarea"];
 const NUMERIC: readonly Control[] = ["text", "tel", "number"];
 const CHOICE: readonly Control[] = ["text", "select"];
 const STREET: readonly Control[] = ["text", "textarea"];
-const ANY: readonly Control[] = ["text", "email", "tel", "number", "select", "textarea", "url"];
+const ANY: readonly Control[] = [
+  "text",
+  "email",
+  "tel",
+  "number",
+  "select",
+  "textarea",
+  "url",
+];
 
 // Words that ask for a profile or website link, one pattern per link type. Prefill's own,
 // not from Chromium, which has no link types.
 export const LINK_WORDS: readonly (readonly [LinkType, RegExp])[] = [
   ["github", /git.?hub/iu],
   ["linkedin", /linked.?in/iu],
-  ["x", /twitter|\bx\.com\b|^x\s*[:(]|^x\s+(?:profile|handle|url|link|account)\b/iu],
+  [
+    "x",
+    /twitter|\bx\.com\b|^x\s*[:(]|^x\s+(?:profile|handle|url|link|account)\b/iu,
+  ],
   ["other", /other.?(?:web.?site|url|link)/iu],
-  ["website", /portfolio|web.?site|personal.?(?:site|page)|home.?page|\burl\b|\bblog\b/iu],
+  [
+    "website",
+    /portfolio|web.?site|personal.?(?:site|page)|home.?page|\bblog\b/iu,
+  ],
 ];
+// A bare "URL" names no link type: "LinkedIn URL" asks for LinkedIn alone, and "URL" by
+// itself asks for a website.
+export const GENERIC_LINK = /\burl\b/iu;
 // Words that ask for a link to something other than a profile or website: a field that
 // says "Resume Link" wants a document, whatever its autocomplete token says.
-export const OTHER_LINKS = /r[eé]sum[eé]|\bcv\b|project|demo|video|paper|publication|writing.?sample|calendly|schedul/iu;
-const LINK = new RegExp(LINK_WORDS.map(([, pattern]) => pattern.source).join("|"), "iu");
+export const OTHER_LINKS =
+  /r[eé]sum[eé]|\bcv\b|project|demo|video|paper|publication|writing.?sample|calendly|schedul/iu;
+const LINK = new RegExp(
+  [
+    ...LINK_WORDS.map(([, pattern]) => pattern.source),
+    GENERIC_LINK.source,
+  ].join("|"),
+  "iu",
+);
 
-const nameIgnored = /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|用户名/iu;
-const addressNameIgnored = /(?:address|location).*(?:nickname|label|type)|lookup/iu;
+const nameIgnored =
+  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|用户名|会社/iu;
+const addressNameIgnored =
+  /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 
 // Card numbers, security codes, one-time codes, passwords, bank details and government IDs. A field
 // that matches is never classified as contact data, whatever else it matches.
@@ -60,6 +86,9 @@ export const SENSITIVE: readonly RegExp[] = [
   /password|passwort|passcode|passwd|\bpwd\b|contraseña|mot de passe|\bssn\b|social.?security|secret|\bmfa\b/iu,
   /account.?(?:number|no\b|num|#)|routing|\biban\b|\bbic\b|swift.?code|sort.?code|\bpin\b(?!.?code)|token|(?:backup|recovery|access|auth).?code/iu,
   /\bdob\b|date.?of.?birth|birth.?date|national.?id|passport|tax.?id|driver.?s?.?licen[cs]e|\b(?:ein|itin|nin)\b/iu,
+  /(?:social|national).?insurance|tax.?file|aadhaa?r|\b(?:cpf|dni|bsn|nie|nif|bsb)\b|nhs.?(?:number|no)|medicare|personnummer|visa.?(?:number|no\b)|transit.?number/iu,
+  /kontonummer|kartennummer|num[eé]ro de (?:carte|compte)|account.?holder|name.?on.?(?:the.?)?account/iu,
+  /(?:confirmation|sms|text(?:ed)?|login|sign.?in|security|access).?code|\d.?digit.{0,12}code|security.?(?:answer|question)/iu,
 ];
 
 // Words that rule a box out as a phone number, whatever its type or tags say: stores and
@@ -82,7 +111,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "phone" },
     pattern:
-      /phone|mobile|contact.?number|telefonnummer|telefono|teléfono|telfixe|telefone|telemovel|電話|电话|телефон|(\b|_|\*)telefon(\b|_|\*)/iu,
+      /phone|mobile?|\btel\b|\bcell|contact.?number|celular|m[oó]vil|handy|rufnummer|telefoon|portable|\bgsm\b|telefonnummer|telefono|teléfono|telfixe|telefone|telemovel|電話|电话|телефон|(\b|_|\*)telefon(\b|_|\*)/iu,
     negative: /\bext\b|extension|area.?code|country.?code|phone.?code/iu,
     controls: NUMERIC,
   },
@@ -96,13 +125,15 @@ export const RULES: readonly Rule[] = [
   },
   {
     result: { kind: "address", part: "country" },
-    pattern: /country|countries|país|pais|\bpays\b|\bpaese\b|\bnazione\b|(\b|_)land(\b|_)|国家/iu,
+    pattern:
+      /country|countries|país|pais|\bpays\b|\bpaese\b|\bnazione\b|(\b|_)land(\b|_)|国家/iu,
     negative: /country.?code|(\b|_)land(\b|_).*mark/iu,
     controls: CHOICE,
   },
   {
     result: { kind: "address", part: "state" },
-    pattern: /(?<!(united|hist|history).?)state|region|province|county|principality|estado|provincia|都道府県|省/iu,
+    pattern:
+      /(?<!(united|hist|history).?)state|region|province|county|principality|estado|provincia|都道府県|省/iu,
     controls: CHOICE,
   },
   {
@@ -125,6 +156,15 @@ export const RULES: readonly Rule[] = [
     negative: addressNameIgnored,
     controls: STREET,
   },
+  // Says "full" in its own language, so it wins over the family and given words in it
+  // ("Nom complet", "Nombre completo").
+  {
+    result: { kind: "name", part: "full" },
+    pattern:
+      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム/iu,
+    negative: nameIgnored,
+    controls: NAME,
+  },
   {
     result: { kind: "name", part: "family" },
     pattern:
@@ -134,7 +174,8 @@ export const RULES: readonly Rule[] = [
   },
   {
     result: { kind: "name", part: "given" },
-    pattern: /first.*name|initials|fname|first$|given.*name|vorname|nombre|forename|prénom|prenom|\bnome\b|名/iu,
+    pattern:
+      /first.*name|initials|fname|first$|given.*name|vorname|nombre|forename|prénom|prenom|\bnome\b|名/iu,
     negative: nameIgnored,
     controls: NAME,
   },

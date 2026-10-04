@@ -1,4 +1,10 @@
-import { parsePageRequest, parsePageResponse, type ErrorResponse, type PageRequest, type PageResponse } from "./messages";
+import {
+  parsePageRequest,
+  parsePageResponse,
+  type ErrorResponse,
+  type PageRequest,
+  type PageResponse,
+} from "./messages";
 import { isTrustedPage } from "./origin";
 
 export type SendNative = (message: unknown) => Promise<unknown>;
@@ -11,8 +17,16 @@ const badReply: ErrorResponse = { type: "error", reason: "unreadable reply" };
 // content script, in the top frame of a normal tab showing a secure page. Private
 // Browsing tabs never reach the app, so nothing about them is kept. Anything Safari
 // leaves out counts as a no.
-function senderHost(sender: MessageSender, extensionId: string): string | undefined {
-  if (sender.id !== extensionId || sender.frameId !== 0 || sender.tab?.incognito !== false) return undefined;
+function senderHost(
+  sender: MessageSender,
+  extensionId: string,
+): string | undefined {
+  if (
+    sender.id !== extensionId ||
+    sender.frameId !== 0 ||
+    sender.tab?.incognito !== false
+  )
+    return undefined;
   try {
     const url = new URL(sender.url ?? "");
     return isTrustedPage(url.protocol, url.hostname) ? url.hostname : undefined;
@@ -26,9 +40,18 @@ function boundToSender(request: PageRequest, host: string): PageRequest {
 }
 
 // Values saved straight to the card leave no mark, since Undo in the sheet covers them.
-function markIfWaiting(response: PageResponse, sender: MessageSender, mark: MarkForReview | undefined): void {
+function markIfWaiting(
+  response: PageResponse,
+  sender: MessageSender,
+  mark: MarkForReview | undefined,
+): void {
   const tabId = sender.tab?.id;
-  if (response.type !== "captureResult" || response.review === 0 || tabId === undefined) return;
+  if (
+    response.type !== "captureResult" ||
+    response.review === 0 ||
+    tabId === undefined
+  )
+    return;
   mark?.(tabId, response.review);
 }
 

@@ -24,7 +24,12 @@ export interface PageEnvironment {
 // Runs in the top frame of secure pages only, so a network attacker on plain http or a
 // frame from another site can't feed the card values or reorder it.
 export function startPage(env: PageEnvironment): () => void {
-  if (!env.isTopFrame || !env.isSecureContext || !isTrustedPage(env.protocol, env.hostname)) return () => undefined;
+  if (
+    !env.isTopFrame ||
+    !env.isSecureContext ||
+    !isTrustedPage(env.protocol, env.hostname)
+  )
+    return () => undefined;
   const host = (): string => env.hostname;
   const send = (request: ExtensionRequest): void => {
     env.send(request).catch(() => undefined);
@@ -40,13 +45,23 @@ export function startPage(env: PageEnvironment): () => void {
     ? [installSuggestions(env.doc, { host, send: env.send })]
     : [
         installContext(env.doc, env.win, { host, send: env.send }),
-        installSuggestions(env.doc, { host, send: env.send, attach: attachDatalist, offCard: true }),
+        installSuggestions(env.doc, {
+          host,
+          send: env.send,
+          attach: attachDatalist,
+          offCard: true,
+        }),
       ];
   const stops = [
     ...values,
     installCapture(env.doc, env.win, { host, send }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
-    installCustom(env.doc, { host, send: env.send, ...shown, textAreas: isChromium }),
+    installCustom(env.doc, {
+      host,
+      send: env.send,
+      ...shown,
+      textAreas: isChromium,
+    }),
   ];
   return () => {
     stops.forEach((stop) => {
