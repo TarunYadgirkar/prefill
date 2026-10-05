@@ -48,28 +48,37 @@ final class FillE2ETests: XCTestCase {
             XCTAssertEqual(SafariDriver.field("Email").value as? String, "alex.rivera@example.com")
         }
         XCTContext.runActivity(named: "d. A tap on a filled field offers the other values") { _ in
-            SafariDriver.field("Email").tap()
-            let other = safari.webViews.descendants(matching: .any)
-                .matching(NSPredicate(format: "label CONTAINS %@", "alex@work.example.org")).firstMatch
-            let offered = other.waitForExistence(timeout: 8)
-            E2EServer.screenshot("fill-d-other-values")
-            if !offered { print("PREFILL-TREE \(safari.debugDescription)") }
-            XCTAssertTrue(offered, "the filled email field never offered the work email")
-            let field = SafariDriver.field("Email").frame
-            XCTAssertFalse(other.frame.intersects(field), "the list covers its own field: \(other.frame) over \(field)")
-            XCTAssertLessThanOrEqual(other.frame.maxY, safari.keyboards.firstMatch.frame.minY, "the list is under the keyboard")
-            SafariDriver.dismissKeyboard()
+            expectOtherValues()
         }
         XCTContext.runActivity(named: "e. Demographic questions are declined") { _ in
-            safari.swipeUp()
-            E2EServer.screenshot("fill-e-declined")
-            let declined = [
-                "Gender": "Decline To Self Identify", "Are you Hispanic/Latino?": "Decline To Self Identify",
-                "Veteran Status": "I don't wish to answer", "Disability Status": "I do not want to answer"
-            ]
-            for (question, answer) in declined {
-                XCTAssertEqual(safari.webViews.buttons[question].firstMatch.value as? String, answer, question)
-            }
+            expectDeclined()
+        }
+    }
+
+    private func expectOtherValues() {
+        SafariDriver.field("Email").tap()
+        let other = safari.webViews.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS %@", "alex@work.example.org")).firstMatch
+        let offered = other.waitForExistence(timeout: 8)
+        E2EServer.screenshot("fill-d-other-values")
+        if !offered { print("PREFILL-TREE \(safari.debugDescription)") }
+        XCTAssertTrue(offered, "the filled email field never offered the work email")
+        let field = SafariDriver.field("Email").frame
+        XCTAssertFalse(other.frame.intersects(field), "the list covers its own field: \(other.frame) over \(field)")
+        let keyboard = safari.keyboards.firstMatch.frame
+        XCTAssertLessThanOrEqual(other.frame.maxY, keyboard.minY, "the list is under the keyboard")
+        SafariDriver.dismissKeyboard()
+    }
+
+    private func expectDeclined() {
+        safari.swipeUp()
+        E2EServer.screenshot("fill-e-declined")
+        let declined = [
+            "Gender": "Decline To Self Identify", "Are you Hispanic/Latino?": "Decline To Self Identify",
+            "Veteran Status": "I don't wish to answer", "Disability Status": "I do not want to answer"
+        ]
+        for (question, answer) in declined {
+            XCTAssertEqual(safari.webViews.buttons[question].firstMatch.value as? String, answer, question)
         }
     }
 
