@@ -95,4 +95,12 @@ struct RowFilterTests {
     @Test func offersNothingOnceTheFieldHoldsAValue() {
         #expect(RowFilter.matching(rows, typed: "alex@work.example.org").isEmpty)
     }
+
+    @Test func readsAPhoneNumberByItsDigits() {
+        let phones = ["+1 (510) 555-0100", "+1 415 555 0199"]
+            .map { AutofillRow(value: $0, detail: "Phone", kind: "phone") }
+        #expect(RowFilter.matching(phones, typed: "5105550100").isEmpty)
+        #expect(RowFilter.matching(phones, typed: "415-555").map(\.value) == ["+1 415 555 0199"])
+        #expect(RowFilter.matching(phones, typed: "2025550123").isEmpty)
+    }
 }
