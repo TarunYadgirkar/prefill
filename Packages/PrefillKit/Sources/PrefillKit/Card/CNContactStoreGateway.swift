@@ -53,23 +53,38 @@ public struct CNContactStoreGateway: ContactsGateway {
         let loaded = try load(identifier, store: store)
         guard let writes = loaded.split.moving(chosen) else { return }
         let before = loaded.split.record
+        // Only what was still on the card moves; another device may have taken the rest.
+        let onCard = Set(loaded.split.extrasOnCard.map(\.id))
+        let moved = chosen.filter { onCard.contains($0.id) }
         try execute(writes, on: loaded, store: store, author: CardWriter.transactionAuthor)
         let after = try load(identifier, store: CNContactStore())
         let held = Set(after.split.placement.onPrefill.map(\.id))
-        guard chosen.allSatisfy({ held.contains($0.id) }) else {
+        guard moved.allSatisfy({ held.contains($0.id) }) else {
             Self.log.error("a moved value is missing from Prefill's contact")
             restoreLostValues(of: before, identifier: identifier, author: CardWriter.transactionAuthor)
             throw .other
         }
     }
 
+    // One save request, read back afterwards like moveOffCard: a value that isn't on the
+    // card is put back.
     public func moveOntoCard(
         _ chosen: [CardExtra]?, identifier: String, leavingMinimal: Bool
     ) throws(CardWriteFailure) {
         let store = CNContactStore()
         let loaded = try load(identifier, store: store)
         guard let writes = loaded.split.movingOntoCard(chosen, leavingMinimal: leavingMinimal) else { return }
+        let before = loaded.split.record
+        let ids = chosen.map { Set($0.map(\.id)) }
+        let moved = loaded.split.placement.onPrefill.filter { $0.isCore && (ids?.contains($0.id) ?? true) }
         try execute(writes, on: loaded, store: store, author: CardWriter.transactionAuthor)
+        let after = try load(identifier, store: CNContactStore())
+        let held = Set(after.split.placement.onCard.map(\.id))
+        guard moved.allSatisfy({ held.contains($0.id) }) else {
+            Self.log.error("a moved value is missing from the card")
+            restoreLostValues(of: before, identifier: identifier, author: CardWriter.transactionAuthor)
+            throw .other
+        }
     }
 
     private struct Loaded {
@@ -80,6 +95,8 @@ public struct CNContactStoreGateway: ContactsGateway {
 
     private func load(_ identifier: String, store: CNContactStore) throws(CardWriteFailure) -> Loaded {
         let card = try fetch(identifier, store: store)
+        // A Prefill contact picked as the card would also be found as its own copy.
+        guard !PrefillContact.isMarker(card.departmentName) else { throw .cardMissing }
         let copies = try PrefillContactStore.find(besideCard: identifier, in: store, keys: CNCardMapping.keys)
         let split = CardSplit(
             card: CNCardMapping.record(from: card, identifier: identifier),
