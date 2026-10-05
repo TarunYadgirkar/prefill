@@ -22,7 +22,16 @@ On the iPhone:
 1. Trust the developer profile in Settings → General → VPN & Device Management.
 2. Turn on the Prefill extension in Settings → Apps → Safari → Extensions, and set All Websites to Allow.
 
-A free Apple ID signs the app for 7 days only, so rerun the script weekly.
+A free Apple ID signs the app for 7 days only, so rerun the script weekly, or let the Mac do it.
+
+### Weekly reinstall
+
+```bash
+zsh scripts/auto-reinstall.sh --force        # once, by hand: click Always Allow on keychain prompts
+zsh scripts/install-auto-reinstall.sh        # then a launchd agent checks daily at 12:15
+```
+
+The agent reinstalls when the last install is 5.5 days old or its profile expires within 36 hours, and retries every 10 minutes for 3 hours while the phone is locked or away. It posts a notification either way. The log is in `~/Library/Logs/Prefill/auto-reinstall.log`. Leave the phone plugged in or on the same Wi-Fi, and keep the repo out of Desktop, Documents and iCloud Drive (launchd jobs can't read those). Pass a device ID to either script to target another phone; `--uninstall` removes the agent.
 
 **Mac.**
 

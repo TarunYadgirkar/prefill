@@ -54,7 +54,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `MacShared/` | Code identity checks and the socket used by both sides. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
 | `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
-| `scripts/` | build, test, install-device, install-mac, e2e-mac-chrome, e2e-mac-ax. |
+| `scripts/` | build, test, install-device, auto-reinstall (and its launchd installer), install-mac, e2e-mac-chrome, e2e-mac-ax. |
 
 ## Rules that keep it safe
 
@@ -94,4 +94,6 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - It doesn't save new values; only the extension does.
   - Arc, Safari, Electron apps and Firefox are untested.
   - The first field clicked right after switching to Chrome may get nothing.
-- **Weekly reinstall:** the free-team iPhone build expires every 7 days. An automated launchd reinstall was offered but not set up.
+- **Weekly reinstall:** the free-team iPhone build expires every 7 days.
+  - `scripts/install-auto-reinstall.sh` sets up a daily launchd agent that runs `scripts/auto-reinstall.sh`, which reinstalls when due and retries while the phone is locked.
+  - It's untested on the Mac: codesign's keychain access from launchd and whether Xcode fetches a fresh profile after the old one is moved aside are unconfirmed.
