@@ -38,6 +38,8 @@ export interface SuggestionOptions {
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
   attach?: Attach;
+  // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
+  skip?: (element: FieldElement) => boolean;
 }
 
 const MAX_INSPECTED = 200;
@@ -167,10 +169,11 @@ export function installSuggestions(
   const attach = options.attach ?? showDropdown;
   // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
   // Prefill's own list would sit on top of the page's, so it skips fields that have one.
-  const isTaken = (element: Element): boolean =>
-    attach === attachDatalist
+  const isTaken = (element: FieldElement): boolean =>
+    options.skip?.(element) === true ||
+    (attach === attachDatalist
       ? element.hasAttribute("list")
-      : hasOwnList(element);
+      : hasOwnList(element));
   const offCard = options.offCard === true;
   const fieldOf = (element: FieldElement): ContactField | undefined =>
     suggestedField(element, !offCard);

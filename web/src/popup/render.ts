@@ -6,11 +6,16 @@ export interface SheetView {
   state: PopupStateResult | undefined;
   busy: boolean;
   note: string | undefined;
+  // The page's one-tap fill: how many fields it can fill, and how many the last tap filled.
+  fillable: number;
+  filled: number | undefined;
 }
 
 export interface SheetActions {
   send: (request: SheetRequest) => void;
   showKind: (kind: ContactKind) => void;
+  fill: () => void;
+  undoFill: () => void;
 }
 
 const KIND_NAMES: Record<ContactKind, { tab: string; plural: string }> = {
@@ -130,6 +135,20 @@ function kindTabs(view: SheetView, kinds: ContactKind[], actions: SheetActions):
   return control;
 }
 
+// Like Safari's AutoFill Contact: one tap fills every empty field the page asks for.
+function fillCard(view: SheetView, actions: SheetActions): HTMLElement | undefined {
+  if (view.filled !== undefined) {
+    const done = view.filled === 0 ? "Nothing left to fill on this page." : `Filled ${String(view.filled)} ${view.filled === 1 ? "field" : "fields"}.`;
+    const undo = view.filled === 0 ? undefined : button("Undo", "link", actions.undoFill, view.busy);
+    return el("section", "fill", el("p", "fill-done", done, undo === undefined ? undefined : " ", undo));
+  }
+  if (view.fillable === 0) return undefined;
+  const label = `Fill ${String(view.fillable)} ${view.fillable === 1 ? "field" : "fields"}`;
+  const fill = button(label, "fill-button", actions.fill, view.busy);
+  const note = "Name, contact info, links and your saved answers. Demographic questions get “Decline”.";
+  return el("section", "fill", fill, el("p", "footnote", note));
+}
+
 function problem(title: string, detail: string): HTMLElement {
   return el("section", "problem", el("h2", undefined, title), el("p", undefined, detail));
 }
@@ -142,6 +161,7 @@ function body(view: SheetView, actions: SheetActions): Child[] {
   if (entry === undefined) return [problem("Prefill couldn't read your card", state.reason ?? "Try again in a moment.")];
   const failure = state.status === "failed" ? el("p", "failure", state.reason ?? "Something went wrong. Try again.") : undefined;
   return [
+    fillCard(view, actions),
     kindTabs(view, state.kinds.map((item) => item.kind), actions),
     bar(entry),
     pinnedNote(entry, view, actions),

@@ -435,12 +435,26 @@ export function parseSheetResponse(
 const pageNeeds = object({
   host: hostName,
   kinds: arrayOf(contactKind, LIMITS.popupKinds),
+  // How many empty fields a one-tap fill would fill on the page.
+  fillable: optional(count),
 });
 export type PageNeeds = Parsed<typeof pageNeeds>;
 export const PAGE_NEEDS_QUERY = { type: "pageNeeds" } as const;
 
 export function parsePageNeeds(message: unknown): PageNeeds | undefined {
   const parsed = pageNeeds(message);
+  return parsed === INVALID ? undefined : parsed;
+}
+
+// The sheet's one-tap fill: it asks the page's content script to fill the form, or to put
+// back what the last fill changed. Only this extension's own pages can send them.
+export const FILL_PAGE = { type: "fillPage" } as const;
+export const UNDO_FILL = { type: "undoFill" } as const;
+const fillPageResult = object({ type: literal("fillPageResult"), filled: count });
+export type FillPageResult = Parsed<typeof fillPageResult>;
+
+export function parseFillPageResult(message: unknown): FillPageResult | undefined {
+  const parsed = fillPageResult(message);
   return parsed === INVALID ? undefined : parsed;
 }
 

@@ -28,6 +28,8 @@ export interface CustomOptions {
   // How the values are shown: a datalist for Safari's bar unless the caller draws its own
   // list, which also works on text areas.
   attach?: Attach;
+  // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
+  skip?: (element: FieldElement) => boolean;
   textAreas?: boolean;
 }
 
@@ -93,10 +95,11 @@ export function installCustom(
   const attach = options.attach ?? attachDatalist;
   // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
   // Prefill's own list would sit on top of the page's, so it skips fields that have one.
-  const isTaken = (element: Element): boolean =>
-    attach === attachDatalist
+  const isTaken = (element: FieldElement): boolean =>
+    options.skip?.(element) === true ||
+    (attach === attachDatalist
       ? element.hasAttribute("list")
-      : hasOwnList(element);
+      : hasOwnList(element));
   const isCandidate = (element: FieldElement): element is TextField =>
     isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);

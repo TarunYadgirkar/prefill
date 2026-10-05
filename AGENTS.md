@@ -45,7 +45,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 | Path | What |
 |---|---|
-| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. |
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Card (Emails/Phones/Addresses/Links/Custom), Sites, Recent, Settings (Sharing your card, Restore), Siri intents. |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
@@ -54,7 +54,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `MacShared/` | Code identity checks and the socket used by both sides. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
 | `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
-| `scripts/` | build, test, install-device, install-mac, e2e-mac-chrome, e2e-mac-ax. |
+| `scripts/` | build, test, install-device, install-mac, e2e-mac-chrome, e2e-mac-ax. `web/src/e2e/fillChrome.ts` runs one-tap fill in real Chromium with a stand-in host (`fakeHost.py`), on Linux or the Mac. |
 
 ## Rules that keep it safe
 
@@ -62,6 +62,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Never act on password, card, code, bank or government-ID fields.
   - Never act on sign-in forms (a `current-password` field in the form).
 - **Values reach a page only after a real click or Tab on that field,** within 1 second, and only while the field is visible (`gesture.ts`). One Tab unlocks one field.
+- **One-tap fill is the one exception, and it takes the person's own tap on Prefill's button:** the pill beside a field they just clicked or tabbed into (closed shadow root, trusted clicks only), or Fill in Safari's sheet.
+  - It fills only visible, empty, editable fields of the form the person is in, never sensitive ones or sign-in forms, and never overwrites what they typed.
+  - Demographic questions (gender, race, ethnicity, veteran, disability, orientation) always get the declining option, or "No" when there is none, and a text box asking one is left alone.
+  - Undo puts every field back, and a tap on a filled field offers the other values.
 - **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
 - **Never drop data:**
   - Card rewrites go through `CardWriter` plus the never-drop guard.

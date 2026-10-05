@@ -1,5 +1,5 @@
-import { startPage, type PageEnvironment } from "./page";
-import { answerPageNeeds } from "./pageNeeds";
+import { startPage, type PageEnvironment, type PageFill } from "./page";
+import { answerFill, answerPageNeeds } from "./pageNeeds";
 
 // Chrome leaves a reloaded or updated extension's old scripts running in open tabs, cut off
 // from the extension, and starts a new copy beside them.
@@ -22,6 +22,7 @@ export function startContent(
     document.removeEventListener("focusin", retire, true);
   };
   document.addEventListener("focusin", retire, true);
+  let fill: PageFill | undefined;
   const stop = startPage({
     doc: document,
     win: window,
@@ -31,15 +32,23 @@ export function startContent(
     isTopFrame: window === window.top,
     send: (request) => browser.runtime.sendMessage(request),
     browser: kind,
+    onFill: (pageFill) => {
+      fill = pageFill;
+    },
   });
 
   if (window === window.top && window.isSecureContext) {
-    browser.runtime.onMessage.addListener((message, sender) =>
-      answerPageNeeds(message, sender, browser.runtime.id, {
+    browser.runtime.onMessage.addListener((message, sender) => {
+      const page = {
         doc: document,
         protocol: location.protocol,
         hostname: location.hostname,
-      }),
-    );
+        ...(fill === undefined ? {} : { fill }),
+      };
+      return (
+        answerPageNeeds(message, sender, browser.runtime.id, page) ??
+        answerFill(message, sender, browser.runtime.id, page)
+      );
+    });
   }
 }

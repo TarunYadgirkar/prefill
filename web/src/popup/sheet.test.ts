@@ -7,17 +7,17 @@ const needs = { host: "shop.example.net", kinds: ["email" as const] };
 describe("openingFor", () => {
   it("takes the host from the tab and the kinds from the page", () => {
     expect(openingFor({ url: "https://www.example.net/a", incognito: false }, needs)).toEqual({
-      site: { host: "www.example.net", kinds: ["email"] },
+      site: { host: "www.example.net", kinds: ["email"], fillable: 0 },
     });
   });
 
   it("uses the page's answer when Safari doesn't share the address", () => {
-    expect(openingFor({ incognito: false }, needs)).toEqual({ site: { host: "shop.example.net", kinds: ["email"] } });
+    expect(openingFor({ incognito: false }, needs)).toEqual({ site: { host: "shop.example.net", kinds: ["email"], fillable: 0 } });
   });
 
   it("shows every kind on a page without contact fields", () => {
     expect(openingFor({ url: "https://example.net/" }, { host: "example.net", kinds: [] })).toEqual({
-      site: { host: "example.net", kinds: ["email", "phone", "address"] },
+      site: { host: "example.net", kinds: ["email", "phone", "address"], fillable: 0 },
     });
   });
 
@@ -27,6 +27,12 @@ describe("openingFor", () => {
     [{ url: "about:blank" }, "unsupported"],
   ])("explains why it can't help on %j", (tab, problem) => {
     expect(openingFor(tab, needs)).toEqual({ problem });
+  });
+
+  it("passes on how many fields the page can fill", () => {
+    expect(openingFor({ url: "https://example.net/" }, { host: "example.net", kinds: ["email"], fillable: 7 })).toEqual({
+      site: { host: "example.net", kinds: ["email"], fillable: 7 },
+    });
   });
 
   it("can't help without a tab or an answer from the page", () => {

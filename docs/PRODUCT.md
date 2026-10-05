@@ -26,6 +26,8 @@ This document has three parts:
 | Oct 3 | Don't count on the $99 developer account. | No CloudKit and no App Groups; everything syncs through iCloud Contacts |
 | Oct 3 | Why can't the extension read Contacts? Make it an app then. | Mac Accessibility engine that suggests in any app; the extension is now optional |
 | Oct 3 | Finish everything, then write docs for future sessions. | This document, `README.md` and `AGENTS.md` |
+| Oct 4 | "Not seamless enough, like AirDrop." Only name and phone may go out when sharing by tapping phones. Research how Apple does it and what other job-application fillers do. | Verified NameDrop sends only the name, one chosen number or email, and the poster. Web audit fixes. Research on Apple's patterns and on Simplify, Jobright and others. |
+| Oct 5 | One-tap fill is fine, but tapping a field must still let me pick another value. Demographic questions: always decline or "No". | One-tap fill: a pill beside the field and a Fill button in Safari's sheet fill the whole form, including selects and yes/no radios, decline demographics, tint what they filled, undo in one tap, and a filled field still lists the other values. |
 
 ## 2. The product
 

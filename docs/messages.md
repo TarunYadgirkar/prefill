@@ -230,7 +230,7 @@ The reply is `captureResult`, with counts only. `saved` values went onto the car
 
 ## The Prefill sheet
 
-Tapping Prefill in Safari's page menu opens `popup.html` as a half-height sheet. It asks the active tab's content script `{ "type": "pageNeeds" }`, which answers with the page's host and the kinds of contact fields it has (`email`, `phone`, `address`); the content script only answers this extension, in the top frame of a page it runs on. The sheet takes the host from the tab's address when Safari shares it and from that answer otherwise, and shows nothing in Private Browsing. It then sends the messages below straight to the app with `browser.runtime.sendNativeMessage`, and clears the page-menu badge for the tab.
+Tapping Prefill in Safari's page menu opens `popup.html` as a half-height sheet. It asks the active tab's content script `{ "type": "pageNeeds" }`, which answers with the page's host, the kinds of contact fields it has (`email`, `phone`, `address`) and `fillable`, the number of empty fields a one-tap fill would fill; the content script only answers this extension, in the top frame of a page it runs on. The sheet takes the host from the tab's address when Safari shares it and from that answer otherwise, and shows nothing in Private Browsing. It then sends the messages below straight to the app with `browser.runtime.sendNativeMessage`, and clears the page-menu badge for the tab.
 
 Every sheet request carries the `host` it is about, checked like any other host, and every reply is `popupStateResult`. Kinds are `email`, `phone` or `address`; a value ID is the UUID the app gives each value. Before the card is linked the reply is `notSetUp`, and when the card can't be read or saved it is `failed` with a `reason`.
 
@@ -284,6 +284,21 @@ The reply lists, for each kind asked about, every value in the order Safari will
 ```
 
 When a `capture` reply has values waiting for review, the background script puts that count on Prefill's row in the page menu for the tab with `browser.action.setBadgeText`. Values saved straight to the card leave no badge, since the sheet's Undo covers them.
+
+## One-tap fill
+
+The pill Prefill shows beside a field the person just clicked or tabbed into, and the Fill button at the top of Safari's sheet, fill the whole form the field is in. The content script asks the app the same three questions the field lists use, once each and only for what the form needs: `contactSuggestions` (without `offCard`, also in Safari, since it fills the fields itself), `linkSuggestions` and `customSuggestions`, whose `text` for a select is its label and for a radio group its legend or question. Nothing new reaches the page that a field's own list wouldn't offer; the difference is that one tap places every value at once.
+
+The sheet talks to the page's content script, not to the app, with two messages only this extension's pages can send:
+
+```json
+{ "type": "fillPage" }
+{ "type": "undoFill" }
+```
+
+Both answer `{ "type": "fillPageResult", "filled": 11 }`, the number of fields filled (0 after an undo).
+
+What a page can and can't do: it can't press the pill (a closed shadow root that ignores untrusted clicks and any tap in its first 400 ms) or send the sheet's messages. It can still lure a person into tapping where the pill appears, the same risk Prefill's own list has; the pill only appears right after the person's own click or Tab into a field, and a fill only reaches visible, empty, non-sensitive fields of that form.
 
 ## error
 
