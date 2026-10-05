@@ -55,6 +55,12 @@
       "type": "customSuggestions",
       "host": "boards.example.io",
       "fields": [{ "text": "School job_application[educations][0][school_name_id]" }, { "text": "Cover letter" }]
+    },
+    "answers": {
+      "type": "answers",
+      "host": "boards.example.io",
+      "action": "learn",
+      "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
     }
   },
   "responses": {
@@ -108,6 +114,7 @@
       "type": "customSuggestionsResult",
       "fields": [{ "values": ["UC Berkeley"] }, { "values": [] }]
     },
+    "answersResult": { "type": "answersResult", "saved": 2 },
     "error": { "type": "error", "reason": "unknown message" }
   }
 }

@@ -3,7 +3,7 @@
 # browsers or screen: builds a test copy of the Mac app that also answers Playwright's
 # Chrome for Testing and uses the Alex Rivera card in testbed/mac-e2e, runs it with its own
 # store, loads the extension into a headless Chrome for Testing profile whose native
-# messaging host is that copy's, focuses an email field and submits a new email.
+# messaging host is that copy's, focuses an email field and submits a new email and a school.
 # Screenshots: assets/generated/mac-chrome-dropdown.png, and with PREFILL_E2E_AIRTABLE=1 also
 # assets/generated/airtable-chrome.png from a real Airtable form (filled, never submitted).
 source ${0:A:h}/lib.sh
@@ -68,4 +68,7 @@ node $ROOT/web/src/e2e/macChrome.ts $ROOT/web/dist-chrome $WORK/profile "http://
 step "Checking that the typed email reached the card"
 grep -q "alex.new@example.net" $WORK/store/* && print "ok  the submitted email was captured" || {
   print "the submitted email never reached the app"; exit 1
+}
+grep -q "University of California, Berkeley" $WORK/store/* && print "ok  the school typed on the form was saved as an answer" || {
+  print "the school answer never reached the app"; exit 1
 }

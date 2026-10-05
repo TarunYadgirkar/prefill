@@ -28,6 +28,8 @@ import {
   type LinkSuggestionsResult,
   type ContactSuggestionsRequest,
   type ContactSuggestionsResult,
+  type AnswersRequest,
+  type AnswersResult,
   type CustomSuggestionsRequest,
   type CustomSuggestionsResult,
   parsePageRequest,
@@ -86,6 +88,16 @@ const customSuggestions: CustomSuggestionsRequest = {
   ],
 };
 
+const answers: AnswersRequest = {
+  type: "answers",
+  host: "boards.example.io",
+  action: "learn",
+  answers: [
+    { question: "school", value: "UC Berkeley" },
+    { question: "sponsorship", value: "No" },
+  ],
+};
+const answersResult: AnswersResult = { type: "answersResult", saved: 2 };
 const customSuggestionsResult: CustomSuggestionsResult = {
   type: "customSuggestionsResult",
   fields: [{ values: ["UC Berkeley"] }, { values: [] }],
@@ -253,6 +265,7 @@ describe("message contract", () => {
       linkSuggestions,
       contactSuggestions,
       customSuggestions,
+      answers,
     }),
   )("request %s matches the shared example", (name, typed) => {
     const example: unknown =
@@ -271,6 +284,7 @@ describe("message contract", () => {
       linkSuggestionsResult,
       contactSuggestionsResult,
       customSuggestionsResult,
+      answersResult,
       error,
     }),
   )("response %s matches the shared example", (name, typed) => {

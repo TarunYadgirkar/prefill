@@ -33,6 +33,18 @@ export const CAPTURE_TRIGGERS = ["submit", "flush"] as const;
 export const CONTACT_KINDS = ["email", "phone", "address"] as const;
 export const POPUP_STATUSES = ["ready", "off", "notSetUp", "failed"] as const;
 export const RECENT_STATES = ["saved", "waiting", "removed"] as const;
+// The job application questions Prefill learns answers to. Mirrored by JobQuestion in Swift.
+export const JOB_QUESTIONS = [
+  "school",
+  "degree",
+  "major",
+  "gpa",
+  "graduation",
+  "authorization",
+  "sponsorship",
+  "heard",
+] as const;
+export const ANSWER_ACTIONS = ["learn", "undo"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -54,6 +66,7 @@ export const LIMITS = {
   fieldText: 200,
   customValue: 200,
   customOptions: 3,
+  answers: 8,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -64,6 +77,7 @@ export type CaptureTrigger = (typeof CAPTURE_TRIGGERS)[number];
 export type ContactKind = (typeof CONTACT_KINDS)[number];
 export type PopupStatus = (typeof POPUP_STATUSES)[number];
 export type RecentState = (typeof RECENT_STATES)[number];
+export type JobQuestion = (typeof JOB_QUESTIONS)[number];
 
 const INVALID: unique symbol = Symbol("invalid");
 type Parser<T> = (value: unknown) => T | typeof INVALID;
@@ -227,6 +241,15 @@ const pageRequests = {
       LIMITS.pageFields,
     ),
   }),
+  answers: object({
+    type: literal("answers"),
+    host: hostName,
+    action: oneOf(ANSWER_ACTIONS),
+    answers: arrayOf(
+      object({ question: oneOf(JOB_QUESTIONS), value: text(LIMITS.customValue) }),
+      LIMITS.answers,
+    ),
+  }),
 };
 
 const contactKind = oneOf(CONTACT_KINDS);
@@ -308,6 +331,7 @@ const pageResponses = {
       LIMITS.pageFields,
     ),
   }),
+  answersResult: object({ type: literal("answersResult"), saved: count }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -338,8 +362,10 @@ export type ContactSuggestionsRequest = Parsed<
 export type CustomSuggestionsRequest = Parsed<
   typeof pageRequests.customSuggestions
 >;
+export type AnswersRequest = Parsed<typeof pageRequests.answers>;
 export type PageRequest =
   | Ping
+  | AnswersRequest
   | PageContextRequest
   | CaptureRequest
   | LinkSuggestionsRequest
@@ -371,8 +397,10 @@ export type ContactSuggestionsResult = Parsed<
 export type CustomSuggestionsResult = Parsed<
   typeof pageResponses.customSuggestionsResult
 >;
+export type AnswersResult = Parsed<typeof pageResponses.answersResult>;
 export type PageResponse =
   | Pong
+  | AnswersResult
   | PageContextResult
   | CaptureResult
   | LinkSuggestionsResult

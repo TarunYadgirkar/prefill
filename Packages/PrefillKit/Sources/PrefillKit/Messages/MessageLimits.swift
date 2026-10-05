@@ -24,6 +24,7 @@ public enum MessageLimits {
     static let fieldText = 200
     static let customValue = CustomField.maxValue
     static let customOptions = 3
+    static let answers = JobQuestion.allCases.count
 }
 
 extension ExtensionRequest {
@@ -46,6 +47,9 @@ extension ExtensionRequest {
         case .customSuggestions(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
                 && body.fields.allSatisfy { $0.text.utf16.count <= MessageLimits.fieldText }
+        case .answers(let body):
+            body.host.count <= MessageLimits.host && body.answers.count <= MessageLimits.answers
+                && body.answers.allSatisfy { $0.value.utf16.count <= MessageLimits.customValue }
         }
     }
 }
@@ -81,6 +85,8 @@ extension ExtensionRequest {
             MessageText.isHost(host)
         case .customSuggestions(let body):
             MessageText.isHost(body.host) && body.fields.allSatisfy { MessageText.isPlain($0.text) }
+        case .answers(let body):
+            MessageText.isHost(body.host) && body.answers.allSatisfy { MessageText.isPlain($0.value) }
         }
     }
 
@@ -98,6 +104,7 @@ extension ExtensionRequest {
         case .linkSuggestions(let body): body.host
         case .contactSuggestions(let body): body.host
         case .customSuggestions(let body): body.host
+        case .answers(let body): body.host
         }
     }
 }

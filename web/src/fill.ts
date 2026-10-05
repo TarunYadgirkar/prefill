@@ -160,7 +160,7 @@ function nearbyWords(inputs: readonly HTMLInputElement[]): string[] {
   return text === "" ? [] : [text];
 }
 
-function questionOf(inputs: readonly HTMLInputElement[]): string {
+export function questionOf(inputs: readonly HTMLInputElement[]): string {
   const first = inputs[0];
   if (first === undefined) return "";
   const label = groupLabel(first);

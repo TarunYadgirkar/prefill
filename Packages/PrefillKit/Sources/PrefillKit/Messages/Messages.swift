@@ -149,6 +149,7 @@ public enum ExtensionRequest: Sendable, Hashable {
     case linkSuggestions(LinkSuggestionsRequest)
     case contactSuggestions(ContactSuggestionsRequest)
     case customSuggestions(CustomSuggestionsRequest)
+    case answers(AnswersRequest)
 }
 
 public enum ExtensionResponse: Sendable, Hashable {
@@ -159,6 +160,7 @@ public enum ExtensionResponse: Sendable, Hashable {
     case linkSuggestions(LinkSuggestionsResponse)
     case contactSuggestions(ContactSuggestionsResponse)
     case customSuggestions(CustomSuggestionsResponse)
+    case answers(AnswersResponse)
     case error(reason: String)
 }
 
@@ -172,12 +174,12 @@ private struct ErrorBody: Codable {
 
 private enum RequestType: String, Codable {
     case ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions
-    case contactSuggestions, customSuggestions
+    case contactSuggestions, customSuggestions, answers
 }
 
 private enum ResponseType: String, Codable {
     case pong, pageContextResult, captureResult, popupStateResult, linkSuggestionsResult, error
-    case contactSuggestionsResult, customSuggestionsResult
+    case contactSuggestionsResult, customSuggestionsResult, answersResult
 }
 
 extension ExtensionRequest: Codable {
@@ -202,6 +204,7 @@ extension ExtensionRequest: Codable {
         case .unpin: .unpin(try UnpinRequest(from: decoder))
         case .undoCapture: .undoCapture(try UndoCaptureRequest(from: decoder))
         case .muteSite: .muteSite(try MuteSiteRequest(from: decoder))
+        case .answers: .answers(try AnswersRequest(from: decoder))
         case .ping, .pageContext, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions:
             throw MessageError.unknownType
         }
@@ -226,6 +229,7 @@ extension ExtensionRequest: Codable {
         case .linkSuggestions: .linkSuggestions
         case .contactSuggestions: .contactSuggestions
         case .customSuggestions: .customSuggestions
+        case .answers: .answers
         }
     }
 
@@ -242,6 +246,7 @@ extension ExtensionRequest: Codable {
         case .linkSuggestions(let body): body
         case .contactSuggestions(let body): body
         case .customSuggestions(let body): body
+        case .answers(let body): body
         }
     }
 }
@@ -265,6 +270,7 @@ extension ExtensionResponse: Codable {
         case .linkSuggestionsResult: .linkSuggestions(try LinkSuggestionsResponse(from: decoder))
         case .contactSuggestionsResult: .contactSuggestions(try ContactSuggestionsResponse(from: decoder))
         case .customSuggestionsResult: .customSuggestions(try CustomSuggestionsResponse(from: decoder))
+        case .answersResult: .answers(try AnswersResponse(from: decoder))
         case .pong, .pageContextResult, .captureResult, .popupStateResult, .error: throw MessageError.unknownType
         }
     }
@@ -286,6 +292,7 @@ extension ExtensionResponse: Codable {
         case .linkSuggestions: .linkSuggestionsResult
         case .contactSuggestions: .contactSuggestionsResult
         case .customSuggestions: .customSuggestionsResult
+        case .answers: .answersResult
         case .error: .error
         }
     }
@@ -299,6 +306,7 @@ extension ExtensionResponse: Codable {
         case .linkSuggestions(let body): body
         case .contactSuggestions(let body): body
         case .customSuggestions(let body): body
+        case .answers(let body): body
         case .error(let reason): ErrorBody(reason: reason)
         }
     }

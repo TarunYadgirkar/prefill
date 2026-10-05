@@ -25,7 +25,7 @@ public struct CNContactStoreGateway: ContactsGateway {
     public func save(
         _ target: CardRecord, basis: CardRecord, scope: CardSaveScope, transactionAuthor: String
     ) throws(CardWriteFailure) -> CardSaveResult {
-        if scope == .keepEveryValue, !target.keepsEveryValue(of: basis) {
+        guard scope.allows(target, over: basis) else {
             Self.log.error("save refused, it would drop or flood values")
             throw .other
         }
@@ -35,7 +35,7 @@ public struct CNContactStoreGateway: ContactsGateway {
         let writes = loaded.split.writes(for: target)
         guard !writes.isEmpty else { return .unchanged }
         try execute(writes, on: loaded, store: store, author: transactionAuthor)
-        if scope == .keepEveryValue {
+        if scope != .personEdit {
             restoreLostValues(of: basis, identifier: target.identifier, author: transactionAuthor)
         }
         return .saved

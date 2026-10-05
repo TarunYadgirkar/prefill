@@ -32,6 +32,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
 | `customSuggestions` fields | 40, each `text` 200 characters |
 | `customSuggestionsResult` | one entry per field asked about, each with at most 3 values of 200 characters |
+| `answers` | 8 answers, each `value` 200 characters |
 
 ## Shared values
 
@@ -181,6 +182,28 @@ The app splits each text into lowercase words (at camelCase, digits and punctuat
 The focused field gets a `list` and a `<datalist>` of its values, which Safari's QuickType bar shows (Safari has no contact suggestion of its own for such a field) and Chrome and Arc show in their dropdown. As with links, any script on the page can read the datalist while it is there.
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
+
+
+## answers
+
+Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
+
+With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit and at most 8 a day across every site. The card save may only add custom fields after the ones there (`CardSaveScope.addAnswers`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. An answer the person already has is never replaced. The reply says how many were saved, and the page then shows a pill, "Saved 2 answers" with Undo, for 8 seconds.
+
+Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved, and replies with how many came off.
+
+```json
+{
+  "type": "answers",
+  "host": "boards.example.io",
+  "action": "learn",
+  "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
+}
+```
+
+```json
+{ "type": "answersResult", "saved": 2 }
+```
 
 ## capture
 

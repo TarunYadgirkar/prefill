@@ -154,6 +154,17 @@ extension AppModel {
         await edit(.setCustomFields(customFields.filter { $0.id != field.id }))
     }
 
+    func addStudentAnswers(_ answers: [JobQuestion: String]) async {
+        let added = StudentStarter.fields(for: answers, adding: customFields)
+        guard !added.isEmpty else { return }
+        await edit(.setCustomFields(Array((customFields + added).prefix(CustomField.maxCount))))
+    }
+
+    func undo(_ answer: LearnedAnswer) async {
+        guard let field = customFields.first(where: { answer.matches($0) }) else { return }
+        await removeCustomField(field)
+    }
+
     func moveCustomFields(from source: IndexSet, to destination: Int) async {
         var fields = customFields
         fields.move(fromOffsets: source, toOffset: destination)
