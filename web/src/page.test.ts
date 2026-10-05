@@ -64,10 +64,22 @@ it.each([
   ["plain http", { protocol: "http:", isSecureContext: false }],
   ["http on another host that claims to be secure", { protocol: "http:", hostname: "shop.example.net" }],
   ["a frame", { isTopFrame: false }],
+  ["a frame from another site", { isTopFrame: false, hostname: "ads.example.com" }],
+  ["a job form frame inside a plain http page", { isTopFrame: false, hostname: "jobs.lever.co", isSecureContext: false }],
+  ["a job form frame over plain http", { isTopFrame: false, protocol: "http:", hostname: "jobs.lever.co" }],
+  ["a frame on a look-alike host", { isTopFrame: false, hostname: "jobs.lever.co.example.com" }],
 ])("does nothing on %s", async (_, overrides: Partial<PageEnvironment>) => {
   const send = await load('<form><input type="email" autocomplete="email"></form>', overrides);
   expect(send).not.toHaveBeenCalled();
 });
+
+it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com"])(
+  "runs in a job application frame from %s, under its own host",
+  async (hostname) => {
+    const send = await load('<input type="email" autocomplete="email">', { isTopFrame: false, hostname });
+    expect(send).toHaveBeenCalledWith({ type: "pageContext", host: hostname, fields: [{ kind: "email" }] });
+  },
+);
 
 it("runs on http only on this device itself", async () => {
   const send = await load('<input type="email" autocomplete="email">', { protocol: "http:", hostname: "localhost" });

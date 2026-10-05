@@ -1,4 +1,4 @@
-import { startPage, type PageEnvironment } from "./page";
+import { isPrefillFrame, startPage, type PageEnvironment } from "./page";
 import { answerPageNeeds } from "./pageNeeds";
 
 // Chrome leaves a reloaded or updated extension's old scripts running in open tabs, cut off
@@ -12,6 +12,14 @@ function isConnected(): boolean {
 }
 
 export function startContent(kind: NonNullable<PageEnvironment["browser"]>): void {
+  const frame = {
+    protocol: location.protocol,
+    hostname: location.hostname,
+    isSecureContext: window.isSecureContext,
+    isTopFrame: window === window.top,
+  };
+  // The script loads into every frame, so a frame Prefill doesn't run in gets nothing added.
+  if (!isPrefillFrame(frame)) return;
   // Registered before the page's own listeners, so a cut-off copy steps aside before it
   // shows anything from what it fetched earlier.
   const retire = (): void => {
@@ -23,15 +31,13 @@ export function startContent(kind: NonNullable<PageEnvironment["browser"]>): voi
   const stop = startPage({
     doc: document,
     win: window,
-    protocol: location.protocol,
-    hostname: location.hostname,
-    isSecureContext: window.isSecureContext,
-    isTopFrame: window === window.top,
+    ...frame,
     send: (request) => browser.runtime.sendMessage(request),
     browser: kind,
   });
 
-  if (window === window.top && window.isSecureContext) {
+  // Safari's sheet asks the top frame only.
+  if (frame.isTopFrame) {
     browser.runtime.onMessage.addListener((message, sender) =>
       answerPageNeeds(message, sender, browser.runtime.id, {
         doc: document,

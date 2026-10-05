@@ -36,6 +36,9 @@ describe("relayToNative", () => {
     ["a tab that doesn't say whether it is private", { ...fromPage, tab: {} }],
     ["a sender outside any tab", { ...fromPage, tab: undefined }],
     ["a frame inside the page", { ...fromPage, frameId: 3 }],
+    ["a job form frame over plain http", { ...fromPage, frameId: 3, url: "http://jobs.lever.co/acme/apply" }],
+    ["a job form frame in a Private Browsing tab", { ...fromPage, frameId: 3, url: "https://jobs.lever.co/a", tab: { incognito: true } }],
+    ["a job form host that doesn't say which frame", { ...fromPage, frameId: undefined, url: "https://jobs.lever.co/acme" }],
     ["a plain http page", { ...fromPage, url: "http://shop.example.net/" }],
     ["a sender with no web address", { ...fromPage, url: undefined }],
     ["a file", { ...fromPage, url: "file:///Users/alex/form.html" }],
@@ -44,6 +47,14 @@ describe("relayToNative", () => {
     const request = { type: "pageContext", host: "shop.example.net", fields: [{ kind: "email" }] };
     expect(relayToNative(request, sender, ID, sendNative)).toBeUndefined();
     expect(sendNative).not.toHaveBeenCalled();
+  });
+
+  it("accepts a job application frame under the frame's own host", async () => {
+    const request = { type: "pageContext", host: "shop.example.net", fields: [{ kind: "email" }] };
+    const sendNative = vi.fn().mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+    const sender = { ...fromPage, frameId: 3, url: "https://boards.greenhouse.io/embed/job_app?for=acme" };
+    await relayToNative(request, sender, ID, sendNative);
+    expect(sendNative).toHaveBeenCalledWith(expect.objectContaining({ host: "boards.greenhouse.io" }));
   });
 
   it("accepts plain http from this device itself", async () => {
