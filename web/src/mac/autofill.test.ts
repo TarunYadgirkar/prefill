@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FieldDescription } from "../classify";
-import { plan, rows } from "./autofill";
+import { fillPlan, plan, rows } from "./autofill";
 
 function field(overrides: Partial<FieldDescription>): FieldDescription {
   return { tag: "input", type: "text", autocomplete: null, label: "", names: [], placeholder: "", signIn: false, ...overrides };
@@ -29,6 +29,13 @@ describe("Mac autofill plan", () => {
       kind: "custom",
       request: { type: "customSuggestions", host: "", fields: [{ text: "School eduSchool edu school" }] },
     });
+  });
+
+  it("fills a form's fields like a focused one, but leaves demographic and follow-up text boxes", () => {
+    expect(fillPlan(field({ label: "Email" }))).toMatchObject({ kind: "contact" });
+    expect(fillPlan(field({ label: "School" }))).toMatchObject({ kind: "custom" });
+    expect(fillPlan(field({ label: "Gender" }))).toEqual({ kind: "none" });
+    expect(fillPlan(field({ label: "If other, please specify" }))).toEqual({ kind: "none" });
   });
 
   it("turns the router's reply into rows with a caption", () => {

@@ -18,6 +18,10 @@ actor AutofillWorker {
         script.rows(for: field, host: host, router: router)
     }
 
+    func fillValues(for fields: [FieldDescription], host: String) -> [Int: AutofillRow] {
+        script.fillValues(for: fields, host: host, router: router)
+    }
+
     static var bundledSource: String? {
         Bundle.main.url(forResource: "autofill", withExtension: "js")
             .flatMap { try? String(contentsOf: $0, encoding: .utf8) }

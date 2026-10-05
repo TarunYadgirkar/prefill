@@ -9,7 +9,11 @@ import SwiftUI
 final class PanelModel {
     var rows: [AutofillRow] = []
     var selected: Int?
+    // After "Fill form": what it did, shown in place of the rows with Undo.
+    var notice: String?
     @ObservationIgnored var pick: (AutofillRow) -> Void = { _ in }
+    @ObservationIgnored var fillForm: () -> Void = {}
+    @ObservationIgnored var undoFill: () -> Void = {}
 
     func move(by step: Int) {
         guard !rows.isEmpty else { return }
@@ -70,6 +74,15 @@ final class SuggestionPanel {
     func show(rows: [AutofillRow], under field: CGRect) {
         if rows != model.rows { model.selected = nil }
         model.rows = rows
+        model.notice = nil
+        place(under: field)
+        panel.orderFrontRegardless()
+    }
+
+    func show(notice: String, under field: CGRect) {
+        model.rows = []
+        model.selected = nil
+        model.notice = notice
         place(under: field)
         panel.orderFrontRegardless()
     }
@@ -80,7 +93,7 @@ final class SuggestionPanel {
         let screen = NSScreen.screens.first { $0.frame.contains(CGPoint(x: appKitField.midX, y: appKitField.midY)) }
             ?? primary
         let width = min(max(appKitField.width, Self.minWidth), Self.maxWidth)
-        host.rootView = PanelContent(model: model, rows: model.rows, width: width)
+        host.rootView = PanelContent(model: model, rows: model.rows, notice: model.notice, width: width)
         let size = CGSize(width: width, height: host.fittingSize.height)
         let frame = PanelGeometry.panelFrame(size: size, under: appKitField, visible: screen.visibleFrame)
         panel.setFrame(frame, display: true)
@@ -89,6 +102,7 @@ final class SuggestionPanel {
     func hide() {
         panel.orderOut(nil)
         model.selected = nil
+        model.notice = nil
     }
 }
 
@@ -109,22 +123,42 @@ struct PanelContent: View {
     let model: PanelModel
     // Passed in rather than read from the model, so the panel's size follows them at once.
     let rows: [AutofillRow]
+    var notice: String?
     var width: CGFloat = 280
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
-                SuggestionRow(row: row, isSelected: model.selected == index)
-                    .contentShape(.rect)
-                    .onHover { if $0 { model.selected = index } }
-                    .onTapGesture { model.pick(row) }
+            if let notice {
+                HStack {
+                    Label(notice, systemImage: "checkmark.circle")
+                    Spacer(minLength: Spacing.xSmall)
+                    Button("Undo") { model.undoFill() }
+                        .buttonStyle(.link)
+                }
+                .padding(.horizontal, Spacing.xSmall)
+                .padding(.vertical, 4)
+            } else {
+                ForEach(Array(rows.enumerated()), id: \.offset) { index, row in
+                    SuggestionRow(row: row, isSelected: model.selected == index)
+                        .contentShape(.rect)
+                        .onHover { if $0 { model.selected = index } }
+                        .onTapGesture { model.pick(row) }
+                }
             }
             Divider().padding(.vertical, Self.inset)
-            Label("Prefill", systemImage: "person.text.rectangle")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, Spacing.xSmall)
-                .padding(.bottom, Spacing.hairline)
+            HStack {
+                Label("Prefill", systemImage: "person.text.rectangle")
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: Spacing.xSmall)
+                if notice == nil {
+                    Button("Fill form") { model.fillForm() }
+                        .buttonStyle(.link)
+                        .help("Fills every empty field on this form that Prefill has a value for")
+                }
+            }
+            .font(.caption)
+            .padding(.horizontal, Spacing.xSmall)
+            .padding(.bottom, Spacing.hairline)
         }
         .padding(Self.inset)
         .frame(width: width, alignment: .leading)
