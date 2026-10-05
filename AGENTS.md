@@ -112,5 +112,5 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
   - A learned answer is never replaced by a later one; the person edits it in the Custom tab.
-- **Mac "Fill form"** (branch `feat/mac-fill-form`): text fields only, unit-tested and built. `scripts/e2e-mac-ax.sh` covers it but needs an unlocked screen, and hasn't passed since the change.
+- **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
