@@ -52,7 +52,8 @@ enum FieldFiller {
     }
 
     // Swaps the value onto the clipboard, presses Command-V in the field's app, then puts
-    // back what the person had copied unless something else was copied meanwhile.
+    // back what the person had copied once the paste has landed, unless something else was
+    // copied meanwhile.
     private static func paste(_ value: String, into element: AXUIElement) async -> Bool {
         let board = NSPasteboard.general
         let saved = snapshot(board)
@@ -65,14 +66,15 @@ enum FieldFiller {
         let ours = board.changeCount
         selectAll(element)
         pressPaste(pid: element.pid)
-        // The person's own clipboard goes back only once the paste has landed (or plainly
-        // won't), so a slow app never pastes what they had copied instead.
+        // The person's own clipboard goes back only once the paste has landed. When it
+        // hasn't, the value stays: a slow app that pastes later must never paste what they
+        // had copied instead, which may be a secret.
         var landed = false
         for _ in 0..<pasteChecks where !landed {
             try? await Task.sleep(for: settleStep)
             landed = element.string(kAXValueAttribute) == value
         }
-        if board.changeCount == ours {
+        if landed, board.changeCount == ours {
             board.clearContents()
             if !saved.isEmpty { board.writeObjects(saved) }
         }

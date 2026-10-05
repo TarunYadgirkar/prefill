@@ -103,6 +103,9 @@ final class FocusWatcher {
         e2eLog("watching \(bundleID)")
         #endif
         appElement = element
+        // A field already focused when the app comes forward sends no focus change, so the
+        // first click in it after switching would get nothing.
+        if let focused = element.element(kAXFocusedUIElementAttribute) { follow(focused) }
     }
 
     // Chrome also starts building the tree when something reads into its window, which
