@@ -6,11 +6,16 @@ export interface SheetView {
   state: PopupStateResult | undefined;
   busy: boolean;
   note: string | undefined;
+  // The page's one-tap fill: how many fields it can fill, and how many the last tap filled.
+  fillable: number;
+  filled: number | undefined;
 }
 
 export interface SheetActions {
   send: (request: SheetRequest) => void;
   showKind: (kind: ContactKind) => void;
+  fill: () => void;
+  undoFill: () => void;
 }
 
 const KIND_NAMES: Record<ContactKind, { tab: string; plural: string }> = {
@@ -130,6 +135,20 @@ function kindTabs(view: SheetView, kinds: ContactKind[], actions: SheetActions):
   return control;
 }
 
+// Like Safari's AutoFill Contact: one tap fills every empty field the page asks for.
+function fillCard(view: SheetView, actions: SheetActions): HTMLElement | undefined {
+  if (view.filled !== undefined) {
+    const done = view.filled === 0 ? "Nothing left to fill on this page." : `Filled ${String(view.filled)} ${view.filled === 1 ? "field" : "fields"}.`;
+    const undo = view.filled === 0 ? undefined : button("Undo", "link", actions.undoFill, view.busy);
+    return el("section", "fill", el("p", "fill-done", done, undo === undefined ? undefined : " ", undo));
+  }
+  if (view.fillable === 0) return undefined;
+  const label = `Fill ${String(view.fillable)} ${view.fillable === 1 ? "field" : "fields"}`;
+  const fill = button(label, "fill-button", actions.fill, view.busy);
+  const note = "Name, contact info, links and your saved answers. Demographic questions get “Decline”.";
+  return el("section", "fill", fill, el("p", "footnote", note));
+}
+
 function problem(title: string, detail: string): HTMLElement {
   return el("section", "problem", el("h2", undefined, title), el("p", undefined, detail));
 }
@@ -157,7 +176,9 @@ export function render(root: HTMLElement, view: SheetView, actions: SheetActions
   const note = el("p", "note", view.note);
   note.setAttribute("role", "status");
   root.setAttribute("aria-busy", String(view.busy || view.state === undefined));
-  root.replaceChildren(header, ...body(view, actions).filter((child) => child !== undefined), note);
+  // Filling goes through the page, so the button doesn't wait on the card's state.
+  const children = [fillCard(view, actions), ...body(view, actions)].filter((child) => child !== undefined);
+  root.replaceChildren(header, ...children, note);
 }
 
 export function renderProblem(root: HTMLElement, title: string, detail: string): void {

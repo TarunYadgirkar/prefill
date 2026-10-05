@@ -10,6 +10,7 @@ const AIRTABLE = "https://airtable.com/appb7Nlzw1t0e8zq1/pagR9cksnxP2SINET/form"
 const HOST = "com.tarunyadgirkar.prefill";
 const EXPECTED = ["alex.rivera@example.com", "alex@work.example.org"];
 const NEW_EMAIL = "alex.new@example.net";
+const SCHOOL = "University of California, Berkeley";
 
 function check(condition: boolean, message: string): void {
   if (!condition) throw new Error(message);
@@ -79,6 +80,7 @@ async function main(): Promise<void> {
 
     await page.fill("#email", "");
     await page.locator("#email").pressSequentially(NEW_EMAIL);
+    await page.locator("#school").pressSequentially(SCHOOL);
     await page.click("button[type=submit]");
     await page.waitForTimeout(1_500);
     if (airtableShot !== undefined) await checkAirtable(context, airtableShot);

@@ -1,30 +1,68 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Choice, TextField } from "./dropdown";
 import type { ContactSuggestionsRequest } from "./messages";
-import { installSuggestions, suggestionOptions, type Suggestions } from "./suggestions";
+import {
+  installSuggestions,
+  suggestionOptions,
+  type Suggestions,
+} from "./suggestions";
 
 const values: Suggestions = {
-  emails: ["alex@work.example.org", "alex.rivera@example.com", "alex@work.example.org"],
+  emails: [
+    "alex@work.example.org",
+    "alex.rivera@example.com",
+    "alex@work.example.org",
+  ],
   phones: ["+1 510 555 0100"],
   addresses: [
-    { street: "2400 Durant Ave\nApt 5", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" },
-    { street: "1 Main St", city: "Berkeley", state: "CA", postalCode: "94710", country: "United States" },
+    {
+      street: "2400 Durant Ave\nApt 5",
+      city: "Berkeley",
+      state: "CA",
+      postalCode: "94704",
+      country: "United States",
+    },
+    {
+      street: "1 Main St",
+      city: "Berkeley",
+      state: "CA",
+      postalCode: "94710",
+      country: "United States",
+    },
   ],
   name: { given: "Alex", family: "Rivera" },
 };
 
 describe("suggestionOptions", () => {
   it("offers each value once, in the app's order", () => {
-    expect(suggestionOptions({ kind: "email", group: "" }, values)).toEqual(["alex@work.example.org", "alex.rivera@example.com"]);
+    expect(suggestionOptions({ kind: "email", group: "" }, values)).toEqual([
+      "alex@work.example.org",
+      "alex.rivera@example.com",
+    ]);
   });
 
   it("offers the part of each address and name a field asks for", () => {
-    expect(suggestionOptions({ kind: "address", part: "street", group: "" }, values)).toEqual(["2400 Durant Ave", "1 Main St"]);
-    expect(suggestionOptions({ kind: "address", part: "street2", group: "" }, values)).toEqual(["Apt 5"]);
-    expect(suggestionOptions({ kind: "address", part: "city", group: "" }, values)).toEqual(["Berkeley"]);
-    expect(suggestionOptions({ kind: "name", part: "full", group: "" }, values)).toEqual(["Alex Rivera"]);
-    expect(suggestionOptions({ kind: "name", part: "middle", group: "" }, values)).toEqual([]);
-    expect(suggestionOptions({ kind: "phone", part: "partial", group: "" }, values)).toEqual([]);
+    expect(
+      suggestionOptions({ kind: "address", part: "street", group: "" }, values),
+    ).toEqual(["2400 Durant Ave", "1 Main St"]);
+    expect(
+      suggestionOptions(
+        { kind: "address", part: "street2", group: "" },
+        values,
+      ),
+    ).toEqual(["Apt 5"]);
+    expect(
+      suggestionOptions({ kind: "address", part: "city", group: "" }, values),
+    ).toEqual(["Berkeley"]);
+    expect(
+      suggestionOptions({ kind: "name", part: "full", group: "" }, values),
+    ).toEqual(["Alex Rivera"]);
+    expect(
+      suggestionOptions({ kind: "name", part: "middle", group: "" }, values),
+    ).toEqual([]);
+    expect(
+      suggestionOptions({ kind: "phone", part: "partial", group: "" }, values),
+    ).toEqual([]);
   });
 });
 
@@ -41,10 +79,19 @@ describe("installSuggestions", () => {
     return () => showing.delete(element);
   };
 
-  const start = (send: (request: ContactSuggestionsRequest) => Promise<unknown>) => {
+  const start = (
+    send: (request: ContactSuggestionsRequest) => Promise<unknown>,
+  ) => {
     showing = new Map();
-    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
-    return installSuggestions(document, { host: () => "shop.example.net", send, isUserEvent: () => true, attach });
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(
+      new DOMRect(10, 10, 200, 30),
+    );
+    return installSuggestions(document, {
+      host: () => "shop.example.net",
+      send,
+      isUserEvent: () => true,
+      attach,
+    });
   };
 
   const firstInput = (): HTMLInputElement => {
@@ -53,7 +100,8 @@ describe("installSuggestions", () => {
     return input;
   };
 
-  const optionsOf = (element: TextField): string[] => (showing.get(element) ?? []).map((choice) => choice.value);
+  const optionsOf = (element: TextField): string[] =>
+    (showing.get(element) ?? []).map((choice) => choice.value);
 
   const reply = () =>
     vi
@@ -71,11 +119,16 @@ describe("installSuggestions", () => {
   });
 
   it("asks once per kind and gives a focused field the card's values", async () => {
-    document.body.innerHTML = '<input type="email" autocomplete="email"><input type="email" name="email2">';
+    document.body.innerHTML =
+      '<input type="email" autocomplete="email"><input type="email" name="email2">';
     const send = reply();
     const stop = start(send);
     await Promise.resolve();
-    expect(send).toHaveBeenCalledWith({ type: "contactSuggestions", host: "shop.example.net", fields: [{ kind: "email" }] });
+    expect(send).toHaveBeenCalledWith({
+      type: "contactSuggestions",
+      host: "shop.example.net",
+      fields: [{ kind: "email" }],
+    });
 
     const field = firstInput();
     field.dispatchEvent(new Event("pointerdown", { bubbles: true }));
@@ -93,7 +146,8 @@ describe("installSuggestions", () => {
   });
 
   it("offers a name in a text area, as Airtable asks for one", async () => {
-    document.body.innerHTML = '<label for="n">Full Name</label><textarea id="n"></textarea>';
+    document.body.innerHTML =
+      '<label for="n">Full Name</label><textarea id="n"></textarea>';
     const send = reply();
     const stop = start(send);
     await Promise.resolve();

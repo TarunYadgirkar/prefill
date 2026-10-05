@@ -10,6 +10,8 @@ interface Gesture {
   target: EventTarget | null;
   key: string | undefined;
   at: number;
+  // The first field focused after a Tab: the only one that Tab lets through.
+  focused?: EventTarget | null;
 }
 
 export interface GestureGate {
@@ -25,9 +27,15 @@ function isPointedAt(gesture: Gesture, element: FieldElement): boolean {
   return label?.control === element;
 }
 
-function follows(gesture: Gesture | undefined, element: FieldElement, now: number): boolean {
+function follows(
+  gesture: Gesture | undefined,
+  element: FieldElement,
+  now: number,
+): boolean {
   if (gesture === undefined || now - gesture.at > GESTURE_MS) return false;
-  return gesture.key === "Tab" || (gesture.key === undefined && isPointedAt(gesture, element));
+  if (gesture.key === "Tab")
+    return gesture.focused === undefined || gesture.focused === element;
+  return gesture.key === undefined && isPointedAt(gesture, element);
 }
 
 export function trackGestures(
@@ -41,19 +49,26 @@ export function trackGestures(
     const key = event instanceof KeyboardEvent ? event.key : undefined;
     last = { target: eventOrigin(event), key, at: now() };
   };
+  // A Tab press isn't tied to a field, so it lets through only the first field focused
+  // after it: a page that moves focus from script can't collect a list on every field it
+  // focuses, whichever of Prefill's lists asks first.
+  const bind = (event: Event): void => {
+    if (last?.key === "Tab" && last.focused === undefined)
+      last.focused = eventOrigin(event);
+  };
   doc.addEventListener("pointerdown", record, true);
   doc.addEventListener("keydown", record, true);
+  doc.addEventListener("focusin", bind, true);
   return {
-    // A Tab press isn't tied to a field, so it lets one field through: a page that moves
-    // focus from script after it can't collect a list on every field it focuses.
     allows: (element) => {
       if (!follows(last, element, now()) || !isInView(element)) return false;
-      if (last?.key === "Tab") last = undefined;
+      if (last?.key === "Tab") last.focused = element;
       return true;
     },
     stop: () => {
       doc.removeEventListener("pointerdown", record, true);
       doc.removeEventListener("keydown", record, true);
+      doc.removeEventListener("focusin", bind, true);
     },
   };
 }

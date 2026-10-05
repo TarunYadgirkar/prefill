@@ -24,6 +24,7 @@ public enum MessageLimits {
     static let fieldText = 200
     static let customValue = CustomField.maxValue
     static let customOptions = 3
+    static let answers = JobQuestion.allCases.count
 }
 
 extension ExtensionRequest {
@@ -46,23 +47,27 @@ extension ExtensionRequest {
         case .customSuggestions(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
                 && body.fields.allSatisfy { $0.text.utf16.count <= MessageLimits.fieldText }
+        case .answers(let body):
+            body.host.count <= MessageLimits.host && body.answers.count <= MessageLimits.answers
+                && body.answers.allSatisfy { $0.value.utf16.count <= MessageLimits.customValue }
         }
     }
 }
 
+// Lengths count UTF-16 units, as the content script's limits do.
 private extension CapturedField {
     var isWithinLimits: Bool {
         let texts = [autocomplete, name, label].compactMap(\.self)
-        return (value?.count ?? 0) <= MessageLimits.value
-            && texts.allSatisfy { $0.count <= MessageLimits.text }
+        return (value?.utf16.count ?? 0) <= MessageLimits.value
+            && texts.allSatisfy { $0.utf16.count <= MessageLimits.text }
             && address.map(\.isWithinLimits) ?? true
     }
 }
 
 private extension PostalAddress {
     var isWithinLimits: Bool {
-        street.count <= MessageLimits.street
-            && [city, state, postalCode, country].allSatisfy { $0.count <= MessageLimits.part }
+        street.utf16.count <= MessageLimits.street
+            && [city, state, postalCode, country].allSatisfy { $0.utf16.count <= MessageLimits.part }
     }
 }
 
@@ -80,6 +85,8 @@ extension ExtensionRequest {
             MessageText.isHost(host)
         case .customSuggestions(let body):
             MessageText.isHost(body.host) && body.fields.allSatisfy { MessageText.isPlain($0.text) }
+        case .answers(let body):
+            MessageText.isHost(body.host) && body.answers.allSatisfy { MessageText.isPlain($0.value) }
         }
     }
 
@@ -97,6 +104,7 @@ extension ExtensionRequest {
         case .linkSuggestions(let body): body.host
         case .contactSuggestions(let body): body.host
         case .customSuggestions(let body): body.host
+        case .answers(let body): body.host
         }
     }
 }

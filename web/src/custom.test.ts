@@ -19,20 +19,35 @@ describe("installCustom", () => {
 
   it("asks about unclaimed text fields only and lists the match on a tapped field", async () => {
     document.body.innerHTML = GREENHOUSE;
-    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(
+      new DOMRect(10, 10, 200, 30),
+    );
     const send = vi
       .fn<(request: CustomSuggestionsRequest) => Promise<unknown>>()
-      .mockResolvedValue({ type: "customSuggestionsResult", fields: [{ values: ["UC Berkeley"] }, { values: ["LinkedIn"] }] });
-    const stop = installCustom(document, { host: () => "boards.example.io", send, isUserEvent: () => true });
+      .mockResolvedValue({
+        type: "customSuggestionsResult",
+        fields: [{ values: ["UC Berkeley"] }, { values: ["LinkedIn"] }],
+      });
+    const stop = installCustom(document, {
+      host: () => "boards.example.io",
+      send,
+      isUserEvent: () => true,
+    });
     await Promise.resolve();
-    expect(send.mock.calls[0]?.[0].fields.map((field) => field.text.split(" ")[0])).toEqual(["School", "How"]);
+    expect(
+      send.mock.calls[0]?.[0].fields.map((field) => field.text.split(" ")[0]),
+    ).toEqual(["School", "How"]);
 
     await Promise.resolve();
     const school = document.getElementById("school") as HTMLInputElement;
     school.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     school.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
     const list = document.getElementById(school.getAttribute("list") ?? "");
-    expect([...(list?.querySelectorAll("option") ?? [])].map((option) => option.value)).toEqual(["UC Berkeley"]);
+    expect(
+      [...(list?.querySelectorAll("option") ?? [])].map(
+        (option) => option.value,
+      ),
+    ).toEqual(["UC Berkeley"]);
 
     school.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
     expect(school.hasAttribute("list")).toBe(false);
@@ -42,15 +57,22 @@ describe("installCustom", () => {
   it("stays off sign-in forms", async () => {
     document.body.innerHTML = `<form><label>School</label><input type="text" name="school">
       <input type="password" autocomplete="current-password"></form>`;
-    const send = vi.fn<(request: CustomSuggestionsRequest) => Promise<unknown>>().mockResolvedValue({});
-    const stop = installCustom(document, { host: () => "example.net", send, isUserEvent: () => true });
+    const send = vi
+      .fn<(request: CustomSuggestionsRequest) => Promise<unknown>>()
+      .mockResolvedValue({});
+    const stop = installCustom(document, {
+      host: () => "example.net",
+      send,
+      isUserEvent: () => true,
+    });
     await Promise.resolve();
     expect(send).not.toHaveBeenCalled();
     stop();
   });
 
   it("takes text areas only where Prefill draws its own list", () => {
-    document.body.innerHTML = '<label for="u">University</label><textarea id="u"></textarea>';
+    document.body.innerHTML =
+      '<label for="u">University</label><textarea id="u"></textarea>';
     const university = document.getElementById("u") as HTMLTextAreaElement;
     expect(isCustomCandidate(university)).toBe(false);
     expect(isCustomCandidate(university, true)).toBe(true);

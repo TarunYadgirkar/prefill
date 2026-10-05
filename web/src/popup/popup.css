@@ -361,3 +361,47 @@ label.row .text {
     transition-duration: 0ms !important;
   }
 }
+
+/* One-tap fill: a filled button like the system's prominent style, above the bar. */
+.fill {
+  margin: 4px 0 20px;
+}
+
+.fill-button {
+  display: block;
+  width: 100%;
+  min-height: 50px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent-text);
+  color: #ffffff;
+  font: -apple-system-headline;
+  transition: transform 120ms var(--ease), opacity 120ms var(--ease);
+}
+
+.fill-button:active {
+  transform: scale(0.98);
+}
+
+.fill-button:disabled {
+  opacity: 0.5;
+}
+
+.fill .footnote {
+  margin-top: 6px;
+}
+
+.fill-done {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 50px;
+  padding: 0 var(--gutter);
+  border-radius: var(--radius-group);
+  background: var(--surface);
+  font: -apple-system-body;
+}
+
+.fill-done .link {
+  min-height: 0;
+}

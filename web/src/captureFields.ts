@@ -3,7 +3,12 @@ import type { AddressPart, ContactField, FieldElement } from "./fieldTypes";
 import {
   HIDDEN_CHARACTERS,
   HIDDEN_EXCEPT_NEWLINE,
-  LIMITS, type CaptureRequest, type CaptureTrigger, type CapturedField, type PostalAddress } from "./messages";
+  LIMITS,
+  type CaptureRequest,
+  type CaptureTrigger,
+  type CapturedField,
+  type PostalAddress,
+} from "./messages";
 
 export interface FieldDescription {
   autocomplete: string;
@@ -28,7 +33,8 @@ const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
 
 // Soft hyphens and direction marks are common in labels and would fail the whole
 // message, so the words used only for classifying lose them.
-const visible = (text: string): string => text.replace(/\s+/gu, " ").replace(ALL_HIDDEN, "").trim();
+const visible = (text: string): string =>
+  text.replace(/\s+/gu, " ").replace(ALL_HIDDEN, "").trim();
 
 // Read from the DOM when the person types, so a report never touches an element the
 // page may have removed since.
@@ -43,8 +49,11 @@ export function describeElement(element: FieldElement): FieldDescription {
 // A value with hidden characters can't be sent as typed, so its field is left out. A
 // street typed in a text area may span lines.
 function hasHidden(entry: EditedField): boolean {
-  const isStreet = entry.field.part === "street" || entry.field.part === "street2";
-  return (isStreet ? HIDDEN_EXCEPT_NEWLINE : HIDDEN_CHARACTERS).test(entry.value);
+  const isStreet =
+    entry.field.part === "street" || entry.field.part === "street2";
+  return (isStreet ? HIDDEN_EXCEPT_NEWLINE : HIDDEN_CHARACTERS).test(
+    entry.value,
+  );
 }
 
 function nonEmpty(entries: Record<string, string>): Record<string, string> {
@@ -55,7 +64,9 @@ function nonEmpty(entries: Record<string, string>): Record<string, string> {
   );
 }
 
-function describe(members: readonly EditedField[]): Pick<CapturedField, "autocomplete" | "name" | "label"> {
+function describe(
+  members: readonly EditedField[],
+): Pick<CapturedField, "autocomplete" | "name" | "label"> {
   const descriptions = members.map((member) => member.description);
   return nonEmpty({
     autocomplete: descriptions[0]?.autocomplete ?? "",
@@ -70,8 +81,12 @@ function describe(members: readonly EditedField[]): Pick<CapturedField, "autocom
   });
 }
 
-function withSection(field: CapturedField, members: readonly EditedField[]): CapturedField {
-  const section = members.find((member) => member.field.section !== undefined)?.field.section;
+function withSection(
+  field: CapturedField,
+  members: readonly EditedField[],
+): CapturedField {
+  const section = members.find((member) => member.field.section !== undefined)
+    ?.field.section;
   return section === undefined ? field : { ...field, section };
 }
 
@@ -87,28 +102,53 @@ function single(entry: EditedField): CapturedField[] {
 }
 
 // A repeated part or a different autocomplete section starts the next address, so a
-// shipping and a billing block become two addresses.
+// shipping and a billing block become two addresses. A field with no section tags joins the
+// address it sits in: pages often tag street and ZIP but leave the apartment untagged.
 function startsNew(draft: AddressDraft, entry: EditedField): boolean {
   const part = entry.field.part as AddressPart;
-  return draft.group !== entry.field.group || (part !== "street2" && draft.parts[part] !== undefined);
+  const group = entry.field.group;
+  const isOtherGroup =
+    group !== "" && draft.group !== "" && draft.group !== group;
+  return (
+    isOtherGroup || (part !== "street2" && draft.parts[part] !== undefined)
+  );
 }
 
-function addPart(draft: AddressDraft | undefined, entry: EditedField): AddressDraft {
+function addPart(
+  draft: AddressDraft | undefined,
+  entry: EditedField,
+): AddressDraft {
   const part = entry.field.part as AddressPart;
   const base = draft ?? { group: entry.field.group, parts: {}, members: [] };
   const previous = base.parts[part];
-  const value = previous === undefined ? entry.value : `${previous}\n${entry.value}`;
-  return { ...base, parts: { ...base.parts, [part]: value }, members: [...base.members, entry] };
+  const value =
+    previous === undefined ? entry.value : `${previous}\n${entry.value}`;
+  const group = base.group === "" ? entry.field.group : base.group;
+  return {
+    group,
+    parts: { ...base.parts, [part]: value },
+    members: [...base.members, entry],
+  };
 }
 
 // An address flushed from a page that was only hidden must have its postal code too, so
 // a half-typed one never leaves the page.
-function isSendable(draft: AddressDraft, street: string, trigger: CaptureTrigger): boolean {
-  const isIncomplete = street === "" || (trigger === "flush" && draft.parts.postalCode === undefined);
+function isSendable(
+  draft: AddressDraft,
+  street: string,
+  trigger: CaptureTrigger,
+): boolean {
+  const isIncomplete =
+    street === "" ||
+    draft.parts.street === undefined ||
+    (trigger === "flush" && draft.parts.postalCode === undefined);
   return !isIncomplete && !draft.members.some(hasHidden);
 }
 
-function addressField(draft: AddressDraft, trigger: CaptureTrigger): CapturedField[] {
+function addressField(
+  draft: AddressDraft,
+  trigger: CaptureTrigger,
+): CapturedField[] {
   const { parts } = draft;
   const street = [parts.street, parts.street2].filter(Boolean).join("\n");
   if (!isSendable(draft, street, trigger)) return [];
@@ -119,10 +159,18 @@ function addressField(draft: AddressDraft, trigger: CaptureTrigger): CapturedFie
     postalCode: clip(parts.postalCode ?? "", LIMITS.part),
     country: clip(parts.country ?? "", LIMITS.part),
   };
-  return [withSection({ kind: "address", address, ...describe(draft.members), userTyped: true }, draft.members)];
+  return [
+    withSection(
+      { kind: "address", address, ...describe(draft.members), userTyped: true },
+      draft.members,
+    ),
+  ];
 }
 
-function assemble(entries: readonly EditedField[], trigger: CaptureTrigger): CapturedField[] {
+function assemble(
+  entries: readonly EditedField[],
+  trigger: CaptureTrigger,
+): CapturedField[] {
   const fields: CapturedField[] = [];
   let draft: AddressDraft | undefined;
   for (const entry of entries) {
@@ -136,7 +184,9 @@ function assemble(entries: readonly EditedField[], trigger: CaptureTrigger): Cap
     }
     draft = addPart(draft, entry);
   }
-  return draft === undefined ? fields : [...fields, ...addressField(draft, trigger)];
+  return draft === undefined
+    ? fields
+    : [...fields, ...addressField(draft, trigger)];
 }
 
 export interface CaptureFacts {
@@ -146,9 +196,18 @@ export interface CaptureFacts {
 }
 
 // Names alone are never saved, so a form with nothing else typed sends nothing.
-export function buildCapture(facts: CaptureFacts, entries: readonly EditedField[]): CaptureRequest | undefined {
+export function buildCapture(
+  facts: CaptureFacts,
+  entries: readonly EditedField[],
+): CaptureRequest | undefined {
   const typed = entries.filter((entry) => entry.value !== "");
   const fields = assemble(typed, facts.trigger).slice(0, LIMITS.captureFields);
   if (!fields.some((field) => field.kind !== "name")) return undefined;
-  return { type: "capture", host: facts.host, hasPassword: facts.hasPassword, trigger: facts.trigger, fields };
+  return {
+    type: "capture",
+    host: facts.host,
+    hasPassword: facts.hasPassword,
+    trigger: facts.trigger,
+    fields,
+  };
 }

@@ -16,12 +16,18 @@ from pathlib import Path
 PORT = int(sys.argv[1])
 UDID = sys.argv[2]
 SHOTS = Path(sys.argv[3])
-SITES = Path(__file__).resolve().parent.parent / "testbed" / "sites"
+ROOT = Path(__file__).resolve().parent.parent
+SITES = ROOT / "testbed" / "sites"
+# The React-Select page: its markup from testbed, its bundle from pnpm build:testbed.
+REACT_SELECT = {
+    "react-select/": ROOT / "testbed/react-select/index.html",
+    "react-select/page.js": ROOT / "build/react-select/page.js",
+}
 CONTACTS = (
     Path.home() / "Library/Developer/CoreSimulator/Devices" / UDID / "data/Library/AddressBook/AddressBook.sqlitedb"
 )
 EMAIL, PHONE, ADDRESS, URL = 4, 3, 5, 22
-TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css"}
+TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript"}
 
 
 def card():
@@ -58,8 +64,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def page(self, name):
-        path = SITES / name
-        if path.parent != SITES or path.suffix not in TYPES or not path.is_file():
+        path = REACT_SELECT.get(name, SITES / name)
+        if (name not in REACT_SELECT and path.parent != SITES) or path.suffix not in TYPES or not path.is_file():
             return self.reply(404, "not found")
         return self.reply(200, path.read_bytes(), TYPES[path.suffix])
 

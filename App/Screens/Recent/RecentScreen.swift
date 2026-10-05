@@ -10,7 +10,7 @@ struct RecentScreen: View {
     var body: some View {
         NavigationStack {
             Group {
-                if model.recent.isEmpty {
+                if model.recent.isEmpty && model.learnedAnswers.isEmpty {
                     EmptyStateView(
                         title: "Nothing new yet", systemImage: "tray",
                         message: Text("""
@@ -71,12 +71,49 @@ private struct RecentList: View {
                     Text("Not on your card").textRole(.groupHeader)
                 }
             }
+            if !model.learnedAnswers.isEmpty {
+                Section {
+                    ForEach(model.learnedAnswers) { answer in
+                        AnswerRow(answer: answer)
+                    }
+                } header: {
+                    Text("Answers saved from applications").textRole(.groupHeader)
+                } footer: {
+                    Text("Prefill fills these in on the next application. Edit them in the Custom tab.")
+                        .textRole(.footnote)
+                }
+            }
         }
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.recent)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: model.learnedAnswers)
     }
 
     private func items(_ state: RecentItem.State) -> [RecentItem] {
         model.recent.filter { $0.state == state }
+    }
+}
+
+private struct AnswerRow: View {
+    @Environment(AppModel.self) private var model
+    let answer: LearnedAnswer
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: Spacing.small) {
+            VStack(alignment: .leading, spacing: Spacing.xxSmall) {
+                Text(answer.label).textRole(.footnote).foregroundStyle(Palette.textSecondary)
+                Text(answer.value).textRole(.body)
+                Text("Answered on \(answer.host.breakableAtPunctuation)").textRole(.footnote)
+            }
+            Button("Undo", systemImage: "arrow.uturn.backward", role: .destructive) {
+                Task { await model.undo(answer) }
+            }
+            .controlSize(.small)
+            .labelStyle(.titleAndIcon)
+        }
+        .padding(.vertical, Spacing.xxSmall)
+        .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("answer-\(answer.label)")
     }
 }
 

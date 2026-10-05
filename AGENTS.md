@@ -45,7 +45,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 | Path | What |
 |---|---|
-| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. |
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Card (Emails/Phones/Addresses/Links/Custom), Sites, Recent, Settings (Sharing your card, Restore), Siri intents. |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
@@ -54,14 +54,21 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `MacShared/` | Code identity checks and the socket used by both sides. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
 | `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
-| `scripts/` | build, test, install-device, install-mac, e2e-mac-chrome, e2e-mac-ax. |
+| `scripts/` | build, test, install-device, auto-reinstall (and its launchd installer), install-mac, e2e-mac-chrome, e2e-mac-ax. `web/src/e2e/fillChrome.ts` runs one-tap fill in real Chromium with a stand-in host (`fakeHost.py`), on Linux or the Mac, including a page built with the real React-Select (`testbed/react-select/`). Run `pnpm --dir web build` first; set `PREFILL_CHROMIUM` to use a local Chromium. |
 
 ## Rules that keep it safe
 
+- **Frames:** the content script runs only in the top frame and in `https` frames on the job application hosts in `web/src/atsFrames.ts` (exact hosts, or a listed domain and its subdomains), each in a secure context and under its own host. `page.ts` and `relay.ts` both check it. Add a host only for a real embedded application form.
 - **Field rules:**
   - Never act on password, card, code, bank or government-ID fields.
   - Never act on sign-in forms (a `current-password` field in the form).
 - **Values reach a page only after a real click or Tab on that field,** within 1 second, and only while the field is visible (`gesture.ts`). One Tab unlocks one field.
+- **One-tap fill is the one exception, and it takes the person's own tap on Prefill's button:** the pill beside a field they just clicked or tabbed into (closed shadow root, trusted clicks only), or Fill in Safari's sheet.
+  - It fills only visible, empty, editable fields of the form the person is in, never sensitive ones or sign-in forms, and never overwrites what they typed.
+  - Demographic questions (gender, race, ethnicity, veteran, disability, orientation) always get the declining option, or "No" when there is none, and a text box asking one is left alone.
+  - Searchable dropdowns (React-Select) are opened the way a person would: type the answer, or press the down arrow to decline, then click the option.
+  - Follow-up questions ("If other, please specify") are left alone.
+  - Undo puts every field back, and a tap on a filled field offers the other values.
 - **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
 - **Never drop data:**
   - Card rewrites go through `CardWriter` plus the never-drop guard.
@@ -94,4 +101,16 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - It doesn't save new values; only the extension does.
   - Arc, Safari, Electron apps and Firefox are untested.
   - The first field clicked right after switching to Chrome may get nothing.
-- **Weekly reinstall:** the free-team iPhone build expires every 7 days. An automated launchd reinstall was offered but not set up.
+- **Weekly reinstall:** the free-team iPhone build expires every 7 days.
+  - `scripts/install-auto-reinstall.sh` sets up a daily launchd agent that runs `scripts/auto-reinstall.sh`, which reinstalls when due and retries while the phone is locked.
+  - It's untested on the Mac: codesign's keychain access from launchd and whether Xcode fetches a fresh profile after the old one is moved aside are unconfirmed.
+  - Install it from the main checkout: the job keeps the path it was installed from.
+- **One-tap fill:**
+  - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
+  - Safari's own suggestion bubble can cover the first row of Prefill's list on a filled field.
+  - The pill counts fields it recognizes, so "Fill form 13 fields" can end as "Filled 9" when the card has no link or answer for some.
+- **Learned answers:**
+  - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
+  - A learned answer is never replaced by a later one; the person edits it in the Custom tab.
+- **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
+- **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.

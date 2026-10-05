@@ -15,24 +15,26 @@ extension MessageRouter {
     // person said not to save on nothing is wanted, so in each case the capture is dropped
     // whole (docs/messages.md, capture).
     func capture(_ request: CaptureRequest) -> CaptureResponse {
-        let dropped = CaptureResponse(saved: 0, review: 0, ignored: request.fields.count)
-        guard let state = currentState(), let link = state.cardLink, !state.isMuted(request.host) else {
-            return dropped
+        Self.eventLock.withLock { _ in
+            let dropped = CaptureResponse(saved: 0, review: 0, ignored: request.fields.count)
+            guard let state = currentState(), let link = state.cardLink, !state.isMuted(request.host) else {
+                return dropped
+            }
+            let card: CardRecord
+            do {
+                card = try gateway.fetchCard(identifier: link.contactIdentifier)
+            } catch {
+                Self.log.error("capture skipped, card unreadable: \(String(describing: error), privacy: .public)")
+                return dropped
+            }
+            let date = now()
+            let filter = CaptureFilter(card: card, settings: state.settings, rejected: Set(state.rejectedValueIDs))
+            let evaluated = limitingSaves(filter.evaluate(request, at: date), request: request, at: date)
+            let context = CaptureContext(request: request, state: state, link: link, card: card, date: date)
+            let decisions = limitingReviews(saveToCard(evaluated, context: context), host: request.host, at: date)
+            record(decisions, context: context)
+            return CaptureResponse(decisions: decisions)
         }
-        let card: CardRecord
-        do {
-            card = try gateway.fetchCard(identifier: link.contactIdentifier)
-        } catch {
-            Self.log.error("capture skipped, card unreadable: \(String(describing: error), privacy: .public)")
-            return dropped
-        }
-        let date = now()
-        let filter = CaptureFilter(card: card, settings: state.settings, rejected: Set(state.rejectedValueIDs))
-        let evaluated = limitingSaves(filter.evaluate(request, at: date), request: request, at: date)
-        let context = CaptureContext(request: request, state: state, link: link, card: card, date: date)
-        let decisions = limitingReviews(saveToCard(evaluated, context: context), host: request.host, at: date)
-        record(decisions, context: context)
-        return CaptureResponse(decisions: decisions)
     }
 
     // Values from a page that was only hidden were never submitted, so they wait for review.

@@ -93,11 +93,22 @@ async function main(): Promise<void> {
     await page.waitForTimeout(1_500);
     const box = await screenBox(page, email);
     const region = [box.x - 24, box.y - 24, Math.max(box.width, 420) + 48, 300].map(Math.round).join(",");
-    execFileSync("screencapture", ["-x", `-R${region}`, screenshot]);
+    // The picture is a record, not a check: a locked screen can't be captured, and the fill still runs.
+    try {
+      execFileSync("screencapture", ["-x", `-R${region}`, screenshot], { stdio: "pipe" });
+    } catch {
+      console.log("no screenshot: the screen can't be captured right now (locked or asleep)");
+    }
     check(!(await page.locator("prefill-suggestions").isVisible()), "the extension shows no list of its own beside the app's panel");
     await page.waitForTimeout(PICK_WAIT_MS);
     const picked = await email.inputValue();
     check(EMAILS.includes(picked), `the email field takes one of the card's emails: ${picked}`);
+    // Fill form: with the email emptied again, the test copy presses it from the phone field.
+    await email.fill("");
+    await page.locator("#phone").click();
+    await page.waitForTimeout(TREE_WAIT_MS / 2 + PICK_WAIT_MS);
+    const phone = await page.locator("#phone").inputValue();
+    check(phone !== "" && EMAILS.includes(await email.inputValue()), `Fill form fills the phone and the email: ${phone}`);
     if (airtable === "airtable") await checkAirtable(page);
   } finally {
     close();

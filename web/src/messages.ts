@@ -3,11 +3,29 @@
 // sides; docs/message-examples.json is checked by tests in both languages. The types are
 // derived from the parsers below, so a parser and its type can't drift apart.
 
-export const FIELD_KINDS = ["email", "phone", "address", "name", "link"] as const;
+export const FIELD_KINDS = [
+  "email",
+  "phone",
+  "address",
+  "name",
+  "link",
+] as const;
 // What a profile or website link is, read from its host by the app.
-export const LINK_TYPES = ["github", "website", "linkedin", "x", "other"] as const;
+export const LINK_TYPES = [
+  "github",
+  "website",
+  "linkedin",
+  "x",
+  "other",
+] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
-export const SYNC_STATUSES = ["unchanged", "saved", "failed", "off", "notSetUp"] as const;
+export const SYNC_STATUSES = [
+  "unchanged",
+  "saved",
+  "failed",
+  "off",
+  "notSetUp",
+] as const;
 // "submit" is a form the person sent. "flush" is what they typed before the page was hidden,
 // which is never saved straight to the card.
 export const CAPTURE_TRIGGERS = ["submit", "flush"] as const;
@@ -15,6 +33,18 @@ export const CAPTURE_TRIGGERS = ["submit", "flush"] as const;
 export const CONTACT_KINDS = ["email", "phone", "address"] as const;
 export const POPUP_STATUSES = ["ready", "off", "notSetUp", "failed"] as const;
 export const RECENT_STATES = ["saved", "waiting", "removed"] as const;
+// The job application questions Prefill learns answers to. Mirrored by JobQuestion in Swift.
+export const JOB_QUESTIONS = [
+  "school",
+  "degree",
+  "major",
+  "gpa",
+  "graduation",
+  "authorization",
+  "sponsorship",
+  "heard",
+] as const;
+export const ANSWER_ACTIONS = ["learn", "undo"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -36,6 +66,7 @@ export const LIMITS = {
   fieldText: 200,
   customValue: 200,
   customOptions: 3,
+  answers: 8,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -46,6 +77,7 @@ export type CaptureTrigger = (typeof CAPTURE_TRIGGERS)[number];
 export type ContactKind = (typeof CONTACT_KINDS)[number];
 export type PopupStatus = (typeof POPUP_STATUSES)[number];
 export type RecentState = (typeof RECENT_STATES)[number];
+export type JobQuestion = (typeof JOB_QUESTIONS)[number];
 
 const INVALID: unique symbol = Symbol("invalid");
 type Parser<T> = (value: unknown) => T | typeof INVALID;
@@ -56,8 +88,12 @@ type Field = Parser<unknown> | Optional<unknown>;
 type Parsed<P> = P extends Parser<infer T> ? T : never;
 type Flat<T> = { [K in keyof T]: T[K] };
 type ObjectOf<S extends Record<string, Field>> = Flat<
-  { [K in keyof S as S[K] extends Optional<unknown> ? never : K]: Parsed<S[K]> } & {
-    [K in keyof S as S[K] extends Optional<unknown> ? K : never]?: S[K] extends Optional<infer T> ? T : never;
+  {
+    [K in keyof S as S[K] extends Optional<unknown> ? never : K]: Parsed<S[K]>;
+  } & {
+    [K in keyof S as S[K] extends Optional<unknown>
+      ? K
+      : never]?: S[K] extends Optional<infer T> ? T : never;
   }
 >;
 
@@ -74,13 +110,21 @@ const UUID = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/iu;
 const text =
   (max: number, hidden: RegExp = HIDDEN_CHARACTERS): Parser<string> =>
   (value) =>
-    typeof value === "string" && value.length <= max && !hidden.test(value) ? value : INVALID;
+    typeof value === "string" && value.length <= max && !hidden.test(value)
+      ? value
+      : INVALID;
 const hostName: Parser<string> = (value) =>
-  typeof value === "string" && value.length <= LIMITS.host && HOST.test(value) ? value : INVALID;
-const uuid: Parser<string> = (value) => (typeof value === "string" && UUID.test(value) ? value : INVALID);
-const boolean: Parser<boolean> = (value) => (typeof value === "boolean" ? value : INVALID);
+  typeof value === "string" && value.length <= LIMITS.host && HOST.test(value)
+    ? value
+    : INVALID;
+const uuid: Parser<string> = (value) =>
+  typeof value === "string" && UUID.test(value) ? value : INVALID;
+const boolean: Parser<boolean> = (value) =>
+  typeof value === "boolean" ? value : INVALID;
 const count: Parser<number> = (value) =>
-  typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : INVALID;
+  typeof value === "number" && Number.isInteger(value) && value >= 0
+    ? value
+    : INVALID;
 const literal =
   <T extends string>(expected: T): Parser<T> =>
   (value) =>
@@ -97,7 +141,9 @@ const arrayOf =
     if (!Array.isArray(value) || value.length > max) return INVALID;
     // Array.from visits holes too, so a sparse array fails instead of slipping through.
     const items = Array.from(value, item);
-    return items.some((parsed) => parsed === INVALID) ? INVALID : (items as T[]);
+    return items.some((parsed) => parsed === INVALID)
+      ? INVALID
+      : (items as T[]);
   };
 
 function parseField(field: Field, raw: unknown): unknown {
@@ -110,9 +156,13 @@ const object =
   <S extends Record<string, Field>>(shape: S): Parser<ObjectOf<S>> =>
   (value) => {
     if (!isRecord(value)) return INVALID;
-    const entries = Object.entries(shape).map(([key, field]) => [key, parseField(field, value[key])] as const);
+    const entries = Object.entries(shape).map(
+      ([key, field]) => [key, parseField(field, value[key])] as const,
+    );
     if (entries.some(([, parsed]) => parsed === INVALID)) return INVALID;
-    return Object.fromEntries(entries.filter(([, parsed]) => parsed !== undefined)) as ObjectOf<S>;
+    return Object.fromEntries(
+      entries.filter(([, parsed]) => parsed !== undefined),
+    ) as ObjectOf<S>;
   };
 
 const refine =
@@ -186,7 +236,19 @@ const pageRequests = {
   customSuggestions: object({
     type: literal("customSuggestions"),
     host: hostName,
-    fields: arrayOf(object({ text: text(LIMITS.fieldText) }), LIMITS.pageFields),
+    fields: arrayOf(
+      object({ text: text(LIMITS.fieldText) }),
+      LIMITS.pageFields,
+    ),
+  }),
+  answers: object({
+    type: literal("answers"),
+    host: hostName,
+    action: oneOf(ANSWER_ACTIONS),
+    answers: arrayOf(
+      object({ question: oneOf(JOB_QUESTIONS), value: text(LIMITS.customValue) }),
+      LIMITS.answers,
+    ),
   }),
 };
 
@@ -199,19 +261,40 @@ const sheetRequests = {
     host: hostName,
     kinds: arrayOf(contactKind, LIMITS.popupKinds),
   }),
-  pin: object({ type: literal("pin"), host: hostName, kind: contactKind, valueID: uuid }),
+  pin: object({
+    type: literal("pin"),
+    host: hostName,
+    kind: contactKind,
+    valueID: uuid,
+  }),
   unpin: object({ type: literal("unpin"), host: hostName, kind: contactKind }),
-  undoCapture: object({ type: literal("undoCapture"), host: hostName, valueID: uuid }),
-  muteSite: object({ type: literal("muteSite"), host: hostName, muted: boolean }),
+  undoCapture: object({
+    type: literal("undoCapture"),
+    host: hostName,
+    valueID: uuid,
+  }),
+  muteSite: object({
+    type: literal("muteSite"),
+    host: hostName,
+    muted: boolean,
+  }),
 };
 
-const popupValue = object({ id: uuid, caption: text(LIMITS.text), text: text(LIMITS.display) });
+const popupValue = object({
+  id: uuid,
+  caption: text(LIMITS.text),
+  text: text(LIMITS.display),
+});
 const popupKind = object({
   kind: contactKind,
   values: arrayOf(popupValue, LIMITS.popupValues),
   pinnedID: optional(uuid),
 });
-const popupRecent = object({ value: popupValue, kind: contactKind, state: oneOf(RECENT_STATES) });
+const popupRecent = object({
+  value: popupValue,
+  kind: contactKind,
+  state: oneOf(RECENT_STATES),
+});
 
 const pageResponses = {
   pong: object({ type: literal("pong") }),
@@ -220,19 +303,35 @@ const pageResponses = {
     status: oneOf(SYNC_STATUSES),
     reason: optional(text(LIMITS.reason)),
   }),
-  captureResult: object({ type: literal("captureResult"), saved: count, review: count, ignored: count }),
-  linkSuggestionsResult: object({ type: literal("linkSuggestionsResult"), links: arrayOf(suggestedLink, LIMITS.links) }),
+  captureResult: object({
+    type: literal("captureResult"),
+    saved: count,
+    review: count,
+    ignored: count,
+  }),
+  linkSuggestionsResult: object({
+    type: literal("linkSuggestionsResult"),
+    links: arrayOf(suggestedLink, LIMITS.links),
+  }),
   contactSuggestionsResult: object({
     type: literal("contactSuggestionsResult"),
     emails: arrayOf(text(LIMITS.value), LIMITS.suggestions),
     phones: arrayOf(text(LIMITS.value), LIMITS.suggestions),
     addresses: arrayOf(postalAddress, LIMITS.suggestions),
-    name: optional(object({ given: text(LIMITS.part), family: text(LIMITS.part) })),
+    name: optional(
+      object({ given: text(LIMITS.part), family: text(LIMITS.part) }),
+    ),
   }),
   customSuggestionsResult: object({
     type: literal("customSuggestionsResult"),
-    fields: arrayOf(object({ values: arrayOf(text(LIMITS.customValue), LIMITS.customOptions) }), LIMITS.pageFields),
+    fields: arrayOf(
+      object({
+        values: arrayOf(text(LIMITS.customValue), LIMITS.customOptions),
+      }),
+      LIMITS.pageFields,
+    ),
   }),
+  answersResult: object({ type: literal("answersResult"), saved: count }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -254,11 +353,19 @@ export type CapturedField = Parsed<typeof capturedField>;
 export type Ping = Parsed<typeof pageRequests.ping>;
 export type PageContextRequest = Parsed<typeof pageRequests.pageContext>;
 export type CaptureRequest = Parsed<typeof pageRequests.capture>;
-export type LinkSuggestionsRequest = Parsed<typeof pageRequests.linkSuggestions>;
-export type ContactSuggestionsRequest = Parsed<typeof pageRequests.contactSuggestions>;
-export type CustomSuggestionsRequest = Parsed<typeof pageRequests.customSuggestions>;
+export type LinkSuggestionsRequest = Parsed<
+  typeof pageRequests.linkSuggestions
+>;
+export type ContactSuggestionsRequest = Parsed<
+  typeof pageRequests.contactSuggestions
+>;
+export type CustomSuggestionsRequest = Parsed<
+  typeof pageRequests.customSuggestions
+>;
+export type AnswersRequest = Parsed<typeof pageRequests.answers>;
 export type PageRequest =
   | Ping
+  | AnswersRequest
   | PageContextRequest
   | CaptureRequest
   | LinkSuggestionsRequest
@@ -269,18 +376,31 @@ export type PinRequest = Parsed<typeof sheetRequests.pin>;
 export type UnpinRequest = Parsed<typeof sheetRequests.unpin>;
 export type UndoCaptureRequest = Parsed<typeof sheetRequests.undoCapture>;
 export type MuteSiteRequest = Parsed<typeof sheetRequests.muteSite>;
-export type SheetRequest = PopupStateRequest | PinRequest | UnpinRequest | UndoCaptureRequest | MuteSiteRequest;
+export type SheetRequest =
+  | PopupStateRequest
+  | PinRequest
+  | UnpinRequest
+  | UndoCaptureRequest
+  | MuteSiteRequest;
 export type ExtensionRequest = PageRequest | SheetRequest;
 export type Pong = Parsed<typeof pageResponses.pong>;
 export type PageContextResult = Parsed<typeof pageResponses.pageContextResult>;
 export type CaptureResult = Parsed<typeof pageResponses.captureResult>;
 export type ErrorResponse = Parsed<typeof pageResponses.error>;
 export type SuggestedLink = Parsed<typeof suggestedLink>;
-export type LinkSuggestionsResult = Parsed<typeof pageResponses.linkSuggestionsResult>;
-export type ContactSuggestionsResult = Parsed<typeof pageResponses.contactSuggestionsResult>;
-export type CustomSuggestionsResult = Parsed<typeof pageResponses.customSuggestionsResult>;
+export type LinkSuggestionsResult = Parsed<
+  typeof pageResponses.linkSuggestionsResult
+>;
+export type ContactSuggestionsResult = Parsed<
+  typeof pageResponses.contactSuggestionsResult
+>;
+export type CustomSuggestionsResult = Parsed<
+  typeof pageResponses.customSuggestionsResult
+>;
+export type AnswersResult = Parsed<typeof pageResponses.answersResult>;
 export type PageResponse =
   | Pong
+  | AnswersResult
   | PageContextResult
   | CaptureResult
   | LinkSuggestionsResult
@@ -294,19 +414,34 @@ export type PopupStateResult = Parsed<typeof sheetResponses.popupStateResult>;
 export type SheetResponse = PopupStateResult | ErrorResponse;
 export type ExtensionResponse = PageResponse | PopupStateResult;
 
-function parseByType<T>(parsers: Record<string, Parser<T>>, message: unknown): T | undefined {
+function parseByType<T>(
+  parsers: Record<string, Parser<T>>,
+  message: unknown,
+): T | undefined {
   if (!isRecord(message) || typeof message.type !== "string") return undefined;
-  const parser = Object.hasOwn(parsers, message.type) ? parsers[message.type] : undefined;
+  const parser = Object.hasOwn(parsers, message.type)
+    ? parsers[message.type]
+    : undefined;
   const parsed = parser?.(message);
   return parsed === undefined || parsed === INVALID ? undefined : parsed;
 }
 
-export function parseExtensionRequest(message: unknown): ExtensionRequest | undefined {
-  return parseByType<ExtensionRequest>({ ...pageRequests, ...sheetRequests }, message);
+export function parseExtensionRequest(
+  message: unknown,
+): ExtensionRequest | undefined {
+  return parseByType<ExtensionRequest>(
+    { ...pageRequests, ...sheetRequests },
+    message,
+  );
 }
 
-export function parseExtensionResponse(message: unknown): ExtensionResponse | undefined {
-  return parseByType<ExtensionResponse>({ ...pageResponses, ...sheetResponses }, message);
+export function parseExtensionResponse(
+  message: unknown,
+): ExtensionResponse | undefined {
+  return parseByType<ExtensionResponse>(
+    { ...pageResponses, ...sheetResponses },
+    message,
+  );
 }
 
 // What a page may send through the background script, and what may come back to it.
@@ -318,12 +453,19 @@ export function parsePageResponse(message: unknown): PageResponse | undefined {
   return parseByType<PageResponse>(pageResponses, message);
 }
 
-export function parseSheetResponse(message: unknown): SheetResponse | undefined {
+export function parseSheetResponse(
+  message: unknown,
+): SheetResponse | undefined {
   return parseByType<SheetResponse>(sheetResponses, message);
 }
 
 // Between the sheet and the content script only: what the page in the tab asks for.
-const pageNeeds = object({ host: hostName, kinds: arrayOf(contactKind, LIMITS.popupKinds) });
+const pageNeeds = object({
+  host: hostName,
+  kinds: arrayOf(contactKind, LIMITS.popupKinds),
+  // How many empty fields a one-tap fill would fill on the page.
+  fillable: optional(count),
+});
 export type PageNeeds = Parsed<typeof pageNeeds>;
 export const PAGE_NEEDS_QUERY = { type: "pageNeeds" } as const;
 
@@ -332,14 +474,30 @@ export function parsePageNeeds(message: unknown): PageNeeds | undefined {
   return parsed === INVALID ? undefined : parsed;
 }
 
+// The sheet's one-tap fill: it asks the page's content script to fill the form, or to put
+// back what the last fill changed. Only this extension's own pages can send them.
+export const FILL_PAGE = { type: "fillPage" } as const;
+export const UNDO_FILL = { type: "undoFill" } as const;
+const fillPageResult = object({ type: literal("fillPageResult"), filled: count });
+export type FillPageResult = Parsed<typeof fillPageResult>;
+
+export function parseFillPageResult(message: unknown): FillPageResult | undefined {
+  const parsed = fillPageResult(message);
+  return parsed === INVALID ? undefined : parsed;
+}
+
 export function isContactKind(kind: string): kind is ContactKind {
   return CONTACT_KINDS.some((candidate) => candidate === kind);
 }
 
-export function isExtensionRequest(message: unknown): message is ExtensionRequest {
+export function isExtensionRequest(
+  message: unknown,
+): message is ExtensionRequest {
   return parseExtensionRequest(message) !== undefined;
 }
 
-export function isExtensionResponse(message: unknown): message is ExtensionResponse {
+export function isExtensionResponse(
+  message: unknown,
+): message is ExtensionResponse {
   return parseExtensionResponse(message) !== undefined;
 }

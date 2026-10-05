@@ -13,8 +13,13 @@ function setUp(isUserEvent: (event: Event) => boolean = () => true) {
   // The dropdown's root is closed; the test keeps the handle the page never gets.
   let root: ShadowRoot | undefined;
   const { attachShadow } = Object.getOwnPropertyDescriptors(Element.prototype);
-  vi.spyOn(Element.prototype, "attachShadow").mockImplementation(function (this: Element, init: ShadowRootInit) {
-    root = (attachShadow.value as (this: Element, init: ShadowRootInit) => ShadowRoot).call(this, init);
+  vi.spyOn(Element.prototype, "attachShadow").mockImplementation(function (
+    this: Element,
+    init: ShadowRootInit,
+  ) {
+    root = (
+      attachShadow.value as (this: Element, init: ShadowRootInit) => ShadowRoot
+    ).call(this, init);
     return root;
   });
   const events: string[] = [];
@@ -22,9 +27,14 @@ function setUp(isUserEvent: (event: Event) => boolean = () => true) {
   input.addEventListener("change", () => events.push(`change ${input.value}`));
   input.focus();
   const hide = showDropdown(input, choices, isUserEvent);
-  const rows = (): string[] => [...(root?.querySelectorAll(".row .value") ?? [])].map((row) => row.textContent);
+  const rows = (): string[] =>
+    [...(root?.querySelectorAll(".row .value") ?? [])].map(
+      (row) => row.textContent,
+    );
   const press = (key: string): void => {
-    input.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+    input.dispatchEvent(
+      new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }),
+    );
   };
   return { input, hide, rows, press, events };
 }

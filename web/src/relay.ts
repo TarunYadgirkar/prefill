@@ -1,4 +1,5 @@
 import { parsePageRequest, parsePageResponse, type ErrorResponse, type PageRequest, type PageResponse } from "./messages";
+import { isAtsFrame } from "./atsFrames";
 import { isTrustedPage } from "./origin";
 
 export type SendNative = (message: unknown) => Promise<unknown>;
@@ -8,17 +9,27 @@ export type MarkForReview = (tabId: number, count: number) => void;
 const badReply: ErrorResponse = { type: "error", reason: "unreadable reply" };
 
 // The page's host, taken from what Safari says about the sender: this extension's own
-// content script, in the top frame of a normal tab showing a secure page. Private
-// Browsing tabs never reach the app, so nothing about them is kept. Anything Safari
-// leaves out counts as a no.
+// content script, in the top frame of a normal tab showing a secure page, or in a frame
+// showing one of the job application forms in atsFrames.ts, whose own host it then is.
+// Private Browsing tabs never reach the app, so nothing about them is kept. Anything
+// Safari leaves out counts as a no.
 function senderHost(sender: MessageSender, extensionId: string): string | undefined {
-  if (sender.id !== extensionId || sender.frameId !== 0 || sender.tab?.incognito !== false) return undefined;
+  if (sender.id !== extensionId || sender.tab?.incognito !== false) return undefined;
+  const url = senderUrl(sender);
+  if (url === undefined || !isTrustedPage(url.protocol, url.hostname)) return undefined;
+  return isAllowedFrame(sender.frameId, url) ? url.hostname : undefined;
+}
+
+function senderUrl(sender: MessageSender): URL | undefined {
   try {
-    const url = new URL(sender.url ?? "");
-    return isTrustedPage(url.protocol, url.hostname) ? url.hostname : undefined;
+    return new URL(sender.url ?? "");
   } catch {
     return undefined;
   }
+}
+
+function isAllowedFrame(frameId: number | undefined, url: URL): boolean {
+  return frameId === 0 || (frameId !== undefined && isAtsFrame(url.protocol, url.hostname));
 }
 
 function boundToSender(request: PageRequest, host: string): PageRequest {
@@ -26,9 +37,18 @@ function boundToSender(request: PageRequest, host: string): PageRequest {
 }
 
 // Values saved straight to the card leave no mark, since Undo in the sheet covers them.
-function markIfWaiting(response: PageResponse, sender: MessageSender, mark: MarkForReview | undefined): void {
+function markIfWaiting(
+  response: PageResponse,
+  sender: MessageSender,
+  mark: MarkForReview | undefined,
+): void {
   const tabId = sender.tab?.id;
-  if (response.type !== "captureResult" || response.review === 0 || tabId === undefined) return;
+  if (
+    response.type !== "captureResult" ||
+    response.review === 0 ||
+    tabId === undefined
+  )
+    return;
   mark?.(tabId, response.review);
 }
 

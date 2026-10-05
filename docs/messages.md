@@ -1,14 +1,21 @@
 # Messages between the extension and the app
 
-The content script sends a message to `background.js` with `browser.runtime.sendMessage`. The background script turns away any message that Safari doesn't say came from this extension's content script in the top frame of a normal tab showing an `https` page (or plain `http` on `localhost` and `127.0.0.1`). Messages from Private Browsing tabs never reach the app, and neither does one from a tab that doesn't say whether it is private. It then parses the message with `parseExtensionRequest`, which rebuilds it from the fields below and drops anything else, replaces `host` with the host of the page Safari says sent it, and forwards the result with `browser.runtime.sendNativeMessage`. `SafariWebExtensionHandler` reads it from `SFExtensionMessageKey`, decodes it into `ExtensionRequest` and hands it to `MessageRouter`, which answers with an `ExtensionResponse`. The background script parses the answer the same way and replaces anything malformed with `{ "type": "error", "reason": "unreadable reply" }` before the page sees it.
+The content script sends a message to `background.js` with `browser.runtime.sendMessage`. The background script turns away any message that Safari doesn't say came from this extension's content script in the top frame of a normal tab showing an `https` page (or plain `http` on `localhost` and `127.0.0.1`), or in a frame whose own address is an `https` page on one of the job application hosts listed below. Messages from Private Browsing tabs never reach the app, and neither does one from a tab that doesn't say whether it is private. It then parses the message with `parseExtensionRequest`, which rebuilds it from the fields below and drops anything else, replaces `host` with the host of the page or frame Safari says sent it, and forwards the result with `browser.runtime.sendNativeMessage`. `SafariWebExtensionHandler` reads it from `SFExtensionMessageKey`, decodes it into `ExtensionRequest` and hands it to `MessageRouter`, which answers with an `ExtensionResponse`. The background script parses the answer the same way and replaces anything malformed with `{ "type": "error", "reason": "unreadable reply" }` before the page sees it.
 
-The content script runs in the top frame of `https` pages only, plus plain `http` on `localhost` and `127.0.0.1` for testing, once the page has loaded (`document_idle`). The manifest still matches every `http` and `https` page, because Safari only offers the All Websites switch for a pattern that covers every site, so the script itself bails out anywhere else and checks that it is in a secure context and the top frame, and the background script checks the page's address again. Frames are left out so an embedded widget from another site can't reorder the card or record values under its own host, and plain `http` is left out so a network attacker can't feed values to the card. A page without email, phone or address fields sends nothing.
+The content script runs in the top frame of `https` pages, plus plain `http` on `localhost` and `127.0.0.1` for testing, once the page has loaded (`document_idle`). It also runs in a frame that shows a job application form company career pages embed, when the frame's own address is `https` on one of these hosts (`web/src/atsFrames.ts`), and the frame is a secure context (so not inside a plain `http` page):
+
+| Match | Hosts |
+| --- | --- |
+| Exact host | `boards.greenhouse.io`, `boards.eu.greenhouse.io`, `job-boards.greenhouse.io`, `job-boards.eu.greenhouse.io`, `jobs.lever.co`, `jobs.eu.lever.co`, `jobs.ashbyhq.com`, `apply.workable.com`, `jobs.smartrecruiters.com` |
+| That domain or any subdomain | `myworkdayjobs.com` |
+
+Such a frame works under its own host, not the host of the page around it: its `pageContext`, captures and suggestions are for `boards.greenhouse.io`, say, and the career page's top frame runs separately under its own host. The manifest still matches every `http` and `https` page in every frame, because Safari only offers the All Websites switch for a pattern that covers every site, so the script itself bails out anywhere else, before adding any listener, and checks that it is in a secure context and the top frame or a listed frame, and the background script checks the sender's address and frame again. Other frames are left out so an embedded widget from another site can't reorder the card or record values under its own host, and plain `http` is left out so a network attacker can't feed values to the card. A page without email, phone or address fields sends nothing.
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
 Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
-Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
+Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them. Text lengths count UTF-16 units, as JavaScript's `length` does.
 
 | Limit | Value |
 | --- | --- |
@@ -25,6 +32,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
 | `customSuggestions` fields | 40, each `text` 200 characters |
 | `customSuggestionsResult` | one entry per field asked about, each with at most 3 values of 200 characters |
+| `answers` | 8 answers, each `value` 200 characters |
 
 ## Shared values
 
@@ -175,6 +183,28 @@ The focused field gets a `list` and a `<datalist>` of its values, which Safari's
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 
+
+## answers
+
+Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
+
+With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit and at most 8 a day across every site. The card save may only add custom fields after the ones there (`CardSaveScope.addAnswers`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. An answer the person already has is never replaced. The reply says how many were saved, and the page then shows a pill, "Saved 2 answers" with Undo, for 8 seconds.
+
+Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved, and replies with how many came off.
+
+```json
+{
+  "type": "answers",
+  "host": "boards.example.io",
+  "action": "learn",
+  "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
+}
+```
+
+```json
+{ "type": "answersResult", "saved": 2 }
+```
+
 ## capture
 
 The content script sends `capture` with `trigger: "submit"` when the person submits a form (a submit event or a click on its submit button, whichever comes first, while Safari reports a fresh tap or keypress), or clicks a button outside any form that says it submits ("Continue", "Sign up") next to the fields they typed in. A page script that submits the form by itself sends nothing. It sends `trigger: "flush"` when the page is hidden, which covers forms that post with `fetch`; that report holds only fields the person has left, and an address only once its postal code is in. Fields reported for a hidden page stay, so a later submit still sends them whole.
@@ -230,7 +260,7 @@ The reply is `captureResult`, with counts only. `saved` values went onto the car
 
 ## The Prefill sheet
 
-Tapping Prefill in Safari's page menu opens `popup.html` as a half-height sheet. It asks the active tab's content script `{ "type": "pageNeeds" }`, which answers with the page's host and the kinds of contact fields it has (`email`, `phone`, `address`); the content script only answers this extension, in the top frame of a page it runs on. The sheet takes the host from the tab's address when Safari shares it and from that answer otherwise, and shows nothing in Private Browsing. It then sends the messages below straight to the app with `browser.runtime.sendNativeMessage`, and clears the page-menu badge for the tab.
+Tapping Prefill in Safari's page menu opens `popup.html` as a half-height sheet. It asks the active tab's content script `{ "type": "pageNeeds" }`, which answers with the page's host, the kinds of contact fields it has (`email`, `phone`, `address`) and `fillable`, the number of empty fields a one-tap fill would fill; the content script only answers this extension, in the top frame of a page it runs on. The sheet takes the host from the tab's address when Safari shares it and from that answer otherwise, and shows nothing in Private Browsing. It then sends the messages below straight to the app with `browser.runtime.sendNativeMessage`, and clears the page-menu badge for the tab.
 
 Every sheet request carries the `host` it is about, checked like any other host, and every reply is `popupStateResult`. Kinds are `email`, `phone` or `address`; a value ID is the UUID the app gives each value. Before the card is linked the reply is `notSetUp`, and when the card can't be read or saved it is `failed` with a `reason`.
 
@@ -239,7 +269,7 @@ Every sheet request carries the `host` it is about, checked like any other host,
 | `popupState` | `host`, `kinds` (at most 3) | Reads the card and plans this site's order without saving. |
 | `pin` | `host`, `kind`, `valueID` | Records the pick for the site, rewrites the card so the value is first, and answers for that kind. Does nothing with Match each site off. |
 | `unpin` | `host`, `kind` | Takes the pick back and rewrites the card the same way. |
-| `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed. |
+| `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed, nor one already undone or turned down that they put back by hand. |
 | `muteSite` | `host`, `muted` | Turns "Don't save on this site" on or off. While it is on, a `capture` from the site is dropped whole. |
 
 These are recorded as events (`pins`, `mutes`, and a `dismissed` capture for an undo), since only the app writes AppState. The app folds them in when it reads the store, and the handler reads through the same fold, so a choice counts right away.
@@ -284,6 +314,21 @@ The reply lists, for each kind asked about, every value in the order Safari will
 ```
 
 When a `capture` reply has values waiting for review, the background script puts that count on Prefill's row in the page menu for the tab with `browser.action.setBadgeText`. Values saved straight to the card leave no badge, since the sheet's Undo covers them.
+
+## One-tap fill
+
+The pill Prefill shows beside a field the person just clicked or tabbed into, and the Fill button at the top of Safari's sheet, fill the whole form the field is in. The content script asks the app the same three questions the field lists use, once each and only for what the form needs: `contactSuggestions` (without `offCard`, also in Safari, since it fills the fields itself), `linkSuggestions` and `customSuggestions`, whose `text` for a select is its label and for a radio group its legend or question. Nothing new reaches the page that a field's own list wouldn't offer; the difference is that one tap places every value at once.
+
+The sheet talks to the page's content script, not to the app, with two messages only this extension's pages can send:
+
+```json
+{ "type": "fillPage" }
+{ "type": "undoFill" }
+```
+
+Both answer `{ "type": "fillPageResult", "filled": 11 }`, the number of fields filled (0 after an undo).
+
+What a page can and can't do: it can't press the pill (a closed shadow root that ignores untrusted clicks and any tap in its first 400 ms) or send the sheet's messages. It can still lure a person into tapping where the pill appears, the same risk Prefill's own list has; the pill only appears right after the person's own click or Tab into a field, and a fill only reaches visible, empty, non-sensitive fields of that form.
 
 ## error
 

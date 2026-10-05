@@ -3,7 +3,8 @@
 # the Mac app with the Alex Rivera card (testbed/mac-e2e) and its own store, runs it watching
 # only Chrome for Testing, opens the test page there with the extension loaded, focuses the
 # email field from Playwright, checks the extension stood down, and lets the test copy pick
-# the first row. The process needs Accessibility:
+# the first row, then empties the form, focuses the phone field and lets it press Fill form.
+# The process needs Accessibility:
 # run from a terminal that has it. Screenshot: assets/generated/mac-ax-panel.png.
 # PREFILL_E2E_AIRTABLE=1 also fills (never submits) the real Airtable form.
 source ${0:A:h}/lib.sh
@@ -13,6 +14,10 @@ E2E_DERIVED=$ROOT/build/DerivedData-MacE2E
 APP=$E2E_DERIVED/Build/Products/Personal/Prefill.app
 WORK=$(mktemp -d)
 INSTALLED_ID=com.tarunyadgirkar.prefill.mac
+
+# The test copy's host shares the real one's identifier and also answers Chrome for
+# Testing, so it never stays on disk after the run, even when the build fails.
+trap 'rm -rf ${E2E_DERIVED:?}' EXIT
 
 step "Building extension scripts and a test copy of the Mac app"
 pnpm --dir $ROOT/web build
@@ -27,6 +32,7 @@ cleanup() {
   kill ${app_pid:-} ${server_pid:-} 2>/dev/null || true
   sleep 1
   rm -rf $WORK
+  rm -rf ${E2E_DERIVED:?}
   $was_running && open -b $INSTALLED_ID || true
 }
 trap cleanup EXIT
@@ -46,6 +52,7 @@ cat >$WORK/profile/NativeMessagingHosts/com.tarunyadgirkar.prefill.json <<EOF2
 EOF2
 PREFILL_E2E_CARD=$ROOT/testbed/mac-e2e/card.json PREFILL_E2E_STORE=$WORK/store \
   PREFILL_E2E_AX_APP=com.google.chrome.for.testing PREFILL_E2E_AX_NO_GESTURE=1 PREFILL_E2E_AX_AUTOPICK=2.5 \
+  PREFILL_E2E_AX_FILL_FORM=1 \
   $APP/Contents/MacOS/Prefill 2>$LOGS/e2e-mac-ax-app.log &
 app_pid=$!
 sleep 2

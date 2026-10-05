@@ -1,6 +1,6 @@
 import SwiftUI
 
-// Step two: the two Safari switches. "Allow Extension" is read from Safari when the person
+// The last step: the two Safari switches. "Allow Extension" is read from Safari when the person
 // comes back to Prefill. "All Websites" can't be read, so it is confirmed once the
 // extension has reported a form.
 struct SafariStep: View {

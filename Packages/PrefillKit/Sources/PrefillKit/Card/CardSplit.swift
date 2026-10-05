@@ -19,7 +19,7 @@ public enum PrefillContact {
         return person.isEmpty ? searchName : "\(searchName) · \(person)"
     }
 
-    static func isMarker(_ department: String) -> Bool {
+    public static func isMarker(_ department: String) -> Bool {
         department == marker || department == minimalMarker
     }
 }
@@ -216,13 +216,22 @@ struct CardSplit: Equatable {
             links: target.links, customFields: target.customFields
         )
         let nextCard = ContactKind.core.reduce(card) { partial, kind in
-            let onCard = Set(card.entries(kind).map(\.key))
-            let kept = isMinimal ? target.entries(kind).filter { onCard.contains($0.key) } : target.entries(kind)
+            let kept = isMinimal ? minimalCardEntries(kind, for: target) : target.entries(kind)
             return partial.replacing(kind, with: kept)
         }
         let coreChanged = ContactKind.core.contains { card.entries($0) != nextCard.entries($0) }
         let extrasChanged = wanted != extras || copies.contains { $0 != wanted }
         return Writes(card: coreChanged ? nextCard : nil, extras: extrasChanged ? wanted : nil)
+    }
+
+    // What stays on a minimal card. Its phones keep their stored order, because NameDrop and
+    // Share Contact remember the number the person picked by its place on the card.
+    private func minimalCardEntries(_ kind: ContactKind, for target: CardRecord) -> [CardEntry] {
+        let onCard = Set(card.entries(kind).map(\.key))
+        let kept = target.entries(kind).filter { onCard.contains($0.key) }
+        guard kind == .phone else { return kept }
+        let byKey = Dictionary(kept.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
+        return card.entries(kind).compactMap { byKey[$0.key] }
     }
 
     // Values already on Prefill's contact keep their stored order, so ranking a page never

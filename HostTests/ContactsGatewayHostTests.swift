@@ -40,6 +40,56 @@ struct ContactsGatewayHostTests {
         #expect(CNContactStore.authorizationStatus(for: .contacts) == .authorized)
     }
 
+    // NameDrop remembers the picked number by its stored identifier, so saves that don't
+    // change the phones (a reorder of emails, a move off the card) must leave it alone.
+    @Test func unchangedPhonesKeepTheirStoredIdentifiers() throws {
+        defer { try? removePrefillContacts() }
+        try withThrowawayCard { identifier in
+            let phoneKeys = [CNContactPhoneNumbersKey as CNKeyDescriptor]
+            let stored = { try CNContactStore().unifiedContact(withIdentifier: identifier, keysToFetch: phoneKeys) }
+            let added = try gateway.fetchCard(identifier: identifier)
+            let mobile = CardEntry(label: CNLabelPhoneNumberMobile, payload: .phone("+1 (510) 555-0134"))
+            _ = try gateway.save(
+                added.replacing(.phone, with: [mobile]), basis: added, transactionAuthor: CardWriter.transactionAuthor
+            )
+            let before = try stored().phoneNumbers.map(\.identifier)
+            #expect(before.count == 1)
+
+            let card = try gateway.fetchCard(identifier: identifier)
+            let reordered = card.replacing(.email, with: Array(card.emails.reversed()))
+            #expect(try gateway.save(reordered, basis: card, transactionAuthor: CardWriter.transactionAuthor) == .saved)
+            #expect(try stored().phoneNumbers.map(\.identifier) == before)
+
+            let emails = try gateway.placement(identifier: identifier).onCard.filter { $0.kind == .email }
+            try gateway.moveOffCard(emails, identifier: identifier)
+            #expect(try gateway.fetchCard(identifier: identifier).phones == [mobile])
+            #expect(try stored().phoneNumbers.map(\.identifier) == before)
+        }
+    }
+
+    // The real card takes answers learned from an application, and Undo takes them back.
+    @Test func learnedAnswersReachTheRealCardAndUndoRemovesThem() throws {
+        try withThrowawayCard { identifier in
+            let card = try gateway.fetchCard(identifier: identifier)
+            let link = CardLink(
+                contactIdentifier: identifier, containerIdentifier: nil, linkedIdentifiers: [],
+                original: card, snapshotAt: .now
+            )
+            let router = MessageRouter(store: InMemoryStore(state: AppState(cardLink: link)), gateway: gateway)
+            let learn: [String: Any] = [
+                "type": "answers", "host": "boards.example.io", "action": "learn",
+                "answers": [["question": "school", "value": "University of California, Berkeley"]]
+            ]
+            #expect(router.route(learn) == .answers(AnswersResponse(saved: 1)))
+            let learned = try gateway.fetchCard(identifier: identifier)
+            #expect(learned.customFields.map(\.value) == ["University of California, Berkeley"])
+            #expect(learned.emails == card.emails)
+            let undo: [String: Any] = ["type": "answers", "host": "boards.example.io", "action": "undo", "answers": []]
+            #expect(router.route(undo) == .answers(AnswersResponse(saved: 1)))
+            #expect(try gateway.fetchCard(identifier: identifier).customFields.isEmpty)
+        }
+    }
+
     @Test func readsTheCardAsStored() throws {
         try withThrowawayCard { identifier in
             let card = try gateway.fetchCard(identifier: identifier)

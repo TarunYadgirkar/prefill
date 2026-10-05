@@ -45,6 +45,18 @@ struct AutofillScriptTests {
         #expect(script.rows(for: FieldDescription(tag: .input, label: "Email", signIn: true), host: "a.com",
                             router: router()).isEmpty)
     }
+
+    @Test func fillFormGivesEachFieldItsFirstValueAndSkipsWhatItMustNotFill() throws {
+        let fields = [
+            FieldDescription(tag: .input, label: "Email"), FieldDescription(tag: .input, label: "Card number"),
+            FieldDescription(tag: .input, label: "Gender"), FieldDescription(tag: .input, type: "tel", label: "Phone"),
+            FieldDescription(tag: .input, label: "Email", signIn: true)
+        ]
+        let values = try script().fillValues(for: fields, host: "jobs.example.com", router: router())
+        #expect(values.keys.sorted() == [0, 3])
+        #expect(values[0]?.kind == "email")
+        #expect(values[3]?.value == "+1 (510) 555-0134")
+    }
 }
 
 struct PanelGeometryTests {

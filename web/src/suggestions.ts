@@ -1,8 +1,19 @@
+import { attachDatalist } from "./datalist";
 import { classify } from "./classify";
-import { eventOrigin, fieldElements, isFieldElement } from "./dom";
-import { showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
+import { eventOrigin, hasOwnList, fieldElements, isFieldElement } from "./dom";
+import {
+  showDropdown,
+  type Attach,
+  type Choice,
+  type TextField,
+} from "./dropdown";
 import { trackGestures } from "./gesture";
-import { isContact, type ContactField, type FieldElement, type FieldPart } from "./fieldTypes";
+import {
+  isContact,
+  type ContactField,
+  type FieldElement,
+  type FieldPart,
+} from "./fieldTypes";
 import {
   LIMITS,
   parseExtensionResponse,
@@ -27,15 +38,29 @@ export interface SuggestionOptions {
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
   attach?: Attach;
+  // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
+  skip?: (element: FieldElement) => boolean;
 }
 
 const MAX_INSPECTED = 200;
 // Single-line inputs that take typed contact details. Text areas count too: Prefill draws
 // its own list under them, and forms like Airtable's ask for a name or email in one.
-const LIST_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "search"]);
-export const SUGGESTED_KINDS: ReadonlySet<FieldKind> = new Set(["email", "phone", "address", "name"]);
+const LIST_INPUTS: ReadonlySet<string> = new Set([
+  "text",
+  "email",
+  "tel",
+  "search",
+]);
+export const SUGGESTED_KINDS: ReadonlySet<FieldKind> = new Set([
+  "email",
+  "phone",
+  "address",
+  "name",
+]);
 
-const ADDRESS_PARTS: Partial<Record<FieldPart, (address: PostalAddress) => string>> = {
+const ADDRESS_PARTS: Partial<
+  Record<FieldPart, (address: PostalAddress) => string>
+> = {
   street: (address) => address.street.split("\n")[0] ?? "",
   street2: (address) => address.street.split("\n").slice(1).join(", "),
   city: (address) => address.city,
@@ -50,7 +75,12 @@ const NAME_PARTS: Partial<Record<FieldPart, (name: Name) => string>> = {
   family: (name) => name.family,
 };
 
-const BY_KIND: Partial<Record<FieldKind, (part: FieldPart | undefined, values: Suggestions) => string[]>> = {
+const BY_KIND: Partial<
+  Record<
+    FieldKind,
+    (part: FieldPart | undefined, values: Suggestions) => string[]
+  >
+> = {
   email: (_part, values) => values.emails,
   phone: (part, values) => (part === "partial" ? [] : values.phones),
   address: (part, values) => {
@@ -59,37 +89,66 @@ const BY_KIND: Partial<Record<FieldKind, (part: FieldPart | undefined, values: S
   },
   name: (part, values) => {
     const pick = NAME_PARTS[part ?? "full"];
-    return pick === undefined || values.name === undefined ? [] : [pick(values.name)];
+    return pick === undefined || values.name === undefined
+      ? []
+      : [pick(values.name)];
   },
 };
 
 // What the browser's dropdown offers a field, best first, each value once.
-export function suggestionOptions(field: ContactField, values: Suggestions): string[] {
+export function suggestionOptions(
+  field: ContactField,
+  values: Suggestions,
+): string[] {
   const all = BY_KIND[field.kind]?.(field.part, values) ?? [];
-  const trimmed = all.map((value) => value.trim()).filter((value) => value.length > 0);
+  const trimmed = all
+    .map((value) => value.trim())
+    .filter((value) => value.length > 0);
   return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
 }
 
-export const KIND_LABELS: Partial<Record<FieldKind, string>> = { email: "Email", phone: "Phone", address: "Address", name: "Name" };
+export const KIND_LABELS: Partial<Record<FieldKind, string>> = {
+  email: "Email",
+  phone: "Phone",
+  address: "Address",
+  name: "Name",
+};
 
-function isTextField(element: FieldElement, textAreas = true): element is TextField {
+function isTextField(
+  element: FieldElement,
+  textAreas = true,
+): element is TextField {
   if (element.localName === "textarea") return textAreas;
-  return element.localName === "input" && LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase());
+  return (
+    element.localName === "input" &&
+    LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase())
+  );
 }
 
-function suggestedField(element: FieldElement, textAreas = true): ContactField | undefined {
+function suggestedField(
+  element: FieldElement,
+  textAreas = true,
+): ContactField | undefined {
   if (!isTextField(element, textAreas)) return undefined;
   const field = classify(element);
-  return isContact(field) && SUGGESTED_KINDS.has(field.kind) ? field : undefined;
+  return isContact(field) && SUGGESTED_KINDS.has(field.kind)
+    ? field
+    : undefined;
 }
 
 // One entry per kind and section, so the request stays small on long forms.
-function pageFields(doc: Document, fieldOf: (element: FieldElement) => ContactField | undefined): PageField[] {
+function pageFields(
+  doc: Document,
+  fieldOf: (element: FieldElement) => ContactField | undefined,
+): PageField[] {
   const seen = new Map<string, PageField>();
   for (const element of fieldElements(doc, MAX_INSPECTED)) {
     const field = fieldOf(element);
     if (field === undefined) continue;
-    const entry: PageField = field.section === undefined ? { kind: field.kind } : { kind: field.kind, section: field.section };
+    const entry: PageField =
+      field.section === undefined
+        ? { kind: field.kind }
+        : { kind: field.kind, section: field.section };
     seen.set(`${entry.kind} ${entry.section ?? ""}`, entry);
   }
   return [...seen.values()].slice(0, LIMITS.pageFields);
@@ -101,11 +160,23 @@ function pageFields(doc: Document, fieldOf: (element: FieldElement) => ContactFi
 // the card has nothing for the field. The values are fetched when the page loads, ranked
 // for the site, and a field gets its list when the person focuses it; the list goes away
 // when the field loses focus. A field with a datalist of its own is left alone.
-export function installSuggestions(doc: Document, options: SuggestionOptions): () => void {
-  const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
+export function installSuggestions(
+  doc: Document,
+  options: SuggestionOptions,
+): () => void {
+  const isUserEvent =
+    options.isUserEvent ?? ((event: Event) => event.isTrusted);
   const attach = options.attach ?? showDropdown;
+  // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
+  // Prefill's own list would sit on top of the page's, so it skips fields that have one.
+  const isTaken = (element: FieldElement): boolean =>
+    options.skip?.(element) === true ||
+    (attach === attachDatalist
+      ? element.hasAttribute("list")
+      : hasOwnList(element));
   const offCard = options.offCard === true;
-  const fieldOf = (element: FieldElement): ContactField | undefined => suggestedField(element, !offCard);
+  const fieldOf = (element: FieldElement): ContactField | undefined =>
+    suggestedField(element, !offCard);
   const gestures = trackGestures(doc, isUserEvent, options.now);
   let known: Suggestions | undefined;
   let detach: (() => void) | undefined;
@@ -118,9 +189,12 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
   };
 
   const offer = (): void => {
-    if (focused === undefined || detach !== undefined || known === undefined) return;
+    if (focused === undefined || detach !== undefined || known === undefined)
+      return;
     const detail = KIND_LABELS[focused.field.kind] ?? "";
-    const choices: Choice[] = suggestionOptions(focused.field, known).map((value) => ({ value, detail }));
+    const choices: Choice[] = suggestionOptions(focused.field, known).map(
+      (value) => ({ value, detail }),
+    );
     if (choices.length > 0) detach = attach(focused.element, choices);
   };
 
@@ -128,7 +202,12 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
     const fields = pageFields(doc, fieldOf);
     if (fields.length === 0) return;
     options
-      .send({ type: "contactSuggestions", host: options.host(), fields, ...(offCard ? { offCard } : {}) })
+      .send({
+        type: "contactSuggestions",
+        host: options.host(),
+        fields,
+        ...(offCard ? { offCard } : {}),
+      })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
         if (response?.type !== "contactSuggestionsResult") return;
@@ -140,7 +219,12 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
 
   const onFocus = (event: Event): void => {
     const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (!isFieldElement(target) || target.hasAttribute("list") || !isTextField(target, !offCard)) return;
+    if (
+      !isFieldElement(target) ||
+      isTaken(target) ||
+      !isTextField(target, !offCard)
+    )
+      return;
     const field = fieldOf(target);
     if (field === undefined || !gestures.allows(target)) return;
     clear();
@@ -153,7 +237,8 @@ export function installSuggestions(doc: Document, options: SuggestionOptions): (
     if (eventOrigin(event) === focused?.element) clear();
   };
 
-  if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", fetchValues, { once: true });
+  if (doc.readyState === "loading")
+    doc.addEventListener("DOMContentLoaded", fetchValues, { once: true });
   else fetchValues();
   doc.addEventListener("focusin", onFocus, true);
   doc.addEventListener("focusout", onBlur, true);

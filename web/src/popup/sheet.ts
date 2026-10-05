@@ -4,6 +4,8 @@ import { isTrustedPage } from "../origin";
 export interface Site {
   host: string;
   kinds: ContactKind[];
+  // Empty fields a one-tap fill would fill on the page.
+  fillable: number;
 }
 
 export type Opening = { site: Site } | { problem: "private" | "unsupported" };
@@ -24,8 +26,10 @@ export function openingFor(tab: Tab | undefined, needs: PageNeeds | undefined): 
   if (tab?.incognito === true) return { problem: "private" };
   const host = tab?.url === undefined ? needs?.host : trustedHost(tab.url);
   if (host === undefined) return { problem: "unsupported" };
-  return { site: { host, kinds: kindsAsked(needs) } };
+  return { site: { host, kinds: kindsAsked(needs), fillable: fillableIn(needs) } };
 }
+
+const fillableIn = (needs: PageNeeds | undefined): number => needs?.fillable ?? 0;
 
 const kindsAsked = (needs: PageNeeds | undefined): ContactKind[] =>
   needs?.kinds.length ? needs.kinds : [...CONTACT_KINDS];

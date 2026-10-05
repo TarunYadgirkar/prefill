@@ -1,4 +1,5 @@
 import Foundation
+import Synchronization
 import Testing
 @testable import PrefillKit
 
@@ -90,6 +91,28 @@ struct SafariChoicesTests {
         ]))
         #expect(gateway.card == Alex.card)
         #expect(store.events.captures.isEmpty)
+    }
+
+    @Test func undoLeavesAValueThePersonPutBackByHand() throws {
+        let store = linked()
+        let router = router(store)
+        let signup: [String: Any] = [
+            "type": "capture", "host": site, "hasPassword": true, "trigger": "submit",
+            "fields": [
+                ["kind": "name", "userTyped": true, "value": "Alex Rivera", "autocomplete": "name"],
+                ["kind": "email", "userTyped": true, "value": "new.person@example.org", "autocomplete": "email"]
+            ]
+        ]
+        _ = router.route(signup)
+        let added = try #require(store.events.captures.first?.value)
+        let undo: [String: Any] = ["type": "undoCapture", "host": site, "valueID": added.id.uuidString]
+        _ = try sheet(router.route(undo))
+        let card = gateway.card
+        let putBack = card.replacing(.email, with: card.emails + [CardEntry(label: nil, payload: added.payload)])
+        gateway.state.withLock { $0.card = putBack }
+
+        _ = try sheet(router.route(undo))
+        #expect(gateway.card == putBack)
     }
 
     @Test func aMutedSiteSavesNothing() throws {

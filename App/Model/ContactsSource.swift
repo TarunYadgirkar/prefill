@@ -51,7 +51,7 @@ nonisolated struct LiveContactsSource: ContactsSource {
         request.sortOrder = .userDefault
         var choices: [CardChoice] = []
         try? CNContactStore().enumerateContacts(with: request) { contact, _ in
-            guard contact.departmentName != PrefillContact.marker else { return }
+            guard !PrefillContact.isMarker(contact.departmentName) else { return }
             choices.append(Self.choice(contact))
         }
         return choices

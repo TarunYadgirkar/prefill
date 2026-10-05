@@ -49,6 +49,7 @@ final class FakeGateway: ContactsGateway {
     ) throws(CardWriteFailure) -> CardSaveResult {
         let result: Result<CardSaveResult, CardWriteFailure> = state.withLock { state in
             if let error = state.saveError { return .failure(error) }
+            guard scope.allows(target, over: basis) else { return .failure(.other) }
             if !state.editsBeforeSave.isEmpty { state.card = state.editsBeforeSave.removeFirst()(state.card) }
             guard state.card == basis else {
                 state.calls.append("stale")

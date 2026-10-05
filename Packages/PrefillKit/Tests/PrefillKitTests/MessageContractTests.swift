@@ -43,13 +43,13 @@ struct MessageContractTests {
     }
 
     @Test func theExamplesFileLoads() {
-        #expect(Self.examples["requests"]?.count == 11)
-        #expect(Self.examples["responses"]?.count == 9)
+        #expect(Self.examples["requests"]?.count == 12)
+        #expect(Self.examples["responses"]?.count == 10)
     }
 
     @Test(arguments: [
         "ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite", "linkSuggestions",
-        "contactSuggestions", "customSuggestions"
+        "contactSuggestions", "customSuggestions", "answers"
     ])
     func requestExamplesRoundTripWithTheSameFieldNames(name: String) throws {
         let json = try #require(example("requests", name) as? NSDictionary)
@@ -106,6 +106,7 @@ struct MessageContractTests {
         ("customSuggestionsResult", .customSuggestions(CustomSuggestionsResponse(fields: [
             .init(values: ["UC Berkeley"]), .init(values: [])
         ]))),
+        ("answersResult", .answers(AnswersResponse(saved: 2))),
         ("error", .error(reason: "unknown message"))
     ])
     func responsesEncodeToTheExamples(name: String, response: ExtensionResponse) throws {

@@ -92,6 +92,11 @@ final class AppModel {
         return RecentCaptures.items(events: events, state: state, card: card)
     }
 
+    // Answers Prefill saved from job applications that are still as saved, newest first.
+    var learnedAnswers: [LearnedAnswer] {
+        events.answers.reversed().filter { answer in customFields.contains { answer.matches($0) } }
+    }
+
     var waitingCount: Int {
         recent.count { $0.state == .waiting }
     }
