@@ -104,3 +104,13 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Weekly reinstall:** the free-team iPhone build expires every 7 days.
   - `scripts/install-auto-reinstall.sh` sets up a daily launchd agent that runs `scripts/auto-reinstall.sh`, which reinstalls when due and retries while the phone is locked.
   - It's untested on the Mac: codesign's keychain access from launchd and whether Xcode fetches a fresh profile after the old one is moved aside are unconfirmed.
+  - Install it from the main checkout: the job keeps the path it was installed from.
+- **One-tap fill:**
+  - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
+  - Safari's own suggestion bubble can cover the first row of Prefill's list on a filled field.
+  - The pill counts fields it recognizes, so "Fill form 13 fields" can end as "Filled 9" when the card has no link or answer for some.
+- **Learned answers:**
+  - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
+  - A learned answer is never replaced by a later one; the person edits it in the Custom tab.
+- **Mac "Fill form"** (branch `feat/mac-fill-form`): text fields only, unit-tested and built. `scripts/e2e-mac-ax.sh` covers it but needs an unlocked screen, and hasn't passed since the change.
+- **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
