@@ -42,3 +42,21 @@ public struct AutofillRow: Codable, Sendable, Hashable {
         self.kind = kind
     }
 }
+
+// The question a field answers when the page only prints it before the field, with nothing
+// tying the two together, as Partiful's event questionnaires do: "First name", " *", then
+// the box. Read from what comes before the field among its siblings, nearest first.
+public enum NearbyLabel {
+    public static let reach = 4
+
+    // `preceding` holds the text of each sibling before the field, nearest first, and nil
+    // for one that isn't plain text. A marker such as " *" is skipped; another control or
+    // a group ends the search, since the words before it belong to that one.
+    public static func pick(preceding: [String?]) -> String? {
+        for text in preceding.prefix(reach) {
+            guard let text else { return nil }
+            if text.contains(where: \.isLetter) { return text.trimmingCharacters(in: .whitespacesAndNewlines) }
+        }
+        return nil
+    }
+}

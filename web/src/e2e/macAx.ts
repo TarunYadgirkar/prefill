@@ -109,6 +109,8 @@ async function main(): Promise<void> {
     await page.waitForTimeout(TREE_WAIT_MS / 2 + PICK_WAIT_MS);
     const phone = await page.locator("#phone").inputValue();
     check(phone !== "" && EMAILS.includes(await email.inputValue()), `Fill form fills the phone and the email: ${phone}`);
+    const first = await page.locator(".question input").inputValue();
+    check(first === "Alex", `Fill form reads the question printed before an unlabelled field: ${first}`);
     if (airtable === "airtable") await checkAirtable(page);
   } finally {
     close();
