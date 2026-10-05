@@ -87,6 +87,11 @@ final class AppTourTests: XCTestCase {
         snap("onboarding-linked")
         swipeUp(until: next)
         next.tap()
+        let later = app.buttons["sharing-next"]
+        XCTAssertTrue(later.waitForExistence(timeout: 10))
+        pause(1)
+        snap("onboarding-sharing")
+        later.tap()
         let open = app.buttons["open-safari-settings"]
         XCTAssertTrue(open.waitForExistence(timeout: 10))
         snap("onboarding-safari")

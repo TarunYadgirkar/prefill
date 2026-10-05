@@ -71,7 +71,7 @@ struct CardStep: View {
             .padding(.top, Spacing.xSmall)
         } actions: {
             PrefillButton(title: "Continue") {
-                path.append(.safari)
+                path.append(model.placement.suggestedMoves.isEmpty ? .safari : .sharing)
             }
             .accessibilityIdentifier("continue")
             PrefillButton(title: "Choose a different card", kind: .secondary) {

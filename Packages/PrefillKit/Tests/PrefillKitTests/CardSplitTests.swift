@@ -108,6 +108,16 @@ struct CardSplitTests {
         #expect(split.placement.cardKeys == [Alex.mobile.entry.key])
     }
 
+    // NameDrop keeps offering the number the person picked only while the card's phones stay put.
+    @Test func aMinimalCardsPhonesAreNeverReordered() {
+        let moved = CardExtras(links: [], customFields: [], emails: Alex.card.emails, isMinimal: true)
+        let split = CardSplit(card: Alex.card.replacing(.email, with: []), copies: [moved])
+        let reordered = split.record.replacing(.phone, with: [Alex.workPhone.entry, Alex.mobile.entry])
+        #expect(split.writes(for: reordered).isEmpty)
+        let trimmed = split.writes(for: split.record.replacing(.phone, with: [Alex.workPhone.entry]))
+        #expect(trimmed.card?.phones == [Alex.workPhone.entry])
+    }
+
     @Test func leavingAMinimalCardPutsEverythingBackOnIt() throws {
         let writes = try #require(minimalSplit.movingOntoCard(nil, leavingMinimal: true))
         #expect(writes.card?.emails == Alex.card.emails)
