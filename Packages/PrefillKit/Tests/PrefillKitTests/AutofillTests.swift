@@ -82,6 +82,21 @@ struct PanelGeometryTests {
     }
 }
 
+struct NearbyLabelTests {
+    // Partiful's questionnaire, as Chrome exposes it: each box follows its question and a " *".
+    @Test func readsTheQuestionPrintedBeforeAnUnlabelledField() {
+        #expect(NearbyLabel.pick(preceding: [" *", "First name"]) == "First name")
+        #expect(NearbyLabel.pick(preceding: [" *", "Last name", "This question is required", nil]) == "Last name")
+        #expect(NearbyLabel.pick(preceding: [" *", "What is your LinkedIn?", "From previous responses"])
+            == "What is your LinkedIn?")
+    }
+
+    @Test func stopsAtAnotherControl() {
+        #expect(NearbyLabel.pick(preceding: [nil, "First name"]) == nil)
+        #expect(NearbyLabel.pick(preceding: [" *", " ", "-", "·", "Too far"]) == nil)
+    }
+}
+
 struct RowFilterTests {
     private let rows = ["alex.rivera@example.com", "alex@work.example.org", "a.school@example.edu"]
         .map { AutofillRow(value: $0, detail: "Email", kind: "email") }
@@ -94,5 +109,13 @@ struct RowFilterTests {
 
     @Test func offersNothingOnceTheFieldHoldsAValue() {
         #expect(RowFilter.matching(rows, typed: "alex@work.example.org").isEmpty)
+    }
+
+    @Test func readsAPhoneNumberByItsDigits() {
+        let phones = ["+1 (510) 555-0100", "+1 415 555 0199"]
+            .map { AutofillRow(value: $0, detail: "Phone", kind: "phone") }
+        #expect(RowFilter.matching(phones, typed: "5105550100").isEmpty)
+        #expect(RowFilter.matching(phones, typed: "415-555").map(\.value) == ["+1 415 555 0199"])
+        #expect(RowFilter.matching(phones, typed: "2025550123").isEmpty)
     }
 }

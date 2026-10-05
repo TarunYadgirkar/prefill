@@ -61,13 +61,36 @@ export function fillField(element: TextField, value: string): void {
   element.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
+// A phone number reads the same whatever its spaces, dashes and brackets, and with or without
+// a country code in front, so numbers are compared by their digits.
+const PHONE_LIKE = /^[\d\s()+.-]+$/u;
+const MIN_PHONE_DIGITS = 7;
+
+function phoneDigits(text: string): string | undefined {
+  const digits = text.replace(/\D/gu, "");
+  return PHONE_LIKE.test(text) && digits.length >= MIN_PHONE_DIGITS ? digits : undefined;
+}
+
+function isSameValue(value: string, text: string): boolean {
+  const typed = phoneDigits(text);
+  const held = typed === undefined ? undefined : phoneDigits(value);
+  if (typed === undefined || held === undefined) return value.toLowerCase() === text;
+  return held.endsWith(typed) || typed.endsWith(held);
+}
+
+function fits(value: string, text: string): boolean {
+  if (value.toLowerCase().includes(text)) return true;
+  const digits = text.replace(/\D/gu, "");
+  return PHONE_LIKE.test(text) && PHONE_LIKE.test(value) && digits !== "" && value.replace(/\D/gu, "").includes(digits);
+}
+
 // The choices that still fit what's in the field, or all of them while it's empty. A
 // field that already holds one of them offers nothing.
 export function matching(choices: readonly Choice[], typed: string): Choice[] {
   const text = typed.trim().toLowerCase();
   if (text === "") return [...choices];
-  if (choices.some((choice) => choice.value.toLowerCase() === text)) return [];
-  return choices.filter((choice) => choice.value.toLowerCase().includes(text));
+  if (choices.some((choice) => isSameValue(choice.value, text))) return [];
+  return choices.filter((choice) => fits(choice.value, text));
 }
 
 function setStyles(element: HTMLElement, styles: Record<string, string>): void {

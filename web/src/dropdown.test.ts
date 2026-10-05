@@ -84,4 +84,15 @@ describe("matching", () => {
     expect(matching(choices, "+1 510 555 0100")).toEqual([]);
     expect(matching(choices, " ")).toEqual(choices);
   });
+
+  // Partiful's RSVP form holds the number as ten digits with no country code.
+  it("reads a phone number by its digits, whatever its format", () => {
+    const phones: Choice[] = [
+      { value: "+1 (510) 555-0100", detail: "Phone" },
+      { value: "+1 415 555 0199", detail: "Phone" },
+    ];
+    expect(matching(phones, "5105550100")).toEqual([]);
+    expect(matching(phones, "415-555")).toEqual([phones[1]]);
+    expect(matching(phones, "2025550123")).toEqual([]);
+  });
 });

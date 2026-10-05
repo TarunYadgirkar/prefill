@@ -38,9 +38,7 @@ enum FieldReader {
         let description = FieldDescription(
             tag: element.role == kAXTextAreaRole ? .textarea : .input,
             type: inputType(element),
-            label: squash([
-                title(of: element), element.string(kAXTitleAttribute), element.string(kAXDescriptionAttribute)
-            ]),
+            label: label(of: element),
             names: [element.string("AXDOMIdentifier")].compactMap { $0 }.filter { !$0.isEmpty },
             placeholder: squash([element.string(kAXPlaceholderValueAttribute)]),
             signIn: isSignIn(element)
@@ -101,6 +99,24 @@ enum FieldReader {
         let description = element.string(kAXRoleDescriptionAttribute)?.lowercased() ?? ""
         let types = ["email": "email", "telephone": "tel", "phone": "tel", "url": "url", "search": "search"]
         return types.first { description.contains($0.key) }?.value ?? "text"
+    }
+
+    // The field's own label, or for a field with no label and no placeholder, the question
+    // printed right before it.
+    private static func label(of element: AXUIElement) -> String {
+        let own = squash([
+            title(of: element), element.string(kAXTitleAttribute), element.string(kAXDescriptionAttribute)
+        ])
+        guard own.isEmpty, squash([element.string(kAXPlaceholderValueAttribute)]).isEmpty else { return own }
+        return squash([NearbyLabel.pick(preceding: textBefore(element))])
+    }
+
+    private static func textBefore(_ element: AXUIElement) -> [String?] {
+        guard let siblings = element.parent?.children(),
+              let index = siblings.firstIndex(where: { CFEqual($0, element) }) else { return [] }
+        return siblings[..<index].reversed().prefix(NearbyLabel.reach).map { sibling in
+            sibling.role == kAXStaticTextRole ? sibling.string(kAXValueAttribute) ?? "" : nil
+        }
     }
 
     private static func title(of element: AXUIElement) -> String? {
