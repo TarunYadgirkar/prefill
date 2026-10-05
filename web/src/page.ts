@@ -1,3 +1,4 @@
+import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
@@ -27,15 +28,19 @@ export interface PageEnvironment {
   onFill?: (fill: PageFill) => void;
 }
 
-// Runs in the top frame of secure pages only, so a network attacker on plain http or a
-// frame from another site can't feed the card values or reorder it.
+type FrameFacts = Pick<PageEnvironment, "protocol" | "hostname" | "isSecureContext" | "isTopFrame">;
+
+// Runs in the top frame of secure pages, and in a frame only when it shows one of the job
+// application forms in atsFrames.ts over https, under that form's own host. So a network
+// attacker on plain http or a frame from any other site can't feed the card values or
+// reorder it.
+export function isPrefillFrame(env: FrameFacts): boolean {
+  if (!env.isSecureContext || !isTrustedPage(env.protocol, env.hostname)) return false;
+  return env.isTopFrame || isAtsFrame(env.protocol, env.hostname);
+}
+
 export function startPage(env: PageEnvironment): () => void {
-  if (
-    !env.isTopFrame ||
-    !env.isSecureContext ||
-    !isTrustedPage(env.protocol, env.hostname)
-  )
-    return () => undefined;
+  if (!isPrefillFrame(env)) return () => undefined;
   const host = (): string => env.hostname;
   const send = (request: ExtensionRequest): void => {
     env.send(request).catch(() => undefined);

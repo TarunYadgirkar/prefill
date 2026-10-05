@@ -62,6 +62,18 @@ describe("Chrome manifest", () => {
   });
 });
 
+describe("content scripts", () => {
+  // Embedded job application forms live in frames; the script itself bails out in every
+  // frame that isn't the top one or a listed form.
+  it.each([
+    ["Safari", new URL("manifest.json", RESOURCES)],
+    ["Chrome", new URL("../chromium/manifest.json", import.meta.url)],
+  ])("%s loads the content script into every frame", (_name, path) => {
+    const { content_scripts } = JSON.parse(readFileSync(path, "utf8")) as { content_scripts: { all_frames: boolean }[] };
+    expect(content_scripts.map((script) => script.all_frames)).toEqual([true]);
+  });
+});
+
 describe("manifest action", () => {
   it("opens Safari's Prefill sheet from the page menu", () => {
     expect(manifest.action.default_popup).toBe("popup.html");
