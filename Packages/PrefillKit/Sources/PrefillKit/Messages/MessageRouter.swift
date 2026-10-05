@@ -1,5 +1,6 @@
 import Foundation
 import os
+import Synchronization
 
 // Answers the Safari extension. Runs inside the extension's handler process, which
 // inherits the app's Contacts grant; nothing here ever asks for access (REPORT.md,
@@ -43,24 +44,31 @@ public struct MessageRouter: Sendable {
 
     static let pageSeenInterval: TimeInterval = 86_400
 
+    // Safari can deliver a capture and a page context to the same handler process at once,
+    // and the Mac relay answers connections in parallel. Both read their limits from the
+    // events before appending to them, so they run one at a time.
+    static let eventLock = Mutex(())
+
     func pageContext(_ request: PageContextRequest) -> PageContextResponse {
-        notePageSeen(at: now())
-        guard let state = currentState() else { return PageContextResponse(outcome: .failed(.other)) }
-        guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
-        guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
-        let date = now()
-        let recent = events().cardWrites.count { date.timeIntervalSince($0) < Self.cardWriteWindow }
-        guard recent < Self.maxCardWritesPerWindow else {
-            Self.log.info("card rewrite skipped, too many this minute")
-            return PageContextResponse(status: .unchanged)
+        Self.eventLock.withLock { _ in
+            notePageSeen(at: now())
+            guard let state = currentState() else { return PageContextResponse(outcome: .failed(.other)) }
+            guard let link = state.cardLink else { return PageContextResponse(status: .notSetUp) }
+            guard state.settings.matchEachSite else { return PageContextResponse(status: .off) }
+            let date = now()
+            let recent = events().cardWrites.count { date.timeIntervalSince($0) < Self.cardWriteWindow }
+            guard recent < Self.maxCardWritesPerWindow else {
+                Self.log.info("card rewrite skipped, too many this minute")
+                return PageContextResponse(status: .unchanged)
+            }
+            let page = PageSignal(
+                host: request.host, hints: request.hints, now: date, matchEachSite: true,
+                siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+            )
+            let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
+            if result.outcome == .saved { noteCardWrite(at: date) }
+            return PageContextResponse(outcome: result.outcome)
         }
-        let page = PageSignal(
-            host: request.host, hints: request.hints, now: date, matchEachSite: true,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
-        )
-        let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
-        if result.outcome == .saved { noteCardWrite(at: date) }
-        return PageContextResponse(outcome: result.outcome)
     }
 
     func notePageSeen(at date: Date) {

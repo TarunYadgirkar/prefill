@@ -8,7 +8,7 @@ Every message is a JSON object with a `type` field. The Swift types live in `Pac
 
 Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
 
-Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them.
+Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them. Text lengths count UTF-16 units, as JavaScript's `length` does.
 
 | Limit | Value |
 | --- | --- |
@@ -239,7 +239,7 @@ Every sheet request carries the `host` it is about, checked like any other host,
 | `popupState` | `host`, `kinds` (at most 3) | Reads the card and plans this site's order without saving. |
 | `pin` | `host`, `kind`, `valueID` | Records the pick for the site, rewrites the card so the value is first, and answers for that kind. Does nothing with Match each site off. |
 | `unpin` | `host`, `kind` | Takes the pick back and rewrites the card the same way. |
-| `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed. |
+| `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed, nor one already undone or turned down that they put back by hand. |
 | `muteSite` | `host`, `muted` | Turns "Don't save on this site" on or off. While it is on, a `capture` from the site is dropped whole. |
 
 These are recorded as events (`pins`, `mutes`, and a `dismissed` capture for an undo), since only the app writes AppState. The app folds them in when it reads the store, and the handler reads through the same fold, so a choice counts right away.

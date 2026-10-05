@@ -50,19 +50,20 @@ extension ExtensionRequest {
     }
 }
 
+// Lengths count UTF-16 units, as the content script's limits do.
 private extension CapturedField {
     var isWithinLimits: Bool {
         let texts = [autocomplete, name, label].compactMap(\.self)
-        return (value?.count ?? 0) <= MessageLimits.value
-            && texts.allSatisfy { $0.count <= MessageLimits.text }
+        return (value?.utf16.count ?? 0) <= MessageLimits.value
+            && texts.allSatisfy { $0.utf16.count <= MessageLimits.text }
             && address.map(\.isWithinLimits) ?? true
     }
 }
 
 private extension PostalAddress {
     var isWithinLimits: Bool {
-        street.count <= MessageLimits.street
-            && [city, state, postalCode, country].allSatisfy { $0.count <= MessageLimits.part }
+        street.utf16.count <= MessageLimits.street
+            && [city, state, postalCode, country].allSatisfy { $0.utf16.count <= MessageLimits.part }
     }
 }
 

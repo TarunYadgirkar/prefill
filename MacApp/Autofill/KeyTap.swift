@@ -88,9 +88,12 @@ final class GestureMonitor {
         self.onClick = onClick
     }
 
-    // `field` is in AppKit coordinates.
+    // `field` is in AppKit coordinates. One Tab unlocks one field, so it's used up here.
     func led(to field: CGRect) -> Bool {
-        if let lastTab, Date.now.timeIntervalSince(lastTab) <= Self.window { return true }
+        if let tab = lastTab, Date.now.timeIntervalSince(tab) <= Self.window {
+            lastTab = nil
+            return true
+        }
         guard let lastClick, Date.now.timeIntervalSince(lastClick.at) <= Self.window else { return false }
         return field.contains(lastClick.point)
     }
@@ -104,7 +107,8 @@ final class GestureMonitor {
             }
         }
         let keys = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            let isTab = event.keyCode == Self.tabKey
+            // Command-Tab switches apps rather than moving to a field.
+            let isTab = event.keyCode == Self.tabKey && !event.modifierFlags.contains(.command)
             MainActor.assumeIsolated { if isTab { self?.lastTab = .now } }
         }
         let scrolls = NSEvent.addGlobalMonitorForEvents(matching: .scrollWheel) { [weak self] _ in

@@ -19,7 +19,7 @@ public enum PrefillContact {
         return person.isEmpty ? searchName : "\(searchName) · \(person)"
     }
 
-    static func isMarker(_ department: String) -> Bool {
+    public static func isMarker(_ department: String) -> Bool {
         department == marker || department == minimalMarker
     }
 }

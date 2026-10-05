@@ -14,6 +14,10 @@ APP=$E2E_DERIVED/Build/Products/Personal/Prefill.app
 WORK=$(mktemp -d)
 INSTALLED_ID=com.tarunyadgirkar.prefill.mac
 
+# The test copy's host shares the real one's identifier and also answers Chrome for
+# Testing, so it never stays on disk after the run, even when the build fails.
+trap 'rm -rf ${E2E_DERIVED:?}' EXIT
+
 step "Building extension scripts and a test copy of the Mac app"
 pnpm --dir $ROOT/web build
 xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
@@ -27,6 +31,7 @@ cleanup() {
   kill ${app_pid:-} ${server_pid:-} 2>/dev/null || true
   sleep 1
   rm -rf $WORK
+  rm -rf ${E2E_DERIVED:?}
   $was_running && open -b $INSTALLED_ID || true
 }
 trap cleanup EXIT
