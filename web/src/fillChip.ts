@@ -25,7 +25,7 @@ const GAP = 6;
 const EARLY_TAP_MS = 400;
 const DONE_MS = 8_000;
 
-const STYLE = `
+export const PILL_STYLE = `
 :host { all: initial; }
 .pill {
   --surface: rgb(255 255 255 / 0.96); --text: #1c1c1e; --muted: #6c6c70; --accent: #0068d6; --line: rgb(60 60 67 / 0.18);
@@ -49,7 +49,7 @@ button:focus-visible { outline: 2px solid var(--accent); }
 
 type State = { name: "offer"; count: number } | { name: "busy" } | { name: "done"; result: FillResult };
 
-function setStyles(element: HTMLElement, styles: Record<string, string>): void {
+export function setStyles(element: HTMLElement, styles: Record<string, string>): void {
   for (const [name, value] of Object.entries(styles)) element.style.setProperty(name, value, "important");
 }
 
@@ -59,7 +59,7 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
   const host = doc.createElement("prefill-fill");
   const root = host.attachShadow({ mode: "closed" });
   const style = doc.createElement("style");
-  style.textContent = STYLE;
+  style.textContent = PILL_STYLE;
   const pill = doc.createElement("div");
   pill.className = "pill";
   pill.setAttribute("role", "toolbar");

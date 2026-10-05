@@ -33,8 +33,13 @@ public struct MessageRouter: Sendable {
         case .linkSuggestions(let body): return .linkSuggestions(linkSuggestions(body))
         case .contactSuggestions(let body): return .contactSuggestions(contactSuggestions(body))
         case .customSuggestions(let body): return .customSuggestions(customSuggestions(body))
-        default: return .popupState(sheet(request))
+        default: return other(request)
         }
+    }
+
+    private func other(_ request: ExtensionRequest) -> ExtensionResponse {
+        if case .answers(let body) = request { return .answers(answers(body)) }
+        return .popupState(sheet(request))
     }
 
     // Every rewrite syncs the card to all of the person's devices, so pages together get a

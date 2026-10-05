@@ -8,6 +8,7 @@ import type { FieldElement } from "./fieldTypes";
 import { fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
 import { installFillChip } from "./fillChip";
 import { trackGestures } from "./gesture";
+import { installLearn } from "./learn";
 import { installLinks } from "./links";
 import type { ExtensionRequest } from "./messages";
 import { isTrustedPage } from "./origin";
@@ -67,6 +68,7 @@ export function startPage(env: PageEnvironment): () => void {
   const stops = [
     ...values,
     installCapture(env.doc, env.win, { host, send }),
+    installLearn(env.doc, env.win, { host, send: env.send }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
     installCustom(env.doc, {
       host,
