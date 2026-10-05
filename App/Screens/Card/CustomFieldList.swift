@@ -9,6 +9,12 @@ struct CustomFieldList: View {
     @State private var editing: CustomField?
     @State private var removing: CustomField?
     @State private var isAdding = false
+    @State private var isAddingStudentAnswers = false
+    @AppStorage("studentStarterDone") private var isStarterDone = false
+
+    private var offersStarter: Bool {
+        !isStarterDone && !StudentStarter.missing(from: fields).isEmpty
+    }
 
     private var fields: [CustomField] { model.customFields }
 
@@ -48,6 +54,20 @@ struct CustomFieldList: View {
                 }
                 .padding(.vertical, Spacing.xxSmall)
                 .accessibilityIdentifier("add-custom-field")
+                if offersStarter {
+                    Button {
+                        isAddingStudentAnswers = true
+                    } label: {
+                        Label("Add student answers", systemImage: "graduationcap.fill")
+                            .textRole(.action)
+                    }
+                    .padding(.vertical, Spacing.xxSmall)
+                    .accessibilityIdentifier("add-student-answers")
+                }
+            } footer: {
+                if offersStarter {
+                    Text("School, degree, major, GPA and graduation date, the questions job applications ask students.")
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -59,6 +79,12 @@ struct CustomFieldList: View {
                     """)) {
                     PrefillButton(title: "Add field", systemImage: "plus") { isAdding = true }
                         .fixedSize()
+                    if offersStarter {
+                        PrefillButton(title: "Add student answers", systemImage: "graduationcap", kind: .secondary) {
+                            isAddingStudentAnswers = true
+                        }
+                        .fixedSize()
+                    }
                 }
             }
         }
@@ -67,6 +93,9 @@ struct CustomFieldList: View {
         }
         .sheet(isPresented: $isAdding) {
             CustomFieldSheet(original: nil)
+        }
+        .sheet(isPresented: $isAddingStudentAnswers) {
+            StudentAnswersSheet(missing: StudentStarter.missing(from: fields)) { isStarterDone = true }
         }
         .confirmationDialog(
             "Remove this field from your card?", isPresented: isRemoving, titleVisibility: .visible,
@@ -105,6 +134,62 @@ private struct CustomFieldRow: View {
         .contentShape(.rect)
         .accessibilityElement(children: .combine)
         .accessibilityIdentifier("custom-\(field.label)")
+    }
+}
+
+// The student starter set: one answer per question that has none yet, the school filled in.
+// Blank answers are left out, and each saved one is an ordinary field to edit afterwards.
+private struct StudentAnswersSheet: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.dismiss) private var dismiss
+    let missing: [JobQuestion]
+    let onSaved: () -> Void
+
+    @State private var answers = StudentStarter.answers
+
+    private var filled: Int {
+        StudentStarter.fields(for: answers, adding: model.customFields).count
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    ForEach(missing, id: \.self) { question in
+                        LabeledContent(question.label) {
+                            TextField(StudentStarter.example(question), text: answer(question))
+                                .multilineTextAlignment(.trailing)
+                                .accessibilityIdentifier("student-\(question.rawValue)")
+                        }
+                    }
+                } footer: {
+                    Text("Change anything that isn’t right and leave blank what you’d rather type each time.")
+                }
+            }
+            .navigationTitle("Student answers")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", role: .cancel) { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add \(filled)") {
+                        Task {
+                            await model.addStudentAnswers(answers)
+                            onSaved()
+                            dismiss()
+                        }
+                    }
+                    .disabled(filled == 0)
+                    .accessibilityIdentifier("save-student-answers")
+                }
+            }
+        }
+        .presentationBackground(Palette.canvas)
+    }
+
+    private func answer(_ question: JobQuestion) -> Binding<String> {
+        Binding { answers[question] ?? "" } set: { answers[question] = $0 }
     }
 }
 

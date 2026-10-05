@@ -38,6 +38,36 @@ public enum JobQuestion: String, Codable, Sendable, CaseIterable {
     }
 }
 
+// What the Custom tab offers a student to start from: the school is filled in, the rest
+// are blank, and all of them can be edited before anything is saved.
+public enum StudentStarter {
+    public static let questions: [JobQuestion] = [.school, .degree, .major, .gpa, .graduation]
+    public static let answers: [JobQuestion: String] = [.school: "University of California, Berkeley"]
+
+    public static func example(_ question: JobQuestion) -> String {
+        switch question {
+        case .degree: "Bachelor of Science"
+        case .major: "Computer Science"
+        case .gpa: "3.8"
+        case .graduation: "May 2028"
+        default: ""
+        }
+    }
+
+    // The questions still without a custom field.
+    public static func missing(from fields: [CustomField]) -> [JobQuestion] {
+        questions.filter { question in !fields.contains { $0.id == question.label.lowercased() } }
+    }
+
+    // A field for each answer that isn't blank and whose question has none yet, in the starter's order.
+    public static func fields(for answers: [JobQuestion: String], adding fields: [CustomField]) -> [CustomField] {
+        missing(from: fields).compactMap { question in
+            let answer = (answers[question] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            return answer.isEmpty ? nil : question.field(answer: answer)
+        }
+    }
+}
+
 // An answer Prefill saved from a form the person submitted.
 public struct LearnedAnswer: Codable, Sendable, Hashable, Identifiable {
     public let id: UUID
