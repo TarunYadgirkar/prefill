@@ -1,6 +1,7 @@
 import { parseAutocomplete } from "./autocomplete";
 import { isPlaceholder, pickFirst, type Option } from "./choices";
 import { classify, isSignIn } from "./classify";
+import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { fieldText, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
@@ -43,7 +44,8 @@ type Want =
 type Slot =
   | { control: "text"; element: TextField; want: Want }
   | { control: "select"; element: HTMLSelectElement; want: Want }
-  | { control: "radio"; inputs: HTMLInputElement[]; want: Want };
+  | { control: "radio"; inputs: HTMLInputElement[]; want: Want }
+  | { control: "combobox"; element: HTMLInputElement; want: Want };
 
 interface Answers {
   contact: Omit<ContactSuggestionsResult, "type"> | undefined;
@@ -86,8 +88,11 @@ const optionOf = (option: HTMLOptionElement): Option => ({ text: option.text, va
 
 // Where a field's words come from when nothing else claims it: a custom answer, unless
 // the field asks a demographic question, which is declined.
+// "If other, please specify" follows another answer, so it's left for the person.
+const FOLLOW_UP = /^\W*if\b/iu;
+
 function freeWant(text: string): Want | undefined {
-  if (text === "") return undefined;
+  if (text === "" || FOLLOW_UP.test(text)) return undefined;
   return isDemographic(text) ? { from: "decline" } : { from: "custom", text };
 }
 
@@ -101,7 +106,8 @@ function linkWant(element: FieldElement, types: readonly LinkType[] | undefined)
 function otherWant(element: FieldElement): Want | undefined {
   if (parseAutocomplete(element.getAttribute("autocomplete")) !== undefined) return undefined;
   const want = freeWant(fieldText(element));
-  return want?.from === "decline" && element.localName !== "select" ? undefined : want;
+  const hasChoices = element.localName === "select" || isCombobox(element);
+  return want?.from === "decline" && !hasChoices ? undefined : want;
 }
 
 function wantOf(element: FieldElement): Want | undefined {
@@ -117,9 +123,18 @@ function isFillableControl(element: FieldElement): boolean {
   return element.localName !== "select" || !(element as HTMLSelectElement).multiple;
 }
 
+function comboboxSlot(element: HTMLInputElement): Slot | undefined {
+  if (!isEditable(element) || !isRendered(element) || !isComboboxEmpty(element)) return undefined;
+  const want = wantOf(element);
+  return want === undefined ? undefined : { control: "combobox", element, want };
+}
+
+const isOpen = (element: FieldElement): boolean =>
+  isEditable(element) && isEmpty(element) && isRendered(element) && !hasOwnList(element) && isFillableControl(element);
+
 function slotOf(element: FieldElement): Slot | undefined {
-  const isOpen = isEditable(element) && isEmpty(element) && isRendered(element) && !hasOwnList(element);
-  if (!isOpen || !isFillableControl(element)) return undefined;
+  if (isCombobox(element)) return comboboxSlot(element as HTMLInputElement);
+  if (!isOpen(element)) return undefined;
   const want = wantOf(element);
   if (want === undefined) return undefined;
   return element.localName === "select"
@@ -324,12 +339,31 @@ function applyRadio(inputs: readonly HTMLInputElement[], want: Want, values: rea
   };
 }
 
+// Types the answer to narrow the list, or opens it with the down arrow to decline.
+function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[]): Promise<(() => void) | undefined> {
+  if (want.from !== "decline" && values[0] === undefined) return Promise.resolve(undefined);
+  const search = want.from === "decline" ? undefined : values[0];
+  return fillCombobox(input, (options) => optionIndex(want, options, values), search);
+}
+
 // Fills one slot and returns what puts it back, or undefined when nothing fit.
 function apply(slot: Slot, answers: Answers): (() => void) | undefined {
   const { values, detail } = valuesFor(slot.want, answers);
   if (slot.control === "text") return applyText(slot.element, values, detail);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values);
-  return applyRadio(slot.inputs, slot.want, values);
+  if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values);
+  return undefined;
+}
+
+// Searchable dropdowns open one at a time, after the rest of the form is filled.
+async function applyComboboxes(slots: readonly Slot[], answers: Answers): Promise<(() => void)[]> {
+  const undos: (() => void)[] = [];
+  for (const slot of slots) {
+    if (slot.control !== "combobox") continue;
+    const undo = await applyCombobox(slot.element, slot.want, valuesFor(slot.want, answers).values).catch(() => undefined);
+    if (undo !== undefined) undos.push(undo);
+  }
+  return undos;
 }
 
 // Fills every empty field of the form the person is in, in page order, and returns how
@@ -338,7 +372,7 @@ export async function fillForm(scope: ParentNode, options: FillOptions): Promise
   const slots = findSlots(scope);
   if (slots.length === 0) return { filled: 0, undo: () => undefined };
   const answers = await gather(slots, options);
-  const undos = slots.flatMap((slot) => apply(slot, answers) ?? []);
+  const undos = [...slots.flatMap((slot) => apply(slot, answers) ?? []), ...(await applyComboboxes(slots, answers))];
   return {
     filled: undos.length,
     undo: () => {

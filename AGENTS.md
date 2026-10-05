@@ -45,7 +45,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 | Path | What |
 |---|---|
-| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `demographics.ts` declines self-identification questions). |
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Card (Emails/Phones/Addresses/Links/Custom), Sites, Recent, Settings (Sharing your card, Restore), Siri intents. |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
@@ -54,7 +54,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `MacShared/` | Code identity checks and the socket used by both sides. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
 | `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
-| `scripts/` | build, test, install-device, auto-reinstall (and its launchd installer), install-mac, e2e-mac-chrome, e2e-mac-ax. `web/src/e2e/fillChrome.ts` runs one-tap fill in real Chromium with a stand-in host (`fakeHost.py`), on Linux or the Mac. |
+| `scripts/` | build, test, install-device, auto-reinstall (and its launchd installer), install-mac, e2e-mac-chrome, e2e-mac-ax. `web/src/e2e/fillChrome.ts` runs one-tap fill in real Chromium with a stand-in host (`fakeHost.py`), on Linux or the Mac, including a page built with the real React-Select (`testbed/react-select/`). Run `pnpm --dir web build` first; set `PREFILL_CHROMIUM` to use a local Chromium. |
 
 ## Rules that keep it safe
 
@@ -66,6 +66,8 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **One-tap fill is the one exception, and it takes the person's own tap on Prefill's button:** the pill beside a field they just clicked or tabbed into (closed shadow root, trusted clicks only), or Fill in Safari's sheet.
   - It fills only visible, empty, editable fields of the form the person is in, never sensitive ones or sign-in forms, and never overwrites what they typed.
   - Demographic questions (gender, race, ethnicity, veteran, disability, orientation) always get the declining option, or "No" when there is none, and a text box asking one is left alone.
+  - Searchable dropdowns (React-Select) are opened the way a person would: type the answer, or press the down arrow to decline, then click the option.
+  - Follow-up questions ("If other, please specify") are left alone.
   - Undo puts every field back, and a tap on a filled field offers the other values.
 - **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
 - **Never drop data:**

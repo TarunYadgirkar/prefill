@@ -2,20 +2,22 @@
 // for the native host and the Mac app (fakeHost.py), and the testbed application page.
 // Runs on Linux and macOS. usage: node fillChrome.ts <screenshot dir>
 import { spawn } from "node:child_process";
-import { chmodSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, cpSync, mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium, type Page } from "playwright-core";
+import { build } from "esbuild";
+import { chromium, type BrowserContext, type Page } from "playwright-core";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const web = resolve(here, "../..");
 const extension = join(web, "dist-chrome");
-const sites = resolve(web, "../testbed/sites");
+const testbed = resolve(web, "../testbed");
 const shots = resolve(process.argv[2] ?? join(tmpdir(), "prefill-e2e"));
 const HOST = "com.tarunyadgirkar.prefill";
 const EXTENSION_ID = "hnmpfjdamkhpfibdjpmdopohkcpfbfej";
-const PORT = 8765;
+// A fresh port each run, so a server left over from an interrupted run can't answer.
+const PORT = 20_000 + Math.floor(Math.random() * 20_000);
 
 function check(condition: boolean, message: string): void {
   if (!condition) throw new Error(`FAIL ${message}`);
@@ -54,8 +56,50 @@ const values = (page: Page): Promise<Record<string, string>> =>
     return { ...out, authorized: radio?.parentElement?.textContent.trim() ?? "" };
   });
 
+// The testbed pages, plus the React-Select page bundled with the real library.
+async function servedPages(): Promise<string> {
+  const root = mkdtempSync(join(tmpdir(), "prefill-sites-"));
+  cpSync(join(testbed, "sites"), root, { recursive: true });
+  mkdirSync(join(root, "react-select"));
+  copyFileSync(join(testbed, "react-select/index.html"), join(root, "react-select/index.html"));
+  await build({
+    entryPoints: [join(testbed, "react-select/page.mjs")],
+    outfile: join(root, "react-select/page.js"),
+    bundle: true,
+    minify: true,
+    nodePaths: [join(web, "node_modules")],
+    define: { "process.env.NODE_ENV": '"production"' },
+    logLevel: "error",
+  });
+  return root;
+}
+
+// Greenhouse's searchable dropdowns: one tap types or arrows into each and clicks the option.
+async function checkReactSelect(context: BrowserContext): Promise<void> {
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 900, height: 1000 });
+  await page.goto(`http://127.0.0.1:${String(PORT)}/react-select/index.html`);
+  await page.waitForTimeout(1_000);
+  await page.click("#first_name");
+  await pressPill(page, "start");
+  await page.waitForFunction(() => document.querySelector('[data-answer="veteran_status"]')?.textContent !== "", null, { timeout: 15_000 });
+  const answers: Record<string, string> = await page.evaluate(() =>
+    Object.fromEntries(
+      [...document.querySelectorAll("output[data-answer]")].map((node) => [node.getAttribute("data-answer") ?? "", node.textContent]),
+    ),
+  );
+  await page.screenshot({ path: join(shots, "fill-chrome-react-select.png"), fullPage: true });
+  check(answers.question_1 === "Yes", "one tap answers a React-Select yes/no question");
+  check(answers.question_2 === "No", "one tap answers the sponsorship question");
+  check(answers["school--0"] === "University of California, Berkeley", "one tap searches and picks the school");
+  check(answers.gender === "Decline To Self Identify", "one tap declines gender in a React-Select");
+  check(answers.veteran_status === "I don't wish to answer", "one tap declines veteran status in a React-Select");
+  await page.close();
+}
+
 async function main(): Promise<void> {
   mkdirSync(shots, { recursive: true });
+  const sites = await servedPages();
   const server = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1", "--directory", sites], { stdio: "ignore" });
   const profile = mkdtempSync(join(tmpdir(), "prefill-profile-"));
   installFakeHost(profile);
@@ -111,6 +155,8 @@ async function main(): Promise<void> {
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("Enter");
     check((await page.inputValue("#email")) === "alex@work.example.org", "a tap on a filled field still offers the other email");
+    await page.close();
+    await checkReactSelect(context);
   } finally {
     await context.close();
     server.kill();

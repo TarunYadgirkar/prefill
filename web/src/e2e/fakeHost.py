@@ -19,7 +19,7 @@ LINKS = [
     {"type": "linkedin", "url": "https://www.linkedin.com/in/alexrivera"},
     {"type": "website", "url": "https://alexrivera.dev"},
 ]
-CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"), ("hear", "LinkedIn")]
+CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"), ("sponsorship", "No"), ("hear", "LinkedIn")]
 
 
 def answer(request):

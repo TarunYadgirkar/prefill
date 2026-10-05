@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { classify } from "./classify";
+import { isCombobox, isComboboxEmpty } from "./combobox";
 import { fieldText } from "./custom";
 import { fieldElements } from "./dom";
-import { fillForm } from "./fill";
+import { fillForm, findSlots } from "./fill";
 import type { ExtensionRequest } from "./messages";
 import type { FieldElement } from "./fieldTypes";
 import ashbyDecagon from "./fixtures/ats-ashby-decagon.html?raw";
@@ -169,5 +170,30 @@ describe("questions Lever doesn't label", () => {
     expect(asked.some((text) => text.startsWith("Will you be returning to your studies after the internship?"))).toBe(true);
     const checked = document.querySelector<HTMLInputElement>('input[name$="[field1]"]:checked');
     expect(checked?.value).toBe("Yes");
+  });
+});
+
+describe("Greenhouse's searchable dropdowns", () => {
+  beforeEach(() => {
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("finds each empty React-Select box and what it asks", () => {
+    const auth = fieldIn("greenhouseGarner", "question_19964589004") as HTMLInputElement;
+    expect(isCombobox(auth)).toBe(true);
+    expect(isComboboxEmpty(auth)).toBe(true);
+    const asks = findSlots(document).flatMap((slot) => (slot.control === "combobox" ? [slot.want] : []));
+    expect(asks).toContainEqual({ from: "decline" });
+    expect(asks).toContainEqual(expect.objectContaining({ from: "custom", text: expect.stringMatching(/^School/u) as string }));
+  });
+
+  it("leaves an \"If 'Other' selected\" follow-up alone", () => {
+    fieldIn("greenhouseGarner", "email");
+    const texts = findSlots(document).flatMap((slot) => (slot.want.from === "custom" ? [slot.want.text] : []));
+    expect(texts.some((text) => text.startsWith("If"))).toBe(false);
   });
 });
