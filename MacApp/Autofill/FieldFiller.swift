@@ -29,6 +29,13 @@ enum FieldFiller {
         return await paste(value, into: element) ? .paste : .failed
     }
 
+    // Through Accessibility only, for a field that may not have focus: a paste would land
+    // in whatever does.
+    static func set(_ element: AXUIElement, to value: String) async -> Bool {
+        guard element.set(kAXValueAttribute, value as CFString) else { return false }
+        return await holds(element, value)
+    }
+
     // Browsers update what Accessibility reads a moment after the page takes the value.
     private static func holds(_ element: AXUIElement, _ value: String) async -> Bool {
         for _ in 0..<settleChecks {

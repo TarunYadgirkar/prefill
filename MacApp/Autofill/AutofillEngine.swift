@@ -15,6 +15,7 @@ final class AutofillEngine {
     private static let enabledKey = "suggestEverywhere"
     private static let trustPoll: Duration = .seconds(2)
     private static let rescroll: Duration = .milliseconds(120)
+    private static let noticeTime: Duration = .seconds(8)
     private static let log = PrefillLog.logger("autofill")
 
     private(set) var isTrusted = AccessibilityTrust.isTrusted
@@ -32,6 +33,8 @@ final class AutofillEngine {
     @ObservationIgnored private var gestures: GestureMonitor?
     @ObservationIgnored private let panel = SuggestionPanel()
     @ObservationIgnored private var current: (field: FocusedField, rows: [AutofillRow])?
+    // What the last "Fill form" put where, for Undo.
+    @ObservationIgnored private var lastFill: [(element: AXUIElement, value: String)] = []
     @ObservationIgnored private var focusToken = 0
     @ObservationIgnored private var trustTask: Task<Void, Never>?
     @ObservationIgnored private var scrollTask: Task<Void, Never>?
@@ -40,6 +43,8 @@ final class AutofillEngine {
     private init() {
         isEnabled = UserDefaults.standard.object(forKey: Self.enabledKey) as? Bool ?? true
         panel.model.pick = { [weak self] row in self?.pick(row) }
+        panel.model.fillForm = { [weak self] in self?.fillForm() }
+        panel.model.undoFill = { [weak self] in self?.undoFill() }
     }
 
     func start(router: MessageRouter) {
@@ -198,7 +203,7 @@ final class AutofillEngine {
     }
 
     private func press(_ key: KeyTap.Key) -> Bool {
-        guard panel.isVisible else { return false }
+        guard panel.isVisible, panel.model.notice == nil else { return false }
         switch key {
         case .next: panel.model.move(by: 1)
         case .previous: panel.model.move(by: -1)
@@ -235,6 +240,7 @@ final class AutofillEngine {
     private func hide() {
         hidePanel()
         current = nil
+        lastFill = []
     }
 
     private static var testApp: String? {
@@ -246,6 +252,9 @@ final class AutofillEngine {
     }
 
     #if PREFILL_TEST_BROWSERS
+    @ObservationIgnored private var e2ePicks = 0
+
+    // With PREFILL_E2E_AX_FILL_FORM, the second field focused gets "Fill form" instead.
     // scripts/e2e-mac-ax.sh never presses keys on the person's screen, so the test copy
     // picks the first row itself a moment after showing it.
     private func autopick(_ field: AXUIElement) {
@@ -256,10 +265,53 @@ final class AutofillEngine {
         Task {
             try? await Task.sleep(for: .seconds(delay))
             guard let current, CFEqual(current.field.element, field), let first = panel.model.rows.first else { return }
-            pick(first)
+            let fillsForm = ProcessInfo.processInfo.environment["PREFILL_E2E_AX_FILL_FORM"] == "1" && e2ePicks > 0
+            e2ePicks += 1
+            if fillsForm { fillForm() } else { pick(first) }
         }
     }
     #endif
+}
+
+extension AutofillEngine {
+    // One tap for the whole form: every empty field on the focused field's page gets the
+    // first value its own list would offer, by the same rules as the extension's one-tap
+    // fill. Only the person's click on Prefill's own panel starts it.
+    private func fillForm() {
+        guard let current, let worker else { return }
+        let anchor = current.field
+        let fields = FieldReader.emptyFields(around: anchor)
+        hidePanel()
+        focusToken += 1
+        let token = focusToken
+        Task {
+            let values = await worker.fillValues(for: fields.map(\.description), host: anchor.host)
+            var filled: [(element: AXUIElement, value: String)] = []
+            for (index, row) in values.sorted(by: { $0.key < $1.key }) {
+                let element = fields[index].element
+                if await FieldFiller.set(element, to: row.value) { filled.append((element, row.value)) }
+            }
+            Self.log.info("filled \(filled.count) of \(fields.count) empty fields")
+            #if PREFILL_TEST_BROWSERS
+            e2eLog("filled form \(filled.count) of \(fields.count)")
+            #endif
+            guard token == self.focusToken, !filled.isEmpty else { return }
+            self.lastFill = filled
+            let notice = filled.count == 1 ? "Filled 1 field" : "Filled \(filled.count) fields"
+            self.panel.show(notice: notice, under: anchor.element.frame ?? anchor.frame)
+            try? await Task.sleep(for: Self.noticeTime)
+            if token == self.focusToken { self.hide() }
+        }
+    }
+
+    // Empties only the fields that still hold what the fill put there.
+    private func undoFill() {
+        let filled = lastFill
+        hide()
+        for (element, value) in filled where element.string(kAXValueAttribute) == value {
+            element.set(kAXValueAttribute, "" as CFString)
+        }
+    }
 }
 
 #if PREFILL_TEST_BROWSERS

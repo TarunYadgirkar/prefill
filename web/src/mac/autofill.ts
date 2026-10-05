@@ -9,6 +9,7 @@ import type { Choice } from "../dropdown";
 import { isContact, type ContactField } from "../fieldTypes";
 import { linkChoices } from "../links";
 import { splitNames } from "../dom";
+import { takesSavedAnswer } from "../fill";
 import { parsePageResponse, type LinkType, type PageField, type PageRequest, type PageResponse } from "../messages";
 import { KIND_LABELS, SUGGESTED_KINDS, suggestionOptions } from "../suggestions";
 
@@ -89,9 +90,19 @@ export function rows(chosen: Plan, reply: unknown): Row[] {
   }
 }
 
+// What "Fill form" does with one of the form's fields: the same plan a focused field gets,
+// except that a text box asking a demographic or follow-up question is left for the person,
+// as in the extension's one-tap fill.
+export function fillPlan(field: FieldDescription): Plan {
+  const chosen = plan(field);
+  if (chosen.kind !== "custom" || chosen.request.type !== "customSuggestions") return chosen;
+  return takesSavedAnswer(joinFieldText([field.label, field.placeholder])) ? chosen : NONE;
+}
+
 // JSON in and out, so the Swift side needs no knowledge of these types.
 const api = {
   plan: (description: string): string => JSON.stringify(plan(JSON.parse(description) as FieldDescription)),
+  fillPlan: (description: string): string => JSON.stringify(fillPlan(JSON.parse(description) as FieldDescription)),
   rows: (chosen: string, reply: string): string => JSON.stringify(rows(JSON.parse(chosen) as Plan, JSON.parse(reply))),
 };
 

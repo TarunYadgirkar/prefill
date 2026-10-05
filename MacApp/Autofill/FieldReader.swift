@@ -5,6 +5,7 @@ import PrefillKit
 // The focused field, read through Accessibility.
 struct FocusedField {
     let element: AXUIElement
+    let bundleID: String
     let description: FieldDescription
     // The page's host, or the app's bundle ID outside a browser.
     let host: String
@@ -21,6 +22,8 @@ enum FieldReader {
     private static let webAreaSearch = 60
     private static let formClimb = 6
     private static let formBudget = 400
+    private static let fillBudget = 3_000
+    private static let maxFillFields = 40
     private static let loopback: Set<String> = ["localhost", "127.0.0.1", "[::1]"]
     private static let browsers = FocusWatcher.chromium.union([
         "com.apple.Safari", "com.apple.SafariTechnologyPreview", "org.mozilla.firefox",
@@ -43,7 +46,30 @@ enum FieldReader {
             signIn: isSignIn(element)
         )
         let value = element.string(kAXValueAttribute) ?? ""
-        return FocusedField(element: element, description: description, host: host, frame: frame, value: value)
+        return FocusedField(
+            element: element, bundleID: bundleID, description: description, host: host, frame: frame, value: value
+        )
+    }
+
+    // The empty fields of the form `field` is in, for "Fill form": every readable text field
+    // on the same page (or in the same window outside a browser) that is on the same host,
+    // so a frame from another site is never filled.
+    static func emptyFields(around field: FocusedField) -> [FocusedField] {
+        let ancestors = field.element.ancestors(limit: webAreaSearch)
+        let root = ancestors.first { $0.role == "AXWebArea" } ?? ancestors.first { $0.role == kAXWindowRole }
+        guard let root else { return [] }
+        var queue = [root]
+        var next = 0
+        var found: [FocusedField] = []
+        while next < queue.count, next < fillBudget, found.count < maxFillFields {
+            let node = queue[next]
+            next += 1
+            if let other = read(node, bundleID: field.bundleID), other.host == field.host, other.value.isEmpty {
+                found.append(other)
+            }
+            queue.append(contentsOf: node.children())
+        }
+        return found
     }
 
     // Web content sits under an AXWebArea whose AXURL is the page; Prefill works on the

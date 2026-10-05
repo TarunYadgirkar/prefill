@@ -91,6 +91,12 @@ const optionOf = (option: HTMLOptionElement): Option => ({ text: option.text, va
 // "If other, please specify" follows another answer, so it's left for the person.
 const FOLLOW_UP = /^\W*if\b/iu;
 
+// Whether a one-tap fill may put a saved answer in a text box that asks this: not a
+// follow-up, and not a demographic question, which only a list of choices can decline.
+export function takesSavedAnswer(text: string): boolean {
+  return text !== "" && !FOLLOW_UP.test(text) && !isDemographic(text);
+}
+
 function freeWant(text: string): Want | undefined {
   if (text === "" || FOLLOW_UP.test(text)) return undefined;
   return isDemographic(text) ? { from: "decline" } : { from: "custom", text };
