@@ -1,5 +1,5 @@
 import { parseAutocomplete, type AutocompleteDetail } from "./autocomplete";
-import { isRendered, labelText, placeholderText, splitNames } from "./dom";
+import { inferredLabel, isRendered, placeholderText, splitNames } from "./dom";
 import {
   IGNORED,
   SENSITIVE,
@@ -164,14 +164,44 @@ function fromRule(
 
 // A source's texts are its raw and split forms, so a negative that matches any of them
 // (the "ext" in "phone ext") rules the source out.
+// A label that is a whole question ("Has your license ever been revoked? If yes, state the
+// reason") names what it asks for near its start, so a word deep in the sentence doesn't
+// make it an address, name or phone field.
+const QUESTION_WORDS = 8;
+const QUESTION_HEAD = 40;
+const PART_KINDS: ReadonlySet<RuleResult["kind"]> = new Set(["address", "name", "phone"]);
+
+function headOf(text: string, kind: RuleResult["kind"]): string {
+  const isQuestion = text.split(/\s+/u).length >= QUESTION_WORDS;
+  return isQuestion && PART_KINDS.has(kind) ? text.slice(0, QUESTION_HEAD) : text;
+}
+
+const WHOLE_ADDRESS_PARTS: ReadonlySet<string> = new Set(["city", "state", "postalCode"]);
+
+// One box for "Address (City – State – ZIP)" takes the whole address, starting at the street.
+function isWholeAddress(texts: readonly string[], control: Control): boolean {
+  if (control !== "text" && control !== "textarea") return false;
+  const parts = RULES.filter(
+    (rule) =>
+      rule.result.kind === "address" &&
+      WHOLE_ADDRESS_PARTS.has(rule.result.part) &&
+      texts.some((text) => rule.pattern.test(text)),
+  );
+  return parts.length >= 2 && texts.some((text) => /address/iu.test(text));
+}
+
 function matchRules(
   texts: readonly string[],
   control: Control,
 ): Classification | undefined {
+  if (isWholeAddress(texts, control))
+    return contact({ kind: "address", part: "street" });
   const rule = RULES.find(
     (candidate) =>
       candidate.controls.includes(control) &&
-      texts.some((text) => candidate.pattern.test(text)) &&
+      texts.some((text) =>
+        candidate.pattern.test(headOf(text, candidate.result.kind)),
+      ) &&
       !texts.some((text) => candidate.negative?.test(text) === true),
   );
   return rule === undefined ? undefined : fromRule(rule.result, texts);
@@ -287,7 +317,7 @@ export function describe(el: FieldElement): FieldDescription {
           : "input",
     type: el.type,
     autocomplete: el.getAttribute("autocomplete"),
-    label: labelText(el),
+    label: inferredLabel(el),
     names: [el.getAttribute("name") ?? "", el.id].filter(Boolean),
     placeholder: placeholderText(el),
     signIn: isSignIn(el),

@@ -1,6 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { classify } from "./classify";
+import { fieldText } from "./custom";
 import { fieldElements } from "./dom";
+import { fillForm } from "./fill";
+import type { ExtensionRequest } from "./messages";
 import type { FieldElement } from "./fieldTypes";
 import ashbyDecagon from "./fixtures/ats-ashby-decagon.html?raw";
 import greenhouseBraeburn from "./fixtures/ats-greenhouse-braeburn.html?raw";
@@ -111,37 +114,60 @@ const RIGHT: readonly Case[] = [
   ["smartRecruitersBosch", "Confirm your email", "confirm-email-input", "email"],
   ["smartRecruitersBosch", "LinkedIn", "linkedin-input", "link linkedin"],
   ["smartRecruitersBosch", "Website", "website-input", "link website"],
+  // Fixed after these fixtures showed them wrong.
+  ["greenhouseGarner", "When is your expected graduation date?", "question_19964585004", "ignored"],
+  ["greenhouseBraeburn", "Current Address (City – State – ZIP Code)", "question_37142024002", "address street"],
+  ["greenhouseBraeburn", "Has your professional license … ever been revoked or suspended", "question_37142046002", "ignored"],
+  ["greenhouseBraeburn", "Have you been excluded, debarred, suspended … from … programs", "question_37142047002", "ignored"],
+  ["leverKepler", "Current location", "location-input", "address city"],
+  ["leverKepler", "LinkedIn URL", "urls[LinkedIn]", "link linkedin"],
+  ["leverKepler", "GitHub URL", "urls[GitHub]", "link github"],
+  ["leverKepler", "Twitter URL", "urls[Twitter]", "link x"],
+  ["leverKepler", "Other website", "urls[Other]", "link other"],
 ];
 
-// What the classifier gets wrong today, with what it returns now. Each case fails until the
-// rules are fixed; then vitest reports it as passing unexpectedly, and it moves up to RIGHT.
-const WRONG: readonly (readonly [...Case, string])[] = [
-  // SENSITIVE's /exp.*date/ (card expiry) matches "expected graduation date".
-  ["greenhouseGarner", "When is your expected graduation date?", "question_19964585004", "ignored", "sensitive"],
-  // A one-line "City – State – ZIP" address: the ZIP rule wins. No part fits exactly.
-  ["greenhouseBraeburn", "Current Address (City – State – ZIP Code)", "question_37142024002", "address street", "address postalCode"],
-  // Questions whose sentence says "state": "If yes, state the reason(s)", "federal or state healthcare programs".
-  ["greenhouseBraeburn", "Has your professional license … ever been revoked or suspended", "question_37142046002", "ignored", "address state"],
-  ["greenhouseBraeburn", "Have you been excluded, debarred, suspended … from … programs", "question_37142047002", "ignored", "address state"],
-  // Lever's city typeahead says "location", which no rule reads.
-  ["leverKepler", "Current location", "location-input", "address city", "ignored"],
-  // "URL" or "website" after a named link type adds a website the field doesn't want.
-  ["leverKepler", "LinkedIn URL", "urls[LinkedIn]", "link linkedin", "link linkedin,website"],
-  ["leverKepler", "GitHub URL", "urls[GitHub]", "link github", "link github,website"],
-  ["leverKepler", "Twitter URL", "urls[Twitter]", "link x", "link x,website"],
-  ["leverKepler", "Other website", "urls[Other]", "link other", "link other,website"],
-];
+// A field the classifier gets wrong goes here as an it.fails case with what it returns
+// today, until the rules are fixed and it moves up to RIGHT.
 
 describe("classify on real applicant tracking system forms", () => {
   it.each(RIGHT)("%s: %s (%s) is %s", (fixture, _label, key, expected) => {
     expect(summary(fieldIn(fixture, key))).toBe(expected);
   });
+});
 
-  it.each(WRONG)("%s: %s (%s) gets %s today", (fixture, _label, key, _expected, actual) => {
-    expect(summary(fieldIn(fixture, key))).toBe(actual);
+// Lever writes each question in a div beside its field, with no <label>.
+describe("questions Lever doesn't label", () => {
+  beforeEach(() => {
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
   });
 
-  it.fails.each(WRONG)("%s: %s (%s) should be %s", (fixture, _label, key, expected) => {
-    expect(summary(fieldIn(fixture, key))).toBe(expected);
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("reads the question beside a text box and a select", () => {
+    expect(fieldText(fieldIn("leverRover", "cards[fb5c103c-4111-4530-94b9-07965c4a027e][field1]"))).toMatch(
+      /^How should we refer to you/u,
+    );
+    expect(fieldText(fieldIn("leverKepler", "cards[d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5][field0]"))).toMatch(
+      /^What Post-Secondary institution do you attend/u,
+    );
+  });
+
+  it("answers a yes/no question from a saved answer", async () => {
+    fieldIn("leverKepler", "email");
+    const asked: string[] = [];
+    const send = (request: ExtensionRequest): Promise<unknown> => {
+      if (request.type !== "customSuggestions") return Promise.resolve({ type: "error", reason: "none" });
+      asked.push(...request.fields.map((field) => field.text));
+      return Promise.resolve({
+        type: "customSuggestionsResult",
+        fields: request.fields.map(({ text }) => ({ values: /returning to your studies/u.test(text) ? ["Yes"] : [] })),
+      });
+    };
+    await fillForm(document, { host: () => "jobs.lever.co", send });
+    expect(asked.some((text) => text.startsWith("Will you be returning to your studies after the internship?"))).toBe(true);
+    const checked = document.querySelector<HTMLInputElement>('input[name$="[field1]"]:checked');
+    expect(checked?.value).toBe("Yes");
   });
 });

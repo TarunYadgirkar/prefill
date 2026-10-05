@@ -3,7 +3,7 @@ import { isPlaceholder, pickFirst, type Option } from "./choices";
 import { classify, isSignIn } from "./classify";
 import { fieldText, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
-import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText } from "./dom";
+import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Choice, type TextField } from "./dropdown";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import type { GestureGate } from "./gesture";
@@ -136,15 +136,13 @@ function groupLabel(first: HTMLInputElement): string {
   return group === null ? "" : (group.getAttribute("aria-label") ?? labelledBy(group));
 }
 
+// The words before the group: Lever puts the question in a div beside the list of buttons.
 function nearbyWords(inputs: readonly HTMLInputElement[]): string[] {
   let container = inputs[0]?.parentElement ?? null;
   while (container !== null && !inputs.every((input) => container?.contains(input) === true))
     container = container.parentElement;
-  if (container === null) return [];
-  const optionTexts = new Set(inputs.map((input) => labelText(input)));
-  return [...container.querySelectorAll("label, legend, p, span, div, h1, h2, h3, h4")]
-    .map((node) => (node.children.length === 0 ? node.textContent.trim() : ""))
-    .filter((text) => text !== "" && !optionTexts.has(text));
+  const text = container === null ? "" : nearbyText(container);
+  return text === "" ? [] : [text];
 }
 
 function questionOf(inputs: readonly HTMLInputElement[]): string {

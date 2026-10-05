@@ -117,6 +117,40 @@ export function labelText(el: FieldElement): string {
   );
 }
 
+// How far up from a field to look for the words before it.
+const NEARBY_LEVELS = 4;
+const NEARBY_STOPS: ReadonlySet<string> = new Set(["form", "fieldset", "body", "html"]);
+
+// The words just before an element when nothing labels it, the way Chromium infers a label:
+// the nearest earlier sibling with text, at the element's level or a few levels up, as long
+// as that sibling holds no field of its own ("<div>Question?</div><div><input></div>").
+// The text of the nearest earlier sibling with any, or "" when a sibling holding a field
+// comes first, since its words belong to that field.
+function textBefore(node: Element): string | undefined {
+  for (let sibling = node.previousElementSibling; sibling !== null; sibling = sibling.previousElementSibling) {
+    if (FIELD_TAGS.has(sibling.localName) || sibling.querySelector(FIELD_SELECTOR) !== null) return "";
+    const text = squash(ownText(sibling));
+    if (text !== "") return text;
+  }
+  return undefined;
+}
+
+export function nearbyText(el: Element): string {
+  let node: Element | null = el;
+  for (let level = 0; node !== null && level < NEARBY_LEVELS; level += 1) {
+    const text = textBefore(node);
+    if (text !== undefined) return text;
+    node = node.parentElement;
+    if (node !== null && NEARBY_STOPS.has(node.localName)) return "";
+  }
+  return "";
+}
+
+// The field's label, or the words before it when the page didn't label it.
+export function inferredLabel(el: FieldElement): string {
+  return labelText(el) || nearbyText(el);
+}
+
 export function placeholderText(el: FieldElement): string {
   return squash(el.getAttribute("placeholder") ?? "");
 }

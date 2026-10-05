@@ -82,7 +82,7 @@ export const SENSITIVE: readonly RegExp[] = [
   /(?:card|cc|acct).?(?:number|#|no|num|field(?!s)|pan)|0000 ?0000 ?0000 ?0000|1234 ?1234 ?1234 ?1234/iu,
   /verification|card.?identification|security.?code|card.?code|security.?value|security.?number|card.?pin|c-v-v|(?:cvn|cvv|cvc|csc|cvd|ccv)|\bcid\b|cccid/iu,
   /\botp\b|one.?time|verification.code|2fa|six.digit/iu,
-  /card.?(?:holder|owner)|name.*on.*card|(?:card|cc).?name|expir|exp.*date/iu,
+  /card.?(?:holder|owner)|name.*on.*card|(?:card|cc).?name|expir|\bexp\b|exp(?:iry|iration)?.?date/iu,
   /password|passwort|passcode|passwd|\bpwd\b|contraseña|mot de passe|\bssn\b|social.?security|secret|\bmfa\b/iu,
   /account.?(?:number|no\b|num|#)|routing|\biban\b|\bbic\b|swift.?code|sort.?code|\bpin\b(?!.?code)|token|(?:backup|recovery|access|auth).?code/iu,
   /\bdob\b|date.?of.?birth|birth.?date|national.?id|passport|tax.?id|driver.?s?.?licen[cs]e|\b(?:ein|itin|nin)\b/iu,
@@ -111,7 +111,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "phone" },
     pattern:
-      /phone|mobile?|\btel\b|\bcell|contact.?number|celular|m[oó]vil|handy|rufnummer|telefoon|portable|\bgsm\b|telefonnummer|telefono|teléfono|telfixe|telefone|telemovel|電話|电话|телефон|(\b|_|\*)telefon(\b|_|\*)/iu,
+      /phone|\bmobil(?:e|nummer)?\b|\btel\b|\bcell|contact.?number|celular|m[oó]vil|handy|rufnummer|telefoon|portable|\bgsm\b|telefonnummer|telefono|teléfono|telfixe|telefone|telemovel|電話|电话|телефон|(\b|_|\*)telefon(\b|_|\*)/iu,
     negative: /\bext\b|extension|area.?code|country.?code|phone.?code/iu,
     controls: NUMERIC,
   },
@@ -139,7 +139,9 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "address", part: "city" },
     pattern:
-      /(?<!(?:pa|ri|li|di|ni|lo))city|town|suburb|\bort\b|stadt|ciudad|localidad|poblacion|ville|commune|citt[àa]\b|localita|cidade|市区町村/iu,
+      /(?<!(?:pa|ri|li|di|ni|lo))city|town|suburb|\bort\b|stadt|ciudad|localidad|poblacion|ville|commune|citt[àa]\b|localita|cidade|市区町村|^(?:current |your |home )?location\b/iu,
+    // "Location" on an application is where the person lives, unless it asks where they'd work.
+    negative: /prefer|desired|relocat|willing|office|remote|on.?site|hybrid|(?:work|job).?location/iu,
     controls: CHOICE,
   },
   {

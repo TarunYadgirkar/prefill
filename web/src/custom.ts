@@ -7,7 +7,7 @@ import {
   hasOwnList,
   fieldElements,
   isFieldElement,
-  labelText,
+  inferredLabel,
   nameTexts,
   placeholderText,
 } from "./dom";
@@ -65,7 +65,7 @@ export function isCustomCandidate(
 // then name and id, cut to the message limit without splitting a character.
 export function fieldText(element: FieldElement): string {
   return joinFieldText([
-    labelText(element),
+    inferredLabel(element),
     placeholderText(element),
     ...nameTexts(element),
   ]);
