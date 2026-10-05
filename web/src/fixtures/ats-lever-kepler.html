@@ -1,0 +1,776 @@
+<!--
+Source: https://jobs.lever.co/kepler/2ad02ce3-1d56-4aee-9f1d-5199c780c0c1/apply (Embedded Software Engineering Intern, Kepler Communications)
+Captured copy: github.com/fkabaalkhail/Applypilot chrome-extension/test/fixtures/real/lever/lever-kepler-intern.html
+Fetched 2026-10-05. The ATS hosts are blocked by this session's egress policy, so the markup
+comes from a saved copy of the live page committed to a public repository (path below),
+fetched through raw.githubusercontent.com. Trimmed to the application form: scripts,
+styles, SVGs, images, comments, classes, inline styles and reCAPTCHA removed; ids, names,
+types, labels, aria-*, autocomplete, placeholders, options and fieldsets kept as captured.
+Lists longer than 30 entries (universities, phone country pickers) keep their first entries.
+-->
+<form id="application-form" method="POST">
+<div>
+<h4>Submit your application</h4>
+<ul>
+<li>
+<label>
+<div>Resume/CV <span>✱</span>
+</div>
+<div>
+<a>
+
+<span>ATTACH RESUME/CV</span>
+<input data-qa="input-resume" id="resume-upload-input" name="resume" type="file">
+</a>
+<span>
+<div>Couldn't auto-read resume.</div>
+</span>
+<span>
+
+<div>Analyzing resume...</div>
+</span>
+<span>
+
+<div>Success!</div>
+</span>
+</div>
+</label>
+<span>
+<p>File exceeds the maximum upload size of <b>100MB</b>. Please try a smaller size.</p>
+</span>
+</li>
+<li>
+<label>
+<div>Full name<span>✱</span>
+</div>
+<div>
+<input type="text" data-qa="name-input" name="name" required="">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Email<span>✱</span>
+</div>
+<div>
+<input name="email" data-qa="email-input" type="email" required="">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Phone <span>✱</span>
+</div>
+<div>
+<input type="text" data-qa="phone-input" name="phone" required="">
+</div>
+</label>
+</li>
+<li data-qa="structured-contact-location-question">
+<label>
+<div>Current location </div>
+<div>
+<input data-qa="location-input" id="location-input" type="text" maxlength="100" name="location">
+<input id="selected-location" type="hidden" name="selectedLocation">
+<div>
+
+<div>No location found. Try entering a different location</div>
+<div>
+<div>
+<span>Loading</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Current company </div>
+<div>
+<input type="text" data-qa="org-input" name="org">
+</div>
+</label>
+</li>
+</ul>
+</div>
+<div>
+<h4>Links</h4>
+<ul>
+<li>
+<label>
+<div>LinkedIn URL</div>
+<div>
+<input type="text" name="urls[LinkedIn]">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Twitter URL</div>
+<div>
+<input type="text" name="urls[Twitter]">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>GitHub URL</div>
+<div>
+<input type="text" name="urls[GitHub]">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Portfolio URL</div>
+<div>
+<input type="text" name="urls[Portfolio]">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Other website</div>
+<div>
+<input type="text" name="urls[Other]">
+</div>
+</label>
+</li>
+<li>
+<label>
+<div>Website/Blog URL</div>
+<div>
+<input type="text" name="urls[Website/Blog]">
+</div>
+</label>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Student Status</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1696615802972,&quot;updatedAt&quot;:1751569321590,&quot;text&quot;:&quot;Student Status&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Will you be enrolled as a student at a Canadian post-secondary institution for the duration of your internship? (Note enrolled does not necessarily mean taking classes if you are a part of an official co-op or internship program)&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;c6ca3be4-6a18-4c83-bf71-3fb3bf8f21ce&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;43f3acea-960a-419d-a5f6-addb023b5912&quot;},{&quot;text&quot;:&quot;No&quot;,&quot;optionId&quot;:&quot;c5f8001e-e875-4403-8b4d-ea9a965f9a0a&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Will you be returning to your studies after the internship?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;858ba137-ac3d-4faa-bda1-309951cc3b89&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;52b878e2-ed36-4dbe-82b1-0b3ec2306a6a&quot;},{&quot;text&quot;:&quot;No&quot;,&quot;optionId&quot;:&quot;39ef18be-d7a6-444c-9a8d-79c56200ba34&quot;}]}],&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;f6189244-e242-4b19-8bac-bac28b3f023a&quot;}" name="cards[f6189244-e242-4b19-8bac-bac28b3f023a][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>Will you be enrolled as a student at a Canadian post-secondary institution for the duration of your internship? (Note enrolled does not necessarily mean taking classes if you are a part of an official co-op or internship program)<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[f6189244-e242-4b19-8bac-bac28b3f023a][field0]" value="Yes" required="required">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[f6189244-e242-4b19-8bac-bac28b3f023a][field0]" value="No" required="required">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+<li>
+<div>
+<div>
+<div>Will you be returning to your studies after the internship?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[f6189244-e242-4b19-8bac-bac28b3f023a][field1]" value="Yes" required="required">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[f6189244-e242-4b19-8bac-bac28b3f023a][field1]" value="No" required="required">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Work Eligibility - Canada</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1553720080305,&quot;text&quot;:&quot;Work Eligibility - Canada&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Are you legally able to work in Canada according to the laws and regulations of the province or territory where you live?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;63dd08e5-a3ea-478f-b28f-52dcdc6bc7c2&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;9d2c1770-40b2-46d0-b330-067ce30bfcc2&quot;},{&quot;text&quot;:&quot;No&quot;,&quot;optionId&quot;:&quot;30dbd045-51f1-45dd-8acc-39621cf27bc2&quot;}]}],&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;updatedAt&quot;:1749826384135,&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;9c30079c-fb08-459a-a221-e9d67212b174&quot;}" name="cards[9c30079c-fb08-459a-a221-e9d67212b174][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>Are you legally able to work in Canada according to the laws and regulations of the province or territory where you live?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[9c30079c-fb08-459a-a221-e9d67212b174][field0]" value="Yes" required="required">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[9c30079c-fb08-459a-a221-e9d67212b174][field0]" value="No" required="required">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">C or C++ Project</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1781290948859,&quot;updatedAt&quot;:1781292167501,&quot;text&quot;:&quot;C or C++ Project&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;textarea&quot;,&quot;text&quot;:&quot;Describe a C or C++ project you've worked on involving hardware/software interactions. What specifically did you implement, what technical challenges did you encounter, and how did you test or debug your solution? (100-200 words)&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;514478dc-48a4-40fb-b4e3-9dbcc3b32e9f&quot;}],&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;2a3eeb8b-3ca9-4f51-81a4-5499dadcc806&quot;}" name="cards[2a3eeb8b-3ca9-4f51-81a4-5499dadcc806][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>Describe a C or C++ project you've worked on involving hardware/software interactions. What specifically did you implement, what technical challenges did you encounter, and how did you test or debug your solution? (100-200 words)<span>✱</span>
+</div>
+</div>
+<div>
+<textarea name="cards[2a3eeb8b-3ca9-4f51-81a4-5499dadcc806][field0]" required="required">
+</textarea>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Office Requirement</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1743798781955,&quot;updatedAt&quot;:1770065353831,&quot;text&quot;:&quot;Office Requirement&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;This position requires you to work from the Toronto Office located at 24 Ward Street, Toronto ON M6H 4A6. Are you able to work from our Kepler office as required?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;86dc5342-c5ad-4c01-aa30-b5f6081f586a&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;207476f3-ba5d-4d1e-b5ff-0fe5708e9d0f&quot;},{&quot;text&quot;:&quot;No&quot;,&quot;optionId&quot;:&quot;07363133-3e48-44f2-8e54-f35d8d7708a3&quot;}]}],&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;f543d1aa-4a26-428e-9edc-1708a8d28869&quot;}" name="cards[f543d1aa-4a26-428e-9edc-1708a8d28869][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>This position requires you to work from the Toronto Office located at 24 Ward Street, Toronto ON M6H 4A6. Are you able to work from our Kepler office as required?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[f543d1aa-4a26-428e-9edc-1708a8d28869][field0]" value="Yes" required="required">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[f543d1aa-4a26-428e-9edc-1708a8d28869][field0]" value="No" required="required">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Year of study</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1744123785057,&quot;updatedAt&quot;:1781029490603,&quot;text&quot;:&quot;Year of study&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;What year of study are you in?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;9457cb69-d12d-4874-ab18-7437980914c3&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;1st&quot;,&quot;optionId&quot;:&quot;39d403e9-6081-4d04-aa5e-682a566ed9eb&quot;},{&quot;text&quot;:&quot;2nd&quot;,&quot;optionId&quot;:&quot;3242851a-b889-4b95-9472-f3dbe62851e0&quot;},{&quot;text&quot;:&quot;3rd&quot;,&quot;optionId&quot;:&quot;ec937499-484a-4a7a-b333-ff76e5a823ff&quot;},{&quot;text&quot;:&quot;4th&quot;,&quot;optionId&quot;:&quot;417ca4ec-98f6-4dcc-a4ee-0d784003cd57&quot;},{&quot;text&quot;:&quot;5th&quot;,&quot;optionId&quot;:&quot;ef6a5bb7-3930-49ca-a171-204726356d3d&quot;},{&quot;text&quot;:&quot;Masters&quot;,&quot;optionId&quot;:&quot;4417b872-f879-4cd8-9366-42e344193d28&quot;},{&quot;text&quot;:&quot;Higher&quot;,&quot;optionId&quot;:&quot;d20c3585-67f6-4c5c-a4f1-e5be419ba669&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;If in your final year of study, does your University have flexibility in pushing out your graduation date?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;e4821bcd-8b61-4d28-a45b-e447616dbad3&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;a0b95642-c0a2-48a9-bc7d-490d9b62f349&quot;},{&quot;text&quot;:&quot;No&quot;,&quot;optionId&quot;:&quot;8180c2d6-b37b-4e81-a38d-860bf444f657&quot;}]}],&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;41b70cbd-a56b-4224-b15d-e1b537f32730&quot;}" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>What year of study are you in?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="1st" required="required">
+<span>1st</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="2nd" required="required">
+<span>2nd</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="3rd" required="required">
+<span>3rd</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="4th" required="required">
+<span>4th</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="5th" required="required">
+<span>5th</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="Masters" required="required">
+<span>Masters</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field0]" value="Higher" required="required">
+<span>Higher</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+<li>
+<div>
+<div>
+<div>If in your final year of study, does your University have flexibility in pushing out your graduation date?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field1]" value="Yes">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[41b70cbd-a56b-4224-b15d-e1b537f32730][field1]" value="No">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">School Attended</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1553720801689,&quot;text&quot;:&quot;School Attended&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;university&quot;,&quot;text&quot;:&quot;What Post-Secondary institution do you attend?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:true,&quot;id&quot;:&quot;77e350b3-edd5-4dec-ab00-57c1fe0af7ad&quot;,&quot;prompt&quot;:&quot;&quot;,&quot;addAsSource&quot;:true}],&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;updatedAt&quot;:1781030097225,&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5&quot;}" name="cards[d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>What Post-Secondary institution do you attend?<span>✱</span>
+</div>
+</div>
+<div>
+<div>
+<select data-qa="university-dropdown" name="cards[d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5][field0]" id="university-picker-d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5-0" required="" aria-hidden="true">
+<option value="">Select a university or college</option>
+<option value="ACAP University College">ACAP University College</option>
+<option value="Auckland University of Technology">Auckland University of Technology</option>
+<option value="Australian Catholic University">Australian Catholic University</option>
+<option value="Australian National University">Australian National University</option>
+<option value="Bond University">Bond University</option>
+<option value="Carnegie Mellon University - Australia">Carnegie Mellon University - Australia</option>
+<option value="Central Queensland University (CQUniversity)">Central Queensland University (CQUniversity)</option>
+<option value="Charles Darwin University">Charles Darwin University</option>
+<option value="Charles Sturt University - Australia">Charles Sturt University - Australia</option>
+<option value="Curtin University">Curtin University</option>
+<option value="Deakin University">Deakin University</option>
+<option value="Edith Cowan University">Edith Cowan University</option>
+<option value="Federation University of Australia">Federation University of Australia</option>
+<option value="Flinders University">Flinders University</option>
+<option value="Griffith University">Griffith University</option>
+<option value="James Cook University">James Cook University</option>
+<option value="La Trobe University">La Trobe University</option>
+<option value="Macquarie University">Macquarie University</option>
+<option value="Monash University">Monash University</option>
+<option value="Murdoch University">Murdoch University</option>
+<option value="Queensland University of Technology (QUT)">Queensland University of Technology (QUT)</option>
+<option value="RMIT University">RMIT University</option>
+<option value="Royal Melbourne Institute of Technology">Royal Melbourne Institute of Technology</option>
+<option value="Southern Cross University">Southern Cross University</option>
+<!-- 2940 more entries removed from the capture -->
+</select>
+<span>
+<span>
+<span role="combobox" aria-autocomplete="list" aria-haspopup="true" aria-expanded="false" aria-labelledby="select2-university-picker-d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5-0-container">
+<span id="select2-university-picker-d8b5ec93-e4ee-4c30-9346-e8eaa44c5ff5-0-container">
+<span>Select a university or college</span>
+</span>
+<span role="presentation">
+<b role="presentation">
+</b>
+</span>
+</span>
+</span>
+<span aria-hidden="true">
+</span>
+</span>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Internship Duration (4 months)</h4>
+<input type="hidden" value="{&quot;createdAt&quot;:1774900711145,&quot;updatedAt&quot;:1774900856908,&quot;text&quot;:&quot;Internship Duration (4 months)&quot;,&quot;instructions&quot;:&quot;&quot;,&quot;type&quot;:&quot;posting&quot;,&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Please confirm your availability for a 4-month internship.&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;d7d92e77-9336-4468-828f-62b87fd3e290&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;I am available for 4 months beginning in the indicated start date.&quot;,&quot;optionId&quot;:&quot;3947b130-8e99-4bac-ad35-9e30537ddb63&quot;},{&quot;text&quot;:&quot;I am NOT available for 4 months.&quot;,&quot;optionId&quot;:&quot;5b5c3461-0fc6-4d55-9e4b-8870de0cc049&quot;}]}],&quot;updatedByUserId&quot;:&quot;53bbe88b-61d6-4a58-ad1e-b28684de55fe&quot;,&quot;id&quot;:&quot;c855023b-2513-4d95-b8aa-48e98c455136&quot;}" name="cards[c855023b-2513-4d95-b8aa-48e98c455136][baseTemplate]">
+<ul>
+<li>
+<div>
+<div>
+<div>Please confirm your availability for a 4-month internship.</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[c855023b-2513-4d95-b8aa-48e98c455136][field0]" value="I am available for 4 months beginning in the indicated start date.">
+<span>I am available for 4 months beginning in the indicated start date.</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[c855023b-2513-4d95-b8aa-48e98c455136][field0]" value="I am NOT available for 4 months.">
+<span>I am NOT available for 4 months.</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div id="countrySurvey _all-opportunity-locations">
+<hr>
+<h4 data-qa="card-name">Demographic Survey for Kepler Communications</h4>
+<p>We invite you to complete this optional survey to help us evaluate our diversity and inclusion efforts. Submission of the information on this form is strictly voluntary and refusal to provide it will not subject you to any adverse treatment or affect your job application. Information obtained will be kept separate from your name and job application. This information will be kept secure and confidential and will be used solely to evaluate our diversity and inclusion efforts.</p>
+<input type="hidden" value="{&quot;createdAt&quot;:1717005348507,&quot;updatedAt&quot;:1717005348507,&quot;text&quot;:&quot;Demographic Survey for Kepler Communications&quot;,&quot;instructions&quot;:&quot;We invite you to complete this optional survey to help us evaluate our diversity and inclusion efforts. \n\nSubmission of the information on this form is strictly voluntary and refusal to provide it will not subject you to any adverse treatment or affect your job application. Information obtained will be kept separate from your name and job application. \n\nThis information will be kept secure and confidential and will be used solely to evaluate our diversity and inclusion efforts.&quot;,&quot;type&quot;:&quot;survey&quot;,&quot;fields&quot;:[{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;What is your age range?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;9e4c96f9-b6ca-4512-ad61-e761ebc92d6d&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;17 or younger&quot;},{&quot;text&quot;:&quot;18-20&quot;},{&quot;text&quot;:&quot;21-29&quot;},{&quot;text&quot;:&quot;30-39&quot;},{&quot;text&quot;:&quot;40-49&quot;},{&quot;text&quot;:&quot;50-59&quot;},{&quot;text&quot;:&quot;60 or older&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;With which ethnicity do you identify?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;a0fa715f-aa3a-45ba-906b-3456983d7ac5&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;White or Caucasian&quot;},{&quot;text&quot;:&quot;Hispanic, Latino, or Spanish origin&quot;},{&quot;text&quot;:&quot;Black, African or Carribean&quot;},{&quot;text&quot;:&quot;East Asian&quot;},{&quot;text&quot;:&quot;South Asian&quot;},{&quot;text&quot;:&quot;Indigenous Peoples, First Nations, Native American, or Alaska Native&quot;},{&quot;text&quot;:&quot;Middle Eastern or North African&quot;},{&quot;text&quot;:&quot;Mixed or multiple ethnic groups&quot;},{&quot;text&quot;:&quot;Other&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;With which gender do you identify?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;a0c1934d-90c8-4418-8280-495d7b89ac14&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Female&quot;},{&quot;text&quot;:&quot;Male&quot;},{&quot;text&quot;:&quot;Non-binary&quot;},{&quot;text&quot;:&quot;Transgender&quot;},{&quot;text&quot;:&quot;Gender non-confirming&quot;},{&quot;text&quot;:&quot;Other&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;With which sexual orientation do you identify?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;43cb30aa-0999-46ef-99d2-c6251029428f&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Heterosexual&quot;,&quot;optionId&quot;:&quot;f5497fce-6c21-4227-a6ff-1bc02944bf5d&quot;},{&quot;text&quot;:&quot;Gay&quot;},{&quot;text&quot;:&quot;Lesbian&quot;},{&quot;text&quot;:&quot;Bisexual&quot;},{&quot;text&quot;:&quot;Two-spirit&quot;},{&quot;text&quot;:&quot;Pansexual&quot;},{&quot;text&quot;:&quot;Asexual&quot;},{&quot;text&quot;:&quot;Other&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Do you identify as a person with a visible or non-visible disability?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;9d996b37-ea5e-4cce-a056-5168d3b9ed0d&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;6dffc30f-2f9b-41cf-90f1-075ff52f8eb3&quot;},{&quot;text&quot;:&quot;No&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]},{&quot;type&quot;:&quot;multiple-choice&quot;,&quot;text&quot;:&quot;Are you a veteran/have you served in the military?&quot;,&quot;description&quot;:&quot;&quot;,&quot;required&quot;:false,&quot;id&quot;:&quot;5114f55b-c1c8-4cd0-bc78-93cfb1cd70f4&quot;,&quot;options&quot;:[{&quot;text&quot;:&quot;Yes&quot;,&quot;optionId&quot;:&quot;708f9b05-107a-4cad-9a31-47b25d52f487&quot;},{&quot;text&quot;:&quot;No&quot;},{&quot;text&quot;:&quot;Prefer not to answer&quot;}]}],&quot;accountId&quot;:&quot;e401c158-127c-402b-a1d5-f25625bc9d26&quot;,&quot;id&quot;:&quot;c228d8ba-49fc-4102-9760-f057a46e4500&quot;}" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][baseTemplate]">
+<input type="hidden" value="4162754f-85b9-4bbc-a6c8-c5d99ed6e5d8" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][surveyId]">
+<input type="hidden" value="" name="">
+<ul>
+<li>
+<div>
+<div>What is your age range?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="17 or younger">
+<span>17 or younger</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="18-20">
+<span>18-20</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="21-29">
+<span>21-29</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="30-39">
+<span>30-39</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="40-49">
+<span>40-49</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="50-59">
+<span>50-59</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="60 or older">
+<span>60 or older</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field0]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<div>
+<div>With which ethnicity do you identify?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="White or Caucasian">
+<span>White or Caucasian</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Hispanic, Latino, or Spanish origin">
+<span>Hispanic, Latino, or Spanish origin</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Black, African or Carribean">
+<span>Black, African or Carribean</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="East Asian">
+<span>East Asian</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="South Asian">
+<span>South Asian</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Indigenous Peoples, First Nations, Native American, or Alaska Native">
+<span>Indigenous Peoples, First Nations, Native American, or Alaska Native</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Middle Eastern or North African">
+<span>Middle Eastern or North African</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Mixed or multiple ethnic groups">
+<span>Mixed or multiple ethnic groups</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Other">
+<span>Other</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field1]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<div>
+<div>With which gender do you identify?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Female">
+<span>Female</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Male">
+<span>Male</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Non-binary">
+<span>Non-binary</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Transgender">
+<span>Transgender</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Gender non-confirming">
+<span>Gender non-confirming</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Other">
+<span>Other</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field2]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<div>
+<div>With which sexual orientation do you identify?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Heterosexual">
+<span>Heterosexual</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Gay">
+<span>Gay</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Lesbian">
+<span>Lesbian</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Bisexual">
+<span>Bisexual</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Two-spirit">
+<span>Two-spirit</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Pansexual">
+<span>Pansexual</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Asexual">
+<span>Asexual</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Other">
+<span>Other</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field3]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<div>
+<div>Do you identify as a person with a visible or non-visible disability?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field4]" value="Yes">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field4]" value="No">
+<span>No</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field4]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<div>
+<div>Are you a veteran/have you served in the military?</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field5]" value="Yes">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field5]" value="No">
+<span>No</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="surveysResponses[c228d8ba-49fc-4102-9760-f057a46e4500][responses][field5]" value="Prefer not to answer">
+<span>Prefer not to answer</span>
+</label>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<input type="hidden" name="accountId" value="e401c158-127c-402b-a1d5-f25625bc9d26">
+<input type="hidden" name="linkedInData">
+<input type="hidden" name="origin">
+<input type="hidden" name="referer">
+<input type="hidden" name="timezone" id="applicant-timezone" value="America/Toronto">
+<input type="hidden" name="socialReferralKey">
+<input type="hidden" name="socialSource">
+<input type="hidden" name="resumeStorageId" value="">
+<input id="hcaptchaResponseInput" type="hidden" name="h-captcha-response" value="">
+<button id="hcaptchaSubmitBtn" type="submit">
+</button>
+<input type="hidden" name="source">
+<div id="h-captcha">
+</div>
+<div>
+<button id="btn-submit" type="button" data-qa="btn-submit">Submit application</button>
+</div>
+</form>
