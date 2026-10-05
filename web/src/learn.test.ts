@@ -41,11 +41,15 @@ describe("learning answers from an application", () => {
     const send = vi.fn<(request: AnswersRequest) => Promise<unknown>>(() =>
       Promise.resolve({ type: "answersResult", saved: 2 }),
     );
-    uninstall = installLearn(document, window, { host: () => "boards.example.io", send, isUserEvent: () => true, hasActivation: () => true });
+    uninstall = installLearn(document, window, { host: () => "boards.example.io", send, isUserEvent: () => true });
     set("#school", "University of California, Berkeley");
     set("input[type=radio][value='1']", "");
     set("#gender", "Male");
     set("#email", "alex@example.com");
+    // A script's requestSubmit() makes a submit with no press before it.
+    document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
+    expect(send).not.toHaveBeenCalled();
+    document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
     document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
     await Promise.resolve();
     await Promise.resolve();
@@ -61,9 +65,24 @@ describe("learning answers from an application", () => {
     expect(document.querySelector("prefill-saved")).not.toBeNull();
   });
 
+  it("drops an answer the page changed or relabelled after the person set it", () => {
+    const send = vi.fn<(request: AnswersRequest) => Promise<unknown>>(() => Promise.resolve(undefined));
+    uninstall = installLearn(document, window, { host: () => "boards.example.io", send, isUserEvent: () => true });
+    set("#school", "University of California, Berkeley");
+    set("#question_1", "linkedin.com/in/alex");
+    const school = document.querySelector<HTMLInputElement>("#school");
+    const other = document.querySelector("label[for=question_1]");
+    if (school === null || other === null) throw new Error("fixture changed");
+    school.value = "Set by the page";
+    other.textContent = "Will you require sponsorship?";
+    document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
+    document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
+    expect(send).not.toHaveBeenCalled();
+  });
+
   it("reads nothing the person didn't set themselves", () => {
     const school = document.querySelector<HTMLInputElement>("#school");
     if (school !== null) school.value = "Set by the page";
-    expect(collectAnswers(document, new WeakSet())).toEqual([]);
+    expect(collectAnswers(document, new WeakMap())).toEqual([]);
   });
 });

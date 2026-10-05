@@ -40,6 +40,29 @@ struct ContactsGatewayHostTests {
         #expect(CNContactStore.authorizationStatus(for: .contacts) == .authorized)
     }
 
+    // The real card takes answers learned from an application, and Undo takes them back.
+    @Test func learnedAnswersReachTheRealCardAndUndoRemovesThem() throws {
+        try withThrowawayCard { identifier in
+            let card = try gateway.fetchCard(identifier: identifier)
+            let link = CardLink(
+                contactIdentifier: identifier, containerIdentifier: nil, linkedIdentifiers: [],
+                original: card, snapshotAt: .now
+            )
+            let router = MessageRouter(store: InMemoryStore(state: AppState(cardLink: link)), gateway: gateway)
+            let learn: [String: Any] = [
+                "type": "answers", "host": "boards.example.io", "action": "learn",
+                "answers": [["question": "school", "value": "University of California, Berkeley"]]
+            ]
+            #expect(router.route(learn) == .answers(AnswersResponse(saved: 1)))
+            let learned = try gateway.fetchCard(identifier: identifier)
+            #expect(learned.customFields.map(\.value) == ["University of California, Berkeley"])
+            #expect(learned.emails == card.emails)
+            let undo: [String: Any] = ["type": "answers", "host": "boards.example.io", "action": "undo", "answers": []]
+            #expect(router.route(undo) == .answers(AnswersResponse(saved: 1)))
+            #expect(try gateway.fetchCard(identifier: identifier).customFields.isEmpty)
+        }
+    }
+
     @Test func readsTheCardAsStored() throws {
         try withThrowawayCard { identifier in
             let card = try gateway.fetchCard(identifier: identifier)

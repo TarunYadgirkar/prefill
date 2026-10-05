@@ -41,6 +41,9 @@ public struct AnswersResponse: Codable, Sendable, Hashable {
 extension MessageRouter {
     // Undo reaches back this far, which covers the page the form led to.
     static let answerUndoWindow: TimeInterval = 600
+    // One application answers every question once, so pages together can't add more in a day.
+    static let maxAnswersPerWindow = JobQuestion.allCases.count
+    static let answerWindow: TimeInterval = 86_400
 
     func answers(_ request: AnswersRequest) -> AnswersResponse {
         Self.eventLock.withLock { _ in
@@ -60,17 +63,17 @@ extension MessageRouter {
 
     // A question the person already has an answer for keeps it.
     private func learn(_ request: AnswersRequest, card: CardRecord) -> Int {
-        let room = CustomField.maxCount - card.customFields.count
+        let date = now()
+        let recent = events().answers.count { date.timeIntervalSince($0.date) < Self.answerWindow }
+        let room = min(CustomField.maxCount - card.customFields.count, Self.maxAnswersPerWindow - recent)
         let added = request.answers.reduce(into: [CustomField]()) { added, answer in
             guard let field = answer.question.field(answer: answer.value), added.count < room,
                   !(card.customFields + added).contains(where: { $0.id == field.id }) else { return }
             added.append(field)
         }
-        guard !added.isEmpty, save(card.replacingCustomFields(with: card.customFields + added), over: card) else {
-            return 0
-        }
+        let target = card.replacingCustomFields(with: card.customFields + added)
+        guard !added.isEmpty, save(target, over: card, scope: .addAnswers) else { return 0 }
         let site = Normalizer.registrableDomain(request.host)
-        let date = now()
         append(ExtensionEvents(answers: added.map {
             LearnedAnswer(host: site, label: $0.label, value: $0.value, date: date)
         }))
@@ -92,7 +95,7 @@ extension MessageRouter {
         return removed
     }
 
-    private func save(_ target: CardRecord, over card: CardRecord, scope: CardSaveScope = .keepEveryValue) -> Bool {
+    private func save(_ target: CardRecord, over card: CardRecord, scope: CardSaveScope) -> Bool {
         let result = try? gateway.save(
             target, basis: card, scope: scope, transactionAuthor: CardWriter.transactionAuthor
         )

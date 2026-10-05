@@ -52,4 +52,32 @@ struct AnswerTests {
         #expect(gateway.card.customFields.isEmpty)
         #expect(gateway.card.emails == Alex.card.emails)
     }
+
+    @Test func pagesTogetherCantAddMoreThanOneApplicationsWorthADay() throws {
+        let (router, store) = router()
+        let earlier = (0..<8).map { LearnedAnswer(host: "a.example", label: "Q\($0)", value: "x", date: .testNow) }
+        try store.appendEvents(ExtensionEvents(answers: earlier))
+        #expect(router.answers(applied).saved == 0)
+        #expect(gateway.card.customFields.isEmpty)
+    }
+
+    @Test func addingAnswersMayOnlyAppendCustomFields() throws {
+        let school = try #require(JobQuestion.school.field(answer: "UC Berkeley"))
+        let major = try #require(JobQuestion.major.field(answer: "EECS"))
+        let basis = Alex.card.replacingCustomFields(with: [school])
+        #expect(CardSaveScope.addAnswers.allows(basis.replacingCustomFields(with: [school, major]), over: basis))
+        #expect(!CardSaveScope.addAnswers.allows(basis.replacingCustomFields(with: [major]), over: basis))
+        #expect(!CardSaveScope.keepEveryValue.allows(basis.replacingCustomFields(with: [school, major]), over: basis))
+        #expect(!CardSaveScope.addAnswers.allows(basis.replacing(.email, with: []), over: basis))
+    }
+
+    @Test func theStudentStarterAddsOnlyFilledInAnswersForQuestionsWithoutOne() throws {
+        #expect(StudentStarter.answers[.school] == "University of California, Berkeley")
+        let major = try #require(JobQuestion.major.field(answer: "EECS"))
+        let typed = StudentStarter.answers.merging([.major: "Data Science", .gpa: " 3.9 ", .degree: ""]) { $1 }
+        let added = StudentStarter.fields(for: typed, adding: [major])
+        #expect(added.map(\.label) == ["School", "GPA"])
+        #expect(added.map(\.value) == ["University of California, Berkeley", "3.9"])
+        #expect(StudentStarter.missing(from: [major] + added) == [.degree, .graduation])
+    }
 }

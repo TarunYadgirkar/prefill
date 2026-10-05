@@ -21,7 +21,16 @@ public protocol ContactsGateway: Sendable {
 // What a save may change. Reordering and adding never removes a value; only an edit the
 // person asked for in the app (remove, relabel, restore) may.
 public enum CardSaveScope: Sendable, Hashable {
-    case keepEveryValue, personEdit
+    // `addAnswers` also keeps every value, and may add custom fields after the ones there.
+    case keepEveryValue, addAnswers, personEdit
+
+    public func allows(_ target: CardRecord, over basis: CardRecord) -> Bool {
+        switch self {
+        case .keepEveryValue: target.keepsEveryValue(of: basis)
+        case .addAnswers: target.keepsEveryValue(of: basis, addingAnswers: true)
+        case .personEdit: true
+        }
+    }
 }
 
 extension ContactsGateway {

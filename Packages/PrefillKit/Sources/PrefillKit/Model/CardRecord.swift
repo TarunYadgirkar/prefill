@@ -98,8 +98,12 @@ public struct CardRecord: Codable, Sendable, Hashable {
 extension CardRecord {
     static let maxAdditionsPerKind = 3
 
-    func keepsEveryValue(of basis: CardRecord) -> Bool {
-        customFields == basis.customFields && ContactKind.allCases.allSatisfy { kind in
+    func keepsEveryValue(of basis: CardRecord, addingAnswers: Bool = false) -> Bool {
+        let added = customFields.count - basis.customFields.count
+        let keepsFields = addingAnswers
+            ? customFields.starts(with: basis.customFields) && added <= JobQuestion.allCases.count
+            : customFields == basis.customFields
+        return keepsFields && ContactKind.allCases.allSatisfy { kind in
             let before = Set(basis.entries(kind).map(\.key))
             let after = Set(entries(kind).map(\.key))
             return before.isSubset(of: after) && after.subtracting(before).count <= Self.maxAdditionsPerKind

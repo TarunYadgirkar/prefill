@@ -23,8 +23,16 @@ export interface LearnOptions {
   host: () => string;
   send: (request: AnswersRequest) => Promise<unknown>;
   isUserEvent?: (event: Event) => boolean;
-  hasActivation?: () => boolean;
+  now?: () => number;
 }
+
+// What a field asked and held when the person last changed it. A page that relabels the
+// field or swaps its value afterwards no longer matches, so nothing of the page's is saved.
+interface Snapshot {
+  text: string;
+  value: string;
+}
+type Touched = WeakMap<Element, Snapshot>;
 
 type Answer = AnswersRequest["answers"][number];
 
@@ -40,7 +48,10 @@ const QUESTIONS: readonly (readonly [JobQuestion, RegExp])[] = [
   ["degree", /\bdegree\b/iu],
   ["school", /\bschool\b|university|college/iu],
 ];
-const NOT_ASKED = /high school/iu;
+const NOT_ASKED = /high school|\bid\b|\bnumber\b|e-?mail/iu;
+// A submit counts only this soon after the person pressed the form's submit button or Enter in it.
+const SUBMIT_MS = 1_000;
+const SEPARATOR = "·";
 const TYPED_INPUTS: ReadonlySet<string> = new Set(["text", "number", "month", "date"]);
 const MAX_INSPECTED = 300;
 const TOAST_MS = 8_000;
@@ -63,32 +74,47 @@ function isLearnable(element: FieldElement): boolean {
   return element.localName === "input" && TYPED_INPUTS.has((element as HTMLInputElement).type.toLowerCase());
 }
 
-function radioAnswers(elements: readonly FieldElement[], touched: WeakSet<Element>): [string, string][] {
-  const checked = elements.filter(
+function radioGroup(elements: readonly FieldElement[], radio: HTMLInputElement): HTMLInputElement[] {
+  return elements.filter(
     (element): element is HTMLInputElement =>
-      element.localName === "input" && (element as HTMLInputElement).type === "radio" && (element as HTMLInputElement).checked,
+      element.localName === "input" && (element as HTMLInputElement).type === "radio" && (element as HTMLInputElement).name === radio.name,
   );
-  return checked
-    .filter((radio) => touched.has(radio) && radio.name !== "")
-    .map((radio) => {
-      const group = elements.filter(
-        (element): element is HTMLInputElement => element.localName === "input" && (element as HTMLInputElement).name === radio.name,
-      );
-      return [questionOf(group), radio.labels?.[0]?.textContent.trim() ?? ""];
-    });
 }
 
-// The answers in a form the person set themselves, one per question, first one first.
-export function collectAnswers(scope: ParentNode, touched: WeakSet<Element>): Answer[] {
+function readRadio(radio: HTMLInputElement, elements: readonly FieldElement[]): Snapshot | undefined {
+  if (!radio.checked || radio.name === "") return undefined;
+  return { text: questionOf(radioGroup(elements, radio)), value: radio.labels?.[0]?.textContent.trim() ?? "" };
+}
+
+// The question and answer a field shows right now, or nothing for one Prefill doesn't learn from.
+function read(element: FieldElement, elements: readonly FieldElement[]): Snapshot | undefined {
+  if (element.localName === "input" && (element as HTMLInputElement).type === "radio")
+    return readRadio(element as HTMLInputElement, elements);
+  return isLearnable(element) ? { text: fieldText(element), value: shownValue(element) } : undefined;
+}
+
+function fits(value: string): boolean {
+  return value !== "" && value.length <= LIMITS.customValue && !HIDDEN_CHARACTERS.test(value) && !value.includes(SEPARATOR);
+}
+
+// What the field still reads, when that is exactly what the person left in it.
+function unchanged(element: FieldElement, elements: readonly FieldElement[], touched: Touched): Snapshot | undefined {
+  const then = touched.get(element);
+  if (then === undefined) return undefined;
+  const now = read(element, elements);
+  return now?.text === then.text && now.value === then.value ? now : undefined;
+}
+
+// The answers in a form the person set themselves and that still read as they left them,
+// one per question, first one first.
+export function collectAnswers(scope: ParentNode, touched: Touched): Answer[] {
   const elements = fieldElements(scope, MAX_INSPECTED);
-  const typed: [string, string][] = elements
-    .filter((element) => touched.has(element) && isLearnable(element))
-    .map((element) => [fieldText(element), shownValue(element)]);
   const answers = new Map<JobQuestion, string>();
-  for (const [text, value] of [...typed, ...radioAnswers(elements, touched)]) {
-    const question = jobQuestion(text);
-    const fits = value !== "" && value.length <= LIMITS.customValue && !HIDDEN_CHARACTERS.test(value);
-    if (question !== undefined && fits && !answers.has(question)) answers.set(question, value);
+  for (const element of elements) {
+    const kept = unchanged(element, elements, touched);
+    const question = kept === undefined ? undefined : jobQuestion(kept.text);
+    if (kept === undefined || question === undefined || !fits(kept.value) || answers.has(question)) continue;
+    answers.set(question, kept.value);
   }
   return [...answers].slice(0, LIMITS.answers).map(([question, value]) => ({ question, value }));
 }
@@ -133,15 +159,40 @@ function showSaved(doc: Document, win: Window, saved: number, undo: () => void, 
   });
 }
 
+const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
+
+// The form a trusted click or Enter key would submit.
+function formOf(event: Event): HTMLFormElement | undefined {
+  const target = eventOrigin(event);
+  if (!(target instanceof Element)) return undefined;
+  if (event.type === "keydown") {
+    const isEnter = (event as KeyboardEvent).key === "Enter" && isFieldElement(target);
+    return isEnter ? ((target as HTMLInputElement).form ?? undefined) : undefined;
+  }
+  const control = target.closest<HTMLButtonElement | HTMLInputElement>(SUBMIT_CONTROLS);
+  return control?.form ?? undefined;
+}
+
 export function installLearn(doc: Document, win: Window, options: LearnOptions): () => void {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
-  const hasActivation =
-    options.hasActivation ?? (() => (win.navigator as Partial<Navigator>).userActivation?.isActive === true);
-  const touched = new WeakSet<Element>();
+  const now = options.now ?? (() => Date.now());
+  const touched: Touched = new WeakMap();
+  // A page script can call requestSubmit() and get a trusted submit event, so only a submit
+  // that follows the person's own press on that form counts.
+  let pressed: { form: HTMLFormElement; at: number } | undefined;
 
   const touch = (event: Event): void => {
     const target = eventOrigin(event);
-    if (isUserEvent(event) && isFieldElement(target)) touched.add(target);
+    if (!isUserEvent(event) || !isFieldElement(target)) return;
+    const scope = (target as HTMLInputElement).form ?? doc;
+    const snapshot = read(target, fieldElements(scope, MAX_INSPECTED));
+    if (snapshot === undefined) touched.delete(target);
+    else touched.set(target, snapshot);
+  };
+
+  const press = (event: Event): void => {
+    const form = isUserEvent(event) ? formOf(event) : undefined;
+    if (form !== undefined) pressed = { form, at: now() };
   };
 
   const undo = (): void => {
@@ -149,7 +200,9 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
   };
 
   const onSubmit = (event: Event): void => {
-    if (!isUserEvent(event) || !hasActivation() || !(event.target instanceof HTMLFormElement)) return;
+    const isPressed = pressed !== undefined && pressed.form === event.target && now() - pressed.at < SUBMIT_MS;
+    pressed = undefined;
+    if (!isUserEvent(event) || !isPressed || !(event.target instanceof HTMLFormElement)) return;
     const answers = collectAnswers(event.target, touched);
     if (answers.length === 0) return;
     void options
@@ -163,10 +216,14 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
 
   doc.addEventListener("input", touch, true);
   doc.addEventListener("change", touch, true);
+  doc.addEventListener("click", press, true);
+  doc.addEventListener("keydown", press, true);
   doc.addEventListener("submit", onSubmit, true);
   return () => {
     doc.removeEventListener("input", touch, true);
     doc.removeEventListener("change", touch, true);
+    doc.removeEventListener("click", press, true);
+    doc.removeEventListener("keydown", press, true);
     doc.removeEventListener("submit", onSubmit, true);
   };
 }
