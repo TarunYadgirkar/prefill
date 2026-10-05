@@ -77,15 +77,19 @@ extension MessageRouter {
 
     // Takes a value saved from this site off the card, or turns down one waiting for review.
     // Only values Prefill captured qualify, so nothing the person put on the card is removed.
+    // A value already undone or turned down is on the card again only because the person
+    // put it back by hand, so it stays.
     func undoCapture(_ request: UndoCaptureRequest) -> PopupStateResponse {
-        guard let state = appState() else { return PopupStateResponse(failure: .other) }
+        guard let state = currentState() else { return PopupStateResponse(failure: .other) }
         guard let link = state.cardLink else { return PopupStateResponse(status: .notSetUp) }
         let site = Normalizer.registrableDomain(request.host)
         let capture = events().captures.last {
             $0.host == site && $0.value.id == request.valueID && $0.value.source == .captured
                 && ($0.verdict == .saved || $0.verdict == .needsReview)
         }
-        guard let capture else { return popupState(host: request.host, kinds: []) }
+        guard let capture, !state.rejectedValueIDs.contains(capture.value.id) else {
+            return popupState(host: request.host, kinds: [])
+        }
         if capture.verdict == .saved {
             let editor = CardEditor(gateway: gateway)
             let outcome = editor.apply(.remove(capture.value), cardIdentifier: link.contactIdentifier)
