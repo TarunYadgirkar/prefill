@@ -234,3 +234,39 @@ export function fieldValue(el: FieldElement): string {
   }
   return el.value.trim();
 }
+
+// Puts a fixed element at a spot given in getBoundingClientRect's coordinates. While iPhone
+// Safari pans the page above the keyboard, those differ from the ones `position: fixed`
+// uses, so this measures where the element landed and moves it by the difference.
+export function placeFixed(host: HTMLElement, left: number, top: number): void {
+  const set = (x: number, y: number): void => {
+    host.style.setProperty("left", `${String(x)}px`, "important");
+    host.style.setProperty("top", `${String(y)}px`, "important");
+  };
+  set(left, top);
+  const landed = host.getBoundingClientRect();
+  if (landed.width === 0 && landed.height === 0) return;
+  const dx = left - landed.left;
+  const dy = top - landed.top;
+  if (Math.abs(dx) >= 1 || Math.abs(dy) >= 1) set(left + dx, top + dy);
+}
+
+// The part of the window the keyboard leaves visible.
+export function visibleHeight(win: Window): number {
+  return win.visualViewport?.height ?? win.innerHeight;
+}
+
+// Runs `place` whenever the page scrolls, resizes or is panned for the keyboard. Returns the undo.
+export function onViewportChange(win: Window, place: () => void): () => void {
+  const visual = win.visualViewport;
+  win.addEventListener("scroll", place, { capture: true, passive: true });
+  win.addEventListener("resize", place, { passive: true });
+  visual?.addEventListener("scroll", place);
+  visual?.addEventListener("resize", place);
+  return () => {
+    win.removeEventListener("scroll", place, { capture: true });
+    win.removeEventListener("resize", place);
+    visual?.removeEventListener("scroll", place);
+    visual?.removeEventListener("resize", place);
+  };
+}

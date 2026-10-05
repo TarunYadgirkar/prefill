@@ -70,6 +70,7 @@ host_e2e_step() {
 e2e() {
   step "Building extension scripts and project"
   pnpm --dir $ROOT/web build
+  pnpm --dir $ROOT/web build:testbed
   xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
   boot_sim
   xcrun simctl privacy $SIM_UDID grant contacts $PERSONAL_BUNDLE_ID

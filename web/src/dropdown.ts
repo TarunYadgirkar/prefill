@@ -1,4 +1,4 @@
-import { eventOrigin } from "./dom";
+import { eventOrigin, onViewportChange, placeFixed, visibleHeight } from "./dom";
 
 export interface Choice {
   value: string;
@@ -140,14 +140,9 @@ export function showDropdown(
     const rect = element.getBoundingClientRect();
     const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, rect.width));
     const height = host.getBoundingClientRect().height;
-    const below =
-      rect.bottom + GAP + height <= win.innerHeight ||
-      rect.top - GAP - height < 0;
-    setStyles(host, {
-      left: `${String(Math.max(0, Math.min(rect.left, win.innerWidth - width)))}px`,
-      top: `${String(below ? rect.bottom + GAP : rect.top - GAP - height)}px`,
-      width: `${String(width)}px`,
-    });
+    const below = rect.bottom + GAP + height <= visibleHeight(win) || rect.top - GAP - height < 0;
+    setStyles(host, { width: `${String(width)}px` });
+    placeFixed(host, Math.max(0, Math.min(rect.left, win.innerWidth - width)), below ? rect.bottom + GAP : rect.top - GAP - height);
   };
 
   const render = (): void => {
@@ -261,8 +256,7 @@ export function showDropdown(
   menu.addEventListener("mousedown", onMouseDown);
   menu.addEventListener("click", onClick);
   win.addEventListener("keydown", onKey, true);
-  win.addEventListener("scroll", place, { capture: true, passive: true });
-  win.addEventListener("resize", place, { passive: true });
+  const stopPlacing = onViewportChange(win, place);
   element.addEventListener("input", onInput);
   doc.documentElement.append(host);
   if (typeof host.showPopover === "function") host.showPopover();
@@ -270,8 +264,7 @@ export function showDropdown(
 
   return () => {
     win.removeEventListener("keydown", onKey, true);
-    win.removeEventListener("scroll", place, { capture: true });
-    win.removeEventListener("resize", place);
+    stopPlacing();
     element.removeEventListener("input", onInput);
     host.remove();
   };

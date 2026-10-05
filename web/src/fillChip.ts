@@ -1,4 +1,4 @@
-import { eventOrigin, isFieldElement } from "./dom";
+import { eventOrigin, isFieldElement, onViewportChange, placeFixed } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import type { FillResult } from "./fill";
 import type { GestureGate } from "./gesture";
@@ -83,14 +83,11 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
     const height = size.height || 32;
     const width = size.width || 160;
     if (rect.right + GAP + width <= win.innerWidth) {
-      setStyles(host, { left: `${String(rect.right + GAP)}px`, top: `${String(rect.top + (rect.height - height) / 2)}px` });
+      placeFixed(host, rect.right + GAP, rect.top + (rect.height - height) / 2);
       return;
     }
     const above = rect.top - GAP - height >= 0;
-    setStyles(host, {
-      left: `${String(Math.max(4, Math.min(rect.right - width, win.innerWidth - width - 4)))}px`,
-      top: `${String(above ? rect.top - GAP - height : rect.bottom + GAP)}px`,
-    });
+    placeFixed(host, Math.max(4, Math.min(rect.right - width, win.innerWidth - width - 4)), above ? rect.top - GAP - height : rect.bottom + GAP);
   };
 
   const hide = (): void => {
@@ -231,14 +228,12 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
   doc.addEventListener("focusin", onFocus, true);
   doc.addEventListener("click", onClickField, true);
   doc.addEventListener("focusout", onBlur, true);
-  win.addEventListener("scroll", onViewport, { capture: true, passive: true });
-  win.addEventListener("resize", onViewport, { passive: true });
+  const stopPlacing = onViewportChange(win, onViewport);
   return () => {
     hide();
     doc.removeEventListener("focusin", onFocus, true);
     doc.removeEventListener("click", onClickField, true);
     doc.removeEventListener("focusout", onBlur, true);
-    win.removeEventListener("scroll", onViewport, true);
-    win.removeEventListener("resize", onViewport);
+    stopPlacing();
   };
 }
