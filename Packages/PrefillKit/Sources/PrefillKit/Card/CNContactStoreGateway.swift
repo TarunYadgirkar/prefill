@@ -247,11 +247,16 @@ enum CNCardMapping {
             guard case .email(let text) = entry.payload else { return nil }
             return text as NSString
         }
-        contact.phoneNumbers = fresh(phones, originals: contact.phoneNumbers) {
-            Normalizer.phone($0.stringValue)
-        } make: { entry in
-            guard case .phone(let text) = entry.payload else { return nil }
-            return CNPhoneNumber(stringValue: text)
+        // NameDrop and Share Contact remember the number the person picked by its stored
+        // identifier, and a rewritten value gets a new one. So phones are written only when
+        // they change, and a save that reorders emails leaves them exactly as stored.
+        if !isStored(phones, as: contact.phoneNumbers) {
+            contact.phoneNumbers = fresh(phones, originals: contact.phoneNumbers) {
+                Normalizer.phone($0.stringValue)
+            } make: { entry in
+                guard case .phone(let text) = entry.payload else { return nil }
+                return CNPhoneNumber(stringValue: text)
+            }
         }
         contact.postalAddresses = fresh(addresses, originals: contact.postalAddresses) {
             Normalizer.address(postal($0))
@@ -286,6 +291,12 @@ enum CNCardMapping {
     static func failure(for error: any Error) -> CardWriteFailure {
         guard let error = error as? CNError else { return .other }
         return failures[error.code] ?? .other
+    }
+
+    private static func isStored(_ phones: [CardEntry], as stored: [CNLabeledValue<CNPhoneNumber>]) -> Bool {
+        phones.count == stored.count && zip(phones, stored).allSatisfy { entry, value in
+            entry.key == Normalizer.phone(value.value.stringValue) && entry.label == value.label
+        }
     }
 
     private static func fresh<Value>(

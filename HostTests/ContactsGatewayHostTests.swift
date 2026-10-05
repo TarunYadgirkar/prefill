@@ -40,6 +40,33 @@ struct ContactsGatewayHostTests {
         #expect(CNContactStore.authorizationStatus(for: .contacts) == .authorized)
     }
 
+    // NameDrop remembers the picked number by its stored identifier, so saves that don't
+    // change the phones (a reorder of emails, a move off the card) must leave it alone.
+    @Test func unchangedPhonesKeepTheirStoredIdentifiers() throws {
+        defer { try? removePrefillContacts() }
+        try withThrowawayCard { identifier in
+            let phoneKeys = [CNContactPhoneNumbersKey as CNKeyDescriptor]
+            let stored = { try CNContactStore().unifiedContact(withIdentifier: identifier, keysToFetch: phoneKeys) }
+            let added = try gateway.fetchCard(identifier: identifier)
+            let mobile = CardEntry(label: CNLabelPhoneNumberMobile, payload: .phone("+1 (510) 555-0134"))
+            _ = try gateway.save(
+                added.replacing(.phone, with: [mobile]), basis: added, transactionAuthor: CardWriter.transactionAuthor
+            )
+            let before = try stored().phoneNumbers.map(\.identifier)
+            #expect(before.count == 1)
+
+            let card = try gateway.fetchCard(identifier: identifier)
+            let reordered = card.replacing(.email, with: Array(card.emails.reversed()))
+            #expect(try gateway.save(reordered, basis: card, transactionAuthor: CardWriter.transactionAuthor) == .saved)
+            #expect(try stored().phoneNumbers.map(\.identifier) == before)
+
+            let emails = try gateway.placement(identifier: identifier).onCard.filter { $0.kind == .email }
+            try gateway.moveOffCard(emails, identifier: identifier)
+            #expect(try gateway.fetchCard(identifier: identifier).phones == [mobile])
+            #expect(try stored().phoneNumbers.map(\.identifier) == before)
+        }
+    }
+
     // The real card takes answers learned from an application, and Undo takes them back.
     @Test func learnedAnswersReachTheRealCardAndUndoRemovesThem() throws {
         try withThrowawayCard { identifier in
