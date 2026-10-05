@@ -1,7 +1,8 @@
 #!/bin/zsh
 # usage: install-device.sh [device-id]
 # Builds the Personal configuration for a connected iPhone and installs it with
-# devicectl. Free personal team builds expire after 7 days, so rerun it weekly.
+# devicectl. Free personal team builds expire after 7 days, so rerun it weekly
+# (install-auto-reinstall.sh sets that up).
 # Device IDs come from: xcrun devicectl list devices
 source ${0:A:h}/lib.sh
 
