@@ -161,7 +161,6 @@ function body(view: SheetView, actions: SheetActions): Child[] {
   if (entry === undefined) return [problem("Prefill couldn't read your card", state.reason ?? "Try again in a moment.")];
   const failure = state.status === "failed" ? el("p", "failure", state.reason ?? "Something went wrong. Try again.") : undefined;
   return [
-    fillCard(view, actions),
     kindTabs(view, state.kinds.map((item) => item.kind), actions),
     bar(entry),
     pinnedNote(entry, view, actions),
@@ -177,7 +176,9 @@ export function render(root: HTMLElement, view: SheetView, actions: SheetActions
   const note = el("p", "note", view.note);
   note.setAttribute("role", "status");
   root.setAttribute("aria-busy", String(view.busy || view.state === undefined));
-  root.replaceChildren(header, ...body(view, actions).filter((child) => child !== undefined), note);
+  // Filling goes through the page, so the button doesn't wait on the card's state.
+  const children = [fillCard(view, actions), ...body(view, actions)].filter((child) => child !== undefined);
+  root.replaceChildren(header, ...children, note);
 }
 
 export function renderProblem(root: HTMLElement, title: string, detail: string): void {
