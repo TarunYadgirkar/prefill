@@ -1,0 +1,670 @@
+<!--
+Source: SmartRecruiters one-click apply (jobs.smartrecruiters.com/oneclick-ui), posting 70832055-56fb-4b0e-bcd5-a70360ecca4a
+(Product Management AI-Tool Intern, Bosch Group)
+Captured copy: github.com/fkabaalkhail/Applypilot chrome-extension/test/fixtures/real/smartrecruiters/sr-bosch-intern.html
+SmartRecruiters draws its fields in Lit web components; the capture serialized their open shadow roots as
+declarative <template shadowrootmode> (the test attaches them). The phone field's inner <input> was not
+serialized in the capture, so the fixture has no phone box.
+Fetched 2026-10-05. The ATS hosts are blocked by this session's egress policy, so the markup
+comes from a saved copy of the live page committed to a public repository (path below),
+fetched through raw.githubusercontent.com. Trimmed to the application form: scripts,
+styles, SVGs, images, comments, classes, inline styles and reCAPTCHA removed; ids, names,
+types, labels, aria-*, autocomplete, placeholders, options and fieldsets kept as captured.
+Lists longer than 30 entries (universities, phone country pickers) keep their first entries.
+-->
+<div>
+<scheduled-maintenance>
+</scheduled-maintenance>
+<oc-easy-apply>
+<div data-test="easy-apply-container">
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Easy Apply </spl-typography-title>
+<spl-typography-body>
+<template shadowrootmode="open">
+<p>
+<slot>
+</slot>
+</p>
+</template> Choose an option to autocomplete your application. You can still fill your profile manually. </spl-typography-body>
+<div>
+<oc-apply-with-resume>
+<spl-form-field>
+<template shadowrootmode="open">
+<spl-internal-form-field>
+<slot>
+</slot>
+<slot name="label-content">
+</slot>
+<slot name="label-suffix">
+</slot>
+</spl-internal-form-field>
+</template>
+<spl-dropzone data-test="apply-with-resume-container" label="">
+<template shadowrootmode="open">
+<div>
+<slot name="icon">
+</slot>
+<label for="file-input">
+<span>Choose a file</span>
+<span>or drop it here</span>
+</label>
+<input type="file" id="file-input" accept=".doc, .dot, .rmr, .rsm, .resume, .oxps, .pdf, .p7s, .ai, .rtf, .pages, .gdoc, .gslides, .xls, .xlsm, .pub, .msg, .ppt, .wps, .ods, .odt, .pptx, .ppsx, .xlsx, .docx, .dotx, .sxw, .wpd, .abw, .mp3, .m4a, .wav, .psd, .eml, .ical, .ics, .ifb, .icalendar, .ics_response, .csv, .txt, .text, .vcf, .mp4, .mov, .bmp, .gif, .jfif, .jpeg, .jpg, .png, .tif, .tiff, .webp">
+<span id="spl-dropzone-restriction-label-2">10MB size limit</span>
+</div>
+</template>
+</spl-dropzone>
+</spl-form-field>
+</oc-apply-with-resume>
+<div>
+<div>
+<spl-divider role="separator">
+<template shadowrootmode="open">
+</template>
+</spl-divider>
+</div>
+<spl-typography-body>
+<template shadowrootmode="open">
+<p>
+<slot>
+</slot>
+</p>
+</template> or </spl-typography-body>
+<div>
+<spl-divider role="separator">
+<template shadowrootmode="open">
+</template>
+</spl-divider>
+</div>
+</div>
+<oc-external-providers>
+<oc-external-providers-buttons>
+<div>
+<oc-apply-with-linked-in>
+<div data-test="apply-with-linkedin-container">
+
+</div>
+</oc-apply-with-linked-in>
+<oc-apply-with-indeed>
+<oc-external-apply-button>
+<button type="button" aria-label="Apply With Indeed"> Apply With Indeed </button>
+</oc-external-apply-button>
+</oc-apply-with-indeed>
+<oc-apply-with-seek>
+<oc-external-apply-button>
+<button type="button" aria-label="Apply with SEEK"> Apply with SEEK </button>
+</oc-external-apply-button>
+</oc-apply-with-seek>
+</div>
+</oc-external-providers-buttons>
+</oc-external-providers>
+</div>
+</div>
+</oc-easy-apply>
+<oc-prefill-success-banner>
+</oc-prefill-success-banner>
+<oc-personal-information>
+<div data-test="personal-information">
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Personal information </spl-typography-title>
+<spl-typography-body>
+<template shadowrootmode="open">
+<p>
+<slot>
+</slot>
+</p>
+</template> Fields marked with * are required. </spl-typography-body>
+<oc-avatar>
+</oc-avatar>
+<div>
+<div data-test="personal-info-first-name">
+<oc-input formcontrolname="firstName" attrid="first-name-input" data-test="personal-info-first-name-input" autocomplete="given-name">
+<spl-input type="text" data-test="" required="" id="first-name-input" label="First name" autocomplete="given-name" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="first-name-input" id="first-name-input-label">
+<spl-typography-label>
+<span>
+<span>First name<span aria-hidden="true">*</span>
+</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input autocomplete="given-name" id="first-name-input" type="text" placeholder="" aria-invalid="false" aria-required="true">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+</div>
+<div data-test="personal-info-last-name">
+<oc-input formcontrolname="lastName" attrid="last-name-input" data-test="personal-info-last-name-input" autocomplete="family-name">
+<spl-input type="text" data-test="" required="" id="last-name-input" label="Last name" autocomplete="family-name" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="last-name-input" id="last-name-input-label">
+<spl-typography-label>
+<span>
+<span>Last name<span aria-hidden="true">*</span>
+</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input autocomplete="family-name" id="last-name-input" type="text" placeholder="" aria-invalid="false" aria-required="true">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+</div>
+</div>
+<div>
+<div data-test="personal-info-email">
+<oc-input formcontrolname="email" type="email" attrid="email-input" data-test="personal-info-email-input" autocomplete="email">
+<spl-input type="email" data-test="" required="" id="email-input" label="Email" autocomplete="email" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="email-input" id="email-input-label">
+<spl-typography-label>
+<span>
+<span>Email<span aria-hidden="true">*</span>
+</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input autocomplete="email" id="email-input" type="email" placeholder="" aria-invalid="false" aria-required="true">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+</div>
+<div data-test="personal-info-email-confirm">
+<oc-input formcontrolname="emailConfirmation" type="email" attrid="confirm-email-input" data-test="personal-info-email-confirm-input" autocomplete="email">
+<spl-input type="email" data-test="" required="" id="confirm-email-input" label="Confirm your email" autocomplete="email" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="confirm-email-input" id="confirm-email-input-label">
+<spl-typography-label>
+<span>
+<span>Confirm your email<span aria-hidden="true">*</span>
+</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input autocomplete="email" id="confirm-email-input" type="email" placeholder="" aria-invalid="false" aria-required="true">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+</div>
+</div>
+<div>
+<div data-test="personal-info-location">
+<oc-location-autocomplete-wrapper>
+<oc-location-autocomplete>
+<spl-autocomplete data-test="location-autocomplete" data-sr-id="location-autocomplete-search" required="" id="spl-form-element_8" label="City">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<div data-sr-id="location-autocomplete-search-root">
+<spl-internal-form-field>
+<div role="status" aria-live="polite" aria-atomic="true" data-sr-id="location-autocomplete-search-clearStatus">
+</div>
+<spl-dropdown>
+<div>
+<div data-sr-id="location-autocomplete-search-prefixIcon">
+<slot name="prefixIcon">
+</slot>
+</div>
+<spl-input type="text" value="" autocomplete="off" label="City" required="" id="spl-form-element_8" data-sr-id="location-autocomplete-search-search">
+<slot name="label-suffix">
+</slot>
+<slot name="label-content">
+</slot>
+</spl-input>
+<div data-sr-id="location-autocomplete-search-suffixIcon">
+<slot name="suffixIcon">
+<spl-icon data-sr-id="location-autocomplete-search-searchIcon">
+</spl-icon>
+</slot>
+</div>
+</div>
+<div id="menu-spl-form-element_8" data-sr-id="location-autocomplete-search-menu" role="listbox" aria-labelledby="spl-0">
+</div>
+</spl-dropdown>
+</spl-internal-form-field>
+</div>
+</template>
+</spl-autocomplete>
+</oc-location-autocomplete>
+</oc-location-autocomplete-wrapper>
+</div>
+<div data-test="personal-info-phone">
+<oc-phone-number>
+<spl-phone-field autocomplete="tel" required="" id="spl-form-element_3" label="Phone number" value="{&quot;country&quot;:&quot;US&quot;}">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<div>
+<div>
+<spl-internal-form-field>
+<label for="spl-form-element_3" id="spl-form-element_3-label">
+<spl-typography-label>
+<span>
+<span>Phone number<span aria-hidden="true">*</span>
+</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div role="group" aria-labelledby="spl-form-element_3-label">
+<spl-tooltip>
+<spl-select id="spl-form-element_10" value="US" aria-describedby="" aria-description="Country code">
+<spl-dropdown-search placeholder="Search by country/region or code">
+</spl-dropdown-search>
+<spl-select-option value="AF" label="Afghanistan">
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<span>Afghanistan</span>
+<span>+93</span>
+</div>
+</spl-select-option>
+<spl-select-option value="AX" label="Åland Islands">
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<span>Åland Islands</span>
+<span>+358</span>
+</div>
+</spl-select-option>
+<spl-select-option value="AL" label="Albania">
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<span>Albania</span>
+<span>+355</span>
+</div>
+</spl-select-option>
+<spl-select-option value="DZ" label="Algeria">
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<span>Algeria</span>
+<span>+213</span>
+</div>
+</spl-select-option>
+<spl-select-option value="AS" label="American Samoa">
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<span>American Samoa</span>
+<span>+1</span>
+</div>
+</spl-select-option>
+<div>
+<div>
+<spl-country-flag>
+</spl-country-flag>
+<spl-typography-body>+1</spl-typography-body>
+</div>
+</div>
+<!-- 240 more entries removed from the capture -->
+</spl-select>
+</spl-tooltip>
+<spl-tooltip>
+<spl-input autocomplete="off" required="" id="spl-form-element_3" type="tel" placeholder="">
+</spl-input>
+</spl-tooltip>
+</div>
+</spl-internal-form-field>
+</div>
+</div>
+</template>
+</spl-phone-field>
+</oc-phone-number>
+</div>
+</div>
+<oc-additional-consent-info>
+</oc-additional-consent-info>
+</div>
+</oc-personal-information>
+<oc-experience>
+<div data-test="experience">
+<div>
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Experience </spl-typography-title>
+<oc-button type="secondary" data-test="add-experience" aria-expanded="false">
+<spl-button data-test="" aria-label="Add experience entry" type="secondary">
+<template shadowrootmode="open">
+<button type="button" aria-expanded="false">
+<div>
+<slot name="prefixIcon">
+</slot>
+<slot>
+</slot>
+<slot name="suffixIcon">
+</slot>
+</div>
+</button>
+</template>
+<span>Add</span>
+<spl-icon>
+<template shadowrootmode="open">
+</template>
+</spl-icon>
+</spl-button>
+</oc-button>
+</div>
+<oc-validation-summary>
+<ul data-test="validation-summary" aria-live="assertive" aria-relevant="all">
+</ul>
+</oc-validation-summary>
+
+</div>
+</oc-experience>
+<oc-education>
+<div data-test="education">
+<oc-education-connecticut-disclaimer>
+</oc-education-connecticut-disclaimer>
+<div>
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Education </spl-typography-title>
+<oc-button type="secondary" data-test="add-education" aria-expanded="false">
+<spl-button data-test="" aria-label="Add education entry" type="secondary">
+<template shadowrootmode="open">
+<button type="button" aria-expanded="false">
+<div>
+<slot name="prefixIcon">
+</slot>
+<slot>
+</slot>
+<slot name="suffixIcon">
+</slot>
+</div>
+</button>
+</template>
+<span>Add</span>
+<spl-icon>
+<template shadowrootmode="open">
+</template>
+</spl-icon>
+</spl-button>
+</oc-button>
+</div>
+<oc-validation-summary>
+<ul data-test="validation-summary" aria-live="assertive" aria-relevant="all">
+</ul>
+</oc-validation-summary>
+
+</div>
+</oc-education>
+<oc-web>
+<div data-test="web">
+<spl-typography-title>
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Your Profiles </spl-typography-title>
+<spl-typography-body>
+<template shadowrootmode="open">
+<p>
+<slot>
+</slot>
+</p>
+</template> Fields marked with * are required. </spl-typography-body>
+<div>
+<oc-input formcontrolname="linkedIn" attrid="linkedin-input" data-test="web-profiles-linkedin">
+<spl-input type="text" data-test="" id="linkedin-input" label="LinkedIn" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="linkedin-input" id="linkedin-input-label">
+<spl-typography-label>
+<span>
+<span>LinkedIn</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input id="linkedin-input" type="text" placeholder="" aria-invalid="false" aria-required="false">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+<oc-input formcontrolname="website" attrid="website-input" data-test="web-profiles-website">
+<spl-input type="text" data-test="" id="website-input" label="Website" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="website-input" id="website-input-label">
+<spl-typography-label>
+<span>
+<span>Website</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<div>
+<slot name="before">
+</slot>
+</div>
+<div>
+<slot name="inner-prefix">
+</slot>
+<input id="website-input" type="text" placeholder="" aria-invalid="false" aria-required="false">
+<slot name="inner-suffix">
+</slot>
+</div>
+<div>
+<slot name="after">
+</slot>
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-input>
+</oc-input>
+</div>
+</div>
+</oc-web>
+<oc-resume-upload>
+<div data-test="resume-upload-container">
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template> Resume <span data-test="section-required-mark">*</span>
+</spl-typography-title>
+<spl-form-field>
+<template shadowrootmode="open">
+<spl-internal-form-field>
+<slot>
+</slot>
+<slot name="label-content">
+</slot>
+<slot name="label-suffix">
+</slot>
+</spl-internal-form-field>
+</template>
+<spl-dropzone data-test="resume-upload" label="">
+<template shadowrootmode="open">
+<div>
+<slot name="icon">
+</slot>
+<label for="file-input">
+<span>Choose a file</span>
+<span>or drop it here</span>
+</label>
+<input type="file" id="file-input" accept=".doc, .dot, .rmr, .rsm, .resume, .oxps, .pdf, .p7s, .ai, .rtf, .pages, .gdoc, .gslides, .xls, .xlsm, .pub, .msg, .ppt, .wps, .ods, .odt, .pptx, .ppsx, .xlsx, .docx, .dotx, .sxw, .wpd, .abw, .mp3, .m4a, .wav, .psd, .eml, .ical, .ics, .ifb, .icalendar, .ics_response, .csv, .txt, .text, .vcf, .mp4, .mov, .bmp, .gif, .jfif, .jpeg, .jpg, .png, .tif, .tiff, .webp">
+<span id="spl-dropzone-restriction-label-1">10MB size limit</span>
+</div>
+<ul>
+</ul>
+</template>
+</spl-dropzone>
+</spl-form-field>
+</div>
+</oc-resume-upload>
+<oc-hiring-manager-message>
+<div data-test="hiring-manager-message-container">
+<spl-typography-title data-test="section-title">
+<template shadowrootmode="open">
+<h3>
+<slot>
+</slot>
+</h3>
+</template>Message to the Hiring Team </spl-typography-title>
+<div>
+<oc-textarea attrid="hiring-manager-message-input" formcontrolname="message" data-test="hiring-manager-message-text">
+<spl-textarea data-test="" id="hiring-manager-message-input" label="Let the company know about your interest working there" value="">
+<template shadowrootmode="open" shadowrootdelegatesfocus="">
+<spl-internal-form-field>
+<label for="hiring-manager-message-input" id="hiring-manager-message-input-label">
+<spl-typography-label>
+<span>
+<span>Let the company know about your interest working there</span>
+<span>
+<slot name="label-suffix">
+</slot>
+</span>
+</span>
+</spl-typography-label>
+</label>
+<div>
+<textarea id="hiring-manager-message-input" placeholder="" aria-required="false">
+</textarea>
+<div hidden="">
+</div>
+</div>
+</spl-internal-form-field>
+</template>
+</spl-textarea>
+</oc-textarea>
+</div>
+</div>
+</oc-hiring-manager-message>
+<oc-consent>
+</oc-consent>
+</div>
