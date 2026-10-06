@@ -51,6 +51,8 @@ final class RelayServer: Sendable {
                     Self.log.error("relay stopped: \(errno, privacy: .public)")
                     return
                 }
+                // Out of descriptors: wait for some to close rather than spin.
+                if errno == EMFILE || errno == ENFILE || errno == ENOBUFS { usleep(100_000) }
                 continue
             }
             queue.async { [self] in serve(connection) }

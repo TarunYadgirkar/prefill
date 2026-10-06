@@ -21,29 +21,25 @@ extension MacModel {
 
     var customFields: [CustomField] { card?.customFields ?? [] }
 
-    // Returns why the field can't be saved, or nil once it is on the card (or the card
-    // couldn't take it, which shows as a problem).
+    // Returns why the field can't be saved, or nil once it is on the card.
     func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
-        switch customFields.saving(field, replacing: old) {
-        case .failure(let problem): return problem.message
-        case .success(let fields):
-            await setCustomFields(fields)
-            return nil
-        }
+        if case .failure(let problem) = customFields.saving(field, replacing: old) { return problem.message }
+        return await editCustomFields(.saveCustomField(field, replacing: old))
     }
 
     func removeCustomField(_ field: CustomField) async {
-        await setCustomFields(customFields.filter { $0.id != field.id })
+        if let reason = await editCustomFields(.removeCustomField(id: field.id)) { problem = reason }
     }
 
-    private func setCustomFields(_ fields: [CustomField]) async {
-        guard let identifier = state.cardLink?.contactIdentifier else { return }
+    private func editCustomFields(_ edit: CardEditor.Edit) async -> String? {
+        guard let identifier = state.cardLink?.contactIdentifier else { return nil }
         let gateway = gateway
         let outcome = await Task.detached {
-            CardEditor(gateway: gateway).apply(.setCustomFields(fields), cardIdentifier: identifier)
+            CardEditor(gateway: gateway).apply(edit, cardIdentifier: identifier)
         }.value
-        if case .failed(let failure) = outcome { problem = failure.reason }
         await refresh()
+        guard case .failed(let failure) = outcome else { return nil }
+        return failure.reason
     }
 
     // Moves what the person chose off My Card onto Prefill's contact.

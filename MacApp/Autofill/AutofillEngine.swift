@@ -237,7 +237,10 @@ final class AutofillEngine {
         keys?.setActive(false)
     }
 
+    // Also drops any lookup still on its way, so it can't show the panel over whatever
+    // the person switched to.
     private func hide() {
+        focusToken += 1
         hidePanel()
         current = nil
         lastFill = []
@@ -281,8 +284,9 @@ extension AutofillEngine {
     private func fillForm() {
         guard let current, let worker else { return }
         let anchor = current.field
-        let fields = FieldReader.emptyFields(around: anchor)
+        // The key tap goes off before the page walk, so a long walk can't stall typing.
         hidePanel()
+        let fields = FieldReader.emptyFields(around: anchor)
         focusToken += 1
         let token = focusToken
         Task {
@@ -290,6 +294,8 @@ extension AutofillEngine {
             var filled: [(element: AXUIElement, value: String)] = []
             for (index, row) in values.sorted(by: { $0.key < $1.key }) {
                 let element = fields[index].element
+                // The person may have typed here since the walk; their text stays.
+                guard element.string(kAXValueAttribute)?.isEmpty ?? true else { continue }
                 if await FieldFiller.set(element, to: row.value) { filled.append((element, row.value)) }
             }
             Self.log.info("filled \(filled.count) of \(fields.count) empty fields")

@@ -55,19 +55,28 @@ enum FieldReader {
     static func emptyFields(around field: FocusedField) -> [FocusedField] {
         let ancestors = field.element.ancestors(limit: webAreaSearch)
         let root = ancestors.first { $0.role == "AXWebArea" } ?? ancestors.first { $0.role == kAXWindowRole }
-        guard let root else { return [] }
+        guard let root, let visible = root.frame else { return [] }
         var queue = [root]
         var next = 0
         var found: [FocusedField] = []
         while next < queue.count, next < fillBudget, found.count < maxFillFields {
             let node = queue[next]
             next += 1
-            if let other = read(node, bundleID: field.bundleID), other.host == field.host, other.value.isEmpty {
+            if let other = read(node, bundleID: field.bundleID), other.host == field.host, other.value.isEmpty,
+               isShown(node, frame: other.frame, within: visible) {
                 found.append(other)
             }
             queue.append(contentsOf: node.children())
         }
         return found
+    }
+
+    // A field moved off the page, hidden or disabled is never filled: pages use them to
+    // collect values the person can't see they're giving.
+    private static func isShown(_ element: AXUIElement, frame: CGRect, within visible: CGRect) -> Bool {
+        frame.intersects(visible)
+            && element.value("AXHidden") as? Bool != true
+            && element.value(kAXEnabledAttribute) as? Bool != false
     }
 
     // Web content sits under an AXWebArea whose AXURL is the page; Prefill works on the

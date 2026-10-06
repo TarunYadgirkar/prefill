@@ -71,6 +71,7 @@ enum FieldFiller {
         item.setString("", forType: concealed)
         board.writeObjects([item])
         let ours = board.changeCount
+        let before = element.string(kAXValueAttribute)
         selectAll(element)
         pressPaste(pid: element.pid)
         // The person's own clipboard goes back only once the paste has landed. When it
@@ -79,7 +80,10 @@ enum FieldFiller {
         var landed = false
         for _ in 0..<pasteChecks where !landed {
             try? await Task.sleep(for: settleStep)
-            landed = element.string(kAXValueAttribute) == value
+            // A field that reformats what it takes, like a masked phone, never reads back
+            // the exact value, so any new text counts as the paste landing.
+            let now = element.string(kAXValueAttribute)
+            landed = now == value || (now != before && now?.isEmpty == false)
         }
         if landed, board.changeCount == ours {
             board.clearContents()
