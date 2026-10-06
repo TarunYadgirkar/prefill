@@ -107,7 +107,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Install it from the main checkout: the job keeps the path it was installed from.
 - **One-tap fill:**
   - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
-  - Safari's own suggestion bubble can cover the first row of Prefill's list on a filled field.
+  - In Safari every recognized field now gets Prefill's own list under it (`showDropdown`), as in Chrome; the datalist path is unused. Safari's own suggestion bubble can cover the list's first row.
   - The pill counts fields it recognizes, so "Fill form 13 fields" can end as "Filled 9" when the card has no link or answer for some.
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.

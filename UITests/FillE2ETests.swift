@@ -22,6 +22,9 @@ final class FillE2ETests: XCTestCase {
         SafariDriver.open(Site.siteA.page("application.html"), waitingFor: "First Name")
         Thread.sleep(forTimeInterval: 3)
 
+        XCTContext.runActivity(named: "0. An empty field shows its own values under it, beside the pill") { _ in
+            expectFieldList()
+        }
         XCTContext.runActivity(named: "a. The pill sits above the field, clear of the keyboard, and fills") { _ in
             tapPill(focusing: "First Name", shot: "fill-a-pill")
             XCTAssertTrue(webButton("Undo").waitForExistence(timeout: 10), "the pill never offered Undo")
@@ -53,6 +56,16 @@ final class FillE2ETests: XCTestCase {
         XCTContext.runActivity(named: "e. Demographic questions are declined") { _ in
             expectDeclined()
         }
+    }
+
+    private func expectFieldList() {
+        SafariDriver.field("Email").tap()
+        let other = safari.webViews.descendants(matching: .any)
+            .matching(NSPredicate(format: "label CONTAINS %@", "alex@work.example.org")).firstMatch
+        XCTAssertTrue(other.waitForExistence(timeout: 8), "the empty email field offered no list")
+        XCTAssertTrue(pillButton().exists, "no Fill pill beside the list")
+        E2EServer.screenshot("fill-0-field-list")
+        SafariDriver.dismissKeyboard()
     }
 
     private func expectOtherValues() {
