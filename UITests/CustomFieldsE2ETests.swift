@@ -2,7 +2,8 @@ import XCTest
 
 // Custom fields end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=CustomFieldsE2ETests)
 // after a host test has linked the Alex Rivera card: add the student starter set, with its school
-// already filled in, in the app's Custom tab, then focus the Greenhouse-style "School" field and read Safari's bar.
+// already filled in, in the app's Custom tab, then focus the Greenhouse-style "School" field and read Prefill's
+// list under it.
 @MainActor
 final class CustomFieldsE2ETests: XCTestCase {
     private let app = XCUIApplication()
@@ -26,15 +27,11 @@ final class CustomFieldsE2ETests: XCTestCase {
 
         SafariDriver.open(E2EServer.Site.siteA.page("greenhouse.html"), waitingFor: "School")
         Thread.sleep(forTimeInterval: 3)
-        var slots: [String] = []
-        for _ in 0..<4 {
-            slots = SafariDriver.suggestions(focusing: "School")
-            if slots.first == berkeley { break }
-            SafariDriver.dismissKeyboard()
-            Thread.sleep(forTimeInterval: 2)
-        }
-        E2EServer.screenshot("custom-field-bar")
-        XCTAssertEqual(slots.first, berkeley)
+        let listed = SafariDriver.prefillList(
+            focusing: "School", rows: [SafariDriver.Row(value: berkeley, detail: "Custom field")]
+        )
+        E2EServer.screenshot("custom-field-list")
+        XCTAssertEqual(listed.first, berkeley)
         SafariDriver.dismissKeyboard()
     }
 

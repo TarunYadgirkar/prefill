@@ -79,6 +79,40 @@ enum SafariDriver {
             .map(\.label)
     }
 
+    // One row of Prefill's own list: the value and the caption under it ("Email", "GitHub").
+    struct Row {
+        let value: String
+        let detail: String
+    }
+
+    // Focuses the field and reads which of `rows` Prefill's list shows, top to bottom, retrying
+    // while the app answers. The list is Prefill's, not Safari's bar above the keyboard.
+    static func prefillList(focusing label: String, rows: [Row]) -> [String] {
+        var shown: [String] = []
+        for _ in 0..<4 {
+            field(label).tap()
+            Thread.sleep(forTimeInterval: 1.5)
+            shown = prefillRows(rows)
+            if !shown.isEmpty { break }
+            dismissKeyboard()
+            Thread.sleep(forTimeInterval: 2)
+        }
+        return shown
+    }
+
+    // A row reads as its value then its caption. Safari's suggestion bubble and the keyboard's
+    // bar show some of the same values with other captions, and a combined link row starts
+    // with a single link's text, so a row has to match both and nothing more.
+    static func prefillRows(_ rows: [Row]) -> [String] {
+        let found = rows.compactMap { row -> (String, CGFloat)? in
+            let predicate = NSPredicate(format: "label BEGINSWITH %@ AND label ENDSWITH %@", row.value, row.detail)
+            let element = safari.webViews.descendants(matching: .any).matching(predicate).allElementsBoundByIndex
+                .first { $0.label.count <= row.value.count + row.detail.count + 2 }
+            return element.map { (row.value, $0.frame.minY) }
+        }
+        return found.sorted { $0.1 < $1.1 }.map(\.0)
+    }
+
     // Safari's page menu, then Prefill's row, which opens the extension's sheet.
     static func openPrefillSheet() {
         let menu = safari.buttons["MoreMenuButton"].firstMatch
