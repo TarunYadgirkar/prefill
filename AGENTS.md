@@ -122,4 +122,4 @@ Last session (Oct 4–6, 2026): PR #1 merged into main, then these on main: mini
 
 Not yet checked by a person: one-tap fill and the per-field list in Safari on the iPhone itself (only the simulator), guesses on the iPhone (needs Apple Intelligence on and a second visit), and NameDrop after the phone-identifier fix (it came back after a restart; whether Prefill still disturbs it is untested).
 
-Next ideas, none started: let the extension handle `autocomplete`-only fields while the Mac engine is on; a Mac equivalent of "put back on card"; React-Select answers for learning; replacing a learned answer with a later one.
+Next: [docs/PLAN.md](docs/PLAN.md) is the v2 plan (click-and-pick by default, picks remembered, one memory, a frozen short card, the app as an inbox, resume import). Work it in order from its Progress list. It folds in the earlier ideas: the Mac "put back on card" (4.3), replacing a learned answer (2.3) and the extension owning Chromium pages (8.1).
