@@ -105,7 +105,7 @@ struct LearnedRow: View {
         Button("Remove", systemImage: "minus.circle", role: .destructive) {
             Task { await model.undo(answer) }
         }
-        .prefillButtonStyle(.rowDestructive)
+        .prefillButtonStyle(.rowSecondary)
         .accessibilityIdentifier("inbox-remove-answer")
     }
 }

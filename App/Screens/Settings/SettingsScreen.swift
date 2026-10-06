@@ -34,7 +34,9 @@ struct SettingsScreen: View {
                     }
                     .disabled(model.card == nil)
                     .accessibilityIdentifier("sharing-your-card")
-                    if let line = model.intelligenceState.settingsLine {
+                }
+                if let line = model.intelligenceState.settingsLine {
+                    Section {
                         Label {
                             Text(line).textRole(.body)
                         } icon: {

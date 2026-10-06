@@ -65,7 +65,7 @@ struct CaptureRow: View {
             Button("Remove", systemImage: "minus.circle", role: .destructive) {
                 run { await model.undo(item) }
             }
-            .prefillButtonStyle(.rowDestructive)
+            .prefillButtonStyle(.rowSecondary)
             .accessibilityIdentifier("inbox-remove")
         case .removed:
             Button("Add", systemImage: "plus") {
