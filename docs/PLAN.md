@@ -70,7 +70,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
   - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
-  - [ ] 3.1 `Answer` and `Memory` types over `CardSplit`
+  - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
   - [ ] 3.3 Usage history per answer ("Used on")
   - [ ] 3.4 Merge
@@ -292,6 +292,7 @@ public struct Memory: Sendable {
 - `Memory.read(gateway:, state:, events:)` builds it from `CNContactStoreGateway.fetchCard` (+ `placement` for `place`), `AppState.values` (origin and dates), `ExtensionEvents.answers` and `captures`.
 - Writes stay where they are (`CardWriter`, `CardEditor`, the answers path). `Memory` is read-only in this phase.
 - Tests: built from a fake gateway with a minimal and a full card, both give the same answers with different `place`.
+- Done as: `Memory.read(card:placement:state:events:)` is the pure core and `Memory.read(gateway:identifier:state:events:)` wraps it. `name` is a `Memory.Name` struct (a tuple isn't `Hashable`), `.captured(host:)` takes a `String?` because the capture can age out of the events, and a custom field's `label` is nil (the question carries it).
 
 ### 3.2 Routers read `Memory`
 

@@ -87,7 +87,11 @@ enum ValueID {
     private static let namespace = Array("com.tarunyadgirkar.prefill.value".utf8)
 
     static func make(kind: ContactKind, key: String) -> UUID {
-        let digest = Insecure.SHA1.hash(data: namespace + Array("\(kind.rawValue):\(key)".utf8))
+        make(name: "\(kind.rawValue):\(key)")
+    }
+
+    static func make(name: String) -> UUID {
+        let digest = Insecure.SHA1.hash(data: namespace + Array(name.utf8))
         var bytes = Array(digest.prefix(16))
         bytes[6] = (bytes[6] & 0x0F) | 0x50
         bytes[8] = (bytes[8] & 0x3F) | 0x80
