@@ -118,8 +118,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 ## Ongoing
 
-Last session (Oct 4–6, 2026): PR #1 merged into main, then these on main: minimal card offered in setup and its phones never reordered or rewritten, learned answers on submit (with Undo), student starter set, Mac "Fill form", per-field lists in Safari, on-device guesses, phone matching by digits, questions printed before unlabelled fields (Partiful). Installed on the iPhone and Mac; the daily reinstall job is loaded from this checkout.
+Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan: click a field and pick a value is the default, Fill form is optional. Its Progress list is the to-do list; take the first unchecked task.
 
-Not yet checked by a person: one-tap fill and the per-field list in Safari on the iPhone itself (only the simulator), guesses on the iPhone (needs Apple Intelligence on and a second visit), and NameDrop after the phone-identifier fix (it came back after a restart; whether Prefill still disturbs it is untested).
+Phase 1 (Oct 6, merged): a value picked from Prefill's list (`picked` message) is pinned for the site without a Contacts write, links too, and a picked custom answer or guess is remembered for the question's words (`ExtensionEvents.answerPicks`). The Mac panel reports picks. In Safari, Prefill's contact list now sits above the field, because Safari's own suggestion bubble swallows every tap in a band about 100 pt under a contact field (found by the new `PickE2ETests`; before this, the first two rows couldn't be tapped on the iPhone). Rows are buttons. Installed on the Mac; the iPhone wasn't connected, so the daily reinstall job will pick it up. After a reinstall, reload the unpacked extension in Chrome and Arc.
 
-Next: [docs/PLAN.md](docs/PLAN.md) is the v2 plan (click-and-pick by default, picks remembered, one memory, a frozen short card, the app as an inbox, resume import). Work it in order from its Progress list. It folds in the earlier ideas: the Mac "put back on card" (4.3), replacing a learned answer (2.3) and the extension owning Chromium pages (8.1).
+Known: `CustomFieldsE2ETests`, `LinksE2ETests` and `MinimalCardE2ETests` fail because they still read Safari's keyboard bar from before `d070f61` (task 2.0). A full `scripts/test.sh e2e` takes about 15 minutes and collides with another session's run on port 8846 and the simulator; check `lsof -iTCP:8846` first.
+
+Not yet checked by a person: picking from the list on the iPhone itself, and the list placement above the field at large Dynamic Type sizes.
