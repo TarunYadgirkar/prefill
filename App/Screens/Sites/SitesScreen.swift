@@ -1,7 +1,7 @@
 import PrefillKit
 import SwiftUI
 
-// Pushed from Settings, inside its navigation stack.
+// Pushed from Settings, whose stack opens each site (SiteDetail) by its host.
 struct SitesScreen: View {
     @Environment(AppModel.self) private var model
 
@@ -21,9 +21,6 @@ struct SitesScreen: View {
         }
         .navigationTitle("Sites")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(for: String.self) { host in
-            SiteDetail(host: host)
-        }
         .background(Palette.canvas)
     }
 }
@@ -113,6 +110,7 @@ struct MatchOffNote: View {
 #Preview {
     NavigationStack {
         SitesScreen()
+            .navigationDestination(for: String.self) { SiteDetail(host: $0) }
     }
     .previewModel()
 }

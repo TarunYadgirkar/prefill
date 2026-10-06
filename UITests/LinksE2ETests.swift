@@ -108,6 +108,6 @@ final class LinksE2ETests: XCTestCase {
         search.typeText(link)
         let row = app.descendants(matching: .any)["value-https://\(link)"].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10), "\(link) never showed in the You tab")
-        app.buttons["Cancel"].firstMatch.tap()
+        closeSearch(app)
     }
 }

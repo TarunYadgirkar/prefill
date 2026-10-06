@@ -14,7 +14,7 @@ struct InboxMark: View {
 
     var body: some View {
         Image(systemName: symbol)
-            .textRole(.rowIcon)
+            .font(TextRole.rowIcon.font)
             .foregroundStyle(color)
             .frame(width: width)
             .accessibilityHidden(true)

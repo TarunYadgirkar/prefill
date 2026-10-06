@@ -48,6 +48,12 @@ struct SettingsScreen: View {
             }
             .navigationTitle("Settings")
             .screenTitleDisplay()
+            .navigationDestination(for: SettingsRoute.self) { _ in
+                SitesScreen()
+            }
+            .navigationDestination(for: String.self) { host in
+                SiteDetail(host: host)
+            }
         }
     }
 

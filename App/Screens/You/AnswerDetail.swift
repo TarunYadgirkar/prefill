@@ -84,6 +84,8 @@ struct AnswerDetail: View {
                 .accessibilityIdentifier("edit-answer")
         }
         Button("Remove", systemImage: "trash", role: .destructive) { isRemoving = true }
+            // A list row tints the icon with the accent; the whole action reads as destructive.
+            .foregroundStyle(Palette.destructive)
             .accessibilityIdentifier("remove-answer")
     }
 
