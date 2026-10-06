@@ -21,6 +21,8 @@ final class CustomFieldsE2ETests: XCTestCase {
         SafariDriver.enableExtension()
         app.launchArguments = ["-finishedOnboarding", "YES"]
         app.launch()
+        // The store starts empty, so the app opens on an empty inbox.
+        if app.staticTexts["Nothing new"].waitForExistence(timeout: 10) { E2EServer.screenshot("inbox-empty") }
         addSchool()
         E2EServer.screenshot("custom-card")
         app.terminate()
@@ -49,10 +51,7 @@ final class CustomFieldsE2ETests: XCTestCase {
         E2EServer.screenshot("custom-student-answers")
         app.buttons["save-student-answers"].tap()
         // Answers sit below the card's contact values, so search brings School on screen.
-        let search = app.searchFields.firstMatch
-        XCTAssertTrue(search.waitForExistence(timeout: 5), "no search field")
-        search.tap()
-        search.typeText("School")
+        search(app, for: "School")
         let row = app.descendants(matching: .any)["custom-School"].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10), "School never showed in the You tab")
     }

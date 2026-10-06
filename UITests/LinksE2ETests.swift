@@ -102,10 +102,7 @@ final class LinksE2ETests: XCTestCase {
         field.typeText(link)
         app.buttons["add-to-card"].tap()
         // Links sit below the card's contact values, so search brings the new one on screen.
-        let search = app.searchFields.firstMatch
-        XCTAssertTrue(search.waitForExistence(timeout: 5), "no search field")
-        search.tap()
-        search.typeText(link)
+        search(app, for: link)
         let row = app.descendants(matching: .any)["value-https://\(link)"].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10), "\(link) never showed in the You tab")
         closeSearch(app)

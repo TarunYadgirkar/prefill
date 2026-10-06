@@ -94,6 +94,10 @@ final class AppTourTests: XCTestCase {
         pause(1)
         snap("onboarding-sharing")
         later.tap()
+        walkSafariStep()
+    }
+
+    private func walkSafariStep() {
         let open = app.buttons["open-safari-settings"]
         let finish = app.buttons["finish-onboarding"]
         // Prefill reads Allow Extension from Safari, which can lag the switch the tour turned off,
@@ -148,10 +152,7 @@ final class AppTourTests: XCTestCase {
         app.navigationBars.buttons["Edit"].tap()
         snapAs("you-edit")
         app.navigationBars.buttons["Done"].tap()
-        let search = app.searchFields.firstMatch
-        swipeDown(until: search)
-        search.tap()
-        search.typeText("work")
+        search(app, for: "work")
         snapAs("you-search")
         closeSearch(app)
     }

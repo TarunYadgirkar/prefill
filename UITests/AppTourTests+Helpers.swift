@@ -94,11 +94,4 @@ extension AppTourTests {
         sites.tap()
         pause(1)
     }
-
-    func swipeDown(until element: XCUIElement) {
-        for _ in 0..<4 where !(element.exists && element.isHittable) {
-            app.swipeDown()
-            pause(0.5)
-        }
-    }
 }
