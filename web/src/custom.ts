@@ -65,6 +65,11 @@ export function customChoices(
   return [...answers, ...guesses];
 }
 
+// A text area is a message or an essay, not a short question, so it gets no guess.
+function offeredFor(element: TextField, choices: readonly Choice[] | undefined): readonly Choice[] | undefined {
+  return element.localName === "textarea" ? choices?.filter((choice) => choice.detail !== GUESS_DETAIL) : choices;
+}
+
 // A field only gets custom values when nothing else claims it: no contact or link meaning,
 // no autofill token, not sensitive, and not on a sign-in form.
 export function isCustomCandidate(
@@ -139,7 +144,7 @@ export function installCustom(
   };
 
   const offer = (): void => {
-    const values = focused === undefined ? undefined : known.get(focused.text);
+    const values = focused === undefined ? undefined : offeredFor(focused.element, known.get(focused.text));
     if (
       focused === undefined ||
       detach !== undefined ||

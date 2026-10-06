@@ -84,6 +84,25 @@ describe("installCustom", () => {
     expect(isCustomCandidate(university)).toBe(false);
     expect(isCustomCandidate(university, true)).toBe(true);
   });
+
+  it("offers a text area its saved answers but never a guess", async () => {
+    document.body.innerHTML = '<form><textarea id="m" placeholder="Type / for commands"></textarea></form>';
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+    const send = vi.fn<CustomOptions["send"]>().mockResolvedValue({
+      type: "customSuggestionsResult",
+      fields: [{ values: [], guesses: ["University of California, Berkeley"] }],
+    });
+    const attach = vi.fn(() => () => undefined);
+    const stop = installCustom(document, { host: () => "claude.ai", send, isUserEvent: () => true, textAreas: true, attach });
+    await Promise.resolve();
+    await Promise.resolve();
+    const box = document.getElementById("m") as HTMLTextAreaElement;
+    box.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    box.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    expect(send).toHaveBeenCalled();
+    expect(attach).not.toHaveBeenCalled();
+    stop();
+  });
 });
 
 describe("customChoices", () => {
