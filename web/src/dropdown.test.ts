@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { matching, showDropdown, type Choice } from "./dropdown";
+import { listSpot, matching, SAFARI_CONTACT, showDropdown, type Choice } from "./dropdown";
 
 const choices: Choice[] = [
   { value: "+1 510 555 0100", detail: "Phone" },
@@ -109,5 +109,25 @@ describe("matching", () => {
     expect(matching(phones, "5105550100")).toEqual([]);
     expect(matching(phones, "415-555")).toEqual([phones[1]]);
     expect(matching(phones, "2025550123")).toEqual([]);
+  });
+});
+
+describe("listSpot", () => {
+  const field = new DOMRect(16, 231, 234, 45);
+  const under = { above: 0, below: 0, preferAbove: false };
+
+  it("puts the list under its field when it fits, else over it", () => {
+    expect(listSpot(field, 150, 800, under)).toEqual({ top: 280 });
+    expect(listSpot(field, 150, 400, under)).toEqual({ top: 77 });
+  });
+
+  it("keeps Safari's list over a contact field, clear of the pill, or past Safari's band", () => {
+    expect(listSpot(field, 150, 545, SAFARI_CONTACT)).toEqual({ top: 231 - 4 - 44 - 150 });
+    const nearTop = new DOMRect(16, 60, 234, 45);
+    expect(listSpot(nearTop, 150, 545, SAFARI_CONTACT)).toEqual({ top: 105 + 4 + 124 });
+  });
+
+  it("cuts the list to the side with more room when neither side fits", () => {
+    expect(listSpot(field, 190, 487, SAFARI_CONTACT)).toEqual({ top: 0, maxHeight: 183 });
   });
 });

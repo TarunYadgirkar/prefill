@@ -16,6 +16,38 @@ export type Attach = (
 ) => () => void;
 
 const GAP = 4;
+
+// Room the list leaves on each side of its field, and which side it tries first.
+export interface Placement {
+  above: number;
+  below: number;
+  preferAbove: boolean;
+}
+const UNDER_FIELD: Placement = { above: 0, below: 0, preferAbove: false };
+// Safari draws its own suggestion bubble under a contact field and takes every tap in a
+// band under the field, wider than the bubble it draws: in the simulator a tap 72 pt under
+// the field went nowhere and one 122 pt under it reached the page. So there the list sits
+// above the field, clear of the Fill form pill, and below only past that band.
+export const SAFARI_CONTACT: Placement = { above: 44, below: 124, preferAbove: true };
+
+// Where the list goes: on the preferred side when it fits, else the other side when that
+// fits, else on the side with more room, cut to that room so it scrolls.
+export function listSpot(
+  field: DOMRect,
+  height: number,
+  room: number,
+  placement: Placement,
+): { top: number; maxHeight?: number } {
+  const under = field.bottom + GAP + placement.below;
+  const roomOver = field.top - GAP - placement.above;
+  const roomUnder = room - under;
+  if (placement.preferAbove && roomOver >= height) return { top: roomOver - height };
+  if (roomUnder >= height) return { top: under };
+  if (roomOver >= height) return { top: roomOver - height };
+  return roomOver > roomUnder
+    ? { top: Math.max(0, roomOver - Math.min(height, roomOver)), maxHeight: roomOver }
+    : { top: under, maxHeight: Math.max(0, roomUnder) };
+}
 // Like Chrome's own popup, a click this soon after the list appears doesn't pick, so a page
 // can't slip the list under a click meant for something else.
 const EARLY_CLICK_MS = 500;
@@ -35,7 +67,7 @@ const STYLE = `
 @media (prefers-color-scheme: dark) {
   .menu { --surface: #282a2d; --text: #e3e3e3; --text-muted: #c4c7c5; --hover: rgb(227 227 227 / 0.08); --divider: rgb(227 227 227 / 0.12); }
 }
-.row { display: grid; padding: 6px 16px; }
+.row { all: unset; box-sizing: border-box; display: grid; width: 100%; padding: 6px 16px; cursor: default; }
 .row[aria-selected="true"], .row:hover { background: var(--hover); }
 .value, .detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail { font-size: 12px; line-height: 16px; color: var(--text-muted); }
@@ -100,8 +132,12 @@ function setStyles(element: HTMLElement, styles: Record<string, string>): void {
     element.style.setProperty(name, value, "important");
 }
 
+// A button, not a plain element: iOS Safari sends a tap's click only to something it takes
+// as clickable, as it does for the Fill form pill.
 function rowFor(doc: Document, choice: Choice, index: number): HTMLElement {
-  const row = doc.createElement("div");
+  const row = doc.createElement("button");
+  row.type = "button";
+  row.tabIndex = -1;
   row.className = "row";
   row.setAttribute("role", "option");
   row.dataset.index = String(index);
@@ -122,6 +158,7 @@ export function showDropdown(
   element: TextField,
   choices: readonly Choice[],
   isUserEvent = (event: Event) => event.isTrusted,
+  placement: Placement = UNDER_FIELD,
 ): () => void {
   const doc = element.ownerDocument;
   const win = doc.defaultView ?? window;
@@ -164,10 +201,11 @@ export function showDropdown(
   const place = (): void => {
     const rect = element.getBoundingClientRect();
     const width = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, rect.width));
-    const height = host.getBoundingClientRect().height;
-    const below = rect.bottom + GAP + height <= visibleHeight(win) || rect.top - GAP - height < 0;
     setStyles(host, { width: `${String(width)}px` });
-    placeFixed(host, Math.max(0, Math.min(rect.left, win.innerWidth - width)), below ? rect.bottom + GAP : rect.top - GAP - height);
+    menu.style.removeProperty("max-height");
+    const spot = listSpot(rect, host.getBoundingClientRect().height, visibleHeight(win), placement);
+    if (spot.maxHeight !== undefined) setStyles(menu, { "max-height": `${String(spot.maxHeight)}px`, "overflow-y": "auto" });
+    placeFixed(host, Math.max(0, Math.min(rect.left, win.innerWidth - width)), spot.top);
   };
 
   const render = (): void => {
@@ -260,7 +298,7 @@ export function showDropdown(
   };
 
   // Keeps focus in the field while a row is pressed.
-  const onMouseDown = (event: MouseEvent): void => {
+  const onMouseDown = (event: Event): void => {
     event.preventDefault();
   };
 
@@ -279,6 +317,7 @@ export function showDropdown(
     pick(Number(row.dataset.index));
   };
 
+  menu.addEventListener("pointerdown", onMouseDown);
   menu.addEventListener("mousedown", onMouseDown);
   menu.addEventListener("click", onClick);
   win.addEventListener("keydown", onKey, true);

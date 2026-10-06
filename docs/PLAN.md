@@ -66,7 +66,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 2.2 The list shows it (detail line and style)
   - [ ] 2.3 A later answer replaces a learned one, with Undo
   - [ ] 2.4 Fill form says what's left and jumps to it
-  - [ ] 2.5 Keep Prefill's list clear of Safari's suggestion bubble
+  - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
   - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
   - [ ] 3.1 `Answer` and `Memory` types over `CardSplit`
@@ -236,6 +236,10 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
 
 ### 2.5 Keep the list clear of Safari's bubble
+
+**Done early, in Phase 1** (`feat/picks`), because it broke click-and-pick on the iPhone: Safari doesn't just cover the first row, it swallows every tap in a band under a contact field. In the simulator a tap 72 pt under the field reached nothing, one 122 pt under it reached the page, and Prefill's list got no pointer, mouse or click event for a tap on its second row. Built: `SAFARI_CONTACT` placement in `dropdown.ts` (list above the field, clear of the Fill form pill, else 124 pt below, else the roomier side, cut to fit and scrolling), used only for contact fields in Safari (`page.ts`). Rows are now buttons. Still open: the list on a field Fill form filled (`installFilledPicker`) uses the default placement; check whether Safari's bubble shows on a filled field and apply the same placement if it does (with 2.4). Also measure the band at the largest Dynamic Type size.
+
+Original notes:
 
 Seen in the Phase 1 simulator run (`assets/generated/e2e-ext-pick-a-before.png`): on an email field with card values, Safari draws its own suggestion bubble ("home" / "work") directly under the field, over Prefill's first row, which is the row the person most needs.
 

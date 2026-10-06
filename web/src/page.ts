@@ -2,7 +2,7 @@ import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
-import { showDropdown } from "./dropdown";
+import { SAFARI_CONTACT, showDropdown, type Attach } from "./dropdown";
 import type { FieldElement } from "./fieldTypes";
 import { fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
 import { installFillChip } from "./fillChip";
@@ -50,10 +50,14 @@ export function startPage(env: PageEnvironment): () => void {
   // bar shows at most three values with no labels, and nothing once the card is minimal,
   // so the field's own list sits under it with every value, next to the Fill form pill.
   const shown = { attach: showDropdown, skip: isFilled };
+  // Safari's own bubble sits under a contact field and swallows taps there.
+  const contactList: Attach = isChromium
+    ? showDropdown
+    : (element, choices) => showDropdown(element, choices, undefined, SAFARI_CONTACT);
   // In Safari the card's order still follows the page.
   const values = [
     ...(isChromium ? [] : [installContext(env.doc, env.win, { host, send: env.send })]),
-    installSuggestions(env.doc, { host, send: env.send, ...shown }),
+    installSuggestions(env.doc, { host, send: env.send, ...shown, attach: contactList }),
   ];
   const stops = [
     ...values,
