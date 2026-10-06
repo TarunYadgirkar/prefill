@@ -60,8 +60,9 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.4 Links honor pins and report picks
   - [x] 1.5 Custom answers remember the pick per question
   - [x] 1.6 Mac panel reports picks
-  - [ ] 1.7 End-to-end check and merge
+  - [x] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
+  - [ ] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
   - [ ] 2.1 Suggestions carry where each value came from
   - [ ] 2.2 The list shows it (detail line and style)
   - [ ] 2.3 A later answer replaces a learned one, with Undo
@@ -186,6 +187,10 @@ Custom fields are matched by words (`CustomFieldMatcher.values`), up to 3, plus 
 ---
 
 ## Phase 2: Honest suggestions
+
+### 2.0 Stale Safari tests
+
+`CustomFieldsE2ETests`, `LinksE2ETests` and `MinimalCardE2ETests` still expect Prefill's values in Safari's keyboard bar (the datalist path). Since `d070f61` Safari shows Prefill's own list under the field instead, so the bar shows keyboard predictions ("I", "The") and all three fail (seen in the full run on 2026-10-06; none was changed after `d070f61`). Change each to find Prefill's rows in the web view, as `PickE2ETests.row(_:)` does, and keep their intent: School offers the custom answer, GitHub/Portfolio offers the links in order, a minimal card's moved emails are still offered. Run the whole suite (`zsh scripts/test.sh e2e`; it takes about 15 minutes and must not overlap another session's run on port 8846).
 
 **Why:** with click-and-pick as the default, the list is the product. It should say why each value is there, so a person trusts the first row and knows when the last row is a guess.
 
