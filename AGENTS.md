@@ -108,6 +108,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **One-tap fill:**
   - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
   - In Safari every recognized field now gets Prefill's own list under it (`showDropdown`), as in Chrome; the datalist path is unused. Safari's own suggestion bubble can cover the list's first row.
+  - Undo clears a React-Select box with Backspace, which React-Select ignores unless the box is clearable, so a non-clearable box keeps Prefill's pick. Undo leaves a box alone once it shows something other than Prefill's pick.
   - The pill counts fields it recognizes, so "Fill form 13 fields" can end as "Filled 9" when the card has no link or answer for some.
 - **Guessed answers:** a field no rule matches gets the on-device model's pick among the custom fields, shown as "Suggested" and never used by Fill form. The Mac panel asks live; on the iPhone the handler notes the question and the app asks on its next launch, so the guess shows from the next visit. Nothing shows until Apple Intelligence is on.
 - **Learned answers:**

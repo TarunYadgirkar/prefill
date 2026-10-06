@@ -143,6 +143,8 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
   };
 
   const show = (field: FieldElement, count: number): void => {
+    // A finished fill's timer would hide this new offer.
+    clearTimeout(doneTimer);
     anchor = field;
     state = { name: "offer", count };
     if (!host.isConnected) doc.documentElement.append(host);

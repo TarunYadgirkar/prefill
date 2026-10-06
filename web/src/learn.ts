@@ -1,4 +1,5 @@
 import { isPlaceholder } from "./choices";
+import { submitControl, TOUCH_EVENTS, touchedField } from "./capture";
 import { classify, isSignIn } from "./classify";
 import { fieldText } from "./custom";
 import { isDemographic } from "./demographics";
@@ -167,18 +168,18 @@ function showPill(doc: Document, win: Window, text: string, action?: PillAction)
   });
 }
 
-const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
+// Enter submits from a field, but starts a new line in a text area.
+function enterForm(event: KeyboardEvent, target: Element): HTMLFormElement | undefined {
+  if (event.key !== "Enter" || !isFieldElement(target) || target.localName === "textarea") return undefined;
+  return (target as HTMLInputElement).form ?? undefined;
+}
 
-// The form a trusted click or Enter key would submit.
+// The form a trusted click on a submit control or Enter key would submit.
 function formOf(event: Event): HTMLFormElement | undefined {
   const target = eventOrigin(event);
   if (!(target instanceof Element)) return undefined;
-  if (event.type === "keydown") {
-    const isEnter = (event as KeyboardEvent).key === "Enter" && isFieldElement(target);
-    return isEnter ? ((target as HTMLInputElement).form ?? undefined) : undefined;
-  }
-  const control = target.closest<HTMLButtonElement | HTMLInputElement>(SUBMIT_CONTROLS);
-  return control?.form ?? undefined;
+  if (event.type === "keydown") return enterForm(event as KeyboardEvent, target);
+  return submitControl(target)?.form ?? undefined;
 }
 
 export function installLearn(doc: Document, win: Window, options: LearnOptions): () => void {
@@ -189,9 +190,17 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
   // that follows the person's own press on that form counts.
   let pressed: { form: HTMLFormElement; at: number } | undefined;
 
+  // execCommand makes trusted input events too, so only a field the person pressed,
+  // typed or composed in counts as theirs.
+  const handled = new WeakSet<FieldElement>();
+  const handle = (event: Event): void => {
+    const field = isUserEvent(event) ? touchedField(event) : undefined;
+    if (field !== undefined) handled.add(field);
+  };
+
   const touch = (event: Event): void => {
     const target = eventOrigin(event);
-    if (!isUserEvent(event) || !isFieldElement(target)) return;
+    if (!isUserEvent(event) || !isFieldElement(target) || !handled.has(target)) return;
     const scope = (target as HTMLInputElement).form ?? doc;
     const snapshot = read(target, fieldElements(scope, MAX_INSPECTED));
     if (snapshot === undefined) touched.delete(target);
@@ -234,12 +243,14 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .catch(() => undefined);
   };
 
+  for (const type of TOUCH_EVENTS) doc.addEventListener(type, handle, true);
   doc.addEventListener("input", touch, true);
   doc.addEventListener("change", touch, true);
   doc.addEventListener("click", press, true);
   doc.addEventListener("keydown", press, true);
   doc.addEventListener("submit", onSubmit, true);
   return () => {
+    for (const type of TOUCH_EVENTS) doc.removeEventListener(type, handle, true);
     doc.removeEventListener("input", touch, true);
     doc.removeEventListener("change", touch, true);
     doc.removeEventListener("click", press, true);

@@ -81,6 +81,9 @@ describe("matching a saved answer to a page's options", () => {
     [["Yes, I am authorized to work in the US", "No"], "Yes", 0],
     [["Bachelor's Degree", "Master's Degree"], "Bachelor's", 0],
     [["Arizona", "Alaska"], "California", -1],
+    [["University of Michigan", "Stanford University"], "University of California, Berkeley", -1],
+    [["Bachelor of Arts", "Master of Science"], "Bachelor of Science", -1],
+    [["-- Select --", "Yes", "No"], "Select", -1],
   ])("%j with %s picks %i", (texts, answer, index) => {
     expect(pickOption(options(...texts), answer)).toBe(index);
   });

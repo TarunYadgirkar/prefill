@@ -20,9 +20,11 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function set(selector: string, value: string): void {
+// The person presses the field, then changes it; `byScript` leaves out the press.
+function set(selector: string, value: string, byScript = false): void {
   const field = document.querySelector<HTMLInputElement | HTMLSelectElement>(selector);
   if (field === null) throw new Error(`no ${selector}`);
+  if (!byScript) field.dispatchEvent(new Event("pointerdown", { bubbles: true, composed: true }));
   if (field instanceof HTMLInputElement && field.type === "radio") field.checked = true;
   else field.value = value;
   field.dispatchEvent(new Event("change", { bubbles: true }));
@@ -75,6 +77,15 @@ describe("learning answers from an application", () => {
     if (school === null || other === null) throw new Error("fixture changed");
     school.value = "Set by the page";
     other.textContent = "Will you require sponsorship?";
+    document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
+    document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("ignores a value a script typed into a field the person never touched", () => {
+    const send = vi.fn<(request: AnswersRequest) => Promise<unknown>>(() => Promise.resolve(undefined));
+    uninstall = installLearn(document, window, { host: () => "boards.example.io", send, isUserEvent: () => true });
+    set("#school", "Set by the page", true);
     document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
     document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
     expect(send).not.toHaveBeenCalled();

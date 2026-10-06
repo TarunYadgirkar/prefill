@@ -83,9 +83,20 @@ export interface PageFill {
 function startFill(env: PageEnvironment, host: () => string): PageFill {
   const gate = trackGestures(env.doc, (event) => event.isTrusted);
   let last: FillResult | undefined;
+  // Undo takes back every fill since the last undo, so a later run that filled nothing
+  // can't hide the fields an earlier one filled.
   const run = async (anchor?: FieldElement): Promise<FillResult> => {
-    last = await fillForm(fillScope(env.doc, anchor), { host, send: env.send });
-    return last;
+    const result = await fillForm(fillScope(env.doc, anchor), { host, send: env.send });
+    if (result.filled === 0) return result;
+    const earlier = last;
+    last = {
+      filled: result.filled + (earlier?.filled ?? 0),
+      undo: () => {
+        result.undo();
+        earlier?.undo();
+      },
+    };
+    return result;
   };
   const stops = [
     installFillChip(env.doc, env.win, {
