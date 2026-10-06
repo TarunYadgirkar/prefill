@@ -82,7 +82,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 4.5 Sheet pins without rewriting
   - [ ] 4.6 Device check (NameDrop, Share Contact, bar) and merge
 - **Phase 5: The app is an inbox**
-  - [ ] 5.1 iPhone: Inbox tab
+  - [x] 5.1 iPhone: Inbox tab
   - [ ] 5.2 iPhone: You tab (search, groups, value detail)
   - [ ] 5.3 iPhone: Settings trimmed
   - [ ] 5.4 Mac menu mirrors the inbox
@@ -375,6 +375,7 @@ Record what was checked in AGENTS.md Ongoing. If the phone isn't reachable, mark
 - Empty state: "Nothing new. Prefill adds what you type into forms, and it shows up here."
 - Badge on the tab: items waiting for a decision only.
 - Source: `RecentCaptures`, `ExtensionEvents.answers`, picks, via `Memory`. `RecentScreen.swift` is the starting point; rename to `InboxScreen.swift`.
+- Done as: "Needs you" (waiting) on top, then "Recently". Each row leads with a state mark (ring, check, minus, pin, sparkle; `Palette.attention` for waiting). A value removed or dismissed stays in Recently with Add, so nothing leaves the list. Picks come from `ExtensionEvents.pins` still in force (`AppModel.firstPicks`); a pin made in the app isn't an event, so it doesn't show.
 
 ### 5.2 You (iPhone)
 

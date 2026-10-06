@@ -48,7 +48,7 @@ extension AppModel {
         commit(state.pinning(value?.id, kind: kind, host: host))
     }
 
-    // `label` is what the person picked in Recently added, or the suggestion they kept.
+    // `label` is what the person picked in the inbox, or the suggestion they kept.
     func save(_ item: RecentItem, label: String?) async {
         let outcome = await add(item.value.payload, label: label, source: .captured)
         if case .failed(let failure) = outcome { report(failure) }

@@ -26,6 +26,11 @@ enum Palette {
     static let positive = Color(uiColor: .systemGreen)
     static let pending = Color(uiColor: .secondaryLabel)
     static let destructive = Color(uiColor: .systemRed)
+    // Marks what waits for the person. systemOrange is 2.2:1 on white, short of 3:1 for a
+    // mark; light mode goes darker, to 4.0:1 on white and 3.6:1 on the grouped canvas.
+    static let attention = Color(uiColor: UIColor {
+        $0.userInterfaceStyle == .dark ? .systemOrange : UIColor(hex: 0xC86400)
+    })
 
     static let keyboardSurface = dynamic(light: 0xE2E3E9, dark: 0x222223)
     static let keyboardKey = dynamic(light: 0xFFFFFF, dark: 0x464646)

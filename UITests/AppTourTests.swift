@@ -23,7 +23,7 @@ final class AppTourTests: XCTestCase {
         walkOnboarding()
         walkCard()
         walkSites()
-        walkRecent()
+        walkInbox()
         walkSettings()
     }
 
@@ -31,11 +31,11 @@ final class AppTourTests: XCTestCase {
     func testSchoolLabel() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "school")
         app.launch()
-        tab("Recently added")
+        tab("Inbox")
         let chip = element("suggested-label-alex.rivera@learn.example.edu")
         XCTAssertTrue(chip.waitForExistence(timeout: 10))
         XCTAssertTrue((chip.value as? String ?? "").hasPrefix("school"), "label is \(chip.value ?? "none")")
-        snap("recent-school-label")
+        snapAs("inbox-school-label")
     }
 
     // Records the bar while its values trade places, for frame-by-frame checking.
@@ -107,6 +107,7 @@ final class AppTourTests: XCTestCase {
     }
 
     private func walkCard() {
+        tab("Card")
         XCTAssertTrue(app.descendants(matching: .any)["quicktype-bar"].firstMatch.waitForExistence(timeout: 10))
         snap("card")
         let school = element("value-alex.school@example.edu")
@@ -157,33 +158,33 @@ final class AppTourTests: XCTestCase {
         app.navigationBars.buttons.firstMatch.tap()
     }
 
-    private func walkRecent() {
-        tab("Recently added")
-        let waiting = app.buttons["Save to card"].firstMatch
-        XCTAssertTrue(waiting.waitForExistence(timeout: 10))
-        snap("recent")
-        swipeUp(until: waiting, above: tabBarTop)
-        waiting.tap()
+    private func walkInbox() {
+        tab("Inbox")
+        let add = app.buttons.matching(identifier: "inbox-add").firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        snapAs("inbox")
+        swipeUp(until: add, above: tabBarTop)
+        add.tap()
         pause(2)
-        let skip = app.buttons["Don’t save"].firstMatch
-        swipeUp(until: skip, above: tabBarTop)
-        skip.tap()
+        let dismiss = app.buttons.matching(identifier: "inbox-dismiss").firstMatch
+        swipeUp(until: dismiss, above: tabBarTop)
+        dismiss.tap()
         pause(1)
-        let remove = app.buttons["Remove from card"].firstMatch
+        let remove = app.buttons.matching(identifier: "inbox-remove").firstMatch
         swipeUp(until: remove, above: tabBarTop)
         XCTAssertTrue(remove.waitForExistence(timeout: 5))
         remove.tap()
         pause(2)
-        snap("recent-after")
+        snapAs("inbox-after")
         // Everything not on the card can go back on it. Counting buttons needs every row on
         // screen, which only the default text size gives.
         guard variant != "large" else { return }
-        let saveAgain = app.buttons.matching(identifier: "Save to card")
-        let removeButtons = app.buttons.matching(identifier: "Remove from card")
-        XCTAssertEqual(saveAgain.count, 2)
+        let putBack = app.buttons.matching(identifier: "inbox-put-back")
+        let removeButtons = app.buttons.matching(identifier: "inbox-remove")
+        XCTAssertEqual(putBack.count, 2)
         let removable = removeButtons.count
-        swipeUp(until: saveAgain.firstMatch, above: tabBarTop)
-        saveAgain.firstMatch.tap()
+        swipeUp(until: putBack.firstMatch, above: tabBarTop)
+        putBack.firstMatch.tap()
         pause(2)
         XCTAssertEqual(removeButtons.count, removable + 1)
     }
@@ -281,6 +282,12 @@ final class AppTourTests: XCTestCase {
     private func snap(_ screen: String) {
         pause(1)
         call("/snap?name=ui-\(screen)-\(variant)")
+    }
+
+    // The inbox and You screens keep their own names, like inbox-light.png.
+    private func snapAs(_ screen: String) {
+        pause(1)
+        call("/snap?name=\(screen)-\(variant)")
     }
 
     private func call(_ path: String) {

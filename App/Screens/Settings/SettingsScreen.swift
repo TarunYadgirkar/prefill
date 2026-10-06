@@ -23,7 +23,7 @@ struct SettingsScreen: View {
                 } footer: {
                     Text("""
                         Adds new emails, phone numbers and addresses you type into Safari forms to your card. \
-                        When it’s off, they wait in Recently added for you.
+                        When it’s off, they wait in your inbox.
                         """)
                     .textRole(.footnote)
                 }

@@ -5,7 +5,7 @@ import PrefillKit
 // on-device model is asked, in one foreground batch per launch, only where they can't tell,
 // and its answers are cached in AppState so the next launch and the Safari handler reuse them.
 extension AppModel {
-    // The label Recently added preselects for a capture the person hasn't labeled.
+    // The label the inbox preselects for a capture the person hasn't labeled.
     func suggestedLabel(_ item: RecentItem) -> Insight<SuggestedLabel> {
         let key = InsightKey.label(item.value, host: item.host, variant: Intelligence.modelVariant)
         if let cached = state.insight(key).flatMap(SuggestedLabel.init(rawValue:)) {
