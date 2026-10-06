@@ -72,7 +72,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 3: One memory**
   - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
-  - [ ] 3.3 Usage history per answer ("Used on")
+  - [x] 3.3 Usage history per answer ("Used on")
   - [ ] 3.4 Merge
 - **Phase 4: Freeze the Me card** (Gate: Tarun says go)
   - [ ] 4.1 Stop per-site card rewrites
@@ -303,6 +303,7 @@ public struct Memory: Sendable {
 
 - `Memory.uses(of: Answer) -> [Use{site, date}]` from `UsageEvent`s, picks (Phase 1) and learned answers.
 - Used by the You tab's value detail (5.2) and the inbox.
+- Done as: `Memory.Use` (sites are registrable domains). Contact picks count through the UsageEvent and PinEvent they leave; a picked custom answer can't, because `AnswerPick` keeps no site.
 
 ### 3.4 Merge
 

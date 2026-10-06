@@ -87,3 +87,32 @@ struct MemoryTests {
         #expect(memory.answers.first { $0.id == Answer.customID(school) }?.createdAt == .daysAgo(5))
     }
 }
+
+struct MemoryUsesTests {
+    @Test func usesAreNewestFirstOncePerSite() throws {
+        let email = Alex.workEmail.id
+        let events = ExtensionEvents(
+            usage: [
+                UsageEvent(valueID: email, host: "example.io", date: .daysAgo(10)),
+                UsageEvent(valueID: email, host: "lever.co", date: .daysAgo(4)),
+                UsageEvent(valueID: email, host: "example.io", date: .daysAgo(1)),
+                UsageEvent(valueID: Alex.homeEmail.id, host: "other.com", date: .daysAgo(1))
+            ],
+            pins: [
+                PinEvent(host: "shop.example.com", kind: .email, valueID: email, date: .daysAgo(2)),
+                PinEvent(host: "gone.com", kind: .email, valueID: nil, date: .daysAgo(2))
+            ],
+            answers: [
+                LearnedAnswer(host: "boards.greenhouse.io", label: "School", value: "UC Berkeley", date: .daysAgo(6)),
+                LearnedAnswer(host: "jobs.lever.co", label: "School", value: "Stanford", date: .daysAgo(3))
+            ]
+        )
+        let memory = Memory.read(card: card, placement: fullPlacement, state: AppState(), events: events)
+        let sites = { (id: UUID) in memory.answers.first { $0.id == id }.map { memory.uses(of: $0).map(\.site) } }
+        #expect(sites(email) == ["example.io", "example.com", "lever.co"])
+        let answer = try #require(memory.answers.first { $0.id == email })
+        #expect(memory.uses(of: answer).first?.date == .daysAgo(1))
+        #expect(sites(Answer.customID(school)) == ["greenhouse.io"])
+        #expect(sites(Answer.customID(gpa)) == [])
+    }
+}
