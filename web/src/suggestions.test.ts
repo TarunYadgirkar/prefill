@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Choice, TextField } from "./dropdown";
-import type { ContactSuggestionsRequest } from "./messages";
 import {
   installSuggestions,
   suggestionOptions,
+  type SuggestionOptions,
   type Suggestions,
 } from "./suggestions";
 
@@ -79,9 +79,7 @@ describe("installSuggestions", () => {
     return () => showing.delete(element);
   };
 
-  const start = (
-    send: (request: ContactSuggestionsRequest) => Promise<unknown>,
-  ) => {
+  const start = (send: SuggestionOptions["send"]) => {
     showing = new Map();
     vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(
       new DOMRect(10, 10, 200, 30),
@@ -105,8 +103,14 @@ describe("installSuggestions", () => {
 
   const reply = () =>
     vi
-      .fn<(request: ContactSuggestionsRequest) => Promise<unknown>>()
-      .mockResolvedValue({ type: "contactSuggestionsResult", ...values });
+      .fn<SuggestionOptions["send"]>()
+      .mockImplementation((request) =>
+        Promise.resolve(
+          request.type === "picked"
+            ? { type: "pickedResult", remembered: true }
+            : { type: "contactSuggestionsResult", ...values },
+        ),
+      );
 
   it("gives nothing to a field the page focused by itself", async () => {
     document.body.innerHTML = '<input type="email" autocomplete="email">';
@@ -142,6 +146,34 @@ describe("installSuggestions", () => {
 
     field.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
     expect(showing.size).toBe(0);
+    stop();
+  });
+
+  it("tells the app about a pick that wasn't first, then asks for the new order", async () => {
+    document.body.innerHTML = '<input type="email" autocomplete="email">';
+    const send = reply();
+    const stop = start(send);
+    await Promise.resolve();
+    const field = firstInput();
+    field.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    field.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    const [first, second] = showing.get(field) ?? [];
+    expect(first?.onPick).toBeUndefined();
+    send.mockClear();
+    second?.onPick?.();
+    await vi.waitFor(() => {
+      expect(send).toHaveBeenCalledTimes(2);
+    });
+    expect(send.mock.calls.map(([request]) => request.type)).toEqual([
+      "picked",
+      "contactSuggestions",
+    ]);
+    expect(send).toHaveBeenCalledWith({
+      type: "picked",
+      host: "shop.example.net",
+      kind: "email",
+      value: "alex.rivera@example.com",
+    });
     stop();
   });
 

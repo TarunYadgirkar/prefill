@@ -56,7 +56,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 1: Picks remember**
   - [x] 1.1 `picked` page message in both contracts, docs and examples
   - [x] 1.2 Router: a pick pins the value for the site without rewriting the card
-  - [ ] 1.3 Dropdown reports picks; contact suggestions send them
+  - [x] 1.3 Dropdown reports picks; contact suggestions send them
   - [ ] 1.4 Links honor pins and report picks
   - [ ] 1.5 Custom answers remember the pick per question
   - [ ] 1.6 Mac panel reports picks
@@ -152,7 +152,7 @@ New file `Messages/MessageRouter+Picks.swift`:
 - `Choice` gains `onPick?: () => void`. `dropdown.ts` `pick` calls it after `fillField`, only for a pick made by a trusted click or Enter (both paths already require `isUserEvent`).
 - `suggestions.ts`: when building choices (`suggestionOptions`, around line 99/195) attach `onPick` that sends `{type: "picked", host, kind, value}` through `browser.runtime.sendMessage`. Fire and forget; ignore the reply except in tests.
 - Don't report a pick of the value that was already first (index 0): it carries no new information and saves a round trip.
-- `installFilledPicker` in `fill.ts` reuses the same choices, so a pick after Fill form also counts.
+- Done for contact fields. `installFilledPicker` in `fill.ts` builds its own choices (`applyText`), so a pick on a field Fill form filled isn't reported yet; that moves to 2.4.
 - Tests (`suggestions.test.ts` or `dropdown.test.ts`): picking the second row sends one `picked` message with the right kind and value; picking the first sends none; a synthetic click sends none.
 
 ### 1.4 Links
@@ -230,6 +230,7 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - After a fill, the pill reads "Filled 9 · 4 need you". Clicking "4 need you" focuses the first empty, visible, editable field in page order (`findSlots(fillScope(...))` minus what was filled), which opens Prefill's list there by the normal focus path. Each next click moves to the next one.
 - Focus moved by Prefill's own button is a trusted gesture from the person's click, but `gesture.ts` won't see it as one. Unlock exactly the focused field for 1 s through a new `gate.allowNext(field)` that only the pill can call (it's in the closed shadow root).
 - Guesses are still never filled.
+- A pick on a filled field (`installFilledPicker`, choices built in `applyText`) reports `picked` like any other list (carried over from 1.3).
 - The pill's count today counts recognized fields, so "Fill form 13 fields" can end as "Filled 9". Change the count to fields Prefill has an answer for (it already fetched them for the prefetch), so the promise matches the result.
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
 

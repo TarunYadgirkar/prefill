@@ -4,6 +4,8 @@ export interface Choice {
   value: string;
   // A few words on what the value is ("Phone", "LinkedIn"), shown under it.
   detail: string;
+  // Runs when the person picks this value, after it's in the field.
+  onPick?: () => void;
 }
 
 export type TextField = HTMLInputElement | HTMLTextAreaElement;
@@ -191,6 +193,7 @@ export function showDropdown(
     const choice = shown[index];
     if (choice === undefined) return;
     fillField(element, choice.value);
+    choice.onPick?.();
     close();
   };
 
