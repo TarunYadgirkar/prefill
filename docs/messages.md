@@ -167,6 +167,8 @@ The content script sends `customSuggestions` once the page has loaded, and again
 
 The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Before the card is linked, or when it can't be read, every list is empty.
 
+A field no rule matched may carry a `guesses` entry: the saved answer Apple's on-device model picked for that question, shown in the field's list with a "Suggested" caption and never filled in by one-tap fill. The handler never runs the model itself. It records the question's words (never what the person typed) in the events as a `FormQuestion`, the app asks the model about each one the next time it opens, and caches the answer by label in `AppState.insights` (or "none"), which the handler then serves. On the Mac, the app's own panel asks the model live.
+
 ```json
 {
   "type": "customSuggestions",
@@ -176,7 +178,7 @@ The app splits each text into lowercase words (at camelCase, digits and punctuat
 ```
 
 ```json
-{ "type": "customSuggestionsResult", "fields": [{ "values": ["UC Berkeley"] }, { "values": [] }] }
+{ "type": "customSuggestionsResult", "fields": [{ "values": ["UC Berkeley"], "guesses": [] }, { "values": [], "guesses": ["EECS"] }] }
 ```
 
 The focused field gets a `list` and a `<datalist>` of its values, which Safari's QuickType bar shows (Safari has no contact suggestion of its own for such a field) and Chrome and Arc show in their dropdown. As with links, any script on the page can read the datalist while it is there.

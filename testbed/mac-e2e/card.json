@@ -17,5 +17,6 @@
       }
     }
   ],
-  "links": [{ "label": "GitHub", "payload": { "link": { "_0": "https://github.com/alexrivera" } } }]
+  "links": [{ "label": "GitHub", "payload": { "link": { "_0": "https://github.com/alexrivera" } } }],
+  "customFields": [{ "label": "Major", "value": "EECS", "matchWords": [] }]
 }

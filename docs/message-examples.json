@@ -112,7 +112,7 @@
     },
     "customSuggestionsResult": {
       "type": "customSuggestionsResult",
-      "fields": [{ "values": ["UC Berkeley"] }, { "values": [] }]
+      "fields": [{ "values": ["UC Berkeley"], "guesses": [] }, { "values": [], "guesses": ["EECS"] }]
     },
     "answersResult": { "type": "answersResult", "saved": 2 },
     "error": { "type": "error", "reason": "unknown message" }

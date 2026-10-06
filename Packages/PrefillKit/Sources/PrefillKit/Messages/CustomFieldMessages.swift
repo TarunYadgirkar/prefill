@@ -24,9 +24,19 @@ public struct CustomSuggestionsRequest: Codable, Sendable, Hashable {
 public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
     public struct Field: Codable, Sendable, Hashable {
         public let values: [String]
+        // What the on-device model thinks answers the field when no rule matched: offered
+        // as a marked option, never filled in by itself.
+        public let guesses: [String]
 
-        public init(values: [String]) {
+        public init(values: [String], guesses: [String] = []) {
             self.values = values
+            self.guesses = guesses
+        }
+
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            values = try container.decode([String].self, forKey: .values)
+            guesses = try container.decodeIfPresent([String].self, forKey: .guesses) ?? []
         }
     }
 
@@ -39,16 +49,44 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
 }
 
 extension MessageRouter {
-    // Every list is empty before the card is linked or when it can't be read.
+    // Every list is empty before the card is linked or when it can't be read. A field no
+    // rule matched gets the model's cached guess, or is noted for the app to ask about.
     func customSuggestions(_ request: CustomSuggestionsRequest) -> CustomSuggestionsResponse {
-        let custom: [CustomField] = if let link = currentState()?.cardLink,
-                                       let card = try? gateway.fetchCard(identifier: link.contactIdentifier) {
-            card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) }
-        } else {
-            []
+        guard let state = currentState(), let link = state.cardLink,
+              let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
+            return CustomSuggestionsResponse(fields: request.fields.map { _ in .init(values: []) })
         }
-        return CustomSuggestionsResponse(fields: request.fields.map { field in
-            .init(values: CustomFieldMatcher.values(for: field.text, in: custom))
-        })
+        let custom = card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) }
+        let variant = Intelligence.modelVariant
+        var unanswered: [String] = []
+        let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
+            let values = CustomFieldMatcher.values(for: field.text, in: custom)
+            guard values.isEmpty, !CustomFieldMatcher.words(field.text).isEmpty else { return .init(values: values) }
+            guard let guess = state.guessedAnswer(for: field.text, in: custom, variant: variant) else {
+                let key = InsightKey.answer(field.text, variant: variant)
+                if state.insight(key) == nil { unanswered.append(field.text) }
+                return .init(values: [])
+            }
+            return .init(values: [], guesses: [guess.value])
+        }
+        if !custom.isEmpty { noteQuestions(unanswered, host: request.host) }
+        return CustomSuggestionsResponse(fields: fields)
+    }
+
+    // The person's custom fields, for a guess made outside the router (the Mac's panel).
+    public func savedAnswers() -> [CustomField] {
+        guard let link = currentState()?.cardLink,
+              let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else { return [] }
+        return card.customFields
+    }
+
+    private func noteQuestions(_ texts: [String], host: String) {
+        guard !texts.isEmpty else { return }
+        Self.eventLock.withLock { _ in
+            let site = Normalizer.registrableDomain(host)
+            let known = Set(events().questions.map(\.text))
+            let fresh = texts.filter { !known.contains($0) }.map { FormQuestion(host: site, text: $0, date: now()) }
+            if !fresh.isEmpty { _ = append(ExtensionEvents(questions: fresh)) }
+        }
     }
 }

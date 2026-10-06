@@ -111,6 +111,13 @@ async function main(): Promise<void> {
     check(phone !== "" && EMAILS.includes(await email.inputValue()), `Fill form fills the phone and the email: ${phone}`);
     const first = await page.locator(".question input").inputValue();
     check(first === "Alex", `Fill form reads the question printed before an unlabelled field: ${first}`);
+    // A question no rule knows: the panel offers the on-device model's guess, marked, and the
+    // test copy picks it. Fill form must have left the field alone.
+    check((await page.locator("#program").inputValue()) === "", "Fill form leaves a field whose only answer is a guess");
+    await page.locator("#program").click();
+    await page.waitForTimeout(TREE_WAIT_MS / 2 + PICK_WAIT_MS + 4_000);
+    const program = await page.locator("#program").inputValue();
+    check(program === "EECS", `the guessed answer is offered on the question and picked: ${program}`);
     if (airtable === "airtable") await checkAirtable(page);
   } finally {
     close();

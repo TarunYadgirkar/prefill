@@ -73,3 +73,17 @@ public struct MuteEvent: Codable, Sendable, Hashable {
         self.date = date
     }
 }
+
+// A form question none of the custom field rules matched, kept for the app to ask the
+// on-device model about. Only the field's words, never what the person typed.
+public struct FormQuestion: Codable, Sendable, Hashable {
+    public let host: String
+    public let text: String
+    public let date: Date
+
+    public init(host: String, text: String, date: Date) {
+        self.host = host
+        self.text = text
+        self.date = date
+    }
+}

@@ -17,6 +17,11 @@ public enum InsightKey {
         "label|\(variant)|\(value.id.uuidString)|\(Normalizer.registrableDomain(host))"
     }
 
+    // A question's words, sorted, so the same question on two sites shares an answer.
+    public static func answer(_ question: String, variant: String) -> String {
+        "answer|\(variant)|\(CustomFieldMatcher.words(question).sorted().joined(separator: " "))"
+    }
+
     public static func siteKind(_ host: String, variant: String) -> String {
         "site|\(variant)|\(Normalizer.registrableDomain(host))"
     }
@@ -37,6 +42,12 @@ public extension AppState {
             siteKinds: siteKinds.merging(kinds) { _, new in new },
             insights: Array(kept.suffix(Self.maxInsights))
         )
+    }
+
+    // The saved answer the model picked for a question, if it's still on the card.
+    public func guessedAnswer(for question: String, in fields: [CustomField], variant: String) -> CustomField? {
+        guard let label = insight(InsightKey.answer(question, variant: variant)), label != "none" else { return nil }
+        return fields.first { $0.id == label.lowercased() }
     }
 
     // The kind of `host`: what the model said if the rules couldn't tell, else the rules.

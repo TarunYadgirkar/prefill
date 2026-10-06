@@ -63,6 +63,21 @@ public actor Intelligence {
         return Insight(answer, source: .model)
     }
 
+    // Which of the person's saved answers, by label, answers a form question none of the
+    // rules matched. Nil when the model has no answer or names a label that isn't there.
+    public func answerLabel(question: String, labels: [String]) async -> String? {
+        #if canImport(FoundationModels)
+        guard !labels.isEmpty else { return nil }
+        let prompt = "Question: \(question)\nNames: \(labels.joined(separator: ", ")), none"
+        guard let answer = await ask(AnswerName.self, instructions: Prompts.answerInstructions, prompt: prompt) else {
+            return nil
+        }
+        return labels.first { $0.caseInsensitiveCompare(answer.name) == .orderedSame }
+        #else
+        return nil
+        #endif
+    }
+
     private func modelLabel(address: String, host: String) async -> SuggestedLabel? {
         #if canImport(FoundationModels)
         let prompt = "Email address: \(address)\nWebsite: \(Normalizer.registrableDomain(host))"
@@ -110,6 +125,17 @@ private enum Prompts {
         Answer unknown when the address gives no clear sign.
         """
 
+    // Without the examples the model names a saved answer for nearly any question.
+    static let answerInstructions = """
+        A questionnaire asks a question. You have the names of a person's saved answers. \
+        Reply with the one name whose answer the question asks for. \
+        Reply none unless a saved answer is exactly what is asked: a question about a company, \
+        a favourite thing, a date of birth or anything the names don't cover is none.
+        Examples: "Which university did you attend?" with School, Major is School. \
+        "What is your favourite colour?" with School, Major is none. \
+        "Employer name" with School, Major is none.
+        """
+
     static let siteInstructions = """
         Sort a website into the category that best describes it. \
         Answer unknown when the name gives no clear sign.
@@ -130,6 +156,12 @@ private enum Prompts {
 private struct ValueContext {
     @Guide(.anyOf(["work", "school", "personal", "shopping", "unknown"]))
     let context: String
+}
+
+@Generable
+private struct AnswerName {
+    @Guide(description: "The name whose answer the question asks for, or none")
+    let name: String
 }
 
 @Generable

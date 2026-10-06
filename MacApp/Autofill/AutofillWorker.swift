@@ -14,8 +14,17 @@ actor AutofillWorker {
         self.router = router
     }
 
-    func rows(for field: FieldDescription, host: String) -> [AutofillRow] {
-        script.rows(for: field, host: host, router: router)
+    private let intelligence = Intelligence()
+
+    // A custom field with no matching answer gets the on-device model's guess, marked as one.
+    func rows(for field: FieldDescription, host: String) async -> [AutofillRow] {
+        let rows = script.rows(for: field, host: host, router: router)
+        guard rows.isEmpty, let question = script.customQuestion(field) else { return rows }
+        let saved = router.savedAnswers()
+        guard !saved.isEmpty else { return rows }
+        guard let label = await intelligence.answerLabel(question: question, labels: saved.map(\.label)),
+              let answer = saved.first(where: { $0.label == label }) else { return rows }
+        return [AutofillRow(value: answer.value, detail: "Suggested", kind: "custom")]
     }
 
     func fillValues(for fields: [FieldDescription], host: String) -> [Int: AutofillRow] {

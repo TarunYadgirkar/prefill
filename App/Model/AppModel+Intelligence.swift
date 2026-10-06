@@ -19,14 +19,16 @@ extension AppModel {
         guard intelligenceState == .available, !isAskingModel else { return }
         let items = unlabeledItems
         let hosts = unplacedHosts
-        guard !items.isEmpty || !hosts.isEmpty else { return }
+        let questions = unansweredQuestions
+        guard !items.isEmpty || !hosts.isEmpty || !questions.isEmpty else { return }
         isAskingModel = true
         defer { isAskingModel = false }
         await intelligence.prewarm()
         let labels = await askLabels(items)
         let (siteAnswers, kinds) = await askSiteKinds(hosts)
-        guard !labels.isEmpty || !siteAnswers.isEmpty else { return }
-        commit(state.recording(labels + siteAnswers, siteKinds: kinds))
+        let guesses = await askAnswers(questions)
+        guard !labels.isEmpty || !siteAnswers.isEmpty || !guesses.isEmpty else { return }
+        commit(state.recording(labels + siteAnswers + guesses, siteKinds: kinds))
     }
 
     private var workDomains: Set<String> { SiteSense.workDomains(state.values) }
@@ -45,6 +47,29 @@ extension AppModel {
             SiteSense.rules(host: host, emailDomains: workDomains) == .unknown
                 && state.insight(InsightKey.siteKind(host, variant: variant)) == nil
         }
+    }
+
+    // Form questions the rules couldn't answer, each asked once per model.
+    private var unansweredQuestions: [String] {
+        let variant = Intelligence.modelVariant
+        var seen = Set<String>()
+        return events.questions.map(\.text).filter { question in
+            let key = InsightKey.answer(question, variant: variant)
+            return seen.insert(key).inserted && state.insight(key) == nil
+        }
+    }
+
+    // The answer is cached by label; "none" keeps the question from being asked again.
+    private func askAnswers(_ questions: [String]) async -> [CachedInsight] {
+        let labels = customFields.map(\.label)
+        guard !labels.isEmpty else { return [] }
+        var answers: [CachedInsight] = []
+        for question in questions {
+            let label = await intelligence.answerLabel(question: question, labels: labels)
+            let key = InsightKey.answer(question, variant: Intelligence.modelVariant)
+            answers.append(CachedInsight(key: key, answer: label ?? "none"))
+        }
+        return answers
     }
 
     private func askLabels(_ items: [RecentItem]) async -> [CachedInsight] {

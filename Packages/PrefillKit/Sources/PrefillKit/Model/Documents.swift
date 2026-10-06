@@ -100,6 +100,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxPins = 100
     public static let maxMutes = 100
     public static let maxAnswers = 40
+    public static let maxQuestions = 40
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
@@ -108,6 +109,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public let pins: [PinEvent]
     public let mutes: [MuteEvent]
     public let answers: [LearnedAnswer]
+    public let questions: [FormQuestion]
     // When the extension last reported a page with contact fields. Safari can't tell the app
     // whether All Websites is allowed, but the extension only runs on pages once it is.
     public let lastPageSeen: Date?
@@ -115,7 +117,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public init(
         usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = [],
         saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = [], answers: [LearnedAnswer] = [],
-        lastPageSeen: Date? = nil
+        questions: [FormQuestion] = [], lastPageSeen: Date? = nil
     ) {
         self.usage = usage
         self.captures = captures
@@ -124,6 +126,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         self.pins = pins
         self.mutes = mutes
         self.answers = answers
+        self.questions = questions
         self.lastPageSeen = lastPageSeen
     }
 
@@ -137,6 +140,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         pins = try container.decodeIfPresent([PinEvent].self, forKey: .pins) ?? []
         mutes = try container.decodeIfPresent([MuteEvent].self, forKey: .mutes) ?? []
         answers = try container.decodeIfPresent([LearnedAnswer].self, forKey: .answers) ?? []
+        questions = try container.decodeIfPresent([FormQuestion].self, forKey: .questions) ?? []
         lastPageSeen = try container.decodeIfPresent(Date.self, forKey: .lastPageSeen)
     }
 
@@ -149,6 +153,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
             pins: Array((pins + new.pins).suffix(Self.maxPins)),
             mutes: Array((mutes + new.mutes).suffix(Self.maxMutes)),
             answers: Array((answers + new.answers).suffix(Self.maxAnswers)),
+            questions: Array((questions + new.questions).suffix(Self.maxQuestions)),
             lastPageSeen: new.lastPageSeen ?? lastPageSeen
         )
     }

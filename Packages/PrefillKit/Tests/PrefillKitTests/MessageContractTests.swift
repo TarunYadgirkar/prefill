@@ -104,7 +104,7 @@ struct MessageContractTests {
             name: SuggestedName(given: "Alex", family: "Rivera")
         ))),
         ("customSuggestionsResult", .customSuggestions(CustomSuggestionsResponse(fields: [
-            .init(values: ["UC Berkeley"]), .init(values: [])
+            .init(values: ["UC Berkeley"]), .init(values: [], guesses: ["EECS"])
         ]))),
         ("answersResult", .answers(AnswersResponse(saved: 2))),
         ("error", .error(reason: "unknown message"))
