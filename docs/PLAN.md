@@ -84,7 +84,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 5: The app is an inbox**
   - [x] 5.1 iPhone: Inbox tab
   - [x] 5.2 iPhone: You tab (search, groups, value detail)
-  - [ ] 5.3 iPhone: Settings trimmed
+  - [x] 5.3 iPhone: Settings trimmed
   - [ ] 5.4 Mac menu mirrors the inbox
   - [ ] 5.5 UI tests and screenshots, merge
 - **Phase 6: Cuts**
@@ -389,6 +389,8 @@ Record what was checked in AGENTS.md Ongoing. If the phone isn't reachable, mark
 ### 5.3 Settings
 
 Keep: Save new info (toggle), Put the value you used on a site first (toggle), Sharing your card (row with status "Name and phone"), Intelligence status line, Choose a different card, Restore original card, Delete Prefill data. Group the last three under "Advanced".
+
+Done as: Advanced also holds Sites until 6.2 removes it. The Safari section (the extension's two switches and "Open Safari settings") stays, since nothing else in the app says when the extension is off. The Safari sheet's popup still says "Reorder for each site"; that copy lives in `web/`.
 
 ### 5.4 Mac menu
 
