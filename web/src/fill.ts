@@ -68,7 +68,9 @@ export function choicesFor(element: FieldElement): readonly Choice[] | undefined
   return filledChoices.get(element);
 }
 
+// A field the person emptied is theirs again, and gets the lists any field gets.
 export function isFilled(element: FieldElement): boolean {
+  if ((element as HTMLInputElement).value === "") filledChoices.delete(element);
   return filledChoices.has(element);
 }
 
@@ -425,11 +427,16 @@ export function installFilledPicker(
   const onBlur = (event: Event): void => {
     if (eventOrigin(event) === current) clear();
   };
+  const onInput = (event: Event): void => {
+    if (current !== undefined && eventOrigin(event) === current && !isFilled(current)) clear();
+  };
   doc.addEventListener("focusin", onFocus, true);
   doc.addEventListener("focusout", onBlur, true);
+  doc.addEventListener("input", onInput, true);
   return () => {
     clear();
     doc.removeEventListener("focusin", onFocus, true);
     doc.removeEventListener("focusout", onBlur, true);
+    doc.removeEventListener("input", onInput, true);
   };
 }
