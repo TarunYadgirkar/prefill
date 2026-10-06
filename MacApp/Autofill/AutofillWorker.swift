@@ -24,7 +24,12 @@ actor AutofillWorker {
         guard !saved.isEmpty else { return rows }
         guard let label = await intelligence.answerLabel(question: question, labels: saved.map(\.label)),
               let answer = saved.first(where: { $0.label == label }) else { return rows }
-        return [AutofillRow(value: answer.value, detail: "Suggested", kind: "custom")]
+        let pick = PickedRequest(host: "", kind: .custom, value: answer.value, question: question)
+        return [AutofillRow(value: answer.value, detail: "Suggested", kind: "custom", pick: pick)]
+    }
+
+    func remember(_ row: AutofillRow, host: String) {
+        AutofillScript.remember(row, host: host, router: router)
     }
 
     func fillValues(for fields: [FieldDescription], host: String) -> [Int: AutofillRow] {

@@ -59,7 +59,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.3 Dropdown reports picks; contact suggestions send them
   - [x] 1.4 Links honor pins and report picks
   - [x] 1.5 Custom answers remember the pick per question
-  - [ ] 1.6 Mac panel reports picks
+  - [x] 1.6 Mac panel reports picks
   - [ ] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
   - [ ] 2.1 Suggestions carry where each value came from

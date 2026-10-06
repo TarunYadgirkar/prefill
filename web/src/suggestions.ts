@@ -111,7 +111,7 @@ export function suggestionOptions(
 
 // A pick of a value that wasn't first is worth remembering. An address is remembered by
 // its street line, and a name has only one value.
-function pickKind(field: ContactField): PickedRequest["kind"] | undefined {
+export function pickKind(field: ContactField): PickedRequest["kind"] | undefined {
   if (field.kind === "email" || field.kind === "phone") return field.kind;
   if (field.kind === "address" && (field.part ?? "street") === "street")
     return "address";

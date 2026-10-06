@@ -35,11 +35,14 @@ public struct AutofillRow: Codable, Sendable, Hashable {
     public let value: String
     public let detail: String
     public let kind: String
+    // What to tell the router when the person picks the row, with an empty host.
+    public let pick: PickedRequest?
 
-    public init(value: String, detail: String, kind: String) {
+    public init(value: String, detail: String, kind: String, pick: PickedRequest? = nil) {
         self.value = value
         self.detail = detail
         self.kind = kind
+        self.pick = pick
     }
 }
 
