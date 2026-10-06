@@ -5,7 +5,8 @@
     "sectionHint": ["home", "work", "shipping", "billing"],
     "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"],
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
-    "recentState": ["saved", "waiting", "removed"]
+    "recentState": ["saved", "waiting", "removed"],
+    "pickKind": ["email", "phone", "address", "link", "custom"]
   },
   "requests": {
     "ping": { "type": "ping" },
@@ -61,7 +62,8 @@
       "host": "boards.example.io",
       "action": "learn",
       "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
-    }
+    },
+    "picked": { "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" }
   },
   "responses": {
     "pong": { "type": "pong" },
@@ -115,6 +117,7 @@
       "fields": [{ "values": ["UC Berkeley"], "guesses": [] }, { "values": [], "guesses": ["EECS"] }]
     },
     "answersResult": { "type": "answersResult", "saved": 2 },
+    "pickedResult": { "type": "pickedResult", "remembered": true },
     "error": { "type": "error", "reason": "unknown message" }
   }
 }

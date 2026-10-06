@@ -45,6 +45,8 @@ export const JOB_QUESTIONS = [
   "heard",
 ] as const;
 export const ANSWER_ACTIONS = ["learn", "undo"] as const;
+// What a pick from Prefill's list under a field is of. Mirrored by PickKind in Swift.
+export const PICK_KINDS = ["email", "phone", "address", "link", "custom"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -78,6 +80,7 @@ export type ContactKind = (typeof CONTACT_KINDS)[number];
 export type PopupStatus = (typeof POPUP_STATUSES)[number];
 export type RecentState = (typeof RECENT_STATES)[number];
 export type JobQuestion = (typeof JOB_QUESTIONS)[number];
+export type PickKind = (typeof PICK_KINDS)[number];
 
 const INVALID: unique symbol = Symbol("invalid");
 type Parser<T> = (value: unknown) => T | typeof INVALID;
@@ -250,6 +253,14 @@ const pageRequests = {
       LIMITS.answers,
     ),
   }),
+  // The person picked a value from Prefill's list: the app puts it first on the site.
+  picked: object({
+    type: literal("picked"),
+    host: hostName,
+    kind: oneOf(PICK_KINDS),
+    value: text(LIMITS.value),
+    question: optional(text(LIMITS.fieldText)),
+  }),
 };
 
 const contactKind = oneOf(CONTACT_KINDS);
@@ -334,6 +345,7 @@ const pageResponses = {
     ),
   }),
   answersResult: object({ type: literal("answersResult"), saved: count }),
+  pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -365,9 +377,11 @@ export type CustomSuggestionsRequest = Parsed<
   typeof pageRequests.customSuggestions
 >;
 export type AnswersRequest = Parsed<typeof pageRequests.answers>;
+export type PickedRequest = Parsed<typeof pageRequests.picked>;
 export type PageRequest =
   | Ping
   | AnswersRequest
+  | PickedRequest
   | PageContextRequest
   | CaptureRequest
   | LinkSuggestionsRequest
@@ -400,9 +414,11 @@ export type CustomSuggestionsResult = Parsed<
   typeof pageResponses.customSuggestionsResult
 >;
 export type AnswersResult = Parsed<typeof pageResponses.answersResult>;
+export type PickedResult = Parsed<typeof pageResponses.pickedResult>;
 export type PageResponse =
   | Pong
   | AnswersResult
+  | PickedResult
   | PageContextResult
   | CaptureResult
   | LinkSuggestionsResult

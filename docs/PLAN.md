@@ -54,8 +54,8 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 ## Progress
 
 - **Phase 1: Picks remember**
-  - [ ] 1.1 `picked` page message in both contracts, docs and examples
-  - [ ] 1.2 Router: a pick pins the value for the site without rewriting the card
+  - [x] 1.1 `picked` page message in both contracts, docs and examples
+  - [x] 1.2 Router: a pick pins the value for the site without rewriting the card
   - [ ] 1.3 Dropdown reports picks; contact suggestions send them
   - [ ] 1.4 Links honor pins and report picks
   - [ ] 1.5 Custom answers remember the pick per question
