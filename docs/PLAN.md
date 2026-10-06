@@ -83,7 +83,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 4.6 Device check (NameDrop, Share Contact, bar) and merge
 - **Phase 5: The app is an inbox**
   - [x] 5.1 iPhone: Inbox tab
-  - [ ] 5.2 iPhone: You tab (search, groups, value detail)
+  - [x] 5.2 iPhone: You tab (search, groups, value detail)
   - [ ] 5.3 iPhone: Settings trimmed
   - [ ] 5.4 Mac menu mirrors the inbox
   - [ ] 5.5 UI tests and screenshots, merge
@@ -384,6 +384,7 @@ Record what was checked in AGENTS.md Ongoing. If the phone isn't reachable, mark
 - Add: one "Add" button with a menu (Email, Phone, Address, Link, Answer).
 - Reorder stays for emails and phones (it sets the default order when no site rule applies), in an Edit mode, not always on.
 - The student starter set moves into the Add menu as "Common student answers…".
+- Done as: `YouScreen`, `YouList` and `AnswerDetail` read `Memory` for "Used on" and where a value is stored. A contact value has no value editor, so its Edit is the label menu (with "Custom label…"); an answer edits in `CustomFieldSheet`. "First on" lists `AppState.pins` for the value, and removing one unpins it. The Sites screen moved under Settings, and the Card tab's bar and kind picker are gone (`KindHeader` stays for the site screen). Added rows sit below the fold, so the e2e tests search for them.
 
 ### 5.3 Settings
 

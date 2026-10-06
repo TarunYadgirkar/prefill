@@ -43,11 +43,8 @@ private struct MainTabs: View {
                 InboxScreen()
             }
             .badge(model.waitingCount)
-            Tab("Card", systemImage: "person.text.rectangle") {
-                CardScreen()
-            }
-            Tab("Sites", systemImage: "globe") {
-                SitesScreen()
+            Tab("You", systemImage: "person.crop.circle") {
+                YouScreen()
             }
             Tab("Settings", systemImage: "gearshape") {
                 SettingsScreen()

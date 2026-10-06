@@ -85,6 +85,10 @@ struct SettingsScreen: View {
             }
             .disabled(model.card == nil)
             .accessibilityIdentifier("sharing-your-card")
+            NavigationLink("Sites") {
+                SitesScreen()
+            }
+            .accessibilityIdentifier("sites")
             Button("Choose a different card") { isChoosingCard = true }
             Button("Restore original card", role: .destructive) { isConfirmingRestore = true }
                 .disabled(model.state.cardLink == nil)
