@@ -8,6 +8,7 @@ import {
   type TextField,
 } from "./dropdown";
 import { trackGestures } from "./gesture";
+import { reportPick } from "./picks";
 import {
   isContact,
   type ContactField,
@@ -21,6 +22,7 @@ import {
   type ContactSuggestionsResult,
   type FieldKind,
   type PageField,
+  type PickedRequest,
   type PostalAddress,
 } from "./messages";
 
@@ -29,7 +31,7 @@ type Name = NonNullable<Suggestions["name"]>;
 
 export interface SuggestionOptions {
   host: () => string;
-  send: (request: ContactSuggestionsRequest) => Promise<unknown>;
+  send: (request: ContactSuggestionsRequest | PickedRequest) => Promise<unknown>;
   // Safari fills contact fields from the card itself, so there Prefill asks only for what a
   // minimal card left on Prefill's contact, shows it through a datalist, and skips text
   // areas, which never show one.
@@ -105,6 +107,15 @@ export function suggestionOptions(
     .map((value) => value.trim())
     .filter((value) => value.length > 0);
   return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
+}
+
+// A pick of a value that wasn't first is worth remembering. An address is remembered by
+// its street line, and a name has only one value.
+export function pickKind(field: ContactField): PickedRequest["kind"] | undefined {
+  if (field.kind === "email" || field.kind === "phone") return field.kind;
+  if (field.kind === "address" && (field.part ?? "street") === "street")
+    return "address";
+  return undefined;
 }
 
 export const KIND_LABELS: Partial<Record<FieldKind, string>> = {
@@ -192,8 +203,12 @@ export function installSuggestions(
     if (focused === undefined || detach !== undefined || known === undefined)
       return;
     const detail = KIND_LABELS[focused.field.kind] ?? "";
+    const kind = pickKind(focused.field);
     const choices: Choice[] = suggestionOptions(focused.field, known).map(
-      (value) => ({ value, detail }),
+      (value, index) =>
+        kind === undefined || index === 0
+          ? { value, detail }
+          : { value, detail, onPick: () => { picked(kind, value); } },
     );
     if (choices.length > 0) detach = attach(focused.element, choices);
   };
@@ -215,6 +230,14 @@ export function installSuggestions(
         offer();
       })
       .catch(() => undefined);
+  };
+
+  const picked = (kind: PickedRequest["kind"], value: string): void => {
+    reportPick(
+      options.send,
+      { type: "picked", host: options.host(), kind, value },
+      fetchValues,
+    );
   };
 
   const onFocus = (event: Event): void => {

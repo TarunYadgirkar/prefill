@@ -50,6 +50,9 @@ extension ExtensionRequest {
         case .answers(let body):
             body.host.count <= MessageLimits.host && body.answers.count <= MessageLimits.answers
                 && body.answers.allSatisfy { $0.value.utf16.count <= MessageLimits.customValue }
+        case .picked(let body):
+            body.host.count <= MessageLimits.host && body.value.utf16.count <= MessageLimits.value
+                && (body.question?.utf16.count ?? 0) <= MessageLimits.fieldText
         }
     }
 }
@@ -87,6 +90,8 @@ extension ExtensionRequest {
             MessageText.isHost(body.host) && body.fields.allSatisfy { MessageText.isPlain($0.text) }
         case .answers(let body):
             MessageText.isHost(body.host) && body.answers.allSatisfy { MessageText.isPlain($0.value) }
+        case .picked(let body):
+            MessageText.isHost(body.host) && MessageText.isPlain(body.value) && MessageText.isPlain(body.question ?? "")
         }
     }
 
@@ -105,6 +110,7 @@ extension ExtensionRequest {
         case .contactSuggestions(let body): body.host
         case .customSuggestions(let body): body.host
         case .answers(let body): body.host
+        case .picked(let body): body.host
         }
     }
 }

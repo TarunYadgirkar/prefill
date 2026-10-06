@@ -32,7 +32,8 @@ public struct LinkSuggestionsResponse: Codable, Sendable, Hashable {
 }
 
 extension MessageRouter {
-    // The card's links of the asked-for types in the person's order, a few of each. Nothing
+    // The card's links of the asked-for types in the person's order, with the one last picked
+    // on this site first, a few of each. Nothing
     // before the card is linked or when it can't be read.
     func linkSuggestions(_ request: LinkSuggestionsRequest) -> LinkSuggestionsResponse {
         guard let state = currentState(), let link = state.cardLink,
@@ -40,7 +41,9 @@ extension MessageRouter {
             return LinkSuggestionsResponse(links: [])
         }
         let wanted = Set(request.types)
-        let order = ManualOrder.values(.link, card: card, known: state.values, now: now())
+        let site = Normalizer.registrableDomain(request.host)
+        let pinned = state.settings.matchEachSite ? state.pinnedValue(.link, on: site) : nil
+        let order = ManualOrder.values(.link, card: card, known: state.values, now: now()).first(pinned)
         let links = order.compactMap { value -> SuggestedLink? in
             guard case .link(let text) = value.payload, ValueRules.isLink(text) else { return nil }
             let type = LinkType.of(text)
@@ -50,5 +53,11 @@ extension MessageRouter {
             links.filter { $0.type == type }.prefix(MessageLimits.linksPerType)
         }
         return LinkSuggestionsResponse(links: Array(capped.prefix(MessageLimits.links)))
+    }
+}
+
+private extension Array where Element == ContactValue {
+    func first(_ id: UUID?) -> [ContactValue] {
+        filter { $0.id == id } + filter { $0.id != id }
     }
 }

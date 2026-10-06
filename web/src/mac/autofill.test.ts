@@ -49,6 +49,25 @@ describe("Mac autofill plan", () => {
     expect(rows(chosen, reply)).toEqual([{ value: "Berkeley", detail: "Address", kind: "address" }]);
   });
 
+  it("marks the rows a pick is worth telling the router about", () => {
+    const emails = rows(plan(field({ label: "Email" })), {
+      type: "contactSuggestionsResult",
+      emails: ["alex@work.example.org", "alex.rivera@example.com"],
+      phones: [],
+      addresses: [],
+    });
+    expect(emails.map((row) => row.pick)).toEqual([
+      undefined,
+      { type: "picked", host: "", kind: "email", value: "alex.rivera@example.com" },
+    ]);
+    const custom = rows(plan(field({ label: "School" })), {
+      type: "customSuggestionsResult",
+      fields: [{ values: ["UC Berkeley"], guesses: ["EECS"] }],
+    });
+    expect(custom.map((row) => row.pick?.question)).toEqual([undefined, "School"]);
+    expect(custom.every((row) => row.onPick === undefined)).toBe(true);
+  });
+
   it("drops a reply of the wrong type", () => {
     expect(rows(plan(field({ label: "Email" })), { type: "pong" })).toEqual([]);
   });

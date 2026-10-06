@@ -13,16 +13,19 @@ import {
 } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { trackGestures } from "./gesture";
+import { reportPick } from "./picks";
 import {
   HIDDEN_CHARACTERS,
   LIMITS,
   parseExtensionResponse,
   type CustomSuggestionsRequest,
+  type CustomSuggestionsResult,
+  type PickedRequest,
 } from "./messages";
 
 export interface CustomOptions {
   host: () => string;
-  send: (request: CustomSuggestionsRequest) => Promise<unknown>;
+  send: (request: CustomSuggestionsRequest | PickedRequest) => Promise<unknown>;
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
   // How the values are shown: a datalist for Safari's bar unless the caller draws its own
@@ -40,6 +43,27 @@ export const GUESS_DETAIL = "Suggested";
 // never wants a saved answer.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text"]);
 const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
+
+type CustomField = CustomSuggestionsResult["fields"][number];
+
+// The field's answers, then the model's guesses. A pick of an answer that wasn't first, or
+// of a guess, is worth remembering for the question.
+export function customChoices(
+  field: CustomField | undefined,
+  onPick: (value: string) => void,
+): Choice[] {
+  const answers = (field?.values ?? []).map((value, index) => ({
+    value,
+    detail: CUSTOM_DETAIL,
+    ...(index === 0 ? {} : { onPick: () => { onPick(value); } }),
+  }));
+  const guesses = (field?.guesses ?? []).map((value) => ({
+    value,
+    detail: GUESS_DETAIL,
+    onPick: () => { onPick(value); },
+  }));
+  return [...answers, ...guesses];
+}
 
 // A field only gets custom values when nothing else claims it: no contact or link meaning,
 // no autofill token, not sensitive, and not on a sign-in form.
@@ -142,15 +166,23 @@ export function installCustom(
         )
           return;
         texts.forEach((text, index) => {
-          const field = response.fields[index];
-          known.set(text, [
-            ...(field?.values ?? []).map((value) => ({ value, detail: CUSTOM_DETAIL })),
-            ...(field?.guesses ?? []).map((value) => ({ value, detail: GUESS_DETAIL })),
-          ]);
+          known.set(text, customChoices(response.fields[index], (value) => {
+            picked(text, value);
+          }));
         });
         offer();
       })
       .catch(() => undefined);
+  };
+
+  const picked = (text: string, value: string): void => {
+    reportPick(
+      options.send,
+      { type: "picked", host: options.host(), kind: "custom", value, question: text },
+      () => {
+        fetchValues([text]);
+      },
+    );
   };
 
   const prefetch = (): void => {

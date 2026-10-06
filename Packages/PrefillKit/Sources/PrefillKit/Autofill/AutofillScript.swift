@@ -33,6 +33,17 @@ public final class AutofillScript {
         rows(planned: plan(field, rule: "fillPlan"), host: host, router: router).first
     }
 
+    // Tells the router the person picked `row` on `host`, so it comes first there next time.
+    public static func remember(_ row: AutofillRow, host: String, router: MessageRouter) {
+        guard let pick = row.pick, !host.isEmpty else { return }
+        let request = ExtensionRequest.picked(
+            PickedRequest(host: host, kind: pick.kind, value: pick.value, question: pick.question)
+        )
+        guard let data = try? JSONEncoder().encode(request),
+              let message = try? JSONSerialization.jsonObject(with: data) else { return }
+        _ = router.route(message)
+    }
+
     // The words a field would be matched against, for a field the rules take as a custom one.
     public func customQuestion(_ field: FieldDescription) -> String? {
         guard let plan = plan(field), plan["kind"] as? String == "custom",

@@ -4,14 +4,21 @@
 // panel shows. Built to web/dist-mac/autofill.js as the global `PrefillAutofill`.
 import { parseAutocomplete } from "../autocomplete";
 import { classifyDescription, type FieldDescription } from "../classify";
-import { CUSTOM_DETAIL, GUESS_DETAIL, joinFieldText } from "../custom";
+import { customChoices, joinFieldText } from "../custom";
 import type { Choice } from "../dropdown";
 import { isContact, type ContactField } from "../fieldTypes";
 import { linkChoices } from "../links";
 import { splitNames } from "../dom";
 import { takesSavedAnswer } from "../fill";
-import { parsePageResponse, type LinkType, type PageField, type PageRequest, type PageResponse } from "../messages";
-import { KIND_LABELS, SUGGESTED_KINDS, suggestionOptions } from "../suggestions";
+import {
+  parsePageResponse,
+  type LinkType,
+  type PageField,
+  type PageRequest,
+  type PageResponse,
+  type PickedRequest,
+} from "../messages";
+import { KIND_LABELS, SUGGESTED_KINDS, pickKind, suggestionOptions } from "../suggestions";
 
 export type Plan =
   | { kind: "contact"; field: ContactField; request: PageRequest }
@@ -22,6 +29,15 @@ export type Plan =
 export interface Row extends Choice {
   // What the value is, for the panel's symbol: a contact kind, "link" or "custom".
   kind: string;
+  // What to tell the router when the person picks this row, as the extension's lists do.
+  // The Mac app fills in the host.
+  pick?: PickedRequest;
+}
+
+const NO_PICK = (): void => undefined;
+
+function picked(kind: PickedRequest["kind"], value: string, question?: string): PickedRequest {
+  return { type: "picked", host: "", kind, value, ...(question === undefined ? {} : { question }) };
 }
 
 // The inputs each kind of list appears on, as in the extension.
@@ -62,21 +78,32 @@ export function plan(field: FieldDescription): Plan {
 function contactRows(chosen: Extract<Plan, { kind: "contact" }>, response: PageResponse): Row[] {
   if (response.type !== "contactSuggestionsResult") return [];
   const detail = KIND_LABELS[chosen.field.kind] ?? "";
-  return suggestionOptions(chosen.field, response).map((value) => ({ value, detail, kind: chosen.field.kind }));
+  const kind = pickKind(chosen.field);
+  return suggestionOptions(chosen.field, response).map((value, index) => ({
+    value,
+    detail,
+    kind: chosen.field.kind,
+    ...(kind === undefined || index === 0 ? {} : { pick: picked(kind, value) }),
+  }));
 }
 
 function linkRows(chosen: Extract<Plan, { kind: "link" }>, response: PageResponse): Row[] {
   if (response.type !== "linkSuggestionsResult") return [];
-  return linkChoices(chosen.linkTypes, response.links, chosen.fullUrl).map((choice) => ({ ...choice, kind: "link" }));
+  return linkChoices(chosen.linkTypes, response.links, chosen.fullUrl, NO_PICK).map(({ onPick, ...choice }) => ({
+    ...choice,
+    kind: "link",
+    ...(onPick === undefined ? {} : { pick: picked("link", choice.value) }),
+  }));
 }
 
-function customRows(response: PageResponse): Row[] {
+function customRows(chosen: Extract<Plan, { kind: "custom" }>, response: PageResponse): Row[] {
   if (response.type !== "customSuggestionsResult") return [];
-  const field = response.fields[0];
-  return [
-    ...(field?.values ?? []).map((value) => ({ value, detail: CUSTOM_DETAIL, kind: "custom" })),
-    ...(field?.guesses ?? []).map((value) => ({ value, detail: GUESS_DETAIL, kind: "custom" })),
-  ];
+  const question = chosen.request.type === "customSuggestions" ? chosen.request.fields[0]?.text : undefined;
+  return customChoices(response.fields[0], NO_PICK).map(({ onPick, ...choice }) => ({
+    ...choice,
+    kind: "custom",
+    ...(onPick === undefined ? {} : { pick: picked("custom", choice.value, question) }),
+  }));
 }
 
 export function rows(chosen: Plan, reply: unknown): Row[] {
@@ -88,7 +115,7 @@ export function rows(chosen: Plan, reply: unknown): Row[] {
     case "link":
       return linkRows(chosen, response);
     case "custom":
-      return customRows(response);
+      return customRows(chosen, response);
     case "none":
       return [];
   }

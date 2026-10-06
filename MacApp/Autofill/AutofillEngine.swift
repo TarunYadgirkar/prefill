@@ -216,7 +216,8 @@ final class AutofillEngine {
     }
 
     private func pick(_ row: AutofillRow) {
-        guard let element = current?.field.element else { return }
+        guard let field = current?.field else { return }
+        let element = field.element
         hide()
         let isStillFocused = { [weak self] in
             guard let focused = self?.watcher?.currentFocus() else { return false }
@@ -226,6 +227,7 @@ final class AutofillEngine {
         Task {
             let method = await FieldFiller.fill(element, with: row.value, isStillFocused: isStillFocused)
             Self.log.info("filled a \(row.kind, privacy: .public) field by \(method.rawValue, privacy: .public)")
+            await self.worker?.remember(row, host: field.host)
             #if PREFILL_TEST_BROWSERS
             e2eLog("filled \(row.kind) by \(method.rawValue)")
             #endif
