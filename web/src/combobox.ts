@@ -50,6 +50,21 @@ async function waitForOptions(input: HTMLInputElement): Promise<HTMLElement[]> {
   }
 }
 
+const CONTROL_DEPTH = 4;
+
+// Whether the box still shows `text` as its one choice. React-Select draws the choice beside
+// the input, a few levels up, and a multi-select's chips would hold more than that.
+function shows(input: HTMLInputElement, text: string): boolean {
+  if (isComboboxEmpty(input)) return false;
+  let node: HTMLElement | null = input.parentElement;
+  for (let depth = 0; node !== null && depth < CONTROL_DEPTH; depth += 1) {
+    const shown = node.textContent.trim();
+    if (shown !== "") return shown === text;
+    node = node.parentElement;
+  }
+  return false;
+}
+
 function press(input: HTMLInputElement, key: string): void {
   input.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
 }
@@ -78,9 +93,12 @@ export async function fillCombobox(
     input.blur();
     return undefined;
   }
+  const picked = chosen.textContent.trim();
   click(chosen);
   input.blur();
   return () => {
+    // Backspace clears whatever the box holds, so only Prefill's own pick is taken back.
+    if (!shows(input, picked)) return;
     input.focus();
     press(input, "Backspace");
     input.blur();

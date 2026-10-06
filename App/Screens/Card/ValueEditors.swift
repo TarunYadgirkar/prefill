@@ -135,10 +135,10 @@ struct AddValueSheet: View {
         case .failure(let problem):
             report(problem.message)
         case .success(let payload):
-            if await model.add(payload, label: label ?? payload.automaticLabel) {
-                dismiss()
-            } else {
-                report(String(localized: "That’s already on your card."))
+            switch await model.add(payload, label: label ?? payload.automaticLabel) {
+            case .added: dismiss()
+            case .alreadyOnCard: report(String(localized: "That’s already on your card."))
+            case .failed(let failure): report(failure.appMessage)
             }
         }
     }

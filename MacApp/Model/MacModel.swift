@@ -155,12 +155,24 @@ final class MacModel {
             return
         }
         let gateway = gateway
-        let (fetched, fresh) = await Task.detached {
-            (try? gateway.fetchCard(identifier: identifier), try? gateway.placement(identifier: identifier))
+        let (result, fresh) = await Task.detached {
+            (Result { () throws(CardWriteFailure) in try gateway.fetchCard(identifier: identifier) },
+             try? gateway.placement(identifier: identifier))
         }.value
-        card = fetched
         if let fresh { placement = fresh }
-        guard let fetched else { return }
+        let fetched: CardRecord
+        switch result {
+        case .success(let record):
+            fetched = record
+        case .failure(.cardMissing):
+            card = nil
+            return
+        case .failure:
+            // Keep the last card on screen: a passing Contacts error isn't an empty card.
+            problem = String(localized: "Prefill couldn’t read your card. Try it again in a moment.")
+            return
+        }
+        card = fetched
         let merged = ManualOrder.allValues(card: fetched, known: state.values, now: .now)
         if merged.map(\.id) != state.values.map(\.id) { commit(state.with(values: merged)) }
     }

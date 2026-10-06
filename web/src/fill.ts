@@ -1,6 +1,6 @@
 import { parseAutocomplete } from "./autocomplete";
 import { isPlaceholder, pickFirst, type Option } from "./choices";
-import { classify, isSignIn } from "./classify";
+import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { fieldText, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
@@ -98,7 +98,7 @@ export function takesSavedAnswer(text: string): boolean {
 }
 
 function freeWant(text: string): Want | undefined {
-  if (text === "" || FOLLOW_UP.test(text)) return undefined;
+  if (text === "" || FOLLOW_UP.test(text) || isSensitiveText([[text]])) return undefined;
   return isDemographic(text) ? { from: "decline" } : { from: "custom", text };
 }
 
@@ -180,11 +180,14 @@ function labelledBy(element: Element): string {
 
 function radioSlots(elements: readonly FieldElement[]): Slot[] {
   const groups = new Map<string, HTMLInputElement[]>();
+  // Same-named radios in two forms are two questions.
+  const forms = new Map<HTMLFormElement | null, number>();
   for (const element of elements) {
     if (element.localName !== "input" || (element as HTMLInputElement).type !== "radio") continue;
     const radio = element as HTMLInputElement;
     if (radio.name === "") continue;
-    const key = `${radio.form === null ? "" : "form"} ${radio.name}`;
+    if (!forms.has(radio.form)) forms.set(radio.form, forms.size);
+    const key = `${String(forms.get(radio.form))} ${radio.name}`;
     groups.set(key, [...(groups.get(key) ?? []), radio]);
   }
   return [...groups.values()].flatMap((inputs) => {
@@ -306,6 +309,11 @@ function applyText(element: TextField, values: readonly string[], detail: string
   const value = values[0];
   if (value === undefined || !element.isConnected || !isEmpty(element)) return undefined;
   fillField(element, value);
+  // A number box or a maxlength can refuse or cut the value; that field isn't filled.
+  if (element.value !== value) {
+    fillField(element, "");
+    return undefined;
+  }
   filledChoices.set(
     element,
     values.map((choice) => ({ value: choice, detail })),
@@ -366,6 +374,8 @@ async function applyComboboxes(slots: readonly Slot[], answers: Answers): Promis
   const undos: (() => void)[] = [];
   for (const slot of slots) {
     if (slot.control !== "combobox") continue;
+    // The person may have picked one while earlier boxes were filling.
+    if (!slot.element.isConnected || !isComboboxEmpty(slot.element)) continue;
     const undo = await applyCombobox(slot.element, slot.want, valuesFor(slot.want, answers).values).catch(() => undefined);
     if (undo !== undefined) undos.push(undo);
   }

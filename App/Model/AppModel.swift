@@ -40,6 +40,7 @@ final class AppModel {
     @ObservationIgnored let intelligence = Intelligence()
     @ObservationIgnored var isAskingModel = false
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
+    @ObservationIgnored var reorderSync: Task<Void, Never>?
 
     init(
         store: any SharedStore, gateway: any ContactsGateway, contacts: any ContactsSource,

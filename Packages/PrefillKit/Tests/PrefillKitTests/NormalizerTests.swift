@@ -18,7 +18,8 @@ struct NormalizerTests {
         ("415.555.0199", "+14155550199"),
         ("1 415 555 0199", "+14155550199"),
         ("+44 20 7946 0958", "+442079460958"),
-        ("555-0134", "5550134")
+        ("555-0134", "5550134"),
+        ("+44 (0)20 7946 0958", "+442079460958")
     ])
     func phoneKeepsDigitsWithCountryCode(raw: String, expected: String) {
         #expect(Normalizer.phone(raw, region: "us") == expected)
@@ -30,7 +31,8 @@ struct NormalizerTests {
         ("+91 98765 43210", "us", "+919876543210"),
         ("020 7946 0958", "gb", "+442079460958"),
         ("(416) 555-0123", "CA", "+14165550123"),
-        ("9876543210", "", "9876543210")
+        ("9876543210", "", "9876543210"),
+        ("0044 20 7946 0958", "gb", "+442079460958")
     ])
     func aNumberWithoutACountryCodeTakesTheRegionsCode(raw: String, region: String, expected: String) {
         #expect(Normalizer.phone(raw, region: region) == expected)

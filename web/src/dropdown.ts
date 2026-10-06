@@ -238,7 +238,9 @@ export function showDropdown(
   const move = (step: number): void => {
     hidden = false;
     const count = matching(choices, typed).length;
-    selected = count === 0 ? -1 : (selected + step + count) % count;
+    if (count === 0) selected = -1;
+    else if (selected < 0) selected = step < 0 ? count - 1 : 0;
+    else selected = (selected + step + count) % count;
     render();
   };
 
@@ -322,6 +324,12 @@ export function showDropdown(
   menu.addEventListener("click", onClick);
   win.addEventListener("keydown", onKey, true);
   const stopPlacing = onViewportChange(win, place);
+  // Removing a focused field fires no focusout, so a page that swaps its form would
+  // otherwise leave the list floating at the top left.
+  const removal = new MutationObserver(() => {
+    if (!element.isConnected) close();
+  });
+  removal.observe(doc.documentElement, { childList: true, subtree: true });
   element.addEventListener("input", onInput);
   doc.documentElement.append(host);
   if (typeof host.showPopover === "function") host.showPopover();
@@ -330,6 +338,7 @@ export function showDropdown(
   return () => {
     win.removeEventListener("keydown", onKey, true);
     stopPlacing();
+    removal.disconnect();
     element.removeEventListener("input", onInput);
     host.remove();
   };

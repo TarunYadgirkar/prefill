@@ -65,6 +65,38 @@ struct CardSplitTests {
         #expect(writes.extras == CardExtras(links: [homepage, github], customFields: [school]))
     }
 
+    @Test func aFieldWhoseLabelPrefillHoldsWithAnotherAnswerStaysOnTheCard() throws {
+        let other = try CustomField.make(label: "School", value: "UCLA", alsoMatches: "").get()
+        let split = CardSplit(card: cardWithExtras, copies: [CardExtras(links: [], customFields: [other])])
+        let writes = try #require(split.moving([.entry(github), .customField(school)]))
+        #expect(writes.card?.customFields == [school])
+        #expect(writes.extras?.customFields == [other])
+    }
+
+    @Test func linksThatShareAKeyMoveOneAtATimeSoNoneIsLost() throws {
+        let first = CardEntry(label: nil, payload: .link("https://facebook.com/profile.php?id=1"))
+        let second = CardEntry(label: nil, payload: .link("https://facebook.com/profile.php?id=2"))
+        let split = CardSplit(card: Alex.card.replacing(.link, with: [first, second]), copies: [])
+        let writes = try #require(split.moving([.entry(first), .entry(second)]))
+        #expect(writes.card?.links == [second])
+        #expect(writes.extras?.links == [first])
+    }
+
+    @Test func copiesThatLearnedDifferentAnswersKeepBoth() throws {
+        let other = try CustomField.make(label: "School", value: "UCLA", alsoMatches: "").get()
+        let split = CardSplit(card: Alex.card, copies: [
+            CardExtras(links: [], customFields: [school]), CardExtras(links: [], customFields: [other])
+        ])
+        #expect(split.record.customFields.map(\.value) == ["UC Berkeley", "UCLA"])
+        #expect(split.record.customFields.map(\.label) == ["School", "School 2"])
+    }
+
+    @Test func aFieldEditedElsewhereIsNotPutBackBesideTheEdit() throws {
+        let edited = try CustomField.make(label: "School", value: "UCLA", alsoMatches: "").get()
+        let now = Alex.card.replacingCustomFields(with: [edited])
+        #expect(now.restoringValues(of: Alex.card.replacingCustomFields(with: [school])).customFields == [edited])
+    }
+
     @Test func movingWhatIsAlreadyOffTheCardDoesNothing() {
         #expect(CardSplit(card: Alex.card, copies: []).moving([.entry(github)]) == nil)
     }

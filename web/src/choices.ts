@@ -32,7 +32,7 @@ const SAME: readonly (readonly string[])[] = [
   ...US_STATES.map(([code, name]) => [name.toLowerCase(), code.toLowerCase()]),
 ];
 
-const PLACEHOLDER = /^(?:-+|select|choose|pick|please (?:select|choose)|select (?:one|an option)|none selected|\.\.\.)\b|^\s*$/iu;
+const PLACEHOLDER = /^\s*(?:(?:select|choose|pick|please (?:select|choose)|none selected)\b|-+|\.\.\.)|^\s*$/iu;
 
 export function normalize(text: string): string {
   return text
@@ -44,8 +44,14 @@ export function normalize(text: string): string {
     .trim();
 }
 
+// Words every school or degree shares, which say nothing about which one is meant.
+const FILLER = new Set(["of", "the", "and", "at", "in", "for", "a", "an", "university", "college", "school", "institute"]);
+
 function words(text: string): string[] {
-  return normalize(text).replace(/\./gu, "").split(" ").filter(Boolean);
+  return normalize(text)
+    .replace(/\./gu, "")
+    .split(" ")
+    .filter((word) => word !== "" && !FILLER.has(word));
 }
 
 // Every name in every group the text belongs to: "CA" is both Canada and California, and
@@ -76,7 +82,8 @@ function score(option: Option, answer: string): number {
       return shared / Math.max(wanted.size, have.length);
     }),
   );
-  return best >= 0.5 ? best * 0.8 : 0;
+  // Half is too little: "Bachelor of Arts" isn't "Bachelor of Science".
+  return best > 0.5 ? best * 0.8 : 0;
 }
 
 // The index of the option that best says `answer`, or -1 when none says it well enough.

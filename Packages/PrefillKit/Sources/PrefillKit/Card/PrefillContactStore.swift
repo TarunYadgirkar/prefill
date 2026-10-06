@@ -27,9 +27,12 @@ enum PrefillContactStore {
         } catch {
             throw CNCardMapping.failure(for: error)
         }
-        return found
-            .filter { (try? container(of: $0.identifier, store: store)) == account }
-            .sorted { $0.identifier < $1.identifier }
+        // A failed lookup must throw: dropping that copy would make write() add a duplicate.
+        var copies: [CNContact] = []
+        for contact in found where try container(of: contact.identifier, store: store) == account {
+            copies.append(contact)
+        }
+        return copies.sorted { $0.identifier < $1.identifier }
     }
 
     // Writes `extras` to every copy, or adds the contact when there is none yet. Copies are

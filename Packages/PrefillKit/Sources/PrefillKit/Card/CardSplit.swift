@@ -88,13 +88,12 @@ public struct CardExtras: Sendable, Hashable {
 
     // Everything on either, this one's first, each value once. Minimal if either is.
     func merging(_ other: CardExtras) -> CardExtras {
-        let fieldIDs = Set(customFields.map(\.id))
         let kinds: [ContactKind] = [.link] + ContactKind.core
         let merged = kinds.reduce(self) { partial, kind in
             partial.replacing(kind, with: partial.entries(kind).adding(other.entries(kind)))
         }
         return merged.with(
-            customFields: customFields + other.customFields.filter { !fieldIDs.contains($0.id) },
+            customFields: customFields.keepingBoth(other.customFields.filter { !customFields.contains($0) }),
             isMinimal: isMinimal || other.isMinimal
         )
     }
@@ -267,23 +266,37 @@ struct CardSplit: Equatable {
     // never loses one. Moving an email, phone or address makes the card minimal. Returns nil
     // when nothing chosen is still on the card.
     func moving(_ chosen: [CardExtra]) -> Writes? {
+        let held = extras ?? CardExtras(links: [], customFields: [])
         let ids = Set(chosen.map(\.id))
-        let picked = { (entry: CardEntry) in ids.contains(CardExtra.entry(entry).id) }
-        let movedFields = card.customFields.filter { ids.contains(CardExtra.customField($0).id) }
+        let movedFields = card.customFields.filter { field in
+            let collides = held.customFields.contains { $0.id == field.id && $0 != field }
+            return ids.contains(CardExtra.customField(field).id) && !collides
+        }
         let kinds = ContactKind.core + [.link]
         let moved = kinds.reduce(CardExtras(links: [], customFields: movedFields)) { partial, kind in
-            partial.replacing(kind, with: card.entries(kind).filter(picked).uniquedByKey())
+            partial.replacing(kind, with: movable(kind, ids: ids, held: held))
         }
         guard !moved.isEmpty else { return nil }
         let kept = kinds.reduce(card) { partial, kind in
-            partial.replacing(kind, with: card.entries(kind).filter { !picked($0) })
+            let leaving = Set(moved.entries(kind))
+            return partial.replacing(kind, with: card.entries(kind).filter { !leaving.contains($0) })
         }
-        .replacingCustomFields(with: card.customFields.filter { !ids.contains(CardExtra.customField($0).id) })
+        .replacingCustomFields(with: card.customFields.filter { !movedFields.contains($0) })
         let becomesMinimal = isMinimal || chosen.contains(where: \.isCore)
-        let merged = (extras ?? CardExtras(links: [], customFields: []))
-            .merging(moved).with(isMinimal: becomesMinimal)
+        let merged = held.merging(moved).with(isMinimal: becomesMinimal)
         let needsExtras = merged != extras || copies.contains { $0 != merged }
         return Writes(card: kept, includesCardExtras: true, extras: needsExtras ? merged : nil)
+    }
+
+    // The chosen entries Prefill's contact can hold as they are. A link's key leaves out its
+    // query, so two links can share one ("profile.php?id=1" and "?id=2"): only the first
+    // moves, and one that differs from a held link of the same key stays on the card.
+    private func movable(_ kind: ContactKind, ids: Set<String>, held: CardExtras) -> [CardEntry] {
+        let picked = card.entries(kind).filter { ids.contains(CardExtra.entry($0).id) }.uniquedByKey()
+        guard kind == .link else { return picked }
+        return picked.filter { entry in
+            !held.entries(kind).contains { $0.key == entry.key && $0.payload != entry.payload }
+        }
     }
 
     // Puts `chosen` emails, phones and addresses from Prefill's contact back on the card
@@ -303,6 +316,19 @@ struct CardSplit: Equatable {
         let extrasChanged = wanted != extras || copies.contains { $0 != wanted }
         guard cardChanged || extrasChanged else { return nil }
         return Writes(card: cardChanged ? nextCard : nil, extras: extrasChanged ? wanted : nil)
+    }
+}
+
+extension [CustomField] {
+    // These fields, then each of `others`. One whose label is taken by a different answer
+    // (two devices learned "School" apart) comes in as "School 2", so neither answer is lost.
+    func keepingBoth(_ others: [CustomField]) -> [CustomField] {
+        others.reduce(into: self) { fields, field in
+            let free = (1...9).lazy
+                .map { $0 == 1 ? field : field.relabeled("\(field.label.prefix(CustomField.maxLabel - 2)) \($0)") }
+                .first { candidate in !fields.contains { $0.id == candidate.id } }
+            if let free { fields.append(free) }
+        }
     }
 }
 

@@ -23,7 +23,7 @@ extension AppModel {
             let reordered = [value] + order.filter { $0.id != id }
             commit(state.with(values: ManualOrder.replacing(kind, with: reordered, in: state.values)))
         }
-        return await syncCard(host: host)
+        return await syncCard(host: host, reportsProblem: false)
     }
 
     // A nil label is a Focus turning off, which puts the person's own order back.
@@ -32,6 +32,6 @@ extension AppModel {
         commit(state.with(settings: Settings(
             matchEachSite: settings.matchEachSite, saveNewInfo: settings.saveNewInfo, focusLabel: label
         )))
-        return await syncCard()
+        return await syncCard(reportsProblem: false)
     }
 }

@@ -96,9 +96,14 @@ extension MessageRouter {
     }
 
     private func save(_ target: CardRecord, over card: CardRecord, scope: CardSaveScope) -> Bool {
-        let result = try? gateway.save(
-            target, basis: card, scope: scope, transactionAuthor: CardWriter.transactionAuthor
-        )
-        return result == .saved
+        do {
+            let result = try gateway.save(
+                target, basis: card, scope: scope, transactionAuthor: CardWriter.transactionAuthor
+            )
+            return result == .saved
+        } catch {
+            Self.log.error("answers not saved: \(String(describing: error), privacy: .public)")
+            return false
+        }
     }
 }

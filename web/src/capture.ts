@@ -47,7 +47,7 @@ const HIDDEN: Trigger = { trigger: "flush", consume: false };
 
 // Only a tap, a key or an input method on a field marks it as the person's. A script can
 // make trusted input events with execCommand, but none of these.
-const TOUCH_EVENTS = [
+export const TOUCH_EVENTS = [
   "pointerdown",
   "touchstart",
   "keydown",
@@ -63,7 +63,7 @@ const SUBMIT_WORDS =
 // How far up from a form-less button to look for the fields it would send.
 const NEARBY_LEVELS = 4;
 
-function submitControl(
+export function submitControl(
   target: EventTarget | null,
 ): HTMLButtonElement | HTMLInputElement | undefined {
   if (!(target instanceof Element)) return undefined;
@@ -200,7 +200,7 @@ function watchPasswords(doc: Document): {
 }
 
 // The field an event landed on, or the one its label controls.
-function touchedField(event: Event): FieldElement | undefined {
+export function touchedField(event: Event): FieldElement | undefined {
   for (const target of event.composedPath()) {
     if (isFieldElement(target)) return target;
     if (target instanceof HTMLLabelElement && isFieldElement(target.control))

@@ -213,7 +213,7 @@ function sourcesOf(field: FieldDescription): string[][] {
   );
 }
 
-function isSensitiveText(sources: readonly string[][]): boolean {
+export function isSensitiveText(sources: readonly string[][]): boolean {
   return sources
     .flat()
     .some((text) => SENSITIVE_PATTERNS.some((pattern) => pattern.test(text)));

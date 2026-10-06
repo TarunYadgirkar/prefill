@@ -1,4 +1,5 @@
 import { isPlaceholder } from "./choices";
+import { submitControl, TOUCH_EVENTS, touchedField } from "./capture";
 import { classify, isSignIn } from "./classify";
 import { fieldText } from "./custom";
 import { isDemographic } from "./demographics";
@@ -121,7 +122,13 @@ export function collectAnswers(scope: ParentNode, touched: Touched): Answer[] {
 
 // "Saved 3 answers" with Undo, at the bottom of the page, in a closed shadow root like the
 // fill pill so the page can't press it.
-function showSaved(doc: Document, win: Window, saved: number, undo: () => void, isUserEvent: (event: Event) => boolean): void {
+interface PillAction {
+  label: string;
+  run: () => void;
+  isUserEvent: (event: Event) => boolean;
+}
+
+function showPill(doc: Document, win: Window, text: string, action?: PillAction): void {
   const host = doc.createElement("prefill-saved");
   const root = host.attachShadow({ mode: "closed" });
   const style = doc.createElement("style");
@@ -131,11 +138,8 @@ function showSaved(doc: Document, win: Window, saved: number, undo: () => void, 
   const status = doc.createElement("span");
   status.className = "status";
   status.setAttribute("role", "status");
-  status.textContent = `Saved ${String(saved)} ${saved === 1 ? "answer" : "answers"}`;
-  const button = doc.createElement("button");
-  button.className = "main";
-  button.textContent = "Undo";
-  pill.append(status, button);
+  status.textContent = text;
+  pill.append(status);
   root.append(style, pill);
   host.setAttribute("popover", "manual");
   setStyles(host, { position: "fixed", margin: "0", padding: "0", border: "0", background: "transparent", inset: "auto", "z-index": "2147483647", overflow: "visible" });
@@ -151,26 +155,31 @@ function showSaved(doc: Document, win: Window, saved: number, undo: () => void, 
   const timer = setTimeout(() => {
     host.remove();
   }, TOAST_MS);
+  if (action === undefined) return;
+  const button = doc.createElement("button");
+  button.className = "main";
+  button.textContent = action.label;
+  pill.append(button);
   button.addEventListener("click", (event) => {
-    if (!isUserEvent(event)) return;
+    if (!action.isUserEvent(event)) return;
     clearTimeout(timer);
     host.remove();
-    undo();
+    action.run();
   });
 }
 
-const SUBMIT_CONTROLS = "button, input[type=submit], input[type=image]";
+// Enter submits from a field, but starts a new line in a text area.
+function enterForm(event: KeyboardEvent, target: Element): HTMLFormElement | undefined {
+  if (event.key !== "Enter" || !isFieldElement(target) || target.localName === "textarea") return undefined;
+  return (target as HTMLInputElement).form ?? undefined;
+}
 
-// The form a trusted click or Enter key would submit.
+// The form a trusted click on a submit control or Enter key would submit.
 function formOf(event: Event): HTMLFormElement | undefined {
   const target = eventOrigin(event);
   if (!(target instanceof Element)) return undefined;
-  if (event.type === "keydown") {
-    const isEnter = (event as KeyboardEvent).key === "Enter" && isFieldElement(target);
-    return isEnter ? ((target as HTMLInputElement).form ?? undefined) : undefined;
-  }
-  const control = target.closest<HTMLButtonElement | HTMLInputElement>(SUBMIT_CONTROLS);
-  return control?.form ?? undefined;
+  if (event.type === "keydown") return enterForm(event as KeyboardEvent, target);
+  return submitControl(target)?.form ?? undefined;
 }
 
 export function installLearn(doc: Document, win: Window, options: LearnOptions): () => void {
@@ -181,9 +190,17 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
   // that follows the person's own press on that form counts.
   let pressed: { form: HTMLFormElement; at: number } | undefined;
 
+  // execCommand makes trusted input events too, so only a field the person pressed,
+  // typed or composed in counts as theirs.
+  const handled = new WeakSet<FieldElement>();
+  const handle = (event: Event): void => {
+    const field = isUserEvent(event) ? touchedField(event) : undefined;
+    if (field !== undefined) handled.add(field);
+  };
+
   const touch = (event: Event): void => {
     const target = eventOrigin(event);
-    if (!isUserEvent(event) || !isFieldElement(target)) return;
+    if (!isUserEvent(event) || !isFieldElement(target) || !handled.has(target)) return;
     const scope = (target as HTMLInputElement).form ?? doc;
     const snapshot = read(target, fieldElements(scope, MAX_INSPECTED));
     if (snapshot === undefined) touched.delete(target);
@@ -195,8 +212,18 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
     if (form !== undefined) pressed = { form, at: now() };
   };
 
+  // The answers are already on the card, so a failed undo must say so rather than vanish.
   const undo = (): void => {
-    options.send({ type: "answers", host: options.host(), action: "undo", answers: [] }).catch(() => undefined);
+    const failed = (): void => {
+      showPill(doc, win, "Couldn’t undo. Remove the answers in Contacts.");
+    };
+    options
+      .send({ type: "answers", host: options.host(), action: "undo", answers: [] })
+      .then((raw) => {
+        const reply = parseExtensionResponse(raw);
+        if (reply?.type !== "answersResult" || reply.saved === 0) failed();
+      })
+      .catch(failed);
   };
 
   const onSubmit = (event: Event): void => {
@@ -209,17 +236,21 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .send({ type: "answers", host: options.host(), action: "learn", answers })
       .then((raw) => {
         const reply = parseExtensionResponse(raw);
-        if (reply?.type === "answersResult" && reply.saved > 0) showSaved(doc, win, reply.saved, undo, isUserEvent);
+        if (reply?.type !== "answersResult" || reply.saved === 0) return;
+        const noun = reply.saved === 1 ? "answer" : "answers";
+        showPill(doc, win, `Saved ${String(reply.saved)} ${noun}`, { label: "Undo", run: undo, isUserEvent });
       })
       .catch(() => undefined);
   };
 
+  for (const type of TOUCH_EVENTS) doc.addEventListener(type, handle, true);
   doc.addEventListener("input", touch, true);
   doc.addEventListener("change", touch, true);
   doc.addEventListener("click", press, true);
   doc.addEventListener("keydown", press, true);
   doc.addEventListener("submit", onSubmit, true);
   return () => {
+    for (const type of TOUCH_EVENTS) doc.removeEventListener(type, handle, true);
     doc.removeEventListener("input", touch, true);
     doc.removeEventListener("change", touch, true);
     doc.removeEventListener("click", press, true);
