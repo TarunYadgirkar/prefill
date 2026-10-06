@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { pickOption } from "./choices";
 import { declineOption } from "./demographics";
-import { choicesFor, fillForm, findSlots } from "./fill";
+import { choicesFor, fillableCount, fillForm, findSlots } from "./fill";
+import { fieldsLeft, nextLeft } from "./fillLeft";
 import type { ExtensionRequest } from "./messages";
 
 const options = (...texts: string[]) => texts.map((text) => ({ text, value: text }));
@@ -140,6 +141,38 @@ describe("one-tap fill", () => {
     expect(value("phone")).toBe("+1 510 555 0100");
     expect(selected("gender")).toBe("Please select");
     expect(document.querySelector<HTMLInputElement>("input[name=auth]:checked")).toBeNull();
+  });
+
+  it("counts the fields it has an answer for, and leaves the rest in page order", async () => {
+    const form = document.getElementById("app");
+    form?.insertAdjacentHTML("afterbegin", '<label for="why">Why do you want to work here?</label><input id="why" type="text">');
+    form?.insertAdjacentHTML("beforeend", '<label for="start">Earliest start date</label><input id="start" type="text">');
+    const send = vi.fn((request: ExtensionRequest) => Promise.resolve(reply(request)));
+    const options = { host: () => "boards.greenhouse.io", send };
+    expect(findSlots(document)).toHaveLength(12);
+    expect(await fillableCount(document, options)).toBe(10);
+    await fillForm(document, options);
+    const left = fieldsLeft(document);
+    expect(left.map((field) => field.id)).toEqual(["why", "start"]);
+    expect(nextLeft(left, left[0])?.id).toBe("start");
+    expect(nextLeft(left, left[1])?.id).toBe("why");
+  });
+
+  it("tells the app about a pick from a filled field's list, as any list does", async () => {
+    const send = vi.fn((request: ExtensionRequest) =>
+      Promise.resolve(request.type === "picked" ? { type: "pickedResult", remembered: true } : reply(request)),
+    );
+    await fillForm(document, { host: () => "boards.greenhouse.io", send });
+    const [first, second] = choicesFor(document.getElementById("email") as HTMLInputElement) ?? [];
+    first?.onPick?.();
+    second?.onPick?.();
+    expect(send).toHaveBeenLastCalledWith({
+      type: "picked",
+      host: "boards.greenhouse.io",
+      kind: "email",
+      value: "tarun@berkeley.edu",
+    });
+    expect(send.mock.calls.filter(([request]) => request.type === "picked")).toHaveLength(1);
   });
 
   it("stays off sign-in forms", () => {

@@ -5,7 +5,7 @@ import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { customChoices, fieldText, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
-import { fillField, showDropdown, type Choice, type TextField } from "./dropdown";
+import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import type { GestureGate } from "./gesture";
 import { linkChoices } from "./links";
@@ -18,8 +18,10 @@ import {
   type ExtensionResponse,
   type LinkType,
   type PageField,
+  type PickedRequest,
   type SuggestedLink,
 } from "./messages";
+import { reportPick } from "./picks";
 import { SUGGESTED_KINDS, contactChoices } from "./suggestions";
 
 // One tap fills a whole form, the way Safari's AutoFill Contact does: every visible, empty
@@ -58,7 +60,16 @@ const MAX_INSPECTED = 300;
 const TEXT_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "url", "number"]);
 // Safari's AutoFill yellow, light enough to read through.
 const TINT = "rgb(255 214 10 / 0.22)";
-const NO_PICK = (): void => undefined;
+
+// Tells the app about a pick from a filled field's list, as the field's own list would.
+type Report = (pick: Pick<PickedRequest, "kind" | "value" | "question">) => void;
+const NO_REPORT: Report = () => undefined;
+
+function reporter(options: FillOptions): Report {
+  return (pick) => {
+    reportPick(options.send, { type: "picked", host: options.host(), ...pick });
+  };
+}
 
 // The values Prefill put in each field and the other choices it had, so a tap on a filled
 // field can still offer the rest.
@@ -268,14 +279,18 @@ async function gather(slots: readonly Slot[], options: FillOptions): Promise<Ans
 }
 
 // What a field could take, best first, as its own list would offer it. Guesses are never filled.
-function choicesOf(want: Want, answers: Answers): Choice[] {
+function choicesOf(want: Want, answers: Answers, report: Report = NO_REPORT): Choice[] {
   switch (want.from) {
     case "contact":
-      return answers.contact === undefined ? [] : contactChoices(want.field, answers.contact);
+      return answers.contact === undefined
+        ? []
+        : contactChoices(want.field, answers.contact, (kind, value) => { report({ kind, value }); });
     case "link":
-      return linkChoices(want.types, answers.links, want.fullUrl);
+      return linkChoices(want.types, answers.links, want.fullUrl, (value) => { report({ kind: "link", value }); });
     case "custom":
-      return customChoices(answers.custom.get(want.text), NO_PICK).filter((choice) => choice.tone !== "guess");
+      return customChoices(answers.custom.get(want.text), (value) => {
+        report({ kind: "custom", value, question: want.text });
+      }).filter((choice) => choice.tone !== "guess");
     case "decline":
       return [];
   }
@@ -361,8 +376,8 @@ function applyCombobox(input: HTMLInputElement, want: Want, values: readonly str
 }
 
 // Fills one slot and returns what puts it back, or undefined when nothing fit.
-function apply(slot: Slot, answers: Answers): (() => void) | undefined {
-  const choices = choicesOf(slot.want, answers);
+function apply(slot: Slot, answers: Answers, report: Report): (() => void) | undefined {
+  const choices = choicesOf(slot.want, answers, report);
   if (slot.control === "text") return applyText(slot.element, choices);
   const values = valuesOf(choices);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values);
@@ -384,13 +399,43 @@ async function applyComboboxes(slots: readonly Slot[], answers: Answers): Promis
   return undos;
 }
 
+// Whether a fill would put something in the slot: a value the field takes, or for a
+// demographic list the option that declines.
+function hasAnswer(slot: Slot, answers: Answers): boolean {
+  if (slot.control === "combobox") return slot.want.from === "decline" || choicesOf(slot.want, answers).length > 0;
+  const values = valuesOf(choicesOf(slot.want, answers));
+  if (slot.control === "text") return values.length > 0;
+  const options =
+    slot.control === "select"
+      ? [...slot.element.options].map(optionOf)
+      : slot.inputs.map((input) => ({ text: labelText(input), value: input.value }));
+  return optionIndex(slot.want, options, values) >= 0;
+}
+
+// How many empty fields of the form a fill would fill, from the same answers it would use.
+export async function fillableCount(scope: ParentNode, options: FillOptions): Promise<number> {
+  const slots = findSlots(scope);
+  if (slots.length === 0) return 0;
+  const answers = await gather(slots, options);
+  return slots.filter((slot) => hasAnswer(slot, answers)).length;
+}
+
+// The field a slot is: the box, the list, or a group's first button.
+export function slotField(slot: Slot): FieldElement | undefined {
+  return slot.control === "radio" ? slot.inputs[0] : slot.element;
+}
+
 // Fills every empty field of the form the person is in, in page order, and returns how
 // many it filled and what takes them all back.
 export async function fillForm(scope: ParentNode, options: FillOptions): Promise<FillResult> {
   const slots = findSlots(scope);
   if (slots.length === 0) return { filled: 0, undo: () => undefined };
   const answers = await gather(slots, options);
-  const undos = [...slots.flatMap((slot) => apply(slot, answers) ?? []), ...(await applyComboboxes(slots, answers))];
+  const report = reporter(options);
+  const undos = [
+    ...slots.flatMap((slot) => apply(slot, answers, report) ?? []),
+    ...(await applyComboboxes(slots, answers)),
+  ];
   return {
     filled: undos.length,
     undo: () => {
@@ -407,6 +452,8 @@ export function installFilledPicker(
   doc: Document,
   gate: GestureGate,
   isUserEvent: (event: Event) => boolean = (event) => event.isTrusted,
+  // How a field's list is drawn: Safari places a contact field's list clear of its bubble.
+  attachFor: (element: TextField) => Attach = () => (element, choices) => showDropdown(element, choices, isUserEvent),
 ): () => void {
   let detach: (() => void) | undefined;
   let current: FieldElement | undefined;
@@ -422,7 +469,7 @@ export function installFilledPicker(
     if (choices === undefined || choices.length < 2 || target.localName === "select" || !gate.allows(target)) return;
     clear();
     current = target;
-    detach = showDropdown(target as TextField, choices, isUserEvent);
+    detach = attachFor(target as TextField)(target as TextField, choices);
   };
   const onBlur = (event: Event): void => {
     if (eventOrigin(event) === current) clear();

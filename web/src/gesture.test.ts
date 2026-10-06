@@ -42,4 +42,18 @@ describe("the click-or-Tab gate", () => {
     expect(gate.allows(input("second"))).toBe(false);
     gate.stop();
   });
+
+  it("lets exactly the field the pill moved focus to through, once, for every list", () => {
+    const pill = trackGestures(document, () => true, () => 0);
+    const list = trackGestures(document, () => true, () => 0);
+    pill.allowNext(input("second"));
+    input("second").dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    expect(list.allows(input("second"))).toBe(true);
+    expect(list.allows(input("first"))).toBe(false);
+    input("second").dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+    input("second").dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    expect(list.allows(input("second"))).toBe(false);
+    pill.stop();
+    list.stop();
+  });
 });

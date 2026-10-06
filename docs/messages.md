@@ -375,6 +375,8 @@ The sheet talks to the page's content script, not to the app, with two messages 
 
 Both answer `{ "type": "fillPageResult", "filled": 11 }`, the number of fields filled (0 after an undo).
 
+The pill offers to fill only the fields the app has an answer for: on a focus in a form with at least three empty fields Prefill recognizes, it asks the same three questions and counts the fields that would get a value, so "Fill form 9 fields" ends as "Filled 9". After a fill it says what's left, "Filled 9 · 4 need you": the fields of the form Prefill recognizes that are still empty. A click on "4 need you" moves focus to the next of them in page order, and that field's own list opens there. That focus comes from Prefill's own button, which the click-or-Tab gate can't see, so the pill lets exactly that field through once (`allowNext`): until it loses focus, another field takes focus, or a second passes. A pick from the list on a field the fill filled is reported with `picked` like any other list's, and in Safari that list on a contact field sits clear of Safari's bubble, as the field's own list does.
+
 What a page can and can't do: it can't press the pill (a closed shadow root that ignores untrusted clicks and any tap in its first 400 ms) or send the sheet's messages. It can still lure a person into tapping where the pill appears, the same risk Prefill's own list has; the pill only appears right after the person's own click or Tab into a field, and a fill only reaches visible, empty, non-sensitive fields of that form.
 
 ## error

@@ -1,11 +1,13 @@
 import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
+import { classify } from "./classify";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
 import { SAFARI_CONTACT, showDropdown, type Attach } from "./dropdown";
-import type { FieldElement } from "./fieldTypes";
-import { fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
-import { installFillChip } from "./fillChip";
+import { isContact, type FieldElement } from "./fieldTypes";
+import { fillableCount, fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
+import { installFillChip, MIN_FIELDS } from "./fillChip";
+import { fieldsLeft } from "./fillLeft";
 import { trackGestures } from "./gesture";
 import { installLearn } from "./learn";
 import { installLinks } from "./links";
@@ -50,10 +52,7 @@ export function startPage(env: PageEnvironment): () => void {
   // bar shows at most three values with no labels, and nothing once the card is minimal,
   // so the field's own list sits under it with every value, next to the Fill form pill.
   const shown = { attach: showDropdown, skip: isFilled };
-  // Safari's own bubble sits under a contact field and swallows taps there.
-  const contactList: Attach = isChromium
-    ? showDropdown
-    : (element, choices) => showDropdown(element, choices, undefined, SAFARI_CONTACT);
+  const contactList = contactAttach(isChromium);
   // In Safari the card's order still follows the page.
   const values = [
     ...(isChromium ? [] : [installContext(env.doc, env.win, { host, send: env.send })]),
@@ -66,7 +65,7 @@ export function startPage(env: PageEnvironment): () => void {
     installLinks(env.doc, { host, send: env.send, ...shown }),
     installCustom(env.doc, { host, send: env.send, ...shown, textAreas: true }),
   ];
-  const fill = startFill(env, host);
+  const fill = startFill(env, host, (element) => (isContact(classify(element)) ? contactList : showDropdown));
   return () => {
     [...stops, fill.stop].forEach((stop) => {
       stop();
@@ -74,9 +73,14 @@ export function startPage(env: PageEnvironment): () => void {
   };
 }
 
+// Safari's own bubble sits under a contact field and swallows taps there, filled or not.
+function contactAttach(isChromium: boolean): Attach {
+  return isChromium ? showDropdown : (element, choices) => showDropdown(element, choices, undefined, SAFARI_CONTACT);
+}
+
 export interface PageFill {
   // How many empty fields a fill would fill in the form the person is in.
-  count: () => number;
+  count: () => Promise<number>;
   fill: () => Promise<number>;
   undo: () => void;
   stop: () => void;
@@ -84,7 +88,7 @@ export interface PageFill {
 
 // One-tap fill: the pill above a focused field and the sheet's Fill button fill the whole
 // form, and a tap on a filled field offers the other values it could have used.
-function startFill(env: PageEnvironment, host: () => string): PageFill {
+function startFill(env: PageEnvironment, host: () => string, attachFor: (element: FieldElement) => Attach): PageFill {
   const gate = trackGestures(env.doc, (event) => event.isTrusted);
   let last: FillResult | undefined;
   // Undo takes back every fill since the last undo, so a later run that filled nothing
@@ -102,16 +106,22 @@ function startFill(env: PageEnvironment, host: () => string): PageFill {
     };
     return result;
   };
+  // Asks the app only for a form big enough for the pill.
+  const count = async (anchor?: FieldElement): Promise<number> => {
+    const scope = fillScope(env.doc, anchor);
+    return findSlots(scope).length < MIN_FIELDS ? 0 : fillableCount(scope, { host, send: env.send });
+  };
   const stops = [
     installFillChip(env.doc, env.win, {
       gate,
-      count: (anchor) => findSlots(fillScope(env.doc, anchor)).length,
+      count,
       fill: run,
+      left: (anchor) => fieldsLeft(fillScope(env.doc, anchor)),
     }),
-    installFilledPicker(env.doc, gate),
+    installFilledPicker(env.doc, gate, undefined, attachFor),
   ];
   const page: PageFill = {
-    count: () => findSlots(fillScope(env.doc)).length,
+    count: () => fillableCount(fillScope(env.doc), { host, send: env.send }),
     fill: async () => (await run()).filled,
     undo: () => {
       last?.undo();

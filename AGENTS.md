@@ -62,7 +62,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Field rules:**
   - Never act on password, card, code, bank or government-ID fields.
   - Never act on sign-in forms (a `current-password` field in the form).
-- **Values reach a page only after a real click or Tab on that field,** within 1 second, and only while the field is visible (`gesture.ts`). One Tab unlocks one field.
+- **Values reach a page only after a real click or Tab on that field,** within 1 second, and only while the field is visible (`gesture.ts`). One Tab unlocks one field, and so does a click on the Fill form pill's "need you", for the field it moves to.
 - **One-tap fill is the one exception, and it takes the person's own tap on Prefill's button:** the pill beside a field they just clicked or tabbed into (closed shadow root, trusted clicks only), or Fill in Safari's sheet.
   - It fills only visible, empty, editable fields of the form the person is in, never sensitive ones or sign-in forms, and never overwrites what they typed.
   - Demographic questions (gender, race, ethnicity, veteran, disability, orientation) always get the declining option, or "No" when there is none, and a text box asking one is left alone.
@@ -109,7 +109,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
   - In Safari every recognized field now gets Prefill's own list under it (`showDropdown`), as in Chrome; the datalist path is unused. Safari's own suggestion bubble can cover the list's first row.
   - Undo clears a React-Select box with Backspace, which React-Select ignores unless the box is clearable, so a non-clearable box keeps Prefill's pick. Undo leaves a box alone once it shows something other than Prefill's pick.
-  - The pill counts fields it recognizes, so "Fill form 13 fields" can end as "Filled 9" when the card has no link or answer for some.
+  - The pill counts the fields the app has an answer for, and after a fill says how many "need you"; a click there moves to the next empty field and opens its list (the gate's one-field `allowNext`).
 - **Guessed answers:** a field no rule matches gets the on-device model's pick among the custom fields, shown as "Suggested" and never used by Fill form. The Mac panel asks live; on the iPhone the handler notes the question and the app asks on its next launch, so the guess shows from the next visit. Nothing shows until Apple Intelligence is on.
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.

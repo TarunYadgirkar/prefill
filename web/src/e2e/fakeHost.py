@@ -43,6 +43,15 @@ def ranked_emails():
 CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"), ("sponsorship", "No"), ("hear", "LinkedIn")]
 
 
+# A question no answer matches gets a guess, which a fill never uses.
+GUESS = ("work here", "Building tools people use every day")
+
+
+def custom_field(text):
+    values = [card(value) for word, value in CUSTOM if word in text][:1]
+    return {"values": values, "guesses": [GUESS[1]] if GUESS[0] in text else []}
+
+
 def answer(request):
     kind = request.get("type")
     if kind == "ping":
@@ -62,7 +71,7 @@ def answer(request):
         links = [{**link, "why": "card"} for link in LINKS if link["type"] in request.get("types", [])]
         return {"type": "linkSuggestionsResult", "links": links}
     if kind == "customSuggestions":
-        fields = [{"values": [card(value) for word, value in CUSTOM if word in field["text"].lower()][:1]} for field in request.get("fields", [])]
+        fields = [custom_field(field["text"].lower()) for field in request.get("fields", [])]
         return {"type": "customSuggestionsResult", "fields": fields}
     if kind == "picked":
         remembered = request.get("kind") == "email" and request.get("value") in CARD["emails"] and STATE is not None

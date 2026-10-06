@@ -34,14 +34,35 @@ function installFakeHost(profile: string): void {
   writeFileSync(join(folder, `${HOST}.json`), JSON.stringify(manifest));
 }
 
-// The pill sits in a closed shadow root, so it is pressed where a person would press it.
-async function pressPill(page: Page, where: "start" | "end"): Promise<void> {
+// The pill sits in a closed shadow root, so it is pressed where a person would press it:
+// its first button, its last (Undo), or after a fill the "need you" button before Undo.
+const PILL_SPOTS = { start: (x: number) => x + 30, end: (x: number, width: number) => x + width - 25, next: (x: number, width: number) => x + width - 100 };
+
+async function pressPill(page: Page, where: keyof typeof PILL_SPOTS): Promise<void> {
   const pill = page.locator("prefill-fill");
   await pill.waitFor({ state: "visible", timeout: 5_000 });
   await page.waitForTimeout(600);
   const box = await pill.boundingBox();
   if (box === null) throw new Error("the pill has no box");
-  await page.mouse.click(where === "start" ? box.x + 30 : box.x + box.width - 25, box.y + box.height / 2);
+  await page.mouse.click(PILL_SPOTS[where](box.x, box.width), box.y + box.height / 2);
+}
+
+// After a fill the pill says how many fields need the person and moves to the first,
+// whose own list opens: here the question only a guess answers.
+async function checkNeedYou(page: Page): Promise<void> {
+  await pressPill(page, "next");
+  const focused = await page
+    .waitForFunction(() => document.activeElement?.id === "why_us", null, { timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+  await page.screenshot({ path: join(shots, "fill-chrome-need-you.png") });
+  check(focused, "need you moves to the field the fill left empty");
+  await page.locator("prefill-suggestions").waitFor({ state: "visible", timeout: 5_000 });
+  check(true, "that field's list opens, with its guess");
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.screenshot({ path: join(shots, "fill-chrome-need-you-dark.png") });
+  await page.emulateMedia({ colorScheme: "light" });
+  check((await page.inputValue("#why_us")) === "", "a guess is never filled");
 }
 
 // What each field shows: a select's chosen text, an input's value, and the checked radio's label.
@@ -106,17 +127,24 @@ async function pickRow(page: Page, selector: string, index: number): Promise<voi
   await page.keyboard.press("Enter");
 }
 
-// A value picked from the list comes first on the site from then on.
-async function checkPickRemembered(page: Page): Promise<void> {
+async function freshPage(page: Page): Promise<void> {
+  await page.waitForTimeout(500);
   await page.goto(`http://127.0.0.1:${String(PORT)}/application.html`);
   await page.waitForTimeout(1_000);
-  await pickRow(page, "#email", 1);
-  check((await page.inputValue("#email")) === "alex@work.example.org", "the second email can be picked");
-  await page.waitForTimeout(500);
-  await page.reload();
-  await page.waitForTimeout(1_000);
+}
+
+// A value picked from a list comes first on the site from then on, a pick on a field Fill
+// form filled included: the work email was picked there just before this.
+async function checkPickRemembered(page: Page): Promise<void> {
+  await freshPage(page);
   await pickRow(page, "#email", 0);
-  check((await page.inputValue("#email")) === "alex@work.example.org", "the picked email comes first after a reload");
+  check((await page.inputValue("#email")) === "alex@work.example.org", "a pick on a filled field is remembered too");
+  await freshPage(page);
+  await pickRow(page, "#email", 1);
+  check((await page.inputValue("#email")) === "alex.rivera@example.com", "the second email can be picked");
+  await freshPage(page);
+  await pickRow(page, "#email", 0);
+  check((await page.inputValue("#email")) === "alex.rivera@example.com", "the picked email comes first after a reload");
 }
 
 async function main(): Promise<void> {
@@ -161,6 +189,7 @@ async function main(): Promise<void> {
     check(filled.hispanic === "Decline To Self Identify", "ethnicity is declined");
     check(filled.veteran === "I don't wish to answer", "veteran status is declined");
     check(filled.disability === "I do not want to answer", "disability is declined");
+    await checkNeedYou(page);
 
     await pressPill(page, "end");
     await page.waitForTimeout(300);
