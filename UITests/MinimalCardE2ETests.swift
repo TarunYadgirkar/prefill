@@ -3,8 +3,8 @@ import XCTest
 // A minimal card end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=MinimalCardE2ETests)
 // after a host test has linked the Alex Rivera card. Settings > Sharing your card moves the
 // emails, addresses and work phone to Prefill's contact, keeping the name and mobile number
-// on the card Safari reads. Safari's bar then offers the emails and address parts from
-// Prefill's datalist and the mobile number from the card. Restore original card puts it all back.
+// on the card Safari reads. Prefill's list under each field still offers every email, address
+// part and phone number. Restore original card puts it all back.
 @MainActor
 final class MinimalCardE2ETests: XCTestCase {
     private let app = XCUIApplication()
@@ -17,7 +17,7 @@ final class MinimalCardE2ETests: XCTestCase {
         }
     }
 
-    func testSafarisBarOffersWhatAMinimalCardMovedOff() {
+    func testPrefillsListOffersWhatAMinimalCardMovedOff() {
         SafariDriver.enableExtension()
         app.launchArguments = ["-finishedOnboarding", "YES"]
         app.launch()
@@ -28,45 +28,43 @@ final class MinimalCardE2ETests: XCTestCase {
         XCTAssertEqual(card?.phones, ["+1 (510) 555-0134"], "the card should keep only the mobile number")
         XCTAssertEqual(card?.addressCount, 0, "addresses stayed on the card")
 
-        let greenhouse = bar(on: "greenhouse.html", field: "Email", shot: "greenhouse-email")
-        XCTAssertTrue(greenhouse.contains(emails[0]) && greenhouse.count > 1, "greenhouse email bar was \(greenhouse)")
-        // A sign-up form's email field gets Safari's Passwords key in the bar instead, so there
-        // Prefill's emails show in WebKit's list under the field.
-        let signup = bar(on: "signup.html", field: "Email", shot: "signup-email", keepFocus: true)
-        let listed = SafariDriver.safari.descendants(matching: .any)[emails[0]].firstMatch.exists
-        XCTAssertTrue(signup.contains(emails[0]) || listed, "signup email bar was \(signup), no list")
-        SafariDriver.dismissKeyboard()
-        let checkout = bar(on: "checkout.html", field: "Email", shot: "checkout-email")
-        XCTAssertTrue(checkout.contains(emails[0]), "checkout email bar was \(checkout)")
-        XCTAssertEqual(barHere("Street address", shot: "checkout-street"), ["2400 Durant Ave", "1 Market St Suite 300"])
-        XCTAssertEqual(barHere("City", shot: "checkout-city"), ["Berkeley", "San Francisco"])
-        XCTAssertEqual(barHere("ZIP", shot: "checkout-zip"), ["94704", "94105"])
-        let phone = barHere("Phone", shot: "checkout-phone")
-        XCTAssertTrue(phone.first?.contains("(510) 555-0134") == true, "phone bar was \(phone)")
+        let emailRows = emails.map { SafariDriver.Row(value: $0, detail: "Email") }
+        let greenhouse = list(on: "greenhouse.html", field: "Email", rows: emailRows, shot: "greenhouse-email")
+        XCTAssertEqual(Set(greenhouse), Set(emails), "greenhouse email list was \(greenhouse)")
+        let signup = list(on: "signup.html", field: "Email", rows: emailRows, shot: "signup-email")
+        XCTAssertEqual(Set(signup), Set(emails), "signup email list was \(signup)")
+        let checkout = list(on: "checkout.html", field: "Email", rows: emailRows, shot: "checkout-email")
+        XCTAssertEqual(Set(checkout), Set(emails), "checkout email list was \(checkout)")
+        let street = ["2400 Durant Ave", "1 Market St Suite 300"]
+        XCTAssertEqual(listHere("Street address", rows: addressRows(street), shot: "checkout-street"), street)
+        XCTAssertEqual(listHere("City", rows: addressRows(["Berkeley", "San Francisco"]), shot: "checkout-city"),
+                       ["Berkeley", "San Francisco"])
+        XCTAssertEqual(listHere("ZIP", rows: addressRows(["94704", "94105"]), shot: "checkout-zip"), ["94704", "94105"])
+        let phones = ["+1 (510) 555-0134", "+1 (415) 555-0199"].map { SafariDriver.Row(value: $0, detail: "Phone") }
+        let phone = listHere("Phone", rows: phones, shot: "checkout-phone")
+        XCTAssertEqual(phone.first, "+1 (510) 555-0134", "phone list was \(phone)")
 
         restoreOriginalCard()
         XCTAssertEqual(E2EServer.waitForCard { $0.emails.count == 3 }?.emails, emails, "restore left emails off")
         XCTAssertEqual(E2EServer.card()?.addressCount, 2, "restore left addresses off")
     }
 
-    // Opens the page and reads the field's bar, retrying while the app answers.
-    private func bar(on page: String, field: String, shot: String, keepFocus: Bool = false) -> [String] {
-        SafariDriver.open(E2EServer.Site.siteA.page(page), waitingFor: field)
-        Thread.sleep(forTimeInterval: 3)
-        return barHere(field, shot: shot, keepFocus: keepFocus)
+    private func addressRows(_ values: [String]) -> [SafariDriver.Row] {
+        values.map { SafariDriver.Row(value: $0, detail: "Address") }
     }
 
-    private func barHere(_ field: String, shot: String, keepFocus: Bool = false) -> [String] {
-        var slots: [String] = []
-        for _ in 0..<4 {
-            slots = SafariDriver.suggestions(focusing: field)
-            if !slots.isEmpty, !slots.contains("I") { break }
-            SafariDriver.dismissKeyboard()
-            Thread.sleep(forTimeInterval: 2)
-        }
+    // Opens the page and reads which of `rows` Prefill's list under the field shows.
+    private func list(on page: String, field: String, rows: [SafariDriver.Row], shot: String) -> [String] {
+        SafariDriver.open(E2EServer.Site.siteA.page(page), waitingFor: field)
+        Thread.sleep(forTimeInterval: 3)
+        return listHere(field, rows: rows, shot: shot)
+    }
+
+    private func listHere(_ field: String, rows: [SafariDriver.Row], shot: String) -> [String] {
+        let shown = SafariDriver.prefillList(focusing: field, rows: rows)
         E2EServer.screenshot("minimal-card-\(shot)")
-        if !keepFocus { SafariDriver.dismissKeyboard() }
-        return slots
+        SafariDriver.dismissKeyboard()
+        return shown
     }
 
     private func moveToMinimalCard() {
