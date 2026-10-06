@@ -53,6 +53,10 @@ public struct CustomField: Codable, Sendable, Hashable, Identifiable {
     }
 
     public var alsoMatches: String { matchWords.joined(separator: ", ") }
+
+    func relabeled(_ label: String) -> CustomField {
+        CustomField(label: label, value: value, matchWords: matchWords)
+    }
 }
 
 extension [CustomField] {

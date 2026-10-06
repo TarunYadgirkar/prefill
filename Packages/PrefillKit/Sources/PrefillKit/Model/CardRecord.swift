@@ -112,8 +112,10 @@ extension CardRecord {
 
     // This card with any value or custom field of `basis` it lost put back at the end.
     func restoringValues(of basis: CardRecord) -> CardRecord {
-        let present = Set(customFields)
-        let lostFields = basis.customFields.filter { !present.contains($0) }
+        // A field whose label is still there was edited, not lost; putting the old answer
+        // back would give the card two answers to one question.
+        let present = Set(customFields.map(\.id))
+        let lostFields = basis.customFields.filter { !present.contains($0.id) }
         let restored = lostFields.isEmpty ? self : replacingCustomFields(with: customFields + lostFields)
         return ContactKind.allCases.reduce(restored) { card, kind in
             let present = Set(card.entries(kind).map(\.key))
