@@ -66,7 +66,8 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 2.2 The list shows it (detail line and style)
   - [ ] 2.3 A later answer replaces a learned one, with Undo
   - [ ] 2.4 Fill form says what's left and jumps to it
-  - [ ] 2.5 End-to-end check and merge
+  - [ ] 2.5 Keep Prefill's list clear of Safari's suggestion bubble
+  - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
   - [ ] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
@@ -234,7 +235,16 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - The pill's count today counts recognized fields, so "Fill form 13 fields" can end as "Filled 9". Change the count to fields Prefill has an answer for (it already fetched them for the prefetch), so the promise matches the result.
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
 
-### 2.5 Check and merge
+### 2.5 Keep the list clear of Safari's bubble
+
+Seen in the Phase 1 simulator run (`assets/generated/e2e-ext-pick-a-before.png`): on an email field with card values, Safari draws its own suggestion bubble ("home" / "work") directly under the field, over Prefill's first row, which is the row the person most needs.
+
+- In Safari only, when the field is one Safari suggests for (a contact kind while the card holds values of that kind), place Prefill's list below the bubble's band (about 60 pt) or above the field when there's more room there. Chromium is unchanged.
+- The band height can't be read from the page; measure it in the simulator at the default text size and at the largest Dynamic Type size, and keep the offset as one named constant in `dropdown.ts`.
+- Phase 4 removes most of the cause (a short card leaves Safari nothing to suggest for email and address), so keep this small and remove it there if the bubble no longer shows.
+- Check: `PickE2ETests` asserts the first row's frame doesn't intersect the bubble.
+
+### 2.6 Check and merge
 
 - `FillE2ETests` (Safari) and `fillChrome.ts`: the "need you" jump on the Greenhouse testbed page.
 - Screenshot of the list with a guess row in light and dark, into `assets/generated/`.
@@ -503,7 +513,7 @@ The menu shows a three-item checklist until each is done: Allow Contacts, Turn o
 
 | Risk | Where | What to do |
 |---|---|---|
-| Safari's own suggestion bubble covers the first row of Prefill's list | Phase 4 | Already seen (AGENTS.md). If it's worse with the card frozen, place the list above the field when the bubble shows. |
+| Safari's own suggestion bubble covers the first row of Prefill's list | Phase 2 | Seen in the Phase 1 run. Task 2.5 moves the list clear of it; Phase 4 removes most of the cause. |
 | Losing Safari's AutoFill Contact for emails and addresses | Phase 4 | That's the trade. Fill form covers whole forms; the gate makes Tarun decide. |
 | The old Safari bar order and Prefill's list disagree during Phases 1 to 3 | Phase 1 | Accept for now. Phase 4 ends it. |
 | Pins from a page are written by a content script | Phase 1 | Only after a trusted click or Enter in Prefill's closed shadow root, only for values already in memory, capped per minute. Run the `security-reviewer` agent on 1.1 to 1.3. |
