@@ -42,7 +42,7 @@ final class LinksE2ETests: XCTestCase {
         XCTAssertEqual(listed, [combined, "github.com/alexrivera", "alexrivera.dev"])
         SafariDriver.dismissKeyboard()
 
-        let email = SafariDriver.Row(value: "alex.rivera@example.com", detail: "Email")
+        let email = SafariDriver.Row(value: "alex.rivera@example.com", detail: "Home email")
         let emails = SafariDriver.prefillList(focusing: "Email", rows: [email])
         E2EServer.screenshot("links-greenhouse-email-list")
         XCTAssertEqual(emails, [email.value], "the email field's list lost the card's email")

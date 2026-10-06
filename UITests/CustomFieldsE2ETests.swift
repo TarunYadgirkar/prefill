@@ -28,7 +28,7 @@ final class CustomFieldsE2ETests: XCTestCase {
         SafariDriver.open(E2EServer.Site.siteA.page("greenhouse.html"), waitingFor: "School")
         Thread.sleep(forTimeInterval: 3)
         let listed = SafariDriver.prefillList(
-            focusing: "School", rows: [SafariDriver.Row(value: berkeley, detail: "Custom field")]
+            focusing: "School", rows: [SafariDriver.Row(value: berkeley, detail: "School")]
         )
         E2EServer.screenshot("custom-field-list")
         XCTAssertEqual(listed.first, berkeley)

@@ -9,6 +9,8 @@ import XCTest
 final class MinimalCardE2ETests: XCTestCase {
     private let app = XCUIApplication()
     private let emails = ["alex.rivera@example.com", "alex@work.example.org", "alex.school@example.edu"]
+    // Prefill's list captions a card value with its label (web/src/why.ts), as the seed card has them.
+    private let emailCaptions = ["Home email", "Work email", "Email"]
 
     override func setUp() async throws {
         continueAfterFailure = false
@@ -28,7 +30,7 @@ final class MinimalCardE2ETests: XCTestCase {
         XCTAssertEqual(card?.phones, ["+1 (510) 555-0134"], "the card should keep only the mobile number")
         XCTAssertEqual(card?.addressCount, 0, "addresses stayed on the card")
 
-        let emailRows = emails.map { SafariDriver.Row(value: $0, detail: "Email") }
+        let emailRows = zip(emails, emailCaptions).map { SafariDriver.Row(value: $0, detail: $1) }
         let greenhouse = list(on: "greenhouse.html", field: "Email", rows: emailRows, shot: "greenhouse-email")
         XCTAssertEqual(Set(greenhouse), Set(emails), "greenhouse email list was \(greenhouse)")
         let signup = list(on: "signup.html", field: "Email", rows: emailRows, shot: "signup-email")
@@ -40,7 +42,10 @@ final class MinimalCardE2ETests: XCTestCase {
         XCTAssertEqual(listHere("City", rows: addressRows(["Berkeley", "San Francisco"]), shot: "checkout-city"),
                        ["Berkeley", "San Francisco"])
         XCTAssertEqual(listHere("ZIP", rows: addressRows(["94704", "94105"]), shot: "checkout-zip"), ["94704", "94105"])
-        let phones = ["+1 (510) 555-0134", "+1 (415) 555-0199"].map { SafariDriver.Row(value: $0, detail: "Phone") }
+        let phones = [
+            SafariDriver.Row(value: "+1 (510) 555-0134", detail: "Mobile phone"),
+            SafariDriver.Row(value: "+1 (415) 555-0199", detail: "Work phone")
+        ]
         let phone = listHere("Phone", rows: phones, shot: "checkout-phone")
         XCTAssertEqual(phone.first, "+1 (510) 555-0134", "phone list was \(phone)")
 
@@ -49,8 +54,9 @@ final class MinimalCardE2ETests: XCTestCase {
         XCTAssertEqual(E2EServer.card()?.addressCount, 2, "restore left addresses off")
     }
 
+    // The seed card's first address is home, the second work.
     private func addressRows(_ values: [String]) -> [SafariDriver.Row] {
-        values.map { SafariDriver.Row(value: $0, detail: "Address") }
+        zip(values, ["Home address", "Work address"]).map { SafariDriver.Row(value: $0, detail: $1) }
     }
 
     // Opens the page and reads which of `rows` Prefill's list under the field shows.
