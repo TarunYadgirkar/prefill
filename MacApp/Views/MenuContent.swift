@@ -18,7 +18,7 @@ struct MenuContent: View {
             BrowserList(browsers: model.browsers.filter(\.isInstalled))
             Divider()
             HStack {
-                SettingsLink { Text("Settings…") }
+                OpenSettingsButton()
                 Spacer()
                 Button("Quit Prefill") { NSApplication.shared.terminate(nil) }
             }
@@ -26,6 +26,25 @@ struct MenuContent: View {
         }
         .padding(Spacing.medium)
         .frame(width: Size.menuWidth)
+    }
+}
+
+// A menu bar app is never the active app, so SettingsLink alone opens Settings behind
+// every other window, or not at all. Prefill comes forward first, then brings the window up.
+struct OpenSettingsButton: View {
+    @Environment(\.openSettings) private var openSettings
+
+    var body: some View {
+        Button("Settings…") {
+            NSApp.activate()
+            openSettings()
+            Task { @MainActor in
+                try? await Task.sleep(for: .milliseconds(200))
+                let window = NSApp.windows.first { $0.identifier?.rawValue == "com_apple_SwiftUI_Settings_window" }
+                window?.makeKeyAndOrderFront(nil)
+                NSApp.activate()
+            }
+        }
     }
 }
 
