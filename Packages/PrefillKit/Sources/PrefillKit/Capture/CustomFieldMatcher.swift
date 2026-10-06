@@ -34,6 +34,11 @@ public enum CustomFieldMatcher {
             .max()
     }
 
+    // A question's words in one string, the same however the question orders them.
+    static func key(_ text: String) -> String {
+        words(text).sorted().joined(separator: " ")
+    }
+
     // Lowercased words, split at camelCase, digits and punctuation, without fillers, and
     // with a plural "s" dropped so "Schools" and "school" agree.
     static func words(_ text: String) -> Set<String> {

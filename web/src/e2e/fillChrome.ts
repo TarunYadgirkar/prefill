@@ -97,12 +97,35 @@ async function checkReactSelect(context: BrowserContext): Promise<void> {
   await page.close();
 }
 
+// Clicks a field and picks the list's row at `index` (0 is the first) from the keyboard.
+async function pickRow(page: Page, selector: string, index: number): Promise<void> {
+  await page.click(selector);
+  await page.locator("prefill-suggestions").waitFor({ state: "visible", timeout: 5_000 });
+  await page.waitForTimeout(600);
+  for (let step = 0; step <= index; step += 1) await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+}
+
+// A value picked from the list comes first on the site from then on.
+async function checkPickRemembered(page: Page): Promise<void> {
+  await page.goto(`http://127.0.0.1:${String(PORT)}/application.html`);
+  await page.waitForTimeout(1_000);
+  await pickRow(page, "#email", 1);
+  check((await page.inputValue("#email")) === "alex@work.example.org", "the second email can be picked");
+  await page.waitForTimeout(500);
+  await page.reload();
+  await page.waitForTimeout(1_000);
+  await pickRow(page, "#email", 0);
+  check((await page.inputValue("#email")) === "alex@work.example.org", "the picked email comes first after a reload");
+}
+
 async function main(): Promise<void> {
   mkdirSync(shots, { recursive: true });
   const sites = await servedPages();
   const server = spawn("python3", ["-m", "http.server", String(PORT), "--bind", "127.0.0.1", "--directory", sites], { stdio: "ignore" });
   const profile = mkdtempSync(join(tmpdir(), "prefill-profile-"));
   installFakeHost(profile);
+  process.env.PREFILL_FAKE_STATE = join(profile, "fake-host-state.json");
   // PREFILL_CHROMIUM points at a browser to use instead of Playwright's own download.
   const executablePath = process.env.PREFILL_CHROMIUM;
   const context = await chromium.launchPersistentContext(profile, {
@@ -155,6 +178,7 @@ async function main(): Promise<void> {
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("Enter");
     check((await page.inputValue("#email")) === "alex@work.example.org", "a tap on a filled field still offers the other email");
+    await checkPickRemembered(page);
     await page.close();
     await checkReactSelect(context);
   } finally {

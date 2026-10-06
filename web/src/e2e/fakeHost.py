@@ -19,6 +19,22 @@ LINKS = [
     {"type": "linkedin", "url": "https://www.linkedin.com/in/alexrivera"},
     {"type": "website", "url": "https://alexrivera.dev"},
 ]
+# Picks outlive one run of the host, as Chrome starts it for each message.
+STATE = os.environ.get("PREFILL_FAKE_STATE")
+
+
+def pinned_email():
+    if not STATE or not os.path.exists(STATE):
+        return None
+    with open(STATE) as handle:
+        return json.load(handle).get("email")
+
+
+def ranked_emails():
+    pin = pinned_email()
+    return sorted(CARD["emails"], key=lambda email: email != pin)
+
+
 CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"), ("sponsorship", "No"), ("hear", "LinkedIn")]
 
 
@@ -32,7 +48,7 @@ def answer(request):
         kinds = {field["kind"] for field in request.get("fields", [])}
         return {
             "type": "contactSuggestionsResult",
-            "emails": CARD["emails"] if "email" in kinds else [],
+            "emails": ranked_emails() if "email" in kinds else [],
             "phones": CARD["phones"] if "phone" in kinds else [],
             "addresses": CARD["addresses"] if "address" in kinds else [],
             **({"name": CARD["name"]} if "name" in kinds else {}),
@@ -42,6 +58,12 @@ def answer(request):
     if kind == "customSuggestions":
         fields = [{"values": [value for word, value in CUSTOM if word in field["text"].lower()][:1]} for field in request.get("fields", [])]
         return {"type": "customSuggestionsResult", "fields": fields}
+    if kind == "picked":
+        remembered = request.get("kind") == "email" and request.get("value") in CARD["emails"] and STATE is not None
+        if remembered:
+            with open(STATE, "w") as handle:
+                json.dump({"email": request["value"]}, handle)
+        return {"type": "pickedResult", "remembered": remembered}
     if kind == "capture":
         return {"type": "captureResult", "saved": 0, "review": 0, "ignored": 0}
     if kind == "pageContext":

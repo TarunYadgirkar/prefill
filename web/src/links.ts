@@ -3,18 +3,20 @@ import { classify } from "./classify";
 import { attachDatalist } from "./datalist";
 import type { Attach, Choice } from "./dropdown";
 import { trackGestures } from "./gesture";
+import { reportPick } from "./picks";
 import { eventOrigin, hasOwnList, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import {
   parseExtensionResponse,
   type LinkSuggestionsRequest,
   type LinkType,
+  type PickedRequest,
   type SuggestedLink,
 } from "./messages";
 
 export interface LinkOptions {
   host: () => string;
-  send: (request: LinkSuggestionsRequest) => Promise<unknown>;
+  send: (request: LinkSuggestionsRequest | PickedRequest) => Promise<unknown>;
   // Only focus the browser made counts. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
   // How the links are shown: a datalist for Safari's bar unless the caller draws its own list.
@@ -66,24 +68,27 @@ export function linkOptions(
   ].slice(0, MAX_OPTIONS);
 }
 
-// Each option with the kind of link it is, or both kinds for a combined one.
+// Each option with the kind of link it is, or both kinds for a combined one. `onPick` hears
+// about a pick of a single link that wasn't first; a combined option is two links, not one.
 export function linkChoices(
   wanted: readonly LinkType[],
   links: readonly SuggestedLink[],
   fullUrl: boolean,
+  onPick?: (value: string) => void,
 ): Choice[] {
-  const detail = (value: string): string => {
-    const link = links.find(
+  const linkOf = (value: string): SuggestedLink | undefined =>
+    links.find(
       (candidate) => value === candidate.url || value === shown(candidate.url),
     );
-    return link === undefined
-      ? wanted.map((type) => TYPE_LABELS[type]).join(" and ")
-      : TYPE_LABELS[link.type];
-  };
-  return linkOptions(wanted, links, fullUrl).map((value) => ({
-    value,
-    detail: detail(value),
-  }));
+  return linkOptions(wanted, links, fullUrl).map((value, index) => {
+    const link = linkOf(value);
+    if (link === undefined)
+      return { value, detail: wanted.map((type) => TYPE_LABELS[type]).join(" and ") };
+    const choice = { value, detail: TYPE_LABELS[link.type] };
+    return onPick === undefined || index === 0
+      ? choice
+      : { ...choice, onPick: () => { onPick(value); } };
+  });
 }
 
 function linkTypesOf(element: FieldElement): readonly LinkType[] {
@@ -160,8 +165,18 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
   ): void => {
     if (focused !== element || detach !== undefined || links === undefined)
       return;
-    const choices = linkChoices(wanted, links, wantsUrl(element));
+    const choices = linkChoices(wanted, links, wantsUrl(element), picked);
     if (choices.length > 0) detach = attach(element, choices);
+  };
+
+  const picked = (value: string): void => {
+    reportPick(
+      options.send,
+      { type: "picked", host: options.host(), kind: "link", value },
+      () => {
+        if (known !== undefined) void fetchLinks([...known.types]);
+      },
+    );
   };
 
   const onFocus = (event: Event): void => {

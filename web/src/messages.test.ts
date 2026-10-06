@@ -7,6 +7,7 @@ import {
   SYNC_STATUSES,
   POPUP_STATUSES,
   RECENT_STATES,
+  PICK_KINDS,
   LIMITS,
   isExtensionRequest,
   isExtensionResponse,
@@ -20,6 +21,8 @@ import {
   type Pong,
   type PopupStateRequest,
   type PinRequest,
+  type PickedRequest,
+  type PickedResult,
   type UnpinRequest,
   type UndoCaptureRequest,
   type MuteSiteRequest,
@@ -98,6 +101,13 @@ const answers: AnswersRequest = {
   ],
 };
 const answersResult: AnswersResult = { type: "answersResult", saved: 2 };
+const picked: PickedRequest = {
+  type: "picked",
+  host: "boards.example.io",
+  kind: "email",
+  value: "alex.rivera@example.com",
+};
+const pickedResult: PickedResult = { type: "pickedResult", remembered: true };
 const customSuggestionsResult: CustomSuggestionsResult = {
   type: "customSuggestionsResult",
   fields: [{ values: ["UC Berkeley"], guesses: [] }, { values: [], guesses: ["EECS"] }],
@@ -230,6 +240,7 @@ describe("message contract", () => {
       syncStatus: [...SYNC_STATUSES],
       popupStatus: [...POPUP_STATUSES],
       recentState: [...RECENT_STATES],
+      pickKind: [...PICK_KINDS],
     });
   });
 
@@ -266,6 +277,7 @@ describe("message contract", () => {
       contactSuggestions,
       customSuggestions,
       answers,
+      picked,
     }),
   )("request %s matches the shared example", (name, typed) => {
     const example: unknown =
@@ -285,6 +297,7 @@ describe("message contract", () => {
       contactSuggestionsResult,
       customSuggestionsResult,
       answersResult,
+      pickedResult,
       error,
     }),
   )("response %s matches the shared example", (name, typed) => {

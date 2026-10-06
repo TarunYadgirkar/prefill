@@ -43,13 +43,13 @@ struct MessageContractTests {
     }
 
     @Test func theExamplesFileLoads() {
-        #expect(Self.examples["requests"]?.count == 12)
-        #expect(Self.examples["responses"]?.count == 10)
+        #expect(Self.examples["requests"]?.count == 13)
+        #expect(Self.examples["responses"]?.count == 11)
     }
 
     @Test(arguments: [
         "ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite", "linkSuggestions",
-        "contactSuggestions", "customSuggestions", "answers"
+        "contactSuggestions", "customSuggestions", "answers", "picked"
     ])
     func requestExamplesRoundTripWithTheSameFieldNames(name: String) throws {
         let json = try #require(example("requests", name) as? NSDictionary)
@@ -107,6 +107,7 @@ struct MessageContractTests {
             .init(values: ["UC Berkeley"]), .init(values: [], guesses: ["EECS"])
         ]))),
         ("answersResult", .answers(AnswersResponse(saved: 2))),
+        ("pickedResult", .picked(PickedResponse(remembered: true))),
         ("error", .error(reason: "unknown message"))
     ])
     func responsesEncodeToTheExamples(name: String, response: ExtensionResponse) throws {
@@ -124,6 +125,7 @@ struct MessageContractTests {
         #expect(enums["syncStatus"] as? [String] == SyncStatus.allCases.map(\.rawValue))
         #expect(enums["popupStatus"] as? [String] == PopupStatus.allCases.map(\.rawValue))
         #expect(enums["recentState"] as? [String] == PopupRecentState.allCases.map(\.rawValue))
+        #expect(enums["pickKind"] as? [String] == PickKind.allCases.map(\.rawValue))
     }
 
     // Mirrors the rejected requests in web/src/messages.test.ts.

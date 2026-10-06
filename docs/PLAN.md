@@ -54,19 +54,21 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 ## Progress
 
 - **Phase 1: Picks remember**
-  - [ ] 1.1 `picked` page message in both contracts, docs and examples
-  - [ ] 1.2 Router: a pick pins the value for the site without rewriting the card
-  - [ ] 1.3 Dropdown reports picks; contact suggestions send them
-  - [ ] 1.4 Links honor pins and report picks
-  - [ ] 1.5 Custom answers remember the pick per question
-  - [ ] 1.6 Mac panel reports picks
-  - [ ] 1.7 End-to-end check and merge
+  - [x] 1.1 `picked` page message in both contracts, docs and examples
+  - [x] 1.2 Router: a pick pins the value for the site without rewriting the card
+  - [x] 1.3 Dropdown reports picks; contact suggestions send them
+  - [x] 1.4 Links honor pins and report picks
+  - [x] 1.5 Custom answers remember the pick per question
+  - [x] 1.6 Mac panel reports picks
+  - [x] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
+  - [ ] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
   - [ ] 2.1 Suggestions carry where each value came from
   - [ ] 2.2 The list shows it (detail line and style)
   - [ ] 2.3 A later answer replaces a learned one, with Undo
   - [ ] 2.4 Fill form says what's left and jumps to it
-  - [ ] 2.5 End-to-end check and merge
+  - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
+  - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
   - [ ] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
@@ -152,7 +154,7 @@ New file `Messages/MessageRouter+Picks.swift`:
 - `Choice` gains `onPick?: () => void`. `dropdown.ts` `pick` calls it after `fillField`, only for a pick made by a trusted click or Enter (both paths already require `isUserEvent`).
 - `suggestions.ts`: when building choices (`suggestionOptions`, around line 99/195) attach `onPick` that sends `{type: "picked", host, kind, value}` through `browser.runtime.sendMessage`. Fire and forget; ignore the reply except in tests.
 - Don't report a pick of the value that was already first (index 0): it carries no new information and saves a round trip.
-- `installFilledPicker` in `fill.ts` reuses the same choices, so a pick after Fill form also counts.
+- Done for contact fields. `installFilledPicker` in `fill.ts` builds its own choices (`applyText`), so a pick on a field Fill form filled isn't reported yet; that moves to 2.4.
 - Tests (`suggestions.test.ts` or `dropdown.test.ts`): picking the second row sends one `picked` message with the right kind and value; picking the first sends none; a synthetic click sends none.
 
 ### 1.4 Links
@@ -166,9 +168,9 @@ New file `Messages/MessageRouter+Picks.swift`:
 
 Custom fields are matched by words (`CustomFieldMatcher.values`), up to 3, plus model guesses. When several match ("School" vs "High school") the person's pick should come first next time, on any site, for questions with the same words.
 
-- Store per-device: `AppState`/`ExtensionEvents` gain `answerPicks: [AnswerPick]` where `AnswerPick{words: String (CustomFieldMatcher.words of the question, sorted, joined), label: String, date}`. Cap 200, newest wins.
+- Store per-device: `ExtensionEvents` gains `answerPicks: [AnswerPick]` where `AnswerPick{words: String (CustomFieldMatcher.words of the question, sorted, joined), label: String, date}`. Cap 200, newest wins.
 - `customSuggestions` reorders each field's `values` so the picked label's value comes first when the words match.
-- Picking a **guess** (`detail: "Suggested"`) is a strong signal: append the pick and also add the guess as a learned answer through the same path `answers` uses (`gateway.save(scope: .addAnswers)`), so it becomes a real value. Do this only for a guess, which is already one of the person's own custom values (the model picks among them), so no new value is invented.
+- Picking a **guess** (`detail: "Suggested"`) records the same pick. Since a guess is always one of the person's own custom values (the model picks among them), the pick alone makes it a real value for that question next time, with no Contacts write. (Built this way instead of saving the guess as a learned answer: nothing new needs storing on the card.)
 - Tests: reorder by pick; a guess pick becomes a value next time; cap respected.
 
 ### 1.6 Mac panel
@@ -185,6 +187,10 @@ Custom fields are matched by words (`CustomFieldMatcher.values`), up to 3, plus 
 ---
 
 ## Phase 2: Honest suggestions
+
+### 2.0 Stale Safari tests
+
+`CustomFieldsE2ETests`, `LinksE2ETests` and `MinimalCardE2ETests` still expect Prefill's values in Safari's keyboard bar (the datalist path). Since `d070f61` Safari shows Prefill's own list under the field instead, so the bar shows keyboard predictions ("I", "The") and all three fail (seen in the full run on 2026-10-06; none was changed after `d070f61`). Change each to find Prefill's rows in the web view, as `PickE2ETests.row(_:)` does, and keep their intent: School offers the custom answer, GitHub/Portfolio offers the links in order, a minimal card's moved emails are still offered. Run the whole suite (`zsh scripts/test.sh e2e`; it takes about 15 minutes and must not overlap another session's run on port 8846).
 
 **Why:** with click-and-pick as the default, the list is the product. It should say why each value is there, so a person trusts the first row and knows when the last row is a guess.
 
@@ -230,10 +236,24 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - After a fill, the pill reads "Filled 9 · 4 need you". Clicking "4 need you" focuses the first empty, visible, editable field in page order (`findSlots(fillScope(...))` minus what was filled), which opens Prefill's list there by the normal focus path. Each next click moves to the next one.
 - Focus moved by Prefill's own button is a trusted gesture from the person's click, but `gesture.ts` won't see it as one. Unlock exactly the focused field for 1 s through a new `gate.allowNext(field)` that only the pill can call (it's in the closed shadow root).
 - Guesses are still never filled.
+- A pick on a filled field (`installFilledPicker`, choices built in `applyText`) reports `picked` like any other list (carried over from 1.3).
 - The pill's count today counts recognized fields, so "Fill form 13 fields" can end as "Filled 9". Change the count to fields Prefill has an answer for (it already fetched them for the prefetch), so the promise matches the result.
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
 
-### 2.5 Check and merge
+### 2.5 Keep the list clear of Safari's bubble
+
+**Done early, in Phase 1** (`feat/picks`), because it broke click-and-pick on the iPhone: Safari doesn't just cover the first row, it swallows every tap in a band under a contact field. In the simulator a tap 72 pt under the field reached nothing, one 122 pt under it reached the page, and Prefill's list got no pointer, mouse or click event for a tap on its second row. Built: `SAFARI_CONTACT` placement in `dropdown.ts` (list above the field, clear of the Fill form pill, else 124 pt below, else the roomier side, cut to fit and scrolling), used only for contact fields in Safari (`page.ts`). Rows are now buttons. Still open: the list on a field Fill form filled (`installFilledPicker`) uses the default placement; check whether Safari's bubble shows on a filled field and apply the same placement if it does (with 2.4). Also measure the band at the largest Dynamic Type size.
+
+Original notes:
+
+Seen in the Phase 1 simulator run (`assets/generated/e2e-ext-pick-a-before.png`): on an email field with card values, Safari draws its own suggestion bubble ("home" / "work") directly under the field, over Prefill's first row, which is the row the person most needs.
+
+- In Safari only, when the field is one Safari suggests for (a contact kind while the card holds values of that kind), place Prefill's list below the bubble's band (about 60 pt) or above the field when there's more room there. Chromium is unchanged.
+- The band height can't be read from the page; measure it in the simulator at the default text size and at the largest Dynamic Type size, and keep the offset as one named constant in `dropdown.ts`.
+- Phase 4 removes most of the cause (a short card leaves Safari nothing to suggest for email and address), so keep this small and remove it there if the bubble no longer shows.
+- Check: `PickE2ETests` asserts the first row's frame doesn't intersect the bubble.
+
+### 2.6 Check and merge
 
 - `FillE2ETests` (Safari) and `fillChrome.ts`: the "need you" jump on the Greenhouse testbed page.
 - Screenshot of the list with a guess row in light and dark, into `assets/generated/`.
@@ -502,7 +522,7 @@ The menu shows a three-item checklist until each is done: Allow Contacts, Turn o
 
 | Risk | Where | What to do |
 |---|---|---|
-| Safari's own suggestion bubble covers the first row of Prefill's list | Phase 4 | Already seen (AGENTS.md). If it's worse with the card frozen, place the list above the field when the bubble shows. |
+| Safari's own suggestion bubble covers the first row of Prefill's list | Phase 2 | Seen in the Phase 1 run. Task 2.5 moves the list clear of it; Phase 4 removes most of the cause. |
 | Losing Safari's AutoFill Contact for emails and addresses | Phase 4 | That's the trade. Fill form covers whole forms; the gate makes Tarun decide. |
 | The old Safari bar order and Prefill's list disagree during Phases 1 to 3 | Phase 1 | Accept for now. Phase 4 ends it. |
 | Pins from a page are written by a content script | Phase 1 | Only after a trusted click or Enter in Prefill's closed shadow root, only for values already in memory, capped per minute. Run the `security-reviewer` agent on 1.1 to 1.3. |

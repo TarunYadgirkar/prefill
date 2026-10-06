@@ -101,6 +101,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxMutes = 100
     public static let maxAnswers = 40
     public static let maxQuestions = 40
+    public static let maxAnswerPicks = 200
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
@@ -110,6 +111,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public let mutes: [MuteEvent]
     public let answers: [LearnedAnswer]
     public let questions: [FormQuestion]
+    public let answerPicks: [AnswerPick]
     // When the extension last reported a page with contact fields. Safari can't tell the app
     // whether All Websites is allowed, but the extension only runs on pages once it is.
     public let lastPageSeen: Date?
@@ -117,7 +119,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public init(
         usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = [],
         saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = [], answers: [LearnedAnswer] = [],
-        questions: [FormQuestion] = [], lastPageSeen: Date? = nil
+        questions: [FormQuestion] = [], answerPicks: [AnswerPick] = [], lastPageSeen: Date? = nil
     ) {
         self.usage = usage
         self.captures = captures
@@ -127,6 +129,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         self.mutes = mutes
         self.answers = answers
         self.questions = questions
+        self.answerPicks = answerPicks
         self.lastPageSeen = lastPageSeen
     }
 
@@ -141,6 +144,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         mutes = try container.decodeIfPresent([MuteEvent].self, forKey: .mutes) ?? []
         answers = try container.decodeIfPresent([LearnedAnswer].self, forKey: .answers) ?? []
         questions = try container.decodeIfPresent([FormQuestion].self, forKey: .questions) ?? []
+        answerPicks = try container.decodeIfPresent([AnswerPick].self, forKey: .answerPicks) ?? []
         lastPageSeen = try container.decodeIfPresent(Date.self, forKey: .lastPageSeen)
     }
 
@@ -154,6 +158,7 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
             mutes: Array((mutes + new.mutes).suffix(Self.maxMutes)),
             answers: Array((answers + new.answers).suffix(Self.maxAnswers)),
             questions: Array((questions + new.questions).suffix(Self.maxQuestions)),
+            answerPicks: Array((answerPicks + new.answerPicks).suffix(Self.maxAnswerPicks)),
             lastPageSeen: new.lastPageSeen ?? lastPageSeen
         )
     }

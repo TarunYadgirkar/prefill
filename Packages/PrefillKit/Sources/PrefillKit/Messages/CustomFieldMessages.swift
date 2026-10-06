@@ -49,8 +49,9 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
 }
 
 extension MessageRouter {
-    // Every list is empty before the card is linked or when it can't be read. A field no
-    // rule matched gets the model's cached guess, or is noted for the app to ask about.
+    // Every list is empty before the card is linked or when it can't be read. The answer the
+    // person last picked for the same question comes first. A field no rule matched gets the
+    // model's cached guess, or is noted for the app to ask about.
     func customSuggestions(_ request: CustomSuggestionsRequest) -> CustomSuggestionsResponse {
         guard let state = currentState(), let link = state.cardLink,
               let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
@@ -58,9 +59,17 @@ extension MessageRouter {
         }
         let custom = card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) }
         let variant = Intelligence.modelVariant
+        let picks = events().answerPicks
         var unanswered: [String] = []
         let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
             let values = CustomFieldMatcher.values(for: field.text, in: custom)
+            // A pick only reorders what the question already matches, or stands in for a guess
+            // where nothing matched, so copying a question's words reaches no other answer.
+            if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks),
+               values.isEmpty || values.contains(picked) {
+                let ordered = [picked] + values.filter { $0 != picked }
+                return .init(values: Array(ordered.prefix(MessageLimits.customOptions)))
+            }
             guard values.isEmpty, !CustomFieldMatcher.words(field.text).isEmpty else { return .init(values: values) }
             guard let guess = state.guessedAnswer(for: field.text, in: custom, variant: variant) else {
                 let key = InsightKey.answer(field.text, variant: variant)

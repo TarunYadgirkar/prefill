@@ -39,7 +39,7 @@ struct AutofillScriptTests {
     }
 
     @Test func sensitiveAndSignInFieldsGetNothing() throws {
-        let script = try script()
+        let script = try self.script()
         #expect(script.rows(for: FieldDescription(tag: .input, label: "Card number"), host: "a.com", router: router())
             .isEmpty)
         #expect(script.rows(for: FieldDescription(tag: .input, label: "Email", signIn: true), host: "a.com",
@@ -56,6 +56,17 @@ struct AutofillScriptTests {
         #expect(values.keys.sorted() == [0, 3])
         #expect(values[0]?.kind == "email")
         #expect(values[3]?.value == "+1 (510) 555-0134")
+    }
+
+    @Test func pickingAnEmailThatWasntFirstPutsItFirstOnTheSite() throws {
+        let router = self.router()
+        let field = FieldDescription(tag: .input, label: "Email")
+        let script = try self.script()
+        let rows = script.rows(for: field, host: "jobs.example.com", router: router)
+        #expect(rows.first?.pick == nil)
+        let second = try #require(rows.dropFirst().first)
+        AutofillScript.remember(second, host: "jobs.example.com", router: router)
+        #expect(script.rows(for: field, host: "jobs.example.com", router: router).first?.value == second.value)
     }
 }
 

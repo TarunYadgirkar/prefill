@@ -1,6 +1,10 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { installCustom, isCustomCandidate } from "./custom";
-import type { CustomSuggestionsRequest } from "./messages";
+import {
+  customChoices,
+  installCustom,
+  isCustomCandidate,
+  type CustomOptions,
+} from "./custom";
 
 const GREENHOUSE = `
 <form>
@@ -23,7 +27,7 @@ describe("installCustom", () => {
       new DOMRect(10, 10, 200, 30),
     );
     const send = vi
-      .fn<(request: CustomSuggestionsRequest) => Promise<unknown>>()
+      .fn<CustomOptions["send"]>()
       .mockResolvedValue({
         type: "customSuggestionsResult",
         fields: [{ values: ["UC Berkeley"] }, { values: ["LinkedIn"] }],
@@ -34,8 +38,11 @@ describe("installCustom", () => {
       isUserEvent: () => true,
     });
     await Promise.resolve();
+    const asked = send.mock.calls[0]?.[0];
     expect(
-      send.mock.calls[0]?.[0].fields.map((field) => field.text.split(" ")[0]),
+      asked?.type === "customSuggestions"
+        ? asked.fields.map((field) => field.text.split(" ")[0])
+        : [],
     ).toEqual(["School", "How"]);
 
     await Promise.resolve();
@@ -58,7 +65,7 @@ describe("installCustom", () => {
     document.body.innerHTML = `<form><label>School</label><input type="text" name="school">
       <input type="password" autocomplete="current-password"></form>`;
     const send = vi
-      .fn<(request: CustomSuggestionsRequest) => Promise<unknown>>()
+      .fn<CustomOptions["send"]>()
       .mockResolvedValue({});
     const stop = installCustom(document, {
       host: () => "example.net",
@@ -76,5 +83,22 @@ describe("installCustom", () => {
     const university = document.getElementById("u") as HTMLTextAreaElement;
     expect(isCustomCandidate(university)).toBe(false);
     expect(isCustomCandidate(university, true)).toBe(true);
+  });
+});
+
+describe("customChoices", () => {
+  it("hears about a pick of an answer that wasn't first, or of a guess", () => {
+    const picked: string[] = [];
+    const choices = customChoices(
+      { values: ["UC Berkeley", "Berkeley High"], guesses: ["EECS"] },
+      (value) => picked.push(value),
+    );
+    choices.forEach((choice) => choice.onPick?.());
+    expect(choices.map((choice) => choice.detail)).toEqual([
+      "Custom field",
+      "Custom field",
+      "Suggested",
+    ]);
+    expect(picked).toEqual(["Berkeley High", "EECS"]);
   });
 });

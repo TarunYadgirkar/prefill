@@ -33,6 +33,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `customSuggestions` fields | 40, each `text` 200 characters |
 | `customSuggestionsResult` | one entry per field asked about, each with at most 3 values of 200 characters |
 | `answers` | 8 answers, each `value` 200 characters |
+| `picked` | `value` 256 characters, `question` 200 characters |
 
 ## Shared values
 
@@ -205,6 +206,20 @@ Undo sends `action: "undo"` with no answers. The app takes back the answers save
 
 ```json
 { "type": "answersResult", "saved": 2 }
+```
+
+## picked
+
+When the person picks a value from Prefill's list under a field (a trusted click on a row, or Enter on a highlighted row), the content script tells the app, so the value comes first on that site from the next focus on. It doesn't report a pick of the value that was already first, and never a value the page filled in. `kind` is `email`, `phone`, `address`, `link` or `custom`. `value` is the text that went into the field: for an address, the street line. A `custom` pick also carries `question`, the field's own words.
+
+For an email, phone number, address or link, the app looks for the value among the person's own values (an address by its street line) and, when it finds one, records a pin for the site's registrable domain and a use of the value there, like a pick in the Prefill sheet but without rewriting the card. A value the person doesn't have is never pinned. A picked link comes first in `linkSuggestions` for that site; a site keeps one picked link. For a `custom` pick the app finds the custom field holding that value and remembers it for the question's words (lowercased, without filler words, in any order), so `customSuggestions` offers it first for any field with the same words on any site, when that field's matches include it or nothing matched (the pick then stands in for a guess). A pick never brings an answer to a field that matched other answers. An empty `value` is ignored. A picked guess then comes back as one of the field's `values`, so Fill form fills it from then on. Contact and link picks do nothing with Match each site off; custom picks don't depend on it. At most 10 picks a minute are kept across every site. The reply says whether the pick was remembered; the page doesn't act on it.
+
+```json
+{ "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" }
+```
+
+```json
+{ "type": "pickedResult", "remembered": true }
 ```
 
 ## capture
