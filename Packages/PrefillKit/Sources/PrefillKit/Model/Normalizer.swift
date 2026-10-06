@@ -17,10 +17,10 @@ public enum Normalizer {
         raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 
-    // The same number typed as "+44 (0)20 …", "0044 20 …" or with an extension still has
-    // the card's key; the extension isn't part of the number.
+    // The same number typed as "+44 (0)20 …" or "0044 20 …" still has the card's key. An
+    // extension stays in the key: two extensions are two numbers.
     public static func phone(_ raw: String, region: String = PhoneRegion.current) -> String {
-        let number = withoutExtension(raw.trimmingCharacters(in: .whitespacesAndNewlines))
+        let number = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         let digits = number.replacing("(0)", with: "").filter(\.isASCII).filter(\.isNumber)
         if number.hasPrefix("+") { return "+" + digits }
         guard digits.count >= PhoneRegion.minNationalDigits, let code = PhoneRegion.callingCode(region) else {
@@ -29,14 +29,6 @@ public enum Normalizer {
         if code == PhoneRegion.nanpCode { return nanp(digits) }
         if digits.hasPrefix("00") { return "+" + digits.dropFirst(2) }
         return "+" + code + trunkStripped(digits)
-    }
-
-    private static func withoutExtension(_ number: String) -> String {
-        let pattern = #"\s*(?:ext\.?|x|#)\s*\d+$"#
-        guard let mark = number.range(of: pattern, options: [.regularExpression, .caseInsensitive]) else {
-            return number
-        }
-        return String(number[..<mark.lowerBound])
     }
 
     // Street plus postal code only. Forms often leave out the country or state, or spell
