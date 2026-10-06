@@ -221,9 +221,9 @@ In Chrome and Arc the messages travel through a native messaging host (`com.taru
 
 Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
 
-With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit and at most 8 a day across every site. The card save may only add custom fields after the ones there (`CardSaveScope.addAnswers`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. An answer the person already has is never replaced. The reply says how many were saved, and the page then shows a pill, "Saved 2 answers" with Undo, for 8 seconds.
+With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces is a person's edit (`personEdit`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved and how many `updated`, and the page then shows a pill, "Saved 2 answers", "Updated your answer" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
 
-Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved, and replies with how many came off.
+Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved: a new one comes off and a replaced one goes back to the answer it replaced. It replies with how many changed back in `saved`.
 
 ```json
 {
@@ -235,7 +235,7 @@ Undo sends `action: "undo"` with no answers. The app takes back the answers save
 ```
 
 ```json
-{ "type": "answersResult", "saved": 2 }
+{ "type": "answersResult", "saved": 2, "updated": 1 }
 ```
 
 ## picked

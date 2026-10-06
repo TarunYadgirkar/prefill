@@ -20,16 +20,35 @@ struct AnswerTests {
         .init(question: .heard, value: "LinkedIn")
     ])
 
+    private let stanford = AnswersRequest(host: "jobs.example.com", action: .learn, answers: [
+        .init(question: .school, value: "Stanford University")
+    ])
+
     @Test func aSubmittedApplicationsAnswersBecomeCustomFieldsOnce() throws {
         let (router, store) = router()
         #expect(router.answers(applied) == AnswersResponse(saved: 3))
         #expect(gateway.card.customFields.map(\.label) == ["School", "Sponsorship", "How did you hear about us"])
         #expect(try store.readEvents().answers.map(\.value) == applied.answers.map(\.value))
-        let again = AnswersRequest(host: "jobs.example.com", action: .learn, answers: [
-            .init(question: .school, value: "Stanford University")
-        ])
-        #expect(router.answers(again) == AnswersResponse(saved: 0))
-        #expect(gateway.card.customFields.first?.value == "University of California, Berkeley")
+        #expect(router.answers(applied) == AnswersResponse(saved: 0))
+        #expect(gateway.card.customFields.count == 3)
+    }
+
+    @Test func aLaterAnswerReplacesALearnedOneAndUndoPutsItBack() throws {
+        let (router, store) = router()
+        _ = router.answers(applied)
+        #expect(router.answers(stanford) == AnswersResponse(saved: 0, updated: 1))
+        #expect(gateway.card.customFields.first?.value == "Stanford University")
+        #expect(try store.readEvents().answers.last?.previous == "University of California, Berkeley")
+        #expect(router.answers(AnswersRequest(host: "jobs.example.com", action: .undo)) == AnswersResponse(saved: 1))
+        #expect(gateway.card.customFields.map(\.value) == applied.answers.map(\.value))
+    }
+
+    @Test func anAnswerThePersonWroteIsNeverReplaced() throws {
+        let school = try #require(JobQuestion.school.field(answer: "UC Berkeley"))
+        gateway.state.withLock { $0.card = Alex.card.replacingCustomFields(with: [school]) }
+        let (router, _) = router()
+        #expect(router.answers(stanford) == AnswersResponse(saved: 0))
+        #expect(gateway.card.customFields == [school])
     }
 
     @Test func aLearnedAnswerFillsTheNextApplicationsQuestion() {

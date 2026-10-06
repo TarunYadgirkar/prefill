@@ -113,7 +113,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Guessed answers:** a field no rule matches gets the on-device model's pick among the custom fields, shown as "Suggested" and never used by Fill form. The Mac panel asks live; on the iPhone the handler notes the question and the app asks on its next launch, so the guess shows from the next visit. Nothing shows until Apple Intelligence is on.
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
-  - A learned answer is never replaced by a later one; the person edits it in the Custom tab.
+  - A later answer replaces a learned one that still reads as learned, with Undo; an answer the person wrote or edited in the app is never replaced.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
 

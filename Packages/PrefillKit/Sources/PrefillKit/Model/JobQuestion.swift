@@ -75,13 +75,16 @@ public struct LearnedAnswer: Codable, Sendable, Hashable, Identifiable {
     public let label: String
     public let value: String
     public let date: Date
+    // The learned answer this one replaced, for Undo; nil for a new answer.
+    public let previous: String?
 
-    public init(id: UUID = UUID(), host: String, label: String, value: String, date: Date) {
+    public init(id: UUID = UUID(), host: String, label: String, value: String, date: Date, previous: String? = nil) {
         self.id = id
         self.host = host
         self.label = label
         self.value = value
         self.date = date
+        self.previous = previous
     }
 
     public func matches(_ field: CustomField) -> Bool {

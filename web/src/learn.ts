@@ -12,6 +12,7 @@ import {
   LIMITS,
   parseExtensionResponse,
   type AnswersRequest,
+  type AnswersResult,
   type JobQuestion,
 } from "./messages";
 
@@ -57,6 +58,16 @@ const TYPED_INPUTS: ReadonlySet<string> = new Set(["text", "number", "month", "d
 const MAX_INSPECTED = 300;
 const TOAST_MS = 8_000;
 const EDGE = 16;
+
+const answersNoun = (count: number): string => (count === 1 ? "answer" : "answers");
+
+// What the pill says after a submit: "Saved 2 answers", "Updated your answer", or both.
+export function savedText({ saved, updated }: Pick<AnswersResult, "saved" | "updated">): string {
+  const changed = updated === 1 ? "your answer" : `${String(updated)} answers`;
+  if (saved === 0) return `Updated ${changed}`;
+  const added = `Saved ${String(saved)} ${answersNoun(saved)}`;
+  return updated === 0 ? added : `${added} and updated ${String(updated)}`;
+}
 
 export function jobQuestion(text: string): JobQuestion | undefined {
   if (isDemographic(text) || NOT_ASKED.test(text)) return undefined;
@@ -236,9 +247,8 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .send({ type: "answers", host: options.host(), action: "learn", answers })
       .then((raw) => {
         const reply = parseExtensionResponse(raw);
-        if (reply?.type !== "answersResult" || reply.saved === 0) return;
-        const noun = reply.saved === 1 ? "answer" : "answers";
-        showPill(doc, win, `Saved ${String(reply.saved)} ${noun}`, { label: "Undo", run: undo, isUserEvent });
+        if (reply?.type !== "answersResult" || reply.saved + reply.updated === 0) return;
+        showPill(doc, win, savedText(reply), { label: "Undo", run: undo, isUserEvent });
       })
       .catch(() => undefined);
   };

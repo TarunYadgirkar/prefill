@@ -365,7 +365,7 @@ const pageResponses = {
       LIMITS.pageFields,
     ),
   }),
-  answersResult: object({ type: literal("answersResult"), saved: count }),
+  answersResult: object({ type: literal("answersResult"), saved: count, updated: count }),
   pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };

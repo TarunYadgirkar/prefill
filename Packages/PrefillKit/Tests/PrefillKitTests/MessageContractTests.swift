@@ -114,7 +114,7 @@ struct MessageContractTests {
             ]),
             .init(values: [], guesses: ["EECS"])
         ]))),
-        ("answersResult", .answers(AnswersResponse(saved: 2))),
+        ("answersResult", .answers(AnswersResponse(saved: 2, updated: 1))),
         ("pickedResult", .picked(PickedResponse(remembered: true))),
         ("error", .error(reason: "unknown message"))
     ])

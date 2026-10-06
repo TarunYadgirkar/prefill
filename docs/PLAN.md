@@ -65,7 +65,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
   - [x] 2.1 Suggestions carry where each value came from
   - [x] 2.2 The list shows it (detail line and style)
-  - [ ] 2.3 A later answer replaces a learned one, with Undo
+  - [x] 2.3 A later answer replaces a learned one, with Undo
   - [ ] 2.4 Fill form says what's left and jumps to it
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
   - [ ] 2.6 End-to-end check and merge
@@ -228,6 +228,7 @@ Today a learned answer is never replaced (AGENTS.md open item). With click-and-p
 - Router: replace the custom field's value through `gateway.save(scope: .personEdit)`, only for a field Prefill learned (match `ExtensionEvents.answers` by label), never for one the person wrote in the app. Keep the old value in the event for Undo.
 - The page shows the existing "Saved" pill as "Updated your answer" with Undo.
 - Tests: replace happens for a learned field; refused for a hand-written one; Undo restores.
+- Built differently: the page can't tell which answers Prefill learned, so `learn.ts` keeps sending `action: "learn"` and the router decides, replacing only a field whose value matches one of its learned answers. The reply gained `updated`; there's no `replace` action.
 
 ### 2.4 Fill form says what's left
 
