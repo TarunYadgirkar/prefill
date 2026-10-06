@@ -175,8 +175,7 @@ private struct StudentAnswersSheet: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add \(filled)") {
                         Task {
-                            await model.addStudentAnswers(answers)
-                            onSaved()
+                            if await model.addStudentAnswers(answers) { onSaved() }
                             dismiss()
                         }
                     }

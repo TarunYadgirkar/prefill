@@ -35,10 +35,11 @@ struct PreferInfoFocusFilter: SetFocusFilterIntent {
 
     @MainActor func perform() async throws -> some IntentResult {
         await model.refreshForIntent()
+        // The label is saved even when the card can't be read, so a Focus that ends
+        // doesn't leave its values first on every site.
+        let outcome = await model.setFocusLabel(preferred?.rawValue)
         guard model.card != nil else { throw IntentProblem.notSetUp }
-        if case .failed(let failure) = await model.setFocusLabel(preferred?.rawValue) {
-            throw IntentProblem.card(failure)
-        }
+        if case .failed(let failure) = outcome { throw IntentProblem.card(failure) }
         return .result()
     }
 }

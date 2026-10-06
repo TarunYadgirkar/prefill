@@ -6,27 +6,40 @@ import PrefillKit
 extension AppModel {
     // Updates the order right away, so the list and the bar move with the drag, then
     // writes the card in the background.
+    // Each write waits for the one before and reads the order when it runs, so quick
+    // drags can't land on the card out of order.
     func reorder(_ kind: ContactKind, to ordered: [ContactValue]) {
         commit(state.with(values: ManualOrder.replacing(kind, with: ordered, in: state.values)))
-        Task { await syncCard() }
+        let previous = reorderSync
+        reorderSync = Task {
+            await previous?.value
+            await syncCard()
+        }
     }
 
-    // Returns false when the value is already on the card.
-    func add(_ payload: ContactPayload, label: String?, source: ValueSource = .typedInApp) async -> Bool {
+    enum AddOutcome {
+        case added, alreadyOnCard
+        case failed(CardWriteFailure)
+    }
+
+    @discardableResult
+    func add(_ payload: ContactPayload, label: String?, source: ValueSource = .typedInApp) async -> AddOutcome {
         let value = ContactValue(payload: payload, label: label, source: source, createdAt: .now)
-        guard !ContactKind.allCases.flatMap(values).contains(where: { $0.id == value.id }) else { return false }
+        let onCard = ContactKind.allCases.flatMap(values)
+        guard !onCard.contains(where: { $0.id == value.id }) else { return .alreadyOnCard }
         commit(state.with(values: state.values + [value]))
-        await syncCard(additions: [value])
-        return true
+        let outcome = await syncCard(additions: [value], reportsProblem: false)
+        guard case .failed(let failure) = outcome else { return .added }
+        return .failed(failure)
     }
 
     func remove(_ value: ContactValue) async {
-        guard await edit(.remove(value)) else { return }
+        guard await edit(.remove(value)) == nil else { return }
         commit(state.with(values: state.values.filter { $0.id != value.id }))
     }
 
     func relabel(_ value: ContactValue, to label: String?) async {
-        guard await edit(.relabel(value, label: label)) else { return }
+        guard await edit(.relabel(value, label: label)) == nil else { return }
         let relabeled = state.values.map { $0.id == value.id ? $0.with(label: label) : $0 }
         commit(state.with(values: relabeled))
     }
@@ -37,7 +50,8 @@ extension AppModel {
 
     // `label` is what the person picked in Recently added, or the suggestion they kept.
     func save(_ item: RecentItem, label: String?) async {
-        _ = await add(item.value.payload, label: label, source: .captured)
+        let outcome = await add(item.value.payload, label: label, source: .captured)
+        if case .failed(let failure) = outcome { report(failure) }
     }
 
     func dismiss(_ item: RecentItem) {
@@ -48,12 +62,13 @@ extension AppModel {
     // save it again.
     func putBack(_ item: RecentItem, label: String?) async {
         commit(state.unrejecting(item.value.id))
-        _ = await add(item.value.payload, label: label, source: .captured)
+        let outcome = await add(item.value.payload, label: label, source: .captured)
+        if case .failed(let failure) = outcome { report(failure) }
     }
 
     // Takes a saved value off the card and remembers not to save it again.
     func undo(_ item: RecentItem) async {
-        guard await edit(.remove(item.value)) else { return }
+        guard await edit(.remove(item.value)) == nil else { return }
         commit(state.rejecting(item.value.id).with(values: state.values.filter { $0.id != item.value.id }))
     }
 
@@ -84,7 +99,7 @@ extension AppModel {
             await refreshCard()
             return
         }
-        guard await edit(.restore(link.original)) else { return }
+        guard await edit(.restore(link.original)) == nil else { return }
         commit(state.with(values: ManualOrder.allValues(card: link.original, known: state.values, now: .now)))
     }
 
@@ -108,7 +123,13 @@ extension AppModel {
         await refreshCard()
     }
 
+    // Picking the linked card again keeps its link: a fresh one would replace the original
+    // card that Restore puts back with the card as Prefill has changed it.
     func link(_ choice: CardChoice) async {
+        guard choice.id != state.cardLink?.contactIdentifier else {
+            await refreshCard()
+            return
+        }
         do throws(CardWriteFailure) {
             let link = try await contacts.link(choice.id)
             commit(state.with(cardLink: link))
@@ -121,7 +142,9 @@ extension AppModel {
     // Puts the person's own order on the card, or with a host that site's order, the way
     // Safari's page context does.
     @discardableResult
-    func syncCard(additions: [ContactValue] = [], host: String? = nil) async -> CardWriteOutcome {
+    func syncCard(
+        additions: [ContactValue] = [], host: String? = nil, reportsProblem: Bool = true
+    ) async -> CardWriteOutcome {
         guard let link = state.cardLink else { return .failed(.cardMissing) }
         let request = CardSyncRequest(
             cardIdentifier: link.contactIdentifier, known: state.values, additions: additions,
@@ -132,32 +155,28 @@ extension AppModel {
             )
         )
         let outcome = await CardWork.sync(gateway, request)
-        if case .failed(let failure) = outcome { report(failure) }
+        if case .failed(let failure) = outcome, reportsProblem { report(failure) }
         await refreshCard()
         return outcome
     }
 
     var customFields: [CustomField] { card?.customFields ?? [] }
 
-    // Returns why the field can't be saved, or nil once it is on the card (or the card
-    // couldn't take it, which the app reports on its own).
+    // Returns why the field can't be saved, or nil once it is on the card.
     func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
-        switch customFields.saving(field, replacing: old) {
-        case .failure(let problem): return problem.message
-        case .success(let fields):
-            await edit(.setCustomFields(fields))
-            return nil
-        }
+        if case .failure(let problem) = customFields.saving(field, replacing: old) { return problem.message }
+        return await edit(.saveCustomField(field, replacing: old), reportsProblem: false)?.appMessage
     }
 
     func removeCustomField(_ field: CustomField) async {
-        await edit(.setCustomFields(customFields.filter { $0.id != field.id }))
+        await edit(.removeCustomField(id: field.id))
     }
 
-    func addStudentAnswers(_ answers: [JobQuestion: String]) async {
+    // Returns whether the answers are on the card.
+    func addStudentAnswers(_ answers: [JobQuestion: String]) async -> Bool {
         let added = StudentStarter.fields(for: answers, adding: customFields)
-        guard !added.isEmpty else { return }
-        await edit(.setCustomFields(Array((customFields + added).prefix(CustomField.maxCount))))
+        guard !added.isEmpty else { return true }
+        return await edit(.addCustomFields(added)) == nil
     }
 
     func undo(_ answer: LearnedAnswer) async {
@@ -168,16 +187,17 @@ extension AppModel {
     func moveCustomFields(from source: IndexSet, to destination: Int) async {
         var fields = customFields
         fields.move(fromOffsets: source, toOffset: destination)
-        await edit(.setCustomFields(fields))
+        await edit(.orderCustomFields(ids: fields.map(\.id)))
     }
 
+    // Returns the failure, or nil once the card holds the edit.
     @discardableResult
-    private func edit(_ edit: CardEditor.Edit) async -> Bool {
-        guard let link = state.cardLink else { return false }
+    private func edit(_ edit: CardEditor.Edit, reportsProblem: Bool = true) async -> CardWriteFailure? {
+        guard let link = state.cardLink else { return .cardMissing }
         let outcome = await CardWork.edit(gateway, edit, identifier: link.contactIdentifier)
         await refreshCard()
-        guard case .failed(let failure) = outcome else { return true }
-        report(failure)
-        return false
+        guard case .failed(let failure) = outcome else { return nil }
+        if reportsProblem { report(failure) }
+        return failure
     }
 }

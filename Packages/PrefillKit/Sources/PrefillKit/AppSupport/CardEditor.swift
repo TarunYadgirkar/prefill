@@ -8,8 +8,13 @@ public struct CardEditor: Sendable {
         case remove(ContactValue)
         case relabel(ContactValue, label: String?)
         case restore(CardRecord)
-        // The person's custom fields, in their order, in place of the card's.
-        case setCustomFields([CustomField])
+        // Custom field edits apply to the card as read at save time, so a field the
+        // extension or another device added since the screen last refreshed stays.
+        case saveCustomField(CustomField, replacing: CustomField?)
+        case removeCustomField(id: String)
+        case addCustomFields([CustomField])
+        // The fields named, in this order, then any the list didn't know about.
+        case orderCustomFields(ids: [String])
     }
 
     private static let attempts = 2
@@ -49,8 +54,8 @@ public struct CardEditor: Sendable {
                 entry.key == value.key ? CardEntry(label: label, payload: entry.payload) : entry
             }
             return card.replacing(value.kind, with: entries)
-        case .setCustomFields(let fields):
-            return card.replacingCustomFields(with: fields)
+        case .saveCustomField, .removeCustomField, .addCustomFields, .orderCustomFields:
+            return card.replacingCustomFields(with: customFields(edit, on: card.customFields))
         case .restore(let original):
             // Links and custom fields stay as they are: they live on Prefill's own contact,
             // which the card before Prefill never had.
@@ -58,6 +63,23 @@ public struct CardEditor: Sendable {
             return kinds.reduce(card) { partial, kind in
                 partial.replacing(kind, with: original.entries(kind))
             }
+        }
+    }
+
+    private static func customFields(_ edit: Edit, on fields: [CustomField]) -> [CustomField] {
+        switch edit {
+        case .saveCustomField(let field, let old):
+            return (try? fields.saving(field, replacing: old).get()) ?? fields
+        case .removeCustomField(let id):
+            return fields.filter { $0.id != id }
+        case .addCustomFields(let added):
+            let new = added.filter { field in !fields.contains { $0.id == field.id } }
+            return Array((fields + new).prefix(CustomField.maxCount))
+        case .orderCustomFields(let ids):
+            let named = ids.compactMap { id in fields.first { $0.id == id } }
+            return named + fields.filter { !ids.contains($0.id) }
+        case .remove, .relabel, .restore:
+            return fields
         }
     }
 }
