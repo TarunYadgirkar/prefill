@@ -12,7 +12,7 @@ import {
   placeholderText,
 } from "./dom";
 import type { FieldElement } from "./fieldTypes";
-import { trackGestures } from "./gesture";
+import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
 import {
   HIDDEN_CHARACTERS,
@@ -199,21 +199,33 @@ export function installCustom(
     );
   };
 
-  const onFocus = (event: Event): void => {
-    const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (!isFieldElement(target) || isTaken(target) || !isCandidate(target))
-      return;
+  const show = (target: FieldElement): void => {
+    if (detach !== undefined || isTaken(target) || !isCandidate(target)) return;
     const text = fieldText(target);
-    if (text === "" || !gestures.allows(target)) return;
+    if (text === "") return;
     clear();
     focused = { element: target, text };
     offer();
     fetchValues([text]);
   };
 
-  const onBlur = (event: Event): void => {
-    if (eventOrigin(event) === focused?.element) clear();
+  // The field the person tapped or tabbed into, even one Prefill filled, so emptying it
+  // brings its list back.
+  let armed: FieldElement | undefined;
+  const onFocus = (event: Event): void => {
+    const target = isUserEvent(event) ? eventOrigin(event) : null;
+    if (!isFieldElement(target) || !isCandidate(target) || !gestures.allows(target)) return;
+    armed = target;
+    clear();
+    show(target);
   };
+
+  const onBlur = (event: Event): void => {
+    const target = eventOrigin(event);
+    if (target === armed) armed = undefined;
+    if (target === focused?.element) clear();
+  };
+  const stopEmptied = onEmptied(doc, isUserEvent, () => armed, show);
 
   if (doc.readyState === "loading")
     doc.addEventListener("DOMContentLoaded", prefetch, { once: true });
@@ -223,6 +235,7 @@ export function installCustom(
   return () => {
     clear();
     gestures.stop();
+    stopEmptied();
     doc.removeEventListener("DOMContentLoaded", prefetch);
     doc.removeEventListener("focusin", onFocus, true);
     doc.removeEventListener("focusout", onBlur, true);

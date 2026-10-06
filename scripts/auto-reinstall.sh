@@ -3,8 +3,8 @@
 # Reinstalls the Personal build on the iPhone before its free-team signature runs out, so the
 # 7-day expiry never bites. scripts/install-auto-reinstall.sh runs it daily from launchd; it is
 # also safe to run by hand. Each run:
-#   1. skips unless the last success was 5.5+ days ago or the installed profile expires within
-#      36 hours (--force always installs),
+#   1. skips unless the checkout has commits the phone doesn't, the last success was 5.5+ days
+#      ago, or the installed profile expires within 36 hours (--force always installs),
 #   2. moves aside cached provisioning profiles for Prefill that expire within 36 hours, so Xcode
 #      signs with a fresh 7-day one instead of reusing one about to lapse (put back on failure),
 #   3. checks the phone is reachable with `xcrun devicectl list devices`, runs install-device.sh,
@@ -196,6 +196,7 @@ record_success() {
     print "installed=$(strftime '%Y-%m-%d %H:%M:%S %z' $EPOCHSECONDS)"
     print "device=$DEVICE"
     print "profile_expires=$expires"
+    print "commit=$(git -C $ROOT rev-parse HEAD 2>/dev/null)"
   } >$STATE_FILE.tmp
   mv -f $STATE_FILE.tmp $STATE_FILE
 }
@@ -206,6 +207,8 @@ install_due() {
   local at=$(state_value installed_at) expires=$(state_value profile_expires) last=$(state_value device)
   [[ -z $at ]] && { log "no earlier install recorded"; return 0 }
   [[ ${(L)last} != "${(L)DEVICE}" ]] && { log "last install went to $last"; return 0 }
+  local built=$(state_value commit) head=$(git -C $ROOT rev-parse HEAD 2>/dev/null)
+  [[ -n $head && $built != $head ]] && { log "the phone runs ${built:0:7}, the checkout is at ${head:0:7}"; return 0 }
   if [[ -n $expires ]] && (( expires - EPOCHSECONDS < REFRESH_BEFORE )); then
     log "installed profile expires $(when $expires)"
     return 0
