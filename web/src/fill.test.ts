@@ -32,26 +32,33 @@ const APPLICATION = `<form id="app">
   <button type="submit">Submit Application</button>
 </form>`;
 
+const card = (value: string) => ({ value, why: "card" });
+
 function reply(request: ExtensionRequest): unknown {
   switch (request.type) {
     case "contactSuggestions":
       return {
         type: "contactSuggestionsResult",
-        emails: ["tarun@example.com", "tarun@berkeley.edu"],
-        phones: ["+1 510 555 0134"],
-        addresses: [{ street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" }],
+        emails: [card("tarun@example.com"), card("tarun@berkeley.edu")],
+        phones: [card("+1 510 555 0134")],
+        addresses: [
+          {
+            address: { street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" },
+            why: "card",
+          },
+        ],
         name: { given: "Tarun", family: "Yadgirkar" },
       };
     case "linkSuggestions":
-      return { type: "linkSuggestionsResult", links: [{ type: "linkedin", url: "https://linkedin.com/in/tarun" }] };
+      return { type: "linkSuggestionsResult", links: [{ type: "linkedin", url: "https://linkedin.com/in/tarun", why: "card" }] };
     case "customSuggestions":
       return {
         type: "customSuggestionsResult",
         fields: request.fields.map(({ text }) => ({
           values: /school/iu.test(text)
-            ? ["University of California, Berkeley"]
+            ? [card("University of California, Berkeley")]
             : /authorized/iu.test(text)
-              ? ["Yes"]
+              ? [card("Yes")]
               : [],
         })),
       };

@@ -38,9 +38,13 @@ struct AnswerTests {
         let asked = CustomSuggestionsRequest(host: "jobs.example.com", fields: [
             .init(text: "Will you now or in the future require sponsorship?"), .init(text: "University")
         ])
-        #expect(router.customSuggestions(asked).fields.map(\.values) == [
+        #expect(router.customSuggestions(asked).fields.map { $0.values.map(\.value) } == [
             ["No"], ["University of California, Berkeley"]
         ])
+        let school = SuggestedValue(
+            value: "University of California, Berkeley", why: .learned, label: "School", site: "example.io"
+        )
+        #expect(router.customSuggestions(asked).fields.last?.values == [school])
     }
 
     @Test func undoTakesBackOnlyWhatTheSiteJustAdded() {

@@ -32,13 +32,14 @@ public struct SuggestedName: Codable, Sendable, Hashable {
 }
 
 public struct ContactSuggestionsResponse: Codable, Sendable, Hashable {
-    public let emails: [String]
-    public let phones: [String]
-    public let addresses: [PostalAddress]
+    public let emails: [SuggestedValue]
+    public let phones: [SuggestedValue]
+    public let addresses: [SuggestedAddress]
     public let name: SuggestedName?
 
     public init(
-        emails: [String] = [], phones: [String] = [], addresses: [PostalAddress] = [], name: SuggestedName? = nil
+        emails: [SuggestedValue] = [], phones: [SuggestedValue] = [], addresses: [SuggestedAddress] = [],
+        name: SuggestedName? = nil
     ) {
         self.emails = emails
         self.phones = phones
@@ -72,35 +73,53 @@ extension MessageRouter {
             host: request.host, hints: request.hints, now: now(), matchEachSite: state.settings.matchEachSite,
             siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
         )
-        let target = CardPlan(card: card, request: syncRequest(state, link: link, page: page)).target
-        let ranked = ContactKind.core.reduce(target) { partial, kind in
-            partial.replacing(kind, with: target.entries(kind).filter { !leavingOut.contains($0.key) })
-        }
+        let sync = syncRequest(state, link: link, page: page)
+        let target = CardPlan(card: card, request: sync).target
         let kinds = Set(request.fields.map(\.kind))
+        let ranked = { (kind: ContactKind) -> [Ranked] in
+            guard let field = FieldKind(rawValue: kind.rawValue), kinds.contains(field) else { return [] }
+            let values = target.entries(kind).filter { !leavingOut.contains($0.key) }
+                .map { ContactValue(entry: $0, createdAt: page.now) }
+            // The target is already in order; ranking again only reads each value's tier.
+            let tiers = Ranker.rankWithTiers(
+                values, usage: sync.usage, pins: sync.pins, context: page.context(for: kind, siteKind: .unknown)
+            )
+            let why = Dictionary(tiers.map { ($0.value.id, SuggestionWhy($0.tier)) }) { first, _ in first }
+            return values.map { Ranked(value: $0, why: why[$0.id] ?? .card) }
+        }
         return ContactSuggestionsResponse(
-            emails: kinds.contains(.email) ? Self.texts(ranked.emails) : [],
-            phones: kinds.contains(.phone) ? Self.texts(ranked.phones) : [],
-            addresses: kinds.contains(.address) ? Self.addresses(ranked.addresses) : [],
-            name: kinds.contains(.name) ? Self.name(card) : nil
+            emails: Self.texts(ranked(.email)), phones: Self.texts(ranked(.phone)),
+            addresses: Self.addresses(ranked(.address)), name: kinds.contains(.name) ? Self.name(card) : nil
         )
     }
 
-    private static func texts(_ entries: [CardEntry]) -> [String] {
-        let texts = entries.compactMap { entry -> String? in
-            switch entry.payload {
-            case .email(let text), .phone(let text): text
+    private struct Ranked {
+        let value: ContactValue
+        let why: SuggestionWhy
+
+        // The card's label as Safari's bar captions it, or none for an unlabeled value.
+        var label: String? {
+            guard let label = value.label, !label.isEmpty else { return nil }
+            return MessageText.oneLine(LabelChoices.caption(label, kind: value.kind), max: MessageLimits.text)
+        }
+    }
+
+    private static func texts(_ ranked: [Ranked]) -> [SuggestedValue] {
+        let values = ranked.compactMap { item -> SuggestedValue? in
+            switch item.value.payload {
+            case .email(let text), .phone(let text): SuggestedValue(value: text, why: item.why, label: item.label)
             case .address, .link: nil
             }
         }
-        return Array(texts.filter { fits($0, max: MessageLimits.value) }.prefix(MessageLimits.suggestions))
+        return Array(values.filter { fits($0.value, max: MessageLimits.value) }.prefix(MessageLimits.suggestions))
     }
 
-    private static func addresses(_ entries: [CardEntry]) -> [PostalAddress] {
-        let addresses = entries.compactMap { entry -> PostalAddress? in
-            guard case .address(let address) = entry.payload else { return nil }
-            return address
+    private static func addresses(_ ranked: [Ranked]) -> [SuggestedAddress] {
+        let addresses = ranked.compactMap { item -> SuggestedAddress? in
+            guard case .address(let address) = item.value.payload, address.fitsMessage else { return nil }
+            return SuggestedAddress(address: address, why: item.why, label: item.label)
         }
-        return Array(addresses.filter(\.fitsMessage).prefix(MessageLimits.suggestions))
+        return Array(addresses.prefix(MessageLimits.suggestions))
     }
 
     private static func name(_ card: CardRecord) -> SuggestedName? {

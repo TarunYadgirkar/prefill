@@ -24,6 +24,7 @@ import {
   type PageField,
   type PickedRequest,
   type PostalAddress,
+  type SuggestedValue,
 } from "./messages";
 
 export type Suggestions = Omit<ContactSuggestionsResult, "type">;
@@ -80,33 +81,36 @@ const NAME_PARTS: Partial<Record<FieldPart, (name: Name) => string>> = {
 const BY_KIND: Partial<
   Record<
     FieldKind,
-    (part: FieldPart | undefined, values: Suggestions) => string[]
+    (part: FieldPart | undefined, values: Suggestions) => SuggestedValue[]
   >
 > = {
   email: (_part, values) => values.emails,
   phone: (part, values) => (part === "partial" ? [] : values.phones),
   address: (part, values) => {
     const pick = ADDRESS_PARTS[part ?? "street"];
-    return pick === undefined ? [] : values.addresses.map(pick);
+    return pick === undefined
+      ? []
+      : values.addresses.map(({ address, ...why }) => ({ ...why, value: pick(address) }));
   },
   name: (part, values) => {
     const pick = NAME_PARTS[part ?? "full"];
     return pick === undefined || values.name === undefined
       ? []
-      : [pick(values.name)];
+      : [{ value: pick(values.name), why: "card" }];
   },
 };
 
-// What the browser's dropdown offers a field, best first, each value once.
+// What the browser's dropdown offers a field, best first, each value once, with why it's there.
 export function suggestionOptions(
   field: ContactField,
   values: Suggestions,
-): string[] {
+): SuggestedValue[] {
   const all = BY_KIND[field.kind]?.(field.part, values) ?? [];
-  const trimmed = all
-    .map((value) => value.trim())
-    .filter((value) => value.length > 0);
-  return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
+  const seen = new Set<string>();
+  return all
+    .map((offered) => ({ ...offered, value: offered.value.trim() }))
+    .filter(({ value }) => value.length > 0 && !seen.has(value) && seen.add(value))
+    .slice(0, LIMITS.suggestions);
 }
 
 // A pick of a value that wasn't first is worth remembering. An address is remembered by
@@ -205,7 +209,7 @@ export function installSuggestions(
     const detail = KIND_LABELS[focused.field.kind] ?? "";
     const kind = pickKind(focused.field);
     const choices: Choice[] = suggestionOptions(focused.field, known).map(
-      (value, index) =>
+      ({ value }, index) =>
         kind === undefined || index === 0
           ? { value, detail }
           : { value, detail, onPick: () => { picked(kind, value); } },

@@ -96,15 +96,23 @@ struct MessageContractTests {
         ("captureResult", .capture(CaptureResponse(saved: 1, review: 0, ignored: 1))),
         ("popupStateResult", .popupState(popupExample)),
         ("linkSuggestionsResult", .linkSuggestions(LinkSuggestionsResponse(links: [
-            SuggestedLink(type: .github, url: "https://github.com/alexrivera"),
+            SuggestedLink(type: .github, url: "https://github.com/alexrivera", why: .pinned),
             SuggestedLink(type: .website, url: "https://alexrivera.dev")
         ]))),
         ("contactSuggestionsResult", .contactSuggestions(ContactSuggestionsResponse(
-            emails: ["alex@work.example.org", "alex.rivera@example.com"], addresses: [Alex.durant],
+            emails: [
+                SuggestedValue(value: "alex@work.example.org", why: .pinned, label: "work"),
+                SuggestedValue(value: "alex.rivera@example.com", why: .used)
+            ],
+            addresses: [SuggestedAddress(address: Alex.durant, label: "home")],
             name: SuggestedName(given: "Alex", family: "Rivera")
         ))),
         ("customSuggestionsResult", .customSuggestions(CustomSuggestionsResponse(fields: [
-            .init(values: ["UC Berkeley"]), .init(values: [], guesses: ["EECS"])
+            .init(values: [SuggestedValue(value: "UC Berkeley", label: "School")]),
+            .init(values: [
+                SuggestedValue(value: "Yes", why: .learned, label: "Work authorization", site: "example.io")
+            ]),
+            .init(values: [], guesses: ["EECS"])
         ]))),
         ("answersResult", .answers(AnswersResponse(saved: 2))),
         ("pickedResult", .picked(PickedResponse(remembered: true))),
@@ -126,6 +134,7 @@ struct MessageContractTests {
         #expect(enums["popupStatus"] as? [String] == PopupStatus.allCases.map(\.rawValue))
         #expect(enums["recentState"] as? [String] == PopupRecentState.allCases.map(\.rawValue))
         #expect(enums["pickKind"] as? [String] == PickKind.allCases.map(\.rawValue))
+        #expect(enums["why"] as? [String] == SuggestionWhy.allCases.map(\.rawValue))
     }
 
     // Mirrors the rejected requests in web/src/messages.test.ts.

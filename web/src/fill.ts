@@ -256,7 +256,7 @@ async function gather(slots: readonly Slot[], options: FillOptions): Promise<Ans
   const [contact, links, custom] = await Promise.all(requests(slots, options.host()).map(ask));
   const answers = new Map<string, readonly string[]>();
   if (custom?.type === "customSuggestionsResult")
-    texts.forEach((text, index) => answers.set(text, custom.fields[index]?.values ?? []));
+    texts.forEach((text, index) => answers.set(text, custom.fields[index]?.values.map(({ value }) => value) ?? []));
   return {
     contact: contact?.type === "contactSuggestionsResult" ? contact : undefined,
     links: links?.type === "linkSuggestionsResult" ? links.links : [],
@@ -268,7 +268,7 @@ function valuesFor(want: Want, answers: Answers): { values: string[]; detail: st
   switch (want.from) {
     case "contact":
       return {
-        values: answers.contact === undefined ? [] : suggestionOptions(want.field, answers.contact),
+        values: answers.contact === undefined ? [] : suggestionOptions(want.field, answers.contact).map(({ value }) => value),
         detail: KIND_LABELS[want.field.kind] ?? "",
       };
     case "link":

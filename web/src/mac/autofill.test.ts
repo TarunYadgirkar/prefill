@@ -44,7 +44,9 @@ describe("Mac autofill plan", () => {
       type: "contactSuggestionsResult",
       emails: [],
       phones: [],
-      addresses: [{ street: "1 Main St", city: "Berkeley", state: "CA", postalCode: "94720", country: "USA" }],
+      addresses: [
+        { address: { street: "1 Main St", city: "Berkeley", state: "CA", postalCode: "94720", country: "USA" }, why: "card" },
+      ],
     };
     expect(rows(chosen, reply)).toEqual([{ value: "Berkeley", detail: "Address", kind: "address" }]);
   });
@@ -52,7 +54,10 @@ describe("Mac autofill plan", () => {
   it("marks the rows a pick is worth telling the router about", () => {
     const emails = rows(plan(field({ label: "Email" })), {
       type: "contactSuggestionsResult",
-      emails: ["alex@work.example.org", "alex.rivera@example.com"],
+      emails: [
+        { value: "alex@work.example.org", why: "card" },
+        { value: "alex.rivera@example.com", why: "card" },
+      ],
       phones: [],
       addresses: [],
     });
@@ -62,7 +67,7 @@ describe("Mac autofill plan", () => {
     ]);
     const custom = rows(plan(field({ label: "School" })), {
       type: "customSuggestionsResult",
-      fields: [{ values: ["UC Berkeley"], guesses: ["EECS"] }],
+      fields: [{ values: [{ value: "UC Berkeley", why: "card" }], guesses: ["EECS"] }],
     });
     expect(custom.map((row) => row.pick?.question)).toEqual([undefined, "School"]);
     expect(custom.every((row) => row.onPick === undefined)).toBe(true);

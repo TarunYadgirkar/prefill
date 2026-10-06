@@ -47,6 +47,9 @@ export const JOB_QUESTIONS = [
 export const ANSWER_ACTIONS = ["learn", "undo"] as const;
 // What a pick from Prefill's list under a field is of. Mirrored by PickKind in Swift.
 export const PICK_KINDS = ["email", "phone", "address", "link", "custom"] as const;
+// Why a value is in Prefill's list: picked or used on this site before, on the card, learned
+// from a form, the on-device model's guess, or from a resume. Mirrored by SuggestionWhy in Swift.
+export const WHYS = ["pinned", "used", "card", "learned", "guess", "resume"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -81,6 +84,7 @@ export type PopupStatus = (typeof POPUP_STATUSES)[number];
 export type RecentState = (typeof RECENT_STATES)[number];
 export type JobQuestion = (typeof JOB_QUESTIONS)[number];
 export type PickKind = (typeof PICK_KINDS)[number];
+export type Why = (typeof WHYS)[number];
 
 const INVALID: unique symbol = Symbol("invalid");
 type Parser<T> = (value: unknown) => T | typeof INVALID;
@@ -187,10 +191,26 @@ const postalAddress = object({
 
 const pageField = object({ kind: oneOf(FIELD_KINDS), section });
 
+const why = oneOf(WHYS);
 const WEB_ADDRESS = /^https?:\/\/\S+$/u;
 const suggestedLink = object({
   type: oneOf(LINK_TYPES),
   url: refine(text(LIMITS.value), (url) => WEB_ADDRESS.test(url)),
+  why,
+});
+// `label` is the card's label ("work") or the custom field's ("School"), and `site` where a
+// learned answer was saved from.
+const suggestedValue = (max: number) =>
+  object({
+    value: text(max),
+    why,
+    label: optional(text(LIMITS.text)),
+    site: optional(hostName),
+  });
+const suggestedAddress = object({
+  address: postalAddress,
+  why,
+  label: optional(text(LIMITS.text)),
 });
 
 // An address arrives in parts and every other kind as one value, never both.
@@ -326,9 +346,9 @@ const pageResponses = {
   }),
   contactSuggestionsResult: object({
     type: literal("contactSuggestionsResult"),
-    emails: arrayOf(text(LIMITS.value), LIMITS.suggestions),
-    phones: arrayOf(text(LIMITS.value), LIMITS.suggestions),
-    addresses: arrayOf(postalAddress, LIMITS.suggestions),
+    emails: arrayOf(suggestedValue(LIMITS.value), LIMITS.suggestions),
+    phones: arrayOf(suggestedValue(LIMITS.value), LIMITS.suggestions),
+    addresses: arrayOf(suggestedAddress, LIMITS.suggestions),
     name: optional(
       object({ given: text(LIMITS.part), family: text(LIMITS.part) }),
     ),
@@ -337,8 +357,9 @@ const pageResponses = {
     type: literal("customSuggestionsResult"),
     fields: arrayOf(
       object({
-        values: arrayOf(text(LIMITS.customValue), LIMITS.customOptions),
+        values: arrayOf(suggestedValue(LIMITS.customValue), LIMITS.customOptions),
         // What the app's on-device model thinks answers the field: offered as a marked option.
+        // Their `why` is always "guess".
         guesses: optional(arrayOf(text(LIMITS.customValue), LIMITS.customOptions)),
       }),
       LIMITS.pageFields,
@@ -404,6 +425,8 @@ export type PageContextResult = Parsed<typeof pageResponses.pageContextResult>;
 export type CaptureResult = Parsed<typeof pageResponses.captureResult>;
 export type ErrorResponse = Parsed<typeof pageResponses.error>;
 export type SuggestedLink = Parsed<typeof suggestedLink>;
+export type SuggestedValue = Parsed<ReturnType<typeof suggestedValue>>;
+export type SuggestedAddress = Parsed<typeof suggestedAddress>;
 export type LinkSuggestionsResult = Parsed<
   typeof pageResponses.linkSuggestionsResult
 >;

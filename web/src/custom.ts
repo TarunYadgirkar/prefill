@@ -52,7 +52,7 @@ export function customChoices(
   field: CustomField | undefined,
   onPick: (value: string) => void,
 ): Choice[] {
-  const answers = (field?.values ?? []).map((value, index) => ({
+  const answers = (field?.values ?? []).map(({ value }, index) => ({
     value,
     detail: CUSTOM_DETAIL,
     ...(index === 0 ? {} : { onPick: () => { onPick(value); } }),

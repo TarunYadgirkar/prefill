@@ -5,14 +5,17 @@ import type { SuggestedLink } from "./messages";
 const github: SuggestedLink = {
   type: "github",
   url: "https://github.com/alexrivera",
+  why: "card",
 };
 const website: SuggestedLink = {
   type: "website",
   url: "https://alexrivera.dev/",
+  why: "card",
 };
 const linkedin: SuggestedLink = {
   type: "linkedin",
   url: "https://www.linkedin.com/in/alexrivera",
+  why: "card",
 };
 const links = [linkedin, website, github];
 

@@ -79,7 +79,7 @@ function contactRows(chosen: Extract<Plan, { kind: "contact" }>, response: PageR
   if (response.type !== "contactSuggestionsResult") return [];
   const detail = KIND_LABELS[chosen.field.kind] ?? "";
   const kind = pickKind(chosen.field);
-  return suggestionOptions(chosen.field, response).map((value, index) => ({
+  return suggestionOptions(chosen.field, response).map(({ value }, index) => ({
     value,
     detail,
     kind: chosen.field.kind,

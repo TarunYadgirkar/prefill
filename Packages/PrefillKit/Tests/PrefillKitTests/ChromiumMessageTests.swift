@@ -14,14 +14,19 @@ struct ChromiumMessageTests {
         return MessageRouter(store: store, gateway: gateway, now: { .testNow }).route(message)
     }
 
+    private static let emails = [
+        SuggestedValue(value: "alex@work.example.org", label: "work"),
+        SuggestedValue(value: "alex.rivera@example.com", label: "home"),
+        SuggestedValue(value: "alex.school@example.edu")
+    ]
+
     @Test func suggestionsFollowTheSiteWithoutWritingTheCard() {
         let reply = route([
             "type": "contactSuggestions", "host": "portal.example.org",
             "fields": [["kind": "email", "section": "work"], ["kind": "name"]]
         ])
         let expected = ContactSuggestionsResponse(
-            emails: ["alex@work.example.org", "alex.rivera@example.com", "alex.school@example.edu"],
-            name: SuggestedName(given: "Alex", family: "Rivera")
+            emails: Self.emails, name: SuggestedName(given: "Alex", family: "Rivera")
         )
         #expect(reply == .contactSuggestions(expected))
         #expect(gateway.saves.isEmpty)
@@ -37,8 +42,7 @@ struct ChromiumMessageTests {
             $0.placement = CardPlacement(onCard: [.entry(Alex.mobile.entry)], isMinimal: true)
         }
         let expected = ContactSuggestionsResponse(
-            emails: ["alex@work.example.org", "alex.rivera@example.com", "alex.school@example.edu"],
-            phones: ["+1 (415) 555-0199"]
+            emails: Self.emails, phones: [SuggestedValue(value: "+1 (415) 555-0199", label: "work")]
         )
         #expect(route(message) == .contactSuggestions(expected))
     }

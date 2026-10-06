@@ -86,7 +86,9 @@ struct CustomFieldTests {
             "type": "customSuggestions", "host": "boards.example.io",
             "fields": [["text": "School"], ["text": "Cover letter"]]
         ])
-        let expected = CustomSuggestionsResponse(fields: [.init(values: ["UC Berkeley"]), .init(values: [])])
+        let expected = CustomSuggestionsResponse(fields: [
+            .init(values: [SuggestedValue(value: "UC Berkeley", label: "School")]), .init(values: [])
+        ])
         #expect(reply == .customSuggestions(expected))
     }
 
