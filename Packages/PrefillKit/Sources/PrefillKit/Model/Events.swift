@@ -87,3 +87,17 @@ public struct FormQuestion: Codable, Sendable, Hashable {
         self.date = date
     }
 }
+
+// A custom answer the person picked from Prefill's list, kept by the question's words so
+// the same question on any site offers it first.
+public struct AnswerPick: Codable, Sendable, Hashable {
+    public let words: String
+    public let label: String
+    public let date: Date
+
+    public init(words: String, label: String, date: Date) {
+        self.words = words
+        self.label = label
+        self.date = date
+    }
+}

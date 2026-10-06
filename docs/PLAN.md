@@ -58,7 +58,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.2 Router: a pick pins the value for the site without rewriting the card
   - [x] 1.3 Dropdown reports picks; contact suggestions send them
   - [x] 1.4 Links honor pins and report picks
-  - [ ] 1.5 Custom answers remember the pick per question
+  - [x] 1.5 Custom answers remember the pick per question
   - [ ] 1.6 Mac panel reports picks
   - [ ] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
@@ -166,9 +166,9 @@ New file `Messages/MessageRouter+Picks.swift`:
 
 Custom fields are matched by words (`CustomFieldMatcher.values`), up to 3, plus model guesses. When several match ("School" vs "High school") the person's pick should come first next time, on any site, for questions with the same words.
 
-- Store per-device: `AppState`/`ExtensionEvents` gain `answerPicks: [AnswerPick]` where `AnswerPick{words: String (CustomFieldMatcher.words of the question, sorted, joined), label: String, date}`. Cap 200, newest wins.
+- Store per-device: `ExtensionEvents` gains `answerPicks: [AnswerPick]` where `AnswerPick{words: String (CustomFieldMatcher.words of the question, sorted, joined), label: String, date}`. Cap 200, newest wins.
 - `customSuggestions` reorders each field's `values` so the picked label's value comes first when the words match.
-- Picking a **guess** (`detail: "Suggested"`) is a strong signal: append the pick and also add the guess as a learned answer through the same path `answers` uses (`gateway.save(scope: .addAnswers)`), so it becomes a real value. Do this only for a guess, which is already one of the person's own custom values (the model picks among them), so no new value is invented.
+- Picking a **guess** (`detail: "Suggested"`) records the same pick. Since a guess is always one of the person's own custom values (the model picks among them), the pick alone makes it a real value for that question next time, with no Contacts write. (Built this way instead of saving the guess as a learned answer: nothing new needs storing on the card.)
 - Tests: reorder by pick; a guess pick becomes a value next time; cap respected.
 
 ### 1.6 Mac panel

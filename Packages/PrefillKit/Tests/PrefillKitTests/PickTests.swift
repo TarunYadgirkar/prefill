@@ -93,4 +93,34 @@ struct PickTests {
         #expect(router.route(pick("link", "alex.example.blog")) == remembered)
         #expect(urls() == ["https://alex.example.blog", "https://alexrivera.dev"])
     }
+
+    private func answers(_ router: MessageRouter, _ question: String) -> CustomSuggestionsResponse.Field? {
+        let ask: [String: Any] = [
+            "type": "customSuggestions", "host": "jobs.example.org", "fields": [["text": question]]
+        ]
+        guard case .customSuggestions(let reply) = router.route(ask) else { return nil }
+        return reply.fields.first
+    }
+
+    private func customPick(_ value: String, question: String) -> [String: Any] {
+        ["type": "picked", "host": "boards.example.io", "kind": "custom", "value": value, "question": question]
+    }
+
+    @Test func aPickedAnswerComesFirstForTheSameQuestionAnywhere() {
+        let fields = [
+            CustomField(label: "School", value: "UC Berkeley", matchWords: []),
+            CustomField(label: "High school", value: "Berkeley High", matchWords: [])
+        ]
+        let gateway = FakeGateway(card: Alex.card.replacingCustomFields(with: fields))
+        let store = linked()
+        let router = MessageRouter(store: store, gateway: gateway, now: { .testNow })
+        #expect(answers(router, "High school name")?.values.first == "Berkeley High")
+        #expect(answers(router, "Name of school")?.values == ["UC Berkeley"])
+        #expect(router.route(customPick("Berkeley High", question: "School name?")) == remembered)
+        #expect(answers(router, "name, school")?.values == ["Berkeley High", "UC Berkeley"])
+        #expect(router.route(customPick("Stanford", question: "School name")) == ignored)
+        #expect(router.route(customPick("UC Berkeley", question: "the")) == ignored)
+        #expect(store.events.answerPicks.count == 1)
+        #expect(gateway.saves.isEmpty)
+    }
 }
