@@ -70,7 +70,7 @@ describe("installSuggestions", () => {
     return () => showing.delete(element);
   };
 
-  const start = (send: SuggestionOptions["send"]) => {
+  const start = (send: SuggestionOptions["send"], skip?: SuggestionOptions["skip"]) => {
     showing = new Map();
     vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(
       new DOMRect(10, 10, 200, 30),
@@ -80,6 +80,7 @@ describe("installSuggestions", () => {
       send,
       isUserEvent: () => true,
       attach,
+      ...(skip === undefined ? {} : { skip }),
     });
   };
 
@@ -102,6 +103,23 @@ describe("installSuggestions", () => {
             : { type: "contactSuggestionsResult", ...values },
         ),
       );
+
+  it("brings the list back when the person empties a field Prefill filled", async () => {
+    document.body.innerHTML = '<input type="email" autocomplete="email" value="alex@example.com">';
+    // Fill form's own picker owns a field while it holds a value.
+    const stop = start(reply(), (element) => (element as HTMLInputElement).value !== "");
+    await Promise.resolve();
+    const field = firstInput();
+    field.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    field.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    expect(showing.size).toBe(0);
+    field.value = "";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(optionsOf(field).length).toBeGreaterThan(0);
+    stop();
+  });
 
   it("gives nothing to a field the page focused by itself", async () => {
     document.body.innerHTML = '<input type="email" autocomplete="email">';

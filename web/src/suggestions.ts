@@ -7,7 +7,7 @@ import {
   type Choice,
   type TextField,
 } from "./dropdown";
-import { trackGestures } from "./gesture";
+import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
 import { labelled, whyDetail } from "./why";
 import {
@@ -255,25 +255,33 @@ export function installSuggestions(
     );
   };
 
-  const onFocus = (event: Event): void => {
-    const target = isUserEvent(event) ? eventOrigin(event) : null;
-    if (
-      !isFieldElement(target) ||
-      isTaken(target) ||
-      !isTextField(target, !offCard)
-    )
-      return;
+  const show = (target: FieldElement): void => {
+    if (detach !== undefined || isTaken(target) || !isTextField(target, !offCard)) return;
     const field = fieldOf(target);
-    if (field === undefined || !gestures.allows(target)) return;
+    if (field === undefined) return;
     clear();
     focused = { element: target, field };
     offer();
     fetchValues();
   };
 
-  const onBlur = (event: Event): void => {
-    if (eventOrigin(event) === focused?.element) clear();
+  // The field the person tapped or tabbed into, even one Prefill filled, so emptying it
+  // brings its list back.
+  let armed: FieldElement | undefined;
+  const onFocus = (event: Event): void => {
+    const target = isUserEvent(event) ? eventOrigin(event) : null;
+    if (!isFieldElement(target) || fieldOf(target) === undefined || !gestures.allows(target)) return;
+    armed = target;
+    clear();
+    show(target);
   };
+
+  const onBlur = (event: Event): void => {
+    const target = eventOrigin(event);
+    if (target === armed) armed = undefined;
+    if (target === focused?.element) clear();
+  };
+  const stopEmptied = onEmptied(doc, isUserEvent, () => armed, show);
 
   if (doc.readyState === "loading")
     doc.addEventListener("DOMContentLoaded", fetchValues, { once: true });
@@ -283,6 +291,7 @@ export function installSuggestions(
   return () => {
     clear();
     gestures.stop();
+    stopEmptied();
     doc.removeEventListener("DOMContentLoaded", fetchValues);
     doc.removeEventListener("focusin", onFocus, true);
     doc.removeEventListener("focusout", onBlur, true);

@@ -62,7 +62,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.6 Mac panel reports picks
   - [x] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
-  - [ ] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
+  - [x] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
   - [x] 2.1 Suggestions carry where each value came from
   - [x] 2.2 The list shows it (detail line and style)
   - [x] 2.3 A later answer replaces a learned one, with Undo
@@ -70,9 +70,9 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
   - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
-  - [ ] 3.1 `Answer` and `Memory` types over `CardSplit`
+  - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
-  - [ ] 3.3 Usage history per answer ("Used on")
+  - [x] 3.3 Usage history per answer ("Used on")
   - [ ] 3.4 Merge
 - **Phase 4: Freeze the Me card** (Gate: Tarun says go)
   - [ ] 4.1 Stop per-site card rewrites
@@ -294,6 +294,7 @@ public struct Memory: Sendable {
 - `Memory.read(gateway:, state:, events:)` builds it from `CNContactStoreGateway.fetchCard` (+ `placement` for `place`), `AppState.values` (origin and dates), `ExtensionEvents.answers` and `captures`.
 - Writes stay where they are (`CardWriter`, `CardEditor`, the answers path). `Memory` is read-only in this phase.
 - Tests: built from a fake gateway with a minimal and a full card, both give the same answers with different `place`.
+- Done as: `Memory.read(card:placement:state:events:)` is the pure core and `Memory.read(gateway:identifier:state:events:)` wraps it. `name` is a `Memory.Name` struct (a tuple isn't `Hashable`), `.captured(host:)` takes a `String?` because the capture can age out of the events, and a custom field's `label` is nil (the question carries it).
 
 ### 3.2 Routers read `Memory`
 
@@ -304,6 +305,7 @@ public struct Memory: Sendable {
 
 - `Memory.uses(of: Answer) -> [Use{site, date}]` from `UsageEvent`s, picks (Phase 1) and learned answers.
 - Used by the You tab's value detail (5.2) and the inbox.
+- Done as: `Memory.Use` (sites are registrable domains). Contact picks count through the UsageEvent and PinEvent they leave; a picked custom answer can't, because `AnswerPick` keeps no site.
 
 ### 3.4 Merge
 

@@ -3,9 +3,9 @@ import XCTest
 // Profile links end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=LinksE2ETests)
 // after a host test has linked the Alex Rivera card: add a GitHub link, a website and a
 // LinkedIn link in the app's Links tab, then focus a Greenhouse-style "GitHub/Portfolio:"
-// field and read Safari's bar, which should offer both links in one option first. On the way,
+// field and read Prefill's list under it, which should offer both links in one option first. On the way,
 // Settings > Sharing your card moves the links off the card Safari and NameDrop read onto
-// Prefill's own contact, and the bar still offers the links and the card's emails.
+// Prefill's own contact, and the list still offers the links and the card's emails.
 @MainActor
 final class LinksE2ETests: XCTestCase {
     private let app = XCUIApplication()
@@ -32,20 +32,20 @@ final class LinksE2ETests: XCTestCase {
         SafariDriver.open(E2EServer.Site.siteA.page("greenhouse.html"), waitingFor: "GitHub/Portfolio")
         Thread.sleep(forTimeInterval: 3)
         let combined = "github.com/alexrivera - alexrivera.dev"
-        var slots: [String] = []
-        for _ in 0..<4 {
-            slots = SafariDriver.suggestions(focusing: "GitHub/Portfolio")
-            if slots.first == combined { break }
-            SafariDriver.dismissKeyboard()
-            Thread.sleep(forTimeInterval: 2)
-        }
-        E2EServer.screenshot("links-greenhouse-bar")
-        XCTAssertEqual(slots, [combined, "github.com/alexrivera", "alexrivera.dev"])
+        let rows = [
+            SafariDriver.Row(value: combined, detail: "GitHub and Website"),
+            SafariDriver.Row(value: "github.com/alexrivera", detail: "GitHub"),
+            SafariDriver.Row(value: "alexrivera.dev", detail: "Website")
+        ]
+        let listed = SafariDriver.prefillList(focusing: "GitHub/Portfolio", rows: rows)
+        E2EServer.screenshot("links-greenhouse-list")
+        XCTAssertEqual(listed, [combined, "github.com/alexrivera", "alexrivera.dev"])
         SafariDriver.dismissKeyboard()
 
-        let emails = SafariDriver.suggestions(focusing: "Email")
-        E2EServer.screenshot("links-greenhouse-email-bar")
-        XCTAssertTrue(emails.contains { $0.contains("alex.rivera@example.com") }, "email bar was \(emails)")
+        let email = SafariDriver.Row(value: "alex.rivera@example.com", detail: "Email")
+        let emails = SafariDriver.prefillList(focusing: "Email", rows: [email])
+        E2EServer.screenshot("links-greenhouse-email-list")
+        XCTAssertEqual(emails, [email.value], "the email field's list lost the card's email")
         SafariDriver.dismissKeyboard()
     }
 

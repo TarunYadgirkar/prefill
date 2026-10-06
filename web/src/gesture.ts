@@ -98,3 +98,23 @@ export function trackGestures(
     },
   };
 }
+
+// Calls `show` when the person empties a field they tapped or tabbed into without leaving
+// it, such as after deleting what Safari's AutoFill put there, so its list comes back.
+// `armed` is the field whose focus passed the gesture gate.
+export function onEmptied(
+  doc: Document,
+  isUserEvent: (event: Event) => boolean,
+  armed: () => FieldElement | undefined,
+  show: (element: FieldElement) => void,
+): () => void {
+  const onInput = (event: Event): void => {
+    const target = eventOrigin(event);
+    if (!isUserEvent(event) || target === null || target !== armed()) return;
+    if ((target as HTMLInputElement).value === "") show(target as FieldElement);
+  };
+  doc.addEventListener("input", onInput, true);
+  return () => {
+    doc.removeEventListener("input", onInput, true);
+  };
+}
