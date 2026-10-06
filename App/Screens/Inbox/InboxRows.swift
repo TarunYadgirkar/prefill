@@ -89,18 +89,24 @@ struct LearnedRow: View {
                 .textRole(.value)
                 .fixedSize(horizontal: false, vertical: true)
         } actions: {
-            HStack(spacing: Spacing.small) {
-                Button("Edit", systemImage: "pencil", action: edit)
-                    .prefillButtonStyle(.rowSecondary)
-                    .accessibilityIdentifier("inbox-edit")
-                Button("Remove", systemImage: "minus.circle", role: .destructive) {
-                    Task { await model.undo(answer) }
-                }
-                .prefillButtonStyle(.rowDestructive)
-                .accessibilityIdentifier("inbox-remove-answer")
+            // Side by side while they fit; stacked at the largest text sizes.
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Spacing.small) { buttons }
+                VStack(alignment: .leading, spacing: Spacing.small) { buttons }
             }
         }
         .accessibilityIdentifier("answer-\(answer.label)")
+    }
+
+    @ViewBuilder private var buttons: some View {
+        Button("Edit", systemImage: "pencil", action: edit)
+            .prefillButtonStyle(.rowSecondary)
+            .accessibilityIdentifier("inbox-edit")
+        Button("Remove", systemImage: "minus.circle", role: .destructive) {
+            Task { await model.undo(answer) }
+        }
+        .prefillButtonStyle(.rowDestructive)
+        .accessibilityIdentifier("inbox-remove-answer")
     }
 }
 

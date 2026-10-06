@@ -95,6 +95,8 @@ final class AppTourTests: XCTestCase {
         snap("onboarding-sharing")
         later.tap()
         let open = app.buttons["open-safari-settings"]
+        // The toolbar button sometimes takes the first tap before the screen settles.
+        if !open.waitForExistence(timeout: 5), later.exists { later.tap() }
         XCTAssertTrue(open.waitForExistence(timeout: 10))
         snap("onboarding-safari")
         swipeUp(until: open)
