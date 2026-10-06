@@ -115,3 +115,11 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - A learned answer is never replaced by a later one; the person edits it in the Custom tab.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
+
+## Ongoing
+
+Last session (Oct 4–6, 2026): PR #1 merged into main, then these on main: minimal card offered in setup and its phones never reordered or rewritten, learned answers on submit (with Undo), student starter set, Mac "Fill form", per-field lists in Safari, on-device guesses, phone matching by digits, questions printed before unlabelled fields (Partiful). Installed on the iPhone and Mac; the daily reinstall job is loaded from this checkout.
+
+Not yet checked by a person: one-tap fill and the per-field list in Safari on the iPhone itself (only the simulator), guesses on the iPhone (needs Apple Intelligence on and a second visit), and NameDrop after the phone-identifier fix (it came back after a restart; whether Prefill still disturbs it is untested).
+
+Next ideas, none started: let the extension handle `autocomplete`-only fields while the Mac engine is on; a Mac equivalent of "put back on card"; React-Select answers for learning; replacing a learned answer with a later one.
