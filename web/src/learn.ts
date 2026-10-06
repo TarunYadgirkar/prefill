@@ -121,7 +121,13 @@ export function collectAnswers(scope: ParentNode, touched: Touched): Answer[] {
 
 // "Saved 3 answers" with Undo, at the bottom of the page, in a closed shadow root like the
 // fill pill so the page can't press it.
-function showSaved(doc: Document, win: Window, saved: number, undo: () => void, isUserEvent: (event: Event) => boolean): void {
+interface PillAction {
+  label: string;
+  run: () => void;
+  isUserEvent: (event: Event) => boolean;
+}
+
+function showPill(doc: Document, win: Window, text: string, action?: PillAction): void {
   const host = doc.createElement("prefill-saved");
   const root = host.attachShadow({ mode: "closed" });
   const style = doc.createElement("style");
@@ -131,11 +137,8 @@ function showSaved(doc: Document, win: Window, saved: number, undo: () => void, 
   const status = doc.createElement("span");
   status.className = "status";
   status.setAttribute("role", "status");
-  status.textContent = `Saved ${String(saved)} ${saved === 1 ? "answer" : "answers"}`;
-  const button = doc.createElement("button");
-  button.className = "main";
-  button.textContent = "Undo";
-  pill.append(status, button);
+  status.textContent = text;
+  pill.append(status);
   root.append(style, pill);
   host.setAttribute("popover", "manual");
   setStyles(host, { position: "fixed", margin: "0", padding: "0", border: "0", background: "transparent", inset: "auto", "z-index": "2147483647", overflow: "visible" });
@@ -151,11 +154,16 @@ function showSaved(doc: Document, win: Window, saved: number, undo: () => void, 
   const timer = setTimeout(() => {
     host.remove();
   }, TOAST_MS);
+  if (action === undefined) return;
+  const button = doc.createElement("button");
+  button.className = "main";
+  button.textContent = action.label;
+  pill.append(button);
   button.addEventListener("click", (event) => {
-    if (!isUserEvent(event)) return;
+    if (!action.isUserEvent(event)) return;
     clearTimeout(timer);
     host.remove();
-    undo();
+    action.run();
   });
 }
 
@@ -195,8 +203,18 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
     if (form !== undefined) pressed = { form, at: now() };
   };
 
+  // The answers are already on the card, so a failed undo must say so rather than vanish.
   const undo = (): void => {
-    options.send({ type: "answers", host: options.host(), action: "undo", answers: [] }).catch(() => undefined);
+    const failed = (): void => {
+      showPill(doc, win, "Couldn’t undo. Remove the answers in Contacts.");
+    };
+    options
+      .send({ type: "answers", host: options.host(), action: "undo", answers: [] })
+      .then((raw) => {
+        const reply = parseExtensionResponse(raw);
+        if (reply?.type !== "answersResult" || reply.saved === 0) failed();
+      })
+      .catch(failed);
   };
 
   const onSubmit = (event: Event): void => {
@@ -209,7 +227,9 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .send({ type: "answers", host: options.host(), action: "learn", answers })
       .then((raw) => {
         const reply = parseExtensionResponse(raw);
-        if (reply?.type === "answersResult" && reply.saved > 0) showSaved(doc, win, reply.saved, undo, isUserEvent);
+        if (reply?.type !== "answersResult" || reply.saved === 0) return;
+        const noun = reply.saved === 1 ? "answer" : "answers";
+        showPill(doc, win, `Saved ${String(reply.saved)} ${noun}`, { label: "Undo", run: undo, isUserEvent });
       })
       .catch(() => undefined);
   };
