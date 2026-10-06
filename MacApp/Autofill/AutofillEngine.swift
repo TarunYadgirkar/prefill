@@ -255,6 +255,7 @@ final class AutofillEngine {
     @ObservationIgnored private var e2ePicks = 0
 
     // With PREFILL_E2E_AX_FILL_FORM, the second field focused gets "Fill form" instead.
+    // Later fields take the first row again.
     // scripts/e2e-mac-ax.sh never presses keys on the person's screen, so the test copy
     // picks the first row itself a moment after showing it.
     private func autopick(_ field: AXUIElement) {
@@ -265,7 +266,7 @@ final class AutofillEngine {
         Task {
             try? await Task.sleep(for: .seconds(delay))
             guard let current, CFEqual(current.field.element, field), let first = panel.model.rows.first else { return }
-            let fillsForm = ProcessInfo.processInfo.environment["PREFILL_E2E_AX_FILL_FORM"] == "1" && e2ePicks > 0
+            let fillsForm = ProcessInfo.processInfo.environment["PREFILL_E2E_AX_FILL_FORM"] == "1" && e2ePicks == 1
             e2ePicks += 1
             if fillsForm { fillForm() } else { pick(first) }
         }

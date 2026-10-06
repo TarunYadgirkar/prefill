@@ -327,6 +327,8 @@ const pageResponses = {
     fields: arrayOf(
       object({
         values: arrayOf(text(LIMITS.customValue), LIMITS.customOptions),
+        // What the app's on-device model thinks answers the field: offered as a marked option.
+        guesses: optional(arrayOf(text(LIMITS.customValue), LIMITS.customOptions)),
       }),
       LIMITS.pageFields,
     ),

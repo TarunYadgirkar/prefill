@@ -1,7 +1,7 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify, isSignIn } from "./classify";
 import { attachDatalist } from "./datalist";
-import type { Attach, TextField } from "./dropdown";
+import type { Attach, Choice, TextField } from "./dropdown";
 import {
   eventOrigin,
   hasOwnList,
@@ -35,6 +35,7 @@ export interface CustomOptions {
 
 const MAX_INSPECTED = 200;
 export const CUSTOM_DETAIL = "Custom field";
+export const GUESS_DETAIL = "Suggested";
 // A datalist shows on text inputs; text areas and selects never show one, and a search box
 // never wants a saved answer.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text"]);
@@ -103,7 +104,7 @@ export function installCustom(
   const isCandidate = (element: FieldElement): element is TextField =>
     isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);
-  const known = new Map<string, readonly string[]>();
+  const known = new Map<string, readonly Choice[]>();
   let detach: (() => void) | undefined;
   let focused: { element: TextField; text: string } | undefined;
 
@@ -122,10 +123,7 @@ export function installCustom(
       values.length === 0
     )
       return;
-    detach = attach(
-      focused.element,
-      values.map((value) => ({ value, detail: CUSTOM_DETAIL })),
-    );
+    detach = attach(focused.element, [...values]);
   };
 
   const fetchValues = (texts: readonly string[]): void => {
@@ -143,9 +141,13 @@ export function installCustom(
           response.fields.length !== texts.length
         )
           return;
-        texts.forEach((text, index) =>
-          known.set(text, response.fields[index]?.values ?? []),
-        );
+        texts.forEach((text, index) => {
+          const field = response.fields[index];
+          known.set(text, [
+            ...(field?.values ?? []).map((value) => ({ value, detail: CUSTOM_DETAIL })),
+            ...(field?.guesses ?? []).map((value) => ({ value, detail: GUESS_DETAIL })),
+          ]);
+        });
         offer();
       })
       .catch(() => undefined);

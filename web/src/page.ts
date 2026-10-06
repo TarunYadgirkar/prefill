@@ -2,7 +2,6 @@ import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { installContext } from "./context";
 import { installCustom } from "./custom";
-import { attachDatalist } from "./datalist";
 import { showDropdown } from "./dropdown";
 import type { FieldElement } from "./fieldTypes";
 import { fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
@@ -47,35 +46,21 @@ export function startPage(env: PageEnvironment): () => void {
     env.send(request).catch(() => undefined);
   };
   const isChromium = env.browser === "chromium";
-  // Chrome mixes a datalist into its own autofill menu, doesn't open it when Tab brings
-  // focus, never shows one on a text area, and leaves its values in the page for scripts to
-  // read. So there every list is Prefill's own, in a closed shadow root.
-  const shown = isChromium ? { attach: showDropdown, skip: isFilled } : { skip: isFilled };
-  // In Safari the card's order still follows the page, and values a minimal card left on
-  // Prefill's contact come through a datalist for Safari's bar.
-  const values = isChromium
-    ? [installSuggestions(env.doc, { host, send: env.send, skip: isFilled })]
-    : [
-        installContext(env.doc, env.win, { host, send: env.send }),
-        installSuggestions(env.doc, {
-          host,
-          send: env.send,
-          attach: attachDatalist,
-          offCard: true,
-          skip: isFilled,
-        }),
-      ];
+  // Every list is Prefill's own, in a closed shadow root, in Safari as in Chrome: Safari's
+  // bar shows at most three values with no labels, and nothing once the card is minimal,
+  // so the field's own list sits under it with every value, next to the Fill form pill.
+  const shown = { attach: showDropdown, skip: isFilled };
+  // In Safari the card's order still follows the page.
+  const values = [
+    ...(isChromium ? [] : [installContext(env.doc, env.win, { host, send: env.send })]),
+    installSuggestions(env.doc, { host, send: env.send, ...shown }),
+  ];
   const stops = [
     ...values,
     installCapture(env.doc, env.win, { host, send }),
     installLearn(env.doc, env.win, { host, send: env.send }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
-    installCustom(env.doc, {
-      host,
-      send: env.send,
-      ...shown,
-      textAreas: isChromium,
-    }),
+    installCustom(env.doc, { host, send: env.send, ...shown, textAreas: true }),
   ];
   const fill = startFill(env, host);
   return () => {

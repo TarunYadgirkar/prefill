@@ -89,4 +89,29 @@ struct CustomFieldTests {
         let expected = CustomSuggestionsResponse(fields: [.init(values: ["UC Berkeley"]), .init(values: [])])
         #expect(reply == .customSuggestions(expected))
     }
+
+    // The model's answer, cached by the app, reaches the field as a marked guess; a question
+    // nobody has asked about yet is kept for the app, once, with only its words.
+    @Test func aCachedGuessIsOfferedAndANewQuestionIsNotedForTheApp() throws {
+        let card = Alex.card.replacingCustomFields(with: fields)
+        let link = CardLink(
+            contactIdentifier: card.identifier, containerIdentifier: nil, linkedIdentifiers: [],
+            original: card, snapshotAt: .daysAgo(30)
+        )
+        let key = InsightKey.answer("Which program are you studying?", variant: Intelligence.modelVariant)
+        let state = AppState(values: Alex.allValues, cardLink: link)
+            .recording([CachedInsight(key: key, answer: "Major")], siteKinds: [:])
+        let store = MemoryStore(state)
+        let router = MessageRouter(store: store, gateway: FakeGateway(card: card), now: { .testNow })
+        let ask = { (text: String) in
+            router.route(["type": "customSuggestions", "host": "jobs.example.com", "fields": [["text": text]]])
+        }
+        #expect(ask("Which program are you studying?")
+            == .customSuggestions(CustomSuggestionsResponse(fields: [.init(values: [], guesses: ["EECS"])])))
+        #expect(ask("Favourite snack") == .customSuggestions(CustomSuggestionsResponse(fields: [.init(values: [])])))
+        _ = ask("Favourite snack")
+        #expect(try store.readEvents().questions == [
+            FormQuestion(host: "example.com", text: "Favourite snack", date: .testNow)
+        ])
+    }
 }

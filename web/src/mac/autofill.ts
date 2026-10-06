@@ -4,7 +4,7 @@
 // panel shows. Built to web/dist-mac/autofill.js as the global `PrefillAutofill`.
 import { parseAutocomplete } from "../autocomplete";
 import { classifyDescription, type FieldDescription } from "../classify";
-import { CUSTOM_DETAIL, joinFieldText } from "../custom";
+import { CUSTOM_DETAIL, GUESS_DETAIL, joinFieldText } from "../custom";
 import type { Choice } from "../dropdown";
 import { isContact, type ContactField } from "../fieldTypes";
 import { linkChoices } from "../links";
@@ -72,7 +72,11 @@ function linkRows(chosen: Extract<Plan, { kind: "link" }>, response: PageRespons
 
 function customRows(response: PageResponse): Row[] {
   if (response.type !== "customSuggestionsResult") return [];
-  return (response.fields[0]?.values ?? []).map((value) => ({ value, detail: CUSTOM_DETAIL, kind: "custom" }));
+  const field = response.fields[0];
+  return [
+    ...(field?.values ?? []).map((value) => ({ value, detail: CUSTOM_DETAIL, kind: "custom" })),
+    ...(field?.guesses ?? []).map((value) => ({ value, detail: GUESS_DETAIL, kind: "custom" })),
+  ];
 }
 
 export function rows(chosen: Plan, reply: unknown): Row[] {

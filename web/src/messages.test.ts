@@ -100,7 +100,7 @@ const answers: AnswersRequest = {
 const answersResult: AnswersResult = { type: "answersResult", saved: 2 };
 const customSuggestionsResult: CustomSuggestionsResult = {
   type: "customSuggestionsResult",
-  fields: [{ values: ["UC Berkeley"] }, { values: [] }],
+  fields: [{ values: ["UC Berkeley"], guesses: [] }, { values: [], guesses: ["EECS"] }],
 };
 
 const pageContext: PageContextRequest = {

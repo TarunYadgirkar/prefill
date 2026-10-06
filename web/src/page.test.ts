@@ -110,13 +110,12 @@ it("runs on http only on this device itself", async () => {
   ).toEqual(["contactSuggestions", "pageContext"]);
 });
 
-it("asks Safari's app only for values a minimal card left off", async () => {
+it("asks Safari's app for every value, for the field's own list", async () => {
   const send = await load('<input type="email" autocomplete="email">');
   expect(send).toHaveBeenCalledWith({
     type: "contactSuggestions",
     host: "shop.example.net",
     fields: [{ kind: "email" }],
-    offCard: true,
   });
 });
 

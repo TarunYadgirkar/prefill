@@ -33,6 +33,14 @@ public final class AutofillScript {
         rows(planned: plan(field, rule: "fillPlan"), host: host, router: router).first
     }
 
+    // The words a field would be matched against, for a field the rules take as a custom one.
+    public func customQuestion(_ field: FieldDescription) -> String? {
+        guard let plan = plan(field), plan["kind"] as? String == "custom",
+              let request = plan["request"] as? [String: Any],
+              let fields = request["fields"] as? [[String: Any]] else { return nil }
+        return fields.first?["text"] as? String
+    }
+
     // "Fill form" for a whole form's empty fields: each one's value, by its place in `fields`.
     public func fillValues(for fields: [FieldDescription], host: String, router: MessageRouter) -> [Int: AutofillRow] {
         Dictionary(uniqueKeysWithValues: fields.enumerated().compactMap { index, field in
