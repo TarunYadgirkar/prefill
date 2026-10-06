@@ -63,7 +63,10 @@ extension MessageRouter {
         var unanswered: [String] = []
         let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
             let values = CustomFieldMatcher.values(for: field.text, in: custom)
-            if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks) {
+            // A pick only reorders what the question already matches, or stands in for a guess
+            // where nothing matched, so copying a question's words reaches no other answer.
+            if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks),
+               values.isEmpty || values.contains(picked) {
                 let ordered = [picked] + values.filter { $0 != picked }
                 return .init(values: Array(ordered.prefix(MessageLimits.customOptions)))
             }

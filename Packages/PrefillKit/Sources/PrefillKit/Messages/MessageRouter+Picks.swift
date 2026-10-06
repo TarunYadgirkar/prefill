@@ -11,7 +11,7 @@ extension MessageRouter {
 
     func picked(_ request: PickedRequest) -> PickedResponse {
         Self.eventLock.withLock { _ in
-            guard let state = currentState(), let link = state.cardLink, hasRoomForPick(),
+            guard !request.value.isEmpty, let state = currentState(), let link = state.cardLink, hasRoomForPick(),
                   let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
                 return PickedResponse(remembered: false)
             }
