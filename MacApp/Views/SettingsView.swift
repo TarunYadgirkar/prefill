@@ -2,48 +2,48 @@ import AppKit
 import PrefillKit
 import SwiftUI
 
+// What Prefill fills in first, then the switches, sharing and browsers, with the card and
+// the switch for every app under Advanced.
 struct SettingsView: View {
     @Environment(MacModel.self) private var model
+    @State private var query = ""
 
     var body: some View {
         Form {
-            Section {
-                CardStatus()
-            } header: {
-                Text("Contact card")
-            } footer: {
-                Text("Prefill uses the card set as My Card in Contacts. iCloud keeps it in sync with your iPhone.")
-                    .foregroundStyle(.secondary)
-            }
-            SharingSection()
+            YouSection(query: $query)
+            CustomFieldsSection(query: query)
             Section {
                 @Bindable var model = model
-                Toggle("Reorder for each site", isOn: $model.matchEachSite)
                 Toggle("Save new info", isOn: $model.saveNewInfo)
+                Toggle("Put the value you used on a site first", isOn: $model.matchEachSite)
                 Toggle("Open at login", isOn: $model.opensAtLoginSetting)
             } footer: {
                 Text("""
-                    Chrome and Arc suggest the values you use on each site first. New emails, phone numbers \
-                    and addresses you type are added to your card, or wait in the menu for you when Save new \
-                    info is off.
+                    New emails, phone numbers and addresses you type are added to your card, or wait in the \
+                    menu for you when Save new info is off. A value you pick on a site comes first there \
+                    from then on.
                     """)
                 .foregroundStyle(.secondary)
             }
-            Section {
-                AutofillSection()
-            } header: {
-                Text("Every app")
-            }
-            CustomFieldsSection()
+            SharingSection()
             Section {
                 BrowserList(browsers: model.browsers.filter(\.isInstalled))
                 ExtensionFolder()
             } header: {
                 Text("Browsers")
             }
+            Section {
+                CardStatus()
+                AutofillSection()
+            } header: {
+                Text("Advanced")
+            } footer: {
+                Text("Prefill uses the card set as My Card in Contacts. iCloud keeps it in sync with your iPhone.")
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
-        .frame(width: Size.settingsWidth)
+        .frame(width: Size.settingsWidth, height: Size.settingsHeight)
         .alert("Prefill", isPresented: problemShown) {
             Button("OK") { model.problem = nil }
         } message: {

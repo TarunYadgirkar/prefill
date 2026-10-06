@@ -53,12 +53,12 @@ extension AppModel {
 extension Memory {
     func answer(for item: YouItem) -> Answer? {
         switch item {
-        case .value(let value): answers.first { $0.id == value.id }
-        case .field(let field): answers.first { $0.question == .custom(label: field.label) }
+        case .value(let value): answer(forValue: value.id)
+        case .field(let field): answer(for: field)
         }
     }
 
     func useCount(_ item: YouItem) -> Int {
-        answer(for: item).map { uses(of: $0).count } ?? 0
+        useCount(answer(for: item))
     }
 }

@@ -85,7 +85,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 5.1 iPhone: Inbox tab
   - [x] 5.2 iPhone: You tab (search, groups, value detail)
   - [x] 5.3 iPhone: Settings trimmed
-  - [ ] 5.4 Mac menu mirrors the inbox
+  - [x] 5.4 Mac menu mirrors the inbox
   - [ ] 5.5 UI tests and screenshots, merge
 - **Phase 6: Cuts**
   - [ ] 6.1 Remove Siri intents, Shortcuts and the Focus filter
@@ -396,6 +396,7 @@ Done as: Advanced also holds Sites until 6.2 removes it. The Safari section (the
 
 - `MenuContent`: the inbox first (from `ReviewList`, extended with learned answers and resume items), then the engine toggle, then "Open Prefill Settings…".
 - `SettingsView`: You (searchable list like 5.2, with `CustomFieldsSection` folded in), Sharing, Browsers, Advanced.
+- Done as: the menu shows the card status only when something stops Prefill (no access, no My Card), otherwise the inbox: "Needs you" with Add / Dismiss and the last three learned answers with Remove, or "Nothing new". Settings searches with a plain field, since a Settings window has no toolbar for `.searchable`; the switches sit after the lists, and Advanced holds the card status and the switch for every app. `Memory.answer(forValue:)`, `answer(for:)` and `useCount` (PrefillKit `AppSupport/MemoryLookup.swift`) serve both apps.
 
 ### 5.5 UI tests and merge
 

@@ -1,16 +1,19 @@
 import PrefillKit
 import SwiftUI
 
-// The menu bar window: whether Prefill can work, then anything waiting for the person.
+// The menu bar window: the inbox first, or what stops Prefill from working, then the switch
+// for every app and the browsers.
 struct MenuContent: View {
     @Environment(MacModel.self) private var model
 
+    private var isReady: Bool { model.access == .granted && model.hasMeCard && model.card != nil }
+
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
-            CardStatus()
-            if !model.waiting.isEmpty {
-                Divider()
-                ReviewList(items: model.waiting)
+            if isReady {
+                ReviewList()
+            } else {
+                CardStatus()
             }
             Divider()
             AutofillSection()
