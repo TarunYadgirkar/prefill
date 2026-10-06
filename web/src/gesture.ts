@@ -23,7 +23,8 @@ export interface GestureGate {
 }
 
 // Shared by every gate on the page, since each of Prefill's lists keeps its own. A grant
-// ends when its field loses focus, another field takes focus, or a second has passed.
+// lets one check through, and ends unused when its field loses focus, another field takes
+// focus, or a second has passed.
 interface Grant {
   element: FieldElement;
   at: number;
@@ -82,7 +83,10 @@ export function trackGestures(
   doc.addEventListener("focusout", leave, true);
   return {
     allows: (element) => {
-      if (isGranted(doc, element, now())) return true;
+      if (isGranted(doc, element, now())) {
+        grants.delete(doc);
+        return true;
+      }
       if (!follows(last, element, now()) || !isInView(element)) return false;
       if (last?.key === "Tab") last.focused = element;
       return true;

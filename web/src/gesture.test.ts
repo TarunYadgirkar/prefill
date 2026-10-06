@@ -48,11 +48,12 @@ describe("the click-or-Tab gate", () => {
     const list = trackGestures(document, () => true, () => 0);
     pill.allowNext(input("second"));
     input("second").dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-    expect(list.allows(input("second"))).toBe(true);
     expect(list.allows(input("first"))).toBe(false);
-    input("second").dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
-    input("second").dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-    expect(list.allows(input("second"))).toBe(false);
+    expect(list.allows(input("second"))).toBe(true);
+    expect(pill.allows(input("second"))).toBe(false);
+    pill.allowNext(input("first"));
+    input("first").dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+    expect(list.allows(input("first"))).toBe(false);
     pill.stop();
     list.stop();
   });

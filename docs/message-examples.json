@@ -128,7 +128,7 @@
         { "values": [], "guesses": ["EECS"] }
       ]
     },
-    "answersResult": { "type": "answersResult", "saved": 2, "updated": 1 },
+    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"] },
     "pickedResult": { "type": "pickedResult", "remembered": true },
     "error": { "type": "error", "reason": "unknown message" }
   }

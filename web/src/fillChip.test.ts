@@ -15,7 +15,9 @@ describe("the Fill form pill", () => {
     document.body.innerHTML = '<form><input id="a"><input id="b"><input id="c"></form>';
     const field = (id: string) => document.getElementById(id) as HTMLInputElement;
     vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
-    Element.prototype.scrollIntoView = vi.fn();
+    Element.prototype.scrollIntoView = function (this: Element) {
+      document.elementFromPoint = () => this;
+    };
     // The pill's root is closed; the test keeps the handle the page never gets.
     let root: ShadowRoot | undefined;
     const { attachShadow } = Object.getOwnPropertyDescriptors(Element.prototype);
@@ -52,6 +54,8 @@ describe("the Fill form pill", () => {
 
     await press("next");
     expect(document.activeElement).toBe(field("b"));
+    expect(root?.textContent).toContain("Filled 1");
+    expect(root?.textContent).toContain("need you");
     expect(list.allows(field("b"))).toBe(true);
     expect(list.allows(field("c"))).toBe(false);
 

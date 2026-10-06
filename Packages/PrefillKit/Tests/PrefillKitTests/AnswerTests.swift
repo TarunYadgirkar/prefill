@@ -36,11 +36,72 @@ struct AnswerTests {
     @Test func aLaterAnswerReplacesALearnedOneAndUndoPutsItBack() throws {
         let (router, store) = router()
         _ = router.answers(applied)
-        #expect(router.answers(stanford) == AnswersResponse(saved: 0, updated: 1))
+        #expect(router.answers(stanford) == AnswersResponse(saved: 0, updated: ["School"]))
         #expect(gateway.card.customFields.first?.value == "Stanford University")
         #expect(try store.readEvents().answers.last?.previous == "University of California, Berkeley")
         #expect(router.answers(AnswersRequest(host: "jobs.example.com", action: .undo)) == AnswersResponse(saved: 1))
         #expect(gateway.card.customFields.map(\.value) == applied.answers.map(\.value))
+    }
+
+    @Test func aLearnedAnswerSaysItsSiteOnlyWhenThePageCanTakeIt() {
+        let field = CustomField(label: "School", value: "UC Berkeley", matchWords: [])
+        let learned = { (host: String) in
+            MessageRouter.sourced(["UC Berkeley"], from: [field], learned: [
+                LearnedAnswer(host: host, label: "School", value: "UC Berkeley", date: .testNow)
+            ]).first
+        }
+        #expect(learned("example.io")?.site == "example.io")
+        #expect(learned("Bücher.example")?.site == nil)
+        #expect(learned("Bücher.example")?.why == .learned)
+        #expect(SuggestedValue(value: "x", why: .card, site: "example.io").site == nil)
+    }
+
+    @Test func aLabelWithHiddenCharactersGoesOutPlain() {
+        let field = CustomField(label: "Sch\u{200B}ool\u{202E}", value: "UC Berkeley", matchWords: [])
+        let hidden = CustomField(label: "\u{200B}", value: "Cal", matchWords: [])
+        let sent = MessageRouter.sourced(["UC Berkeley", "Cal"], from: [field, hidden], learned: [])
+        #expect(sent.map(\.label) == ["Sch ool ", nil])
+    }
+
+    @Test func aValueTwoFieldsShareTakesTheLabelOfTheFieldThatMatched() {
+        let fields = [
+            CustomField(label: "School", value: "UC Berkeley", matchWords: []),
+            CustomField(label: "College", value: "UC Berkeley", matchWords: [])
+        ]
+        gateway.state.withLock { $0.card = Alex.card.replacingCustomFields(with: fields) }
+        let (router, _) = router()
+        let asked = CustomSuggestionsRequest(
+            host: "jobs.example.com", fields: [.init(text: "College"), .init(text: "School")]
+        )
+        #expect(router.customSuggestions(asked).fields.map { $0.values.first?.label } == ["College", "School"])
+    }
+
+    @Test func eachLearnedAnswerIsReplacedAtMostOnceADay() {
+        let (router, _) = router()
+        _ = router.answers(applied)
+        #expect(router.answers(stanford).updated == ["School"])
+        let again = AnswersRequest(host: "evil.example", action: .learn, answers: [
+            .init(question: .school, value: "Nowhere College"), .init(question: .sponsorship, value: "Yes")
+        ])
+        #expect(router.answers(again) == AnswersResponse(saved: 0, updated: ["Sponsorship"]))
+        #expect(gateway.card.customFields.first?.value == "Stanford University")
+    }
+
+    @Test func replacingAnswersMayChangeOnlyTheLearnedValues() throws {
+        let school = try #require(JobQuestion.school.field(answer: "UC Berkeley"))
+        let major = try #require(JobQuestion.major.field(answer: "EECS"))
+        let basis = Alex.card.replacingCustomFields(with: [school, major])
+        let scope = CardSaveScope.replaceAnswers([school.id])
+        let stanford = CustomField(label: school.label, value: "Stanford", matchWords: school.matchWords)
+        let math = CustomField(label: major.label, value: "Math", matchWords: major.matchWords)
+        #expect(scope.allows(basis.replacingCustomFields(with: [stanford, major]), over: basis))
+        #expect(!scope.allows(basis.replacingCustomFields(with: [school, math]), over: basis))
+        #expect(!scope.allows(basis.replacingCustomFields(with: [stanford]), over: basis))
+        #expect(!scope.allows(basis.replacingCustomFields(with: [major, stanford]), over: basis))
+        let changed = basis.replacingCustomFields(with: [stanford, major])
+        #expect(!scope.allows(changed.replacing(.email, with: Array(changed.emails.dropFirst())), over: basis))
+        let extra = CardEntry(label: nil, payload: .email("new@example.net"))
+        #expect(!scope.allows(changed.replacing(.email, with: changed.emails + [extra]), over: basis))
     }
 
     @Test func anAnswerThePersonWroteIsNeverReplaced() throws {

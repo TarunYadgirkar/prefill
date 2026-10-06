@@ -38,7 +38,7 @@ public struct SuggestedValue: Codable, Sendable, Hashable {
         self.value = value
         self.why = why
         self.label = label
-        self.site = site
+        self.site = why == .learned ? site : nil
     }
 }
 

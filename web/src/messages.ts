@@ -200,13 +200,17 @@ const suggestedLink = object({
 });
 // `label` is the card's label ("work") or the custom field's ("School"), and `site` where a
 // learned answer was saved from.
+// Only a learned answer says where it came from.
 const suggestedValue = (max: number) =>
-  object({
-    value: text(max),
-    why,
-    label: optional(text(LIMITS.text)),
-    site: optional(hostName),
-  });
+  refine(
+    object({
+      value: text(max),
+      why,
+      label: optional(text(LIMITS.text)),
+      site: optional(hostName),
+    }),
+    (offered) => offered.site === undefined || offered.why === "learned",
+  );
 const suggestedAddress = object({
   address: postalAddress,
   why,
@@ -365,7 +369,12 @@ const pageResponses = {
       LIMITS.pageFields,
     ),
   }),
-  answersResult: object({ type: literal("answersResult"), saved: count, updated: count }),
+  answersResult: object({
+    type: literal("answersResult"),
+    saved: count,
+    // The labels of the learned answers a later one replaced.
+    updated: arrayOf(text(LIMITS.text), LIMITS.answers),
+  }),
   pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };

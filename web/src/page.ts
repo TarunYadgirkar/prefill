@@ -78,6 +78,29 @@ function contactAttach(isChromium: boolean): Attach {
   return isChromium ? showDropdown : (element, choices) => showDropdown(element, choices, undefined, SAFARI_CONTACT);
 }
 
+// The pill's count for each form, kept until anything on the page changes a field (the
+// person typing, a fill or its undo), so moving between fields doesn't ask the app each time.
+function formCounts(doc: Document, ask: (scope: ParentNode) => Promise<number>) {
+  const known = new Map<ParentNode, Promise<number>>();
+  const forget = (): void => {
+    known.clear();
+  };
+  doc.addEventListener("input", forget, true);
+  doc.addEventListener("change", forget, true);
+  return {
+    count: (scope: ParentNode): Promise<number> => {
+      const asked = known.get(scope) ?? ask(scope).catch(() => 0);
+      known.set(scope, asked);
+      return asked;
+    },
+    forget,
+    stop: (): void => {
+      doc.removeEventListener("input", forget, true);
+      doc.removeEventListener("change", forget, true);
+    },
+  };
+}
+
 export interface PageFill {
   // How many empty fields a fill would fill in the form the person is in.
   count: () => Promise<number>;
@@ -93,8 +116,10 @@ function startFill(env: PageEnvironment, host: () => string, attachFor: (element
   let last: FillResult | undefined;
   // Undo takes back every fill since the last undo, so a later run that filled nothing
   // can't hide the fields an earlier one filled.
+  const counts = formCounts(env.doc, (scope) => fillableCount(scope, { host, send: env.send }));
   const run = async (anchor?: FieldElement): Promise<FillResult> => {
     const result = await fillForm(fillScope(env.doc, anchor), { host, send: env.send });
+    counts.forget();
     if (result.filled === 0) return result;
     const earlier = last;
     last = {
@@ -109,7 +134,7 @@ function startFill(env: PageEnvironment, host: () => string, attachFor: (element
   // Asks the app only for a form big enough for the pill.
   const count = async (anchor?: FieldElement): Promise<number> => {
     const scope = fillScope(env.doc, anchor);
-    return findSlots(scope).length < MIN_FIELDS ? 0 : fillableCount(scope, { host, send: env.send });
+    return findSlots(scope).length < MIN_FIELDS ? 0 : counts.count(scope);
   };
   const stops = [
     installFillChip(env.doc, env.win, {
@@ -121,14 +146,15 @@ function startFill(env: PageEnvironment, host: () => string, attachFor: (element
     installFilledPicker(env.doc, gate, undefined, attachFor),
   ];
   const page: PageFill = {
-    count: () => fillableCount(fillScope(env.doc), { host, send: env.send }),
+    count: () => counts.count(fillScope(env.doc)),
     fill: async () => (await run()).filled,
     undo: () => {
       last?.undo();
       last = undefined;
+      counts.forget();
     },
     stop: () => {
-      stops.forEach((stop) => {
+      [...stops, counts.stop].forEach((stop) => {
         stop();
       });
       gate.stop();

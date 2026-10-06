@@ -22,12 +22,15 @@ public protocol ContactsGateway: Sendable {
 // person asked for in the app (remove, relabel, restore) may.
 public enum CardSaveScope: Sendable, Hashable {
     // `addAnswers` also keeps every value, and may add custom fields after the ones there.
-    case keepEveryValue, addAnswers, personEdit
+    // `replaceAnswers` may do that too, and change the value of the custom fields with these
+    // IDs (answers Prefill learned), keeping every field's label, words and place.
+    case keepEveryValue, addAnswers, replaceAnswers(Set<String>), personEdit
 
     public func allows(_ target: CardRecord, over basis: CardRecord) -> Bool {
         switch self {
         case .keepEveryValue: target.keepsEveryValue(of: basis)
         case .addAnswers: target.keepsEveryValue(of: basis, addingAnswers: true)
+        case .replaceAnswers(let ids): target.keepsEveryValue(of: basis, replacingAnswers: ids)
         case .personEdit: true
         }
     }

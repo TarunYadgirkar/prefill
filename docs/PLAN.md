@@ -241,6 +241,7 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - The pill's count today counts recognized fields, so "Fill form 13 fields" can end as "Filled 9". Change the count to fields Prefill has an answer for (it already fetched them for the prefetch), so the promise matches the result.
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
 - Built: the grant is shared by every gate on the page (each list keeps its own gate) and ends when the field loses focus, another takes focus, or after 1 s. The pill's count is async now: it gathers the form's answers on focus (only for forms with at least 3 recognized empty fields). A filled field's list uses `SAFARI_CONTACT` for contact fields in Safari; whether Safari's bubble shows on a filled field wasn't checked in the simulator, it's assumed from it showing on any contact field. `testbed/sites/application.html` gained "Why do you want to work here?", which nothing answers, for the jump.
+- Known and accepted: whether the pill shows (and its count) tells a page, after the person's click or Tab, that Prefill has answers for at least 3 of its fields. It's inherent to offering a pill only where it would fill something.
 
 ### 2.5 Keep the list clear of Safari's bubble
 

@@ -56,11 +56,11 @@ Every value a suggestion reply carries back says why it is offered, so Prefill's
 | `pinned` | The person picked it on this site before. |
 | `used` | The person typed or picked it on this site before. |
 | `card` | It is on the person's card or Prefill's contact. `label` is the card's label as Safari's bar captions it (`work`, `home`), or the custom field's label (`School`), and is left out for an unlabeled value. |
-| `learned` | Prefill saved it from a form the person submitted. `site` is the registrable domain it was saved from. |
+| `learned` | Prefill saved it from a form the person submitted. `site` is the registrable domain it was saved from, left out when it isn't a plain host name. Only a `learned` value carries `site`. |
 | `guess` | The on-device model's pick. Only `customSuggestionsResult`'s `guesses` are guesses, so they carry no `why` of their own. |
 | `resume` | From a resume import (not yet sent). |
 
-`pinned` and `used` need Match each site on. A `label` is at most 100 characters.
+`pinned` and `used` need Match each site on. A `label` is at most 100 characters, on one line with hidden characters turned into spaces, and left out when nothing is left.
 
 A `name` field is never saved. The capture filter only uses it to tell whether a form is about the person.
 
@@ -221,7 +221,7 @@ In Chrome and Arc the messages travel through a native messaging host (`com.taru
 
 Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
 
-With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces is a person's edit (`personEdit`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved and how many `updated`, and the page then shows a pill, "Saved 2 answers", "Updated your answer" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
+With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced, and each learned answer is replaced at most once a day, whatever site asks. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces may also change the value of exactly those learned fields, keeping every contact value and every custom field's label, words and place (`replaceAnswers`), and like any save but the person's own edits it puts back anything a write in between lost. It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved, and `updated` lists the labels of the learned answers it replaced, so the page's pill can name the question: "Saved 2 answers", "Updated your answer to School", "Updated 2 answers" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
 
 Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved: a new one comes off and a replaced one goes back to the answer it replaced. It replies with how many changed back in `saved`.
 
@@ -235,7 +235,7 @@ Undo sends `action: "undo"` with no answers. The app takes back the answers save
 ```
 
 ```json
-{ "type": "answersResult", "saved": 2, "updated": 1 }
+{ "type": "answersResult", "saved": 2, "updated": ["Work authorization"] }
 ```
 
 ## picked
@@ -375,7 +375,7 @@ The sheet talks to the page's content script, not to the app, with two messages 
 
 Both answer `{ "type": "fillPageResult", "filled": 11 }`, the number of fields filled (0 after an undo).
 
-The pill offers to fill only the fields the app has an answer for: on a focus in a form with at least three empty fields Prefill recognizes, it asks the same three questions and counts the fields that would get a value, so "Fill form 9 fields" ends as "Filled 9". After a fill it says what's left, "Filled 9 · 4 need you": the fields of the form Prefill recognizes that are still empty. A click on "4 need you" moves focus to the next of them in page order, and that field's own list opens there. That focus comes from Prefill's own button, which the click-or-Tab gate can't see, so the pill lets exactly that field through once (`allowNext`): until it loses focus, another field takes focus, or a second passes. A pick from the list on a field the fill filled is reported with `picked` like any other list's, and in Safari that list on a contact field sits clear of Safari's bubble, as the field's own list does.
+The pill offers to fill only the fields the app has an answer for: on a focus in a form with at least three empty fields Prefill recognizes, it asks the same three questions and counts the fields that would get a value, so "Fill form 9 fields" ends as "Filled 9". After a fill it says what's left, "Filled 9 · 4 need you": the fields of the form Prefill recognizes that are still empty. A click on "4 need you" moves focus to the next of them in page order that the person can see once it is scrolled into view (drawn, not hidden by style or clipping, and the field or its label is what sits at its centre); any other is skipped. That field's own list opens there. That focus comes from Prefill's own button, which the click-or-Tab gate can't see, so the pill lets exactly that field through, for one check (`allowNext`), ending unused when it loses focus, another field takes focus, or a second passes. The count for a form is kept until a field on the page changes, so moving between fields doesn't ask the app each time. A pick from the list on a field the fill filled is reported with `picked` like any other list's, and in Safari that list on a contact field sits clear of Safari's bubble, as the field's own list does.
 
 What a page can and can't do: it can't press the pill (a closed shadow root that ignores untrusted clicks and any tap in its first 400 ms) or send the sheet's messages. It can still lure a person into tapping where the pill appears, the same risk Prefill's own list has; the pill only appears right after the person's own click or Tab into a field, and a fill only reaches visible, empty, non-sensitive fields of that form.
 

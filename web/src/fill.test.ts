@@ -72,7 +72,20 @@ const value = (id: string): string => (document.getElementById(id) as HTMLInputE
 const selected = (id: string): string =>
   (document.getElementById(id) as HTMLSelectElement).selectedOptions[0]?.text ?? "";
 
+// jsdom draws nothing: the field last scrolled into view is what sits at any point, unless
+// a test covers it.
+const covered = new Set<Element>();
+function stubDrawing(): void {
+  const drawn: { shown: Element | null } = { shown: null };
+  Element.prototype.scrollIntoView = function (this: Element) {
+    drawn.shown = this;
+  };
+  document.elementFromPoint = () => (drawn.shown !== null && covered.has(drawn.shown) ? document.body : drawn.shown);
+}
+
 beforeEach(() => {
+  covered.clear();
+  stubDrawing();
   document.body.innerHTML = APPLICATION;
   vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
 });
@@ -156,6 +169,16 @@ describe("one-tap fill", () => {
     expect(left.map((field) => field.id)).toEqual(["why", "start"]);
     expect(nextLeft(left, left[0])?.id).toBe("start");
     expect(nextLeft(left, left[1])?.id).toBe("why");
+  });
+
+  it("never jumps to a field the page covers or hides", () => {
+    document.body.innerHTML =
+      '<form><input id="a"><input id="covered"><input id="faded" style="opacity:0"><input id="b"></form>';
+    const field = (id: string) => document.getElementById(id) as HTMLInputElement;
+    covered.add(field("covered"));
+    const left = fieldsLeft(document);
+    expect(nextLeft(left, field("a"))?.id).toBe("b");
+    expect(nextLeft(left, field("b"))?.id).toBe("a");
   });
 
   it("tells the app about a pick from a filled field's list, as any list does", async () => {

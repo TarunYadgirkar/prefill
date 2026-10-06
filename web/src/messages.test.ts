@@ -108,7 +108,7 @@ const answers: AnswersRequest = {
     { question: "sponsorship", value: "No" },
   ],
 };
-const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: 1 };
+const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"] };
 const picked: PickedRequest = {
   type: "picked",
   host: "boards.example.io",

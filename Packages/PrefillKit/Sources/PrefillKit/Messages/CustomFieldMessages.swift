@@ -62,10 +62,13 @@ extension MessageRouter {
         let variant = Intelligence.modelVariant
         let recorded = events()
         let picks = recorded.answerPicks
-        let sourced = { (values: [String]) in Self.sourced(values, in: custom, learned: recorded.answers) }
         var unanswered: [String] = []
         let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
-            let values = CustomFieldMatcher.values(for: field.text, in: custom)
+            let matched = CustomFieldMatcher.matches(for: field.text, in: custom)
+            let values = matched.map(\.value)
+            let sourced = { (values: [String]) in
+                Self.sourced(values, from: matched + custom, learned: recorded.answers)
+            }
             // A pick only reorders what the question already matches, or stands in for a guess
             // where nothing matched, so copying a question's words reaches no other answer.
             if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks),
@@ -88,16 +91,24 @@ extension MessageRouter {
     }
 
     // A value Prefill learned from a form and that still reads as learned says where from;
-    // any other is the person's own, under its label.
-    private static func sourced(
-        _ values: [String], in custom: [CustomField], learned: [LearnedAnswer]
+    // any other is the person's own, under its label. `fields` holds the question's matches
+    // first, so a value two fields share takes the label of the one that matched.
+    static func sourced(
+        _ values: [String], from fields: [CustomField], learned: [LearnedAnswer]
     ) -> [SuggestedValue] {
         values.map { value in
-            guard let field = custom.first(where: { $0.value == value }) else { return SuggestedValue(value: value) }
-            if let answer = learned.last(where: { $0.matches(field) }) {
-                return SuggestedValue(value: value, why: .learned, label: field.label, site: answer.host)
+            guard let field = fields.first(where: { $0.value == value }) else { return SuggestedValue(value: value) }
+            // A label synced from another device may hold characters the page's parser refuses.
+            let plain = MessageText.oneLine(field.label, max: MessageLimits.text)
+            let label = plain.trimmingCharacters(in: .whitespaces).isEmpty ? nil : plain
+            guard let answer = learned.last(where: { $0.matches(field) }) else {
+                return SuggestedValue(value: value, label: label)
             }
-            return SuggestedValue(value: value, label: field.label)
+            // The page's parser turns away a reply with a site it can't take, and every
+            // answer with it, so a site that isn't a plain host name is left out.
+            let site = MessageText.isHost(answer.host) && answer.host.utf16.count <= MessageLimits.host
+                ? answer.host : nil
+            return SuggestedValue(value: value, why: .learned, label: label, site: site)
         }
     }
 

@@ -61,12 +61,14 @@ const EDGE = 16;
 
 const answersNoun = (count: number): string => (count === 1 ? "answer" : "answers");
 
-// What the pill says after a submit: "Saved 2 answers", "Updated your answer", or both.
+// What the pill says after a submit: "Saved 2 answers", "Updated your answer to School",
+// "Updated 2 answers", or both. Naming the question shows which answer a page changed.
 export function savedText({ saved, updated }: Pick<AnswersResult, "saved" | "updated">): string {
-  const changed = updated === 1 ? "your answer" : `${String(updated)} answers`;
+  const [only] = updated;
+  const changed = updated.length === 1 && only !== undefined ? `your answer to ${only}` : `${String(updated.length)} answers`;
   if (saved === 0) return `Updated ${changed}`;
   const added = `Saved ${String(saved)} ${answersNoun(saved)}`;
-  return updated === 0 ? added : `${added} and updated ${String(updated)}`;
+  return updated.length === 0 ? added : `${added} and updated ${String(updated.length)}`;
 }
 
 export function jobQuestion(text: string): JobQuestion | undefined {
@@ -247,7 +249,7 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .send({ type: "answers", host: options.host(), action: "learn", answers })
       .then((raw) => {
         const reply = parseExtensionResponse(raw);
-        if (reply?.type !== "answersResult" || reply.saved + reply.updated === 0) return;
+        if (reply?.type !== "answersResult" || reply.saved + reply.updated.length === 0) return;
         showPill(doc, win, savedText(reply), { label: "Undo", run: undo, isUserEvent });
       })
       .catch(() => undefined);

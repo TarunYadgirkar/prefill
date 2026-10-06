@@ -32,10 +32,10 @@ public struct AnswersRequest: Codable, Sendable, Hashable {
 public struct AnswersResponse: Codable, Sendable, Hashable {
     // How many answers were saved, or with `undo` taken back.
     public let saved: Int
-    // How many learned answers a later one replaced.
-    public let updated: Int
+    // The labels of the learned answers a later one replaced.
+    public let updated: [String]
 
-    public init(saved: Int, updated: Int = 0) {
+    public init(saved: Int, updated: [String] = []) {
         self.saved = saved
         self.updated = updated
     }
@@ -59,6 +59,7 @@ extension MessageRouter {
     static let answerUndoWindow: TimeInterval = 600
     // One application answers every question once, so pages together can't add or change more in a day.
     static let maxAnswersPerWindow = JobQuestion.allCases.count
+    // A page can ask any question, so it can replace a learned answer, but each one only once a day.
     static let answerWindow: TimeInterval = 86_400
 
     func answers(_ request: AnswersRequest) -> AnswersResponse {
@@ -83,10 +84,15 @@ extension MessageRouter {
         let date = now()
         let learned = events().answers
         let recent = learned.count { date.timeIntervalSince($0.date) < Self.answerWindow }
+        let replacedToday = Set(learned.filter {
+            $0.previous != nil && date.timeIntervalSince($0.date) < Self.answerWindow
+        }.map { $0.label.lowercased() })
         let changes = Self.changes(
-            request.answers, card: card, learned: learned, budget: Self.maxAnswersPerWindow - recent
+            request.answers, card: card, learned: learned,
+            limits: (budget: Self.maxAnswersPerWindow - recent, replacedToday: replacedToday)
         )
-        let scope: CardSaveScope = changes.replaced.isEmpty ? .addAnswers : .personEdit
+        let scope: CardSaveScope = changes.replaced.isEmpty
+            ? .addAnswers : .replaceAnswers(Set(changes.replaced.map(\.before.id)))
         let target = card.replacingCustomFields(with: changes.applied(to: card.customFields))
         guard changes.count > 0, save(target, over: card, scope: scope) else { return AnswersResponse(saved: 0) }
         let site = Normalizer.registrableDomain(request.host)
@@ -95,20 +101,23 @@ extension MessageRouter {
             LearnedAnswer(host: site, label: after.label, value: after.value, date: date, previous: before.value)
         }
         append(ExtensionEvents(answers: added + replaced))
-        return AnswersResponse(saved: changes.added.count, updated: changes.replaced.count)
+        let labels = changes.replaced.map { MessageText.oneLine($0.after.label, max: MessageLimits.text) }
+        return AnswersResponse(saved: changes.added.count, updated: labels)
     }
 
     private static func changes(
-        _ answers: [AnswersRequest.Answer], card: CardRecord, learned: [LearnedAnswer], budget: Int
+        _ answers: [AnswersRequest.Answer], card: CardRecord, learned: [LearnedAnswer],
+        limits: (budget: Int, replacedToday: Set<String>)
     ) -> AnswerChanges {
         let room = CustomField.maxCount - card.customFields.count
         return answers.reduce(into: AnswerChanges()) { changes, answer in
-            guard let field = answer.question.field(answer: answer.value), changes.count < budget else { return }
+            guard let field = answer.question.field(answer: answer.value), changes.count < limits.budget else { return }
             guard let existing = (card.customFields + changes.added).first(where: { $0.id == field.id }) else {
                 if changes.added.count < room { changes.added.append(field) }
                 return
             }
-            guard existing.value != field.value, learned.contains(where: { $0.matches(existing) }),
+            guard existing.value != field.value, !limits.replacedToday.contains(existing.id),
+                  learned.contains(where: { $0.matches(existing) }),
                   !changes.replaced.contains(where: { $0.before == existing }) else { return }
             let after = CustomField(label: existing.label, value: field.value, matchWords: existing.matchWords)
             changes.replaced.append((existing, after))

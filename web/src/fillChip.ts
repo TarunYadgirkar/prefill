@@ -212,7 +212,6 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
     anchor = target;
     asked = undefined;
     options.gate.allowNext(target);
-    target.scrollIntoView({ block: "center" });
     target.focus({ preventScroll: true });
     clearTimeout(doneTimer);
     doneTimer = setTimeout(hide, DONE_MS);

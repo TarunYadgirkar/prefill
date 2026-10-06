@@ -41,7 +41,7 @@ describe("learning answers from an application", () => {
 
   it("sends what the person answered on submit, and offers Undo for what was saved", async () => {
     const send = vi.fn<(request: AnswersRequest) => Promise<unknown>>(() =>
-      Promise.resolve({ type: "answersResult", saved: 2, updated: 0 }),
+      Promise.resolve({ type: "answersResult", saved: 2, updated: [] }),
     );
     uninstall = installLearn(document, window, { host: () => "boards.example.io", send, isUserEvent: () => true });
     set("#school", "University of California, Berkeley");
@@ -68,9 +68,10 @@ describe("learning answers from an application", () => {
   });
 
   it("says when a later answer replaced a learned one", () => {
-    expect(savedText({ saved: 0, updated: 1 })).toBe("Updated your answer");
-    expect(savedText({ saved: 2, updated: 0 })).toBe("Saved 2 answers");
-    expect(savedText({ saved: 1, updated: 2 })).toBe("Saved 1 answer and updated 2");
+    expect(savedText({ saved: 0, updated: ["School"] })).toBe("Updated your answer to School");
+    expect(savedText({ saved: 0, updated: ["School", "Major"] })).toBe("Updated 2 answers");
+    expect(savedText({ saved: 2, updated: [] })).toBe("Saved 2 answers");
+    expect(savedText({ saved: 1, updated: ["School", "Major"] })).toBe("Saved 1 answer and updated 2");
   });
 
   it("drops an answer the page changed or relabelled after the person set it", () => {
