@@ -76,4 +76,21 @@ struct PickTests {
         let store = linked(events: ExtensionEvents(pins: busy))
         #expect(router(store).route(pick("email", Alex.schoolEmail.display)) == ignored)
     }
+
+    @Test func aPickedLinkComesFirstOnThatSite() {
+        let card = Alex.card.replacing(.link, with: [
+            CardEntry(label: nil, payload: .link("https://alexrivera.dev")),
+            CardEntry(label: nil, payload: .link("https://alex.example.blog"))
+        ])
+        let gateway = FakeGateway(card: card)
+        let router = MessageRouter(store: linked(), gateway: gateway, now: { .testNow })
+        let ask: [String: Any] = ["type": "linkSuggestions", "host": "boards.example.io", "types": ["website"]]
+        let urls = { () -> [String] in
+            guard case .linkSuggestions(let reply) = router.route(ask) else { return [] }
+            return reply.links.map(\.url)
+        }
+        #expect(urls() == ["https://alexrivera.dev", "https://alex.example.blog"])
+        #expect(router.route(pick("link", "alex.example.blog")) == remembered)
+        #expect(urls() == ["https://alex.example.blog", "https://alexrivera.dev"])
+    }
 }

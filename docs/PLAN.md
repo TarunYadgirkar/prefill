@@ -57,7 +57,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.1 `picked` page message in both contracts, docs and examples
   - [x] 1.2 Router: a pick pins the value for the site without rewriting the card
   - [x] 1.3 Dropdown reports picks; contact suggestions send them
-  - [ ] 1.4 Links honor pins and report picks
+  - [x] 1.4 Links honor pins and report picks
   - [ ] 1.5 Custom answers remember the pick per question
   - [ ] 1.6 Mac panel reports picks
   - [ ] 1.7 End-to-end check and merge

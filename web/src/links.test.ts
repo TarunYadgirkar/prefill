@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { linkOptions } from "./links";
+import { linkChoices, linkOptions } from "./links";
 import type { SuggestedLink } from "./messages";
 
 const github: SuggestedLink = {
@@ -33,5 +33,21 @@ describe("linkOptions", () => {
       "https://github.com/alexrivera",
       "https://alexrivera.dev/",
     ]);
+  });
+});
+
+describe("linkChoices", () => {
+  it("hears about a pick of a single link that wasn't first, never a combined one", () => {
+    const picked: string[] = [];
+    const choices = linkChoices(["github", "website"], links, false, (value) =>
+      picked.push(value),
+    );
+    choices.forEach((choice) => choice.onPick?.());
+    expect(choices.map((choice) => choice.onPick === undefined)).toEqual([
+      true,
+      false,
+      false,
+    ]);
+    expect(picked).toEqual(["github.com/alexrivera", "alexrivera.dev"]);
   });
 });
