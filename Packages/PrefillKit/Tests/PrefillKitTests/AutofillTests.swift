@@ -28,7 +28,8 @@ struct AutofillScriptTests {
         )
         let emails: Set = ["alex.rivera@example.com", "alex@work.example.org", "alex.school@example.edu"]
         #expect(Set(rows.map(\.value)) == emails)
-        #expect(rows.allSatisfy { $0.kind == "email" && $0.detail == "Email" })
+        #expect(rows.allSatisfy { $0.kind == "email" && !$0.isGuess })
+        #expect(Set(rows.map(\.detail)) == ["Home email", "Work email", "Email"])
     }
 
     @Test func aFullNameTextAreaGetsTheCardsName() throws {
@@ -66,7 +67,9 @@ struct AutofillScriptTests {
         #expect(rows.first?.pick == nil)
         let second = try #require(rows.dropFirst().first)
         AutofillScript.remember(second, host: "jobs.example.com", router: router)
-        #expect(script.rows(for: field, host: "jobs.example.com", router: router).first?.value == second.value)
+        let first = script.rows(for: field, host: "jobs.example.com", router: router).first
+        #expect(first?.value == second.value)
+        #expect(first?.detail == "Used here")
     }
 }
 

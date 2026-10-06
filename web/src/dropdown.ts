@@ -2,8 +2,10 @@ import { eventOrigin, onViewportChange, placeFixed, visibleHeight } from "./dom"
 
 export interface Choice {
   value: string;
-  // A few words on what the value is ("Phone", "LinkedIn"), shown under it.
+  // A few words on what the value is or why it's offered ("Work email", "Used here").
   detail: string;
+  // A guess is drawn apart from the person's own values.
+  tone?: "guess";
   // Runs when the person picks this value, after it's in the field.
   onPick?: () => void;
 }
@@ -58,19 +60,21 @@ const MAX_WIDTH = 420;
 const STYLE = `
 :host { all: initial; }
 .menu {
-  --surface: #ffffff; --text: #1f1f1f; --text-muted: #474747; --hover: rgb(31 31 31 / 0.08); --divider: rgb(31 31 31 / 0.12);
+  --surface: #ffffff; --text: #1f1f1f; --text-muted: #474747; --accent: #0b57d0; --hover: rgb(31 31 31 / 0.08); --divider: rgb(31 31 31 / 0.12);
   box-sizing: border-box; padding: 4px 0; border-radius: 8px; background: var(--surface); color: var(--text);
   font: 13px/20px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.3), 0 4px 8px 3px rgb(0 0 0 / 0.15);
   overflow: hidden; user-select: none; cursor: default;
 }
 @media (prefers-color-scheme: dark) {
-  .menu { --surface: #282a2d; --text: #e3e3e3; --text-muted: #c4c7c5; --hover: rgb(227 227 227 / 0.08); --divider: rgb(227 227 227 / 0.12); }
+  .menu { --surface: #282a2d; --text: #e3e3e3; --text-muted: #c4c7c5; --accent: #a8c7fa; --hover: rgb(227 227 227 / 0.08); --divider: rgb(227 227 227 / 0.12); }
 }
 .row { all: unset; box-sizing: border-box; display: grid; width: 100%; padding: 6px 16px; cursor: default; }
 .row[aria-selected="true"], .row:hover { background: var(--hover); }
 .value, .detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail { font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.guess .value { color: var(--text-muted); }
+.guess .detail { color: var(--accent); }
 .footer { margin-top: 4px; padding: 6px 16px 2px; border-top: 1px solid var(--divider); font-size: 12px; line-height: 16px; color: var(--text-muted); }
 `;
 
@@ -138,7 +142,7 @@ function rowFor(doc: Document, choice: Choice, index: number): HTMLElement {
   const row = doc.createElement("button");
   row.type = "button";
   row.tabIndex = -1;
-  row.className = "row";
+  row.className = choice.tone === undefined ? "row" : `row ${choice.tone}`;
   row.setAttribute("role", "option");
   row.dataset.index = String(index);
   const value = doc.createElement("span");

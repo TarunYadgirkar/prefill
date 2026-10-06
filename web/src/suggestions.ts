@@ -9,6 +9,7 @@ import {
 } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { reportPick } from "./picks";
+import { labelled, whyDetail } from "./why";
 import {
   isContact,
   type ContactField,
@@ -129,6 +130,23 @@ export const KIND_LABELS: Partial<Record<FieldKind, string>> = {
   name: "Name",
 };
 
+// The list a contact field shows, each value saying why it's there. `onPick` hears about
+// a pick worth remembering: one that wasn't first, of a kind the app pins.
+export function contactChoices(
+  field: ContactField,
+  values: Suggestions,
+  onPick?: (kind: PickedRequest["kind"], value: string) => void,
+): Choice[] {
+  const kind = pickKind(field);
+  const word = KIND_LABELS[field.kind] ?? "";
+  return suggestionOptions(field, values).map((offered, index) => {
+    const choice = { value: offered.value, detail: whyDetail(offered, labelled(offered.label, word)) };
+    return kind === undefined || onPick === undefined || index === 0
+      ? choice
+      : { ...choice, onPick: () => { onPick(kind, offered.value); } };
+  });
+}
+
 function isTextField(
   element: FieldElement,
   textAreas = true,
@@ -206,14 +224,7 @@ export function installSuggestions(
   const offer = (): void => {
     if (focused === undefined || detach !== undefined || known === undefined)
       return;
-    const detail = KIND_LABELS[focused.field.kind] ?? "";
-    const kind = pickKind(focused.field);
-    const choices: Choice[] = suggestionOptions(focused.field, known).map(
-      ({ value }, index) =>
-        kind === undefined || index === 0
-          ? { value, detail }
-          : { value, detail, onPick: () => { picked(kind, value); } },
-    );
+    const choices = contactChoices(focused.field, known, picked);
     if (choices.length > 0) detach = attach(focused.element, choices);
   };
 

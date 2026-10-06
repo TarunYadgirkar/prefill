@@ -64,7 +64,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 2: Honest suggestions**
   - [ ] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
   - [x] 2.1 Suggestions carry where each value came from
-  - [ ] 2.2 The list shows it (detail line and style)
+  - [x] 2.2 The list shows it (detail line and style)
   - [ ] 2.3 A later answer replaces a learned one, with Undo
   - [ ] 2.4 Fill form says what's left and jumps to it
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)

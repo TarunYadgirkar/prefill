@@ -4,6 +4,7 @@ import { attachDatalist } from "./datalist";
 import type { Attach, Choice } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { reportPick } from "./picks";
+import { whyDetail } from "./why";
 import { eventOrigin, hasOwnList, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import {
@@ -84,7 +85,7 @@ export function linkChoices(
     const link = linkOf(value);
     if (link === undefined)
       return { value, detail: wanted.map((type) => TYPE_LABELS[type]).join(" and ") };
-    const choice = { value, detail: TYPE_LABELS[link.type] };
+    const choice = { value, detail: whyDetail(link, TYPE_LABELS[link.type]) };
     return onPick === undefined || index === 0
       ? choice
       : { ...choice, onPick: () => { onPick(value); } };

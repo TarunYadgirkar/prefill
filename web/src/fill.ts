@@ -2,24 +2,25 @@ import { parseAutocomplete } from "./autocomplete";
 import { isPlaceholder, pickFirst, type Option } from "./choices";
 import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
-import { fieldText, joinFieldText } from "./custom";
+import { customChoices, fieldText, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Choice, type TextField } from "./dropdown";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import type { GestureGate } from "./gesture";
-import { linkOptions } from "./links";
+import { linkChoices } from "./links";
 import {
   LIMITS,
   parseExtensionResponse,
   type ContactSuggestionsResult,
+  type CustomSuggestionsResult,
   type ExtensionRequest,
   type ExtensionResponse,
   type LinkType,
   type PageField,
   type SuggestedLink,
 } from "./messages";
-import { KIND_LABELS, SUGGESTED_KINDS, suggestionOptions } from "./suggestions";
+import { SUGGESTED_KINDS, contactChoices } from "./suggestions";
 
 // One tap fills a whole form, the way Safari's AutoFill Contact does: every visible, empty
 // field Prefill can answer, from the card, the links and the custom answers. Voluntary
@@ -50,15 +51,14 @@ type Slot =
 interface Answers {
   contact: Omit<ContactSuggestionsResult, "type"> | undefined;
   links: readonly SuggestedLink[];
-  custom: ReadonlyMap<string, readonly string[]>;
+  custom: ReadonlyMap<string, CustomSuggestionsResult["fields"][number]>;
 }
 
 const MAX_INSPECTED = 300;
 const TEXT_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "url", "number"]);
 // Safari's AutoFill yellow, light enough to read through.
 const TINT = "rgb(255 214 10 / 0.22)";
-const LINK_DETAIL = "Link";
-const CUSTOM_DETAIL = "Your answer";
+const NO_PICK = (): void => undefined;
 
 // The values Prefill put in each field and the other choices it had, so a tap on a filled
 // field can still offer the rest.
@@ -254,9 +254,12 @@ async function gather(slots: readonly Slot[], options: FillOptions): Promise<Ans
           .then(parseExtensionResponse)
           .catch(() => undefined);
   const [contact, links, custom] = await Promise.all(requests(slots, options.host()).map(ask));
-  const answers = new Map<string, readonly string[]>();
+  const answers = new Map<string, CustomSuggestionsResult["fields"][number]>();
   if (custom?.type === "customSuggestionsResult")
-    texts.forEach((text, index) => answers.set(text, custom.fields[index]?.values.map(({ value }) => value) ?? []));
+    texts.forEach((text, index) => {
+      const field = custom.fields[index];
+      if (field !== undefined) answers.set(text, field);
+    });
   return {
     contact: contact?.type === "contactSuggestionsResult" ? contact : undefined,
     links: links?.type === "linkSuggestionsResult" ? links.links : [],
@@ -264,21 +267,21 @@ async function gather(slots: readonly Slot[], options: FillOptions): Promise<Ans
   };
 }
 
-function valuesFor(want: Want, answers: Answers): { values: string[]; detail: string } {
+// What a field could take, best first, as its own list would offer it. Guesses are never filled.
+function choicesOf(want: Want, answers: Answers): Choice[] {
   switch (want.from) {
     case "contact":
-      return {
-        values: answers.contact === undefined ? [] : suggestionOptions(want.field, answers.contact).map(({ value }) => value),
-        detail: KIND_LABELS[want.field.kind] ?? "",
-      };
+      return answers.contact === undefined ? [] : contactChoices(want.field, answers.contact);
     case "link":
-      return { values: linkOptions(want.types, answers.links, want.fullUrl), detail: LINK_DETAIL };
+      return linkChoices(want.types, answers.links, want.fullUrl);
     case "custom":
-      return { values: [...(answers.custom.get(want.text) ?? [])], detail: CUSTOM_DETAIL };
+      return customChoices(answers.custom.get(want.text), NO_PICK).filter((choice) => choice.tone !== "guess");
     case "decline":
-      return { values: [], detail: "" };
+      return [];
   }
 }
+
+const valuesOf = (choices: readonly Choice[]): string[] => choices.map(({ value }) => value);
 
 function setSelect(select: HTMLSelectElement, index: number): void {
   Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "selectedIndex")?.set?.call(select, index);
@@ -305,8 +308,8 @@ function tint(element: HTMLElement): () => void {
   return clear;
 }
 
-function applyText(element: TextField, values: readonly string[], detail: string): (() => void) | undefined {
-  const value = values[0];
+function applyText(element: TextField, choices: readonly Choice[]): (() => void) | undefined {
+  const value = choices[0]?.value;
   if (value === undefined || !element.isConnected || !isEmpty(element)) return undefined;
   fillField(element, value);
   // A number box or a maxlength can refuse or cut the value; that field isn't filled.
@@ -314,10 +317,7 @@ function applyText(element: TextField, values: readonly string[], detail: string
     fillField(element, "");
     return undefined;
   }
-  filledChoices.set(
-    element,
-    values.map((choice) => ({ value: choice, detail })),
-  );
+  filledChoices.set(element, [...choices]);
   const clear = tint(element);
   return () => {
     clear();
@@ -362,8 +362,9 @@ function applyCombobox(input: HTMLInputElement, want: Want, values: readonly str
 
 // Fills one slot and returns what puts it back, or undefined when nothing fit.
 function apply(slot: Slot, answers: Answers): (() => void) | undefined {
-  const { values, detail } = valuesFor(slot.want, answers);
-  if (slot.control === "text") return applyText(slot.element, values, detail);
+  const choices = choicesOf(slot.want, answers);
+  if (slot.control === "text") return applyText(slot.element, choices);
+  const values = valuesOf(choices);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values);
   if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values);
   return undefined;
@@ -376,7 +377,8 @@ async function applyComboboxes(slots: readonly Slot[], answers: Answers): Promis
     if (slot.control !== "combobox") continue;
     // The person may have picked one while earlier boxes were filling.
     if (!slot.element.isConnected || !isComboboxEmpty(slot.element)) continue;
-    const undo = await applyCombobox(slot.element, slot.want, valuesFor(slot.want, answers).values).catch(() => undefined);
+    const values = valuesOf(choicesOf(slot.want, answers));
+    const undo = await applyCombobox(slot.element, slot.want, values).catch(() => undefined);
     if (undo !== undefined) undos.push(undo);
   }
   return undos;
