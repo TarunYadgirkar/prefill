@@ -86,7 +86,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 5.2 iPhone: You tab (search, groups, value detail)
   - [x] 5.3 iPhone: Settings trimmed
   - [x] 5.4 Mac menu mirrors the inbox
-  - [ ] 5.5 UI tests and screenshots, merge
+  - [x] 5.5 UI tests and screenshots, merge (large-text tour and empty-inbox shot not run)
 - **Phase 6: Cuts**
   - [ ] 6.1 Remove Siri intents, Shortcuts and the Focus filter
   - [ ] 6.2 Remove the Sites tab
