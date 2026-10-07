@@ -68,7 +68,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 2.3 A later answer replaces a learned one, with Undo
   - [x] 2.4 Fill form says what's left and jumps to it
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
-  - [ ] 2.6 End-to-end check and merge
+  - [x] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
   - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [ ] 3.2 Suggestion routers read from `Memory`
