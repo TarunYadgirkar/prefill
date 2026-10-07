@@ -1,14 +1,15 @@
+import PrefillKit
 import SwiftUI
 
 // What the keyboard's controls do, supplied by the input view controller.
 struct KeyboardActions {
-    var insert: (String) -> Void = { _ in }
+    var insert: (KeyboardValue) -> Void = { _ in }
     var nextKeyboard: () -> Void = {}
     var returnKey: () -> Void = {}
     var deleteBackward: () -> Void = {}
 }
 
-// The slim top row: ABC back to the person's own keyboard on the leading edge, return and
+// The key row: ABC back to the person's own keyboard on the leading edge, return then
 // delete on the trailing edge, where the system keyboard has them.
 struct KeyboardBar: View {
     let returnLabel: String
@@ -39,7 +40,6 @@ struct KeyboardBar: View {
         }
         .dynamicTypeSize(...DynamicTypeSize.xLarge)
         .padding(.horizontal, KeyboardMetrics.edge)
-        .padding(.top, KeyboardMetrics.barTop)
     }
 }
 

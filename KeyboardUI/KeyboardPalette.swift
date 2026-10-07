@@ -24,20 +24,26 @@ enum KeyboardPalette {
 }
 
 // Measured against the system keyboard: keys sit 3pt from the screen edges with 6pt between
-// them, and are 8pt round.
-enum KeyboardMetrics {
-    static let height: CGFloat = 290
+// them, and are 8pt round. The panel is a chip row over one key row, about the height of the
+// QuickType bar plus a row of keys.
+nonisolated enum KeyboardMetrics {
     static let edge: CGFloat = 3
     static let gap: CGFloat = 6
     static let radius: CGFloat = 8
     static let keyHeight: CGFloat = 44
-    static let barTop: CGFloat = 6
-    static let rowPadding: CGFloat = 12
-    static let rowVertical: CGFloat = 8
-    static let groupGap: CGFloat = 14
+    static let chipHeight: CGFloat = 52
+    static let top: CGFloat = 6
+    static let bottom: CGFloat = 4
+    static let height: CGFloat = top + chipHeight + gap + keyHeight + bottom
+    // The chip row scrolls inside the same 3pt edge as the keys, so the first and last chips
+    // line up with ABC and delete instead of running into the screen edge.
+    static let rowInset: CGFloat = edge
+    static let chipPadding: CGFloat = 12
+    static let chipMaxShare: CGFloat = 0.7
     static let switchKeyWidth: CGFloat = 64
     static let returnKeyWidth: CGFloat = 88
     static let deleteKeyWidth: CGFloat = 52
+    static let rowPadding: CGFloat = 12
 }
 
 private extension UIColor {

@@ -1,11 +1,11 @@
 import PrefillKit
 import SwiftUI
 
-// The Prefill keyboard: the person's values as key-shaped rows under a slim bar. A tap types
-// the value and hands the person back to their own keyboard.
+// The Prefill keyboard: a row of the person's values, likeliest first, over one row of keys.
+// A tap types the value and hands the person back to their own keyboard.
 struct KeyboardPanel: View {
     enum Content {
-        case values([KeyboardGroup])
+        case values([KeyboardValue])
         case needsApp, needsFullAccess, notHere
     }
 
@@ -15,61 +15,60 @@ struct KeyboardPanel: View {
 
     var body: some View {
         VStack(spacing: KeyboardMetrics.gap) {
+            row
+                .frame(maxWidth: .infinity)
+                .frame(height: KeyboardMetrics.chipHeight)
             KeyboardBar(returnLabel: returnLabel, actions: actions)
-            list
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .padding(.top, KeyboardMetrics.top)
+        .padding(.bottom, KeyboardMetrics.bottom)
         .frame(height: KeyboardMetrics.height)
         .background(KeyboardPalette.surface)
     }
 
-    @ViewBuilder private var list: some View {
+    @ViewBuilder private var row: some View {
         switch content {
-        case .values(let groups): KeyboardValueList(groups: groups, insert: actions.insert)
-        case .needsApp: KeyboardEmptyLine(text: Text("Open Prefill once to share your info with the keyboard."))
-        case .needsFullAccess: KeyboardEmptyLine(text: Text("""
-            Turn on Allow Full Access for Prefill in Settings › General › Keyboard › Keyboards.
-            """))
-        case .notHere: KeyboardEmptyLine(text: Text("Prefill doesn’t type into password or code fields."))
+        case .values(let values): KeyboardChipRow(values: values, insert: actions.insert)
+        case .needsApp: KeyboardEmptyLine(text: Text("Open Prefill once to share your info."))
+        case .needsFullAccess: KeyboardEmptyLine(text: Text("Turn on Allow Full Access for Prefill in Settings."))
+        case .notHere: KeyboardEmptyLine(text: Text("Prefill doesn’t type passwords or codes."))
         }
     }
 }
 
-private struct KeyboardValueList: View {
-    let groups: [KeyboardGroup]
-    let insert: (String) -> Void
+private struct KeyboardChipRow: View {
+    let values: [KeyboardValue]
+    let insert: (KeyboardValue) -> Void
 
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: KeyboardMetrics.gap) {
-                ForEach(groups) { group in
-                    Text(group.title)
-                        .font(.footnote.weight(.semibold))
-                        .foregroundStyle(KeyboardPalette.caption)
-                        .padding(.leading, KeyboardMetrics.rowPadding)
-                        .padding(.top, group.id == groups.first?.id ? 0 : KeyboardMetrics.groupGap - KeyboardMetrics.gap)
-                        .accessibilityAddTraits(.isHeader)
-                    ForEach(group.values) { value in
-                        KeyboardValueRow(value: value) { insert(value.text) }
+        GeometryReader { proxy in
+            ScrollView(.horizontal) {
+                KeyboardChipLayout(
+                    visibleWidth: proxy.size.width - KeyboardMetrics.rowInset,
+                    maxChipWidth: proxy.size.width * KeyboardMetrics.chipMaxShare
+                ) {
+                    ForEach(values) { value in
+                        KeyboardChip(value: value) { insert(value) }
                     }
                 }
+                .frame(height: proxy.size.height)
             }
-            .padding(.horizontal, KeyboardMetrics.edge)
-            .padding(.top, KeyboardMetrics.gap)
-            .padding(.bottom, KeyboardMetrics.rowVertical)
+            .contentMargins(.horizontal, KeyboardMetrics.rowInset, for: .scrollContent)
+            .scrollIndicators(.hidden)
+            // Back to the start whenever the order changes, so the likeliest value is in view.
+            .id(values.map(\.id))
         }
-        .scrollIndicators(.automatic)
-        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
+        .dynamicTypeSize(...DynamicTypeSize.xLarge)
     }
 }
 
-private struct KeyboardValueRow: View {
+private struct KeyboardChip: View {
     let value: KeyboardValue
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 0) {
                 Text(value.label)
                     .font(.footnote)
                     .foregroundStyle(KeyboardPalette.caption)
@@ -80,10 +79,8 @@ private struct KeyboardValueRow: View {
                     .truncationMode(.middle)
             }
             .lineLimit(1)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, KeyboardMetrics.rowPadding)
-            .padding(.vertical, KeyboardMetrics.rowVertical)
-            .frame(minHeight: KeyboardMetrics.keyHeight)
+            .padding(.horizontal, KeyboardMetrics.chipPadding)
+            .frame(maxHeight: .infinity, alignment: .leading)
         }
         .buttonStyle(KeyboardKeyStyle())
         .accessibilityLabel(Text(verbatim: "\(value.shownText), \(value.label)"))
@@ -99,8 +96,10 @@ private struct KeyboardEmptyLine: View {
             .font(.callout)
             .foregroundStyle(KeyboardPalette.caption)
             .multilineTextAlignment(.center)
-            .padding(.horizontal, KeyboardMetrics.rowPadding * 2)
+            .lineLimit(2)
+            .minimumScaleFactor(0.8)
+            .padding(.horizontal, KeyboardMetrics.rowPadding)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            .dynamicTypeSize(...DynamicTypeSize.xLarge)
     }
 }
