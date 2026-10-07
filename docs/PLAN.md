@@ -101,7 +101,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 8: One Mac engine** (Gate: phases 1 and 2 merged)
   - [x] 8.1 The extension owns Chromium pages it's running in (Oct 6: until that browser quits, not 60 s; the stand-down is gone)
   - [x] 8.2 Accessibility stays for everything else
-  - [ ] 8.3 Mac checks and merge
+  - [x] 8.3 Mac checks and merge (Oct 7: both scripts pass; found and fixed two content script copies in one tab)
 - **Phase 9: Setup in three steps**
   - [ ] 9.1 New onboarding flow
   - [ ] 9.2 Mac first run
