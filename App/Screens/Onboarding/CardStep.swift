@@ -22,10 +22,11 @@ struct CardStep: View {
 
     private var intro: some View {
         OnboardingStepLayout(
+            step: 1,
             title: "Start with your contact card",
             message: """
-                Safari fills forms from your own contact card. Prefill keeps that card up to date and puts the \
-                email, phone number and address that fit each site first.
+                Prefill shows a list under each field in Safari with your emails, phone numbers and addresses, \
+                and remembers which one you pick on each site. It starts from your own contact card.
                 """
         ) {
             Spacer(minLength: 0)
@@ -55,13 +56,11 @@ struct CardStep: View {
 
     private var linked: some View {
         OnboardingStepLayout(
+            step: 1,
             title: "\(model.cardName)’s card",
-            message: """
-                Safari suggests these two emails first right now. Prefill reorders them on each site you \
-                visit.
-                """
+            message: "Prefill starts from what’s on this card. New values you type on forms show up in its Inbox."
         ) {
-            QuickTypeBar(kind: .email, values: model.values(.email), isFullBleed: true)
+            CardSummary(values: CardSummary.kinds.flatMap(model.values))
             VStack(alignment: .leading, spacing: Spacing.small) {
                 Text("Check that Safari uses this card")
                     .textRole(.sectionTitle)
@@ -93,6 +92,31 @@ struct CardStep: View {
         } else {
             path.append(.chooser)
         }
+    }
+}
+
+// What's on the card, the way the You tab lists it, so the person can see it's theirs.
+private struct CardSummary: View {
+    static let kinds: [ContactKind] = [.email, .phone, .address]
+
+    let values: [ContactValue]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            if values.isEmpty {
+                Text("This card has no emails, phone numbers or addresses yet.")
+                    .textRole(.secondary)
+                    .padding(.vertical, Spacing.xxSmall)
+            }
+            ForEach(Array(values.enumerated()), id: \.element.id) { index, value in
+                if index > 0 { Divider() }
+                ValueRow(value: value) { EmptyView() }
+            }
+        }
+        .padding(.horizontal, Spacing.medium)
+        .padding(.vertical, Spacing.xSmall)
+        .background(Palette.surface, in: .rect(cornerRadius: Radius.listGroup))
+        .accessibilityIdentifier("card-summary")
     }
 }
 
@@ -151,7 +175,7 @@ private struct SiteDemo: View {
                     }
                 }
                 .pickerStyle(.segmented)
-                Text("Switch sites to see which email Safari suggests first.")
+                Text("Switch sites to see which email comes first.")
                     .textRole(.footnote)
             }
             VStack(spacing: Spacing.medium) {
