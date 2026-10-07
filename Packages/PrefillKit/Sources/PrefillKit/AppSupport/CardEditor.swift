@@ -7,6 +7,9 @@ public struct CardEditor: Sendable {
     public enum Edit: Sendable {
         case remove(ContactValue)
         case relabel(ContactValue, label: String?)
+        // The value in its place on the card with what the person typed, in one save. One
+        // that now matches another value on the card becomes that value.
+        case replace(ContactValue, with: CardEntry)
         case restore(CardRecord)
         // Custom field edits apply to the card as read at save time, so a field the
         // extension or another device added since the screen last refreshed stays.
@@ -54,6 +57,12 @@ public struct CardEditor: Sendable {
                 entry.key == value.key ? CardEntry(label: label, payload: entry.payload) : entry
             }
             return card.replacing(value.kind, with: entries)
+        case .replace(let value, let entry):
+            var seen = Set<String>()
+            let entries = card.entries(value.kind)
+                .map { $0.key == value.key ? entry : $0 }
+                .filter { seen.insert($0.key).inserted }
+            return card.replacing(value.kind, with: entries)
         case .saveCustomField, .removeCustomField, .addCustomFields, .orderCustomFields:
             return card.replacingCustomFields(with: customFields(edit, on: card.customFields))
         case .restore(let original):
@@ -78,7 +87,7 @@ public struct CardEditor: Sendable {
         case .orderCustomFields(let ids):
             let named = ids.compactMap { id in fields.first { $0.id == id } }
             return named + fields.filter { !ids.contains($0.id) }
-        case .remove, .relabel, .restore:
+        case .remove, .relabel, .replace, .restore:
             return fields
         }
     }

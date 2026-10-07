@@ -198,67 +198,6 @@ private extension ContactPayload {
     }
 }
 
-struct ValueDraft {
-    struct Problem: Error {
-        let message: String
-    }
-
-    private static let minPhoneDigits = 7
-
-    var email = ""
-    var phone = ""
-    var street = ""
-    var city = ""
-    var state = ""
-    var postalCode = ""
-    var country = ""
-    var link = ""
-
-    func payload(_ kind: ContactKind) -> Result<ContactPayload, Problem> {
-        switch kind {
-        case .email: emailPayload()
-        case .phone: phonePayload()
-        case .address: addressPayload()
-        case .link: linkPayload()
-        }
-    }
-
-    private func linkPayload() -> Result<ContactPayload, Problem> {
-        guard let text = LinkType.cardText(link) else {
-            return .failure(Problem(message: String(localized: "Enter a web address like github.com/yourname.")))
-        }
-        return .success(.link(text))
-    }
-
-    private func emailPayload() -> Result<ContactPayload, Problem> {
-        let text = email.trimmingCharacters(in: .whitespacesAndNewlines)
-        let parts = text.split(separator: "@", omittingEmptySubsequences: false)
-        guard parts.count == 2, !parts[0].isEmpty, parts[1].contains("."), !parts[1].hasSuffix(".") else {
-            return .failure(Problem(message: String(localized: "Enter an email address like name@example.com.")))
-        }
-        return .success(.email(text))
-    }
-
-    private func phonePayload() -> Result<ContactPayload, Problem> {
-        let text = phone.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard text.filter(\.isNumber).count >= Self.minPhoneDigits else {
-            return .failure(Problem(message: String(localized: "Enter a phone number with at least 7 digits.")))
-        }
-        return .success(.phone(text))
-    }
-
-    private func addressPayload() -> Result<ContactPayload, Problem> {
-        let trim = { (text: String) in text.trimmingCharacters(in: .whitespacesAndNewlines) }
-        guard !trim(street).isEmpty else {
-            return .failure(Problem(message: String(localized: "Enter the street part of the address.")))
-        }
-        return .success(.address(PostalAddress(
-            street: trim(street), city: trim(city), state: trim(state),
-            postalCode: trim(postalCode), country: trim(country)
-        )))
-    }
-}
-
 #Preview("Relabel") {
     RelabelSheet(value: PreviewData.emails[2])
         .previewModel()

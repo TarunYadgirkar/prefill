@@ -43,20 +43,38 @@ struct YouSection: View {
 }
 
 private struct YouValueRow: View {
+    @Environment(MacModel.self) private var model
     let value: ContactValue
     let useCount: Int
+    @State private var isEditing = false
+    @State private var isConfirmingRemove = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.hairline) {
-            Text(LabelChoices.caption(value.label, kind: value.kind)).foregroundStyle(.secondary)
-            Text(value.display)
-            if useCount > 0 {
-                Text("Used on ^[\(useCount) site](inflect: true)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                Text(LabelChoices.caption(value.label, kind: value.kind)).foregroundStyle(.secondary)
+                Text(value.display)
+                if useCount > 0 {
+                    Text("Used on ^[\(useCount) site](inflect: true)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
+            .accessibilityElement(children: .combine)
+            Spacer()
+            Button("Edit…") { isEditing = true }
+            Button("Remove", role: .destructive) { isConfirmingRemove = true }
         }
-        .accessibilityElement(children: .combine)
+        .sheet(isPresented: $isEditing) {
+            ValueEditForm(value: value)
+        }
+        .confirmationDialog(
+            "Remove \(value.display)?", isPresented: $isConfirmingRemove, titleVisibility: .visible
+        ) {
+            Button("Remove", role: .destructive) { Task { await model.removeValue(value) } }
+        } message: {
+            Text("It comes off your contacts on every device, and Prefill stops offering it.")
+        }
     }
 }
 

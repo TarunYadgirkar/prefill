@@ -46,6 +46,30 @@ struct CardEditorTests {
         #expect(gateway.card.emails.map(\.label) == [Alex.homeLabel, Alex.workLabel, "_$!<School>!$_"])
     }
 
+    @Test func replacesAValueInItsPlaceInOneSave() {
+        let gateway = FakeGateway()
+        let typed = CardEntry(label: Alex.workLabel, payload: .email("alex@newjob.example.org"))
+        let edit = CardEditor.Edit.replace(Alex.workEmail, with: typed)
+        #expect(CardEditor(gateway: gateway).apply(edit, cardIdentifier: Alex.card.identifier) == .saved)
+        #expect(gateway.card.emails == [Alex.homeEmail.entry, typed, Alex.schoolEmail.entry])
+        #expect(gateway.saves.count == 1)
+    }
+
+    @Test func aValueEditedIntoAnotherOneBecomesThatOne() {
+        let gateway = FakeGateway()
+        let edit = CardEditor.Edit.replace(Alex.workEmail, with: Alex.homeEmail.entry)
+        #expect(CardEditor(gateway: gateway).apply(edit, cardIdentifier: Alex.card.identifier) == .saved)
+        #expect(gateway.card.emails == [Alex.homeEmail.entry, Alex.schoolEmail.entry])
+    }
+
+    @Test func checksWhatThePersonTyped() {
+        var draft = ValueDraft(.link("https://github.com/alexrivera"))
+        #expect((try? draft.payload(.link).get()) != nil)
+        draft.link = "not a link"
+        #expect((try? draft.payload(.link).get()) == nil)
+        #expect((try? ValueDraft(.phone("12")).payload(.phone).get()) == nil)
+    }
+
     @Test func anEditThatChangesNothingSkipsTheSave() {
         let gateway = FakeGateway()
         let edit = CardEditor.Edit.relabel(Alex.homeEmail, label: Alex.homeLabel)
