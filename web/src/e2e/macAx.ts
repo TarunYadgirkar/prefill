@@ -1,8 +1,8 @@
-// Drives a visible Chrome for Testing, without the extension, against a running test copy
-// of the Mac app with Accessibility (scripts/e2e-mac-ax.sh sets it up). Focus moves from
-// Playwright, never from the person's mouse or keyboard; the test copy picks the first row
-// itself. Run with node.
-// The extension is loaded too, and has to stand down while the app's panel shows.
+// Drives a visible Chrome for Testing against a running test copy of the Mac app with
+// Accessibility (scripts/e2e-mac-ax.sh sets it up). Focus moves from Playwright, never from
+// the person's mouse or keyboard; the test copy picks the first row itself. Run with node.
+// First without the extension, where the app's panel serves the page, then with it, where
+// the extension's own list shows and the panel stays away.
 // usage: node macAx.ts <extension dir> <profile dir> <page url> <screenshot path> [airtable]
 import { execFileSync, spawn } from "node:child_process";
 import { chromium, type Locator, type Page } from "playwright-core";
@@ -57,14 +57,14 @@ async function checkAirtable(page: Page): Promise<void> {
 
 // Started directly with the page, as from the Dock, so the page has the window's focus;
 // Playwright then attaches over the debugging port.
-async function openChrome(extensionDir: string, dir: string, url: string): Promise<{ page: Page; close: () => void }> {
+async function openChrome(extensionDir: string | undefined, dir: string, url: string): Promise<{ page: Page; close: () => void }> {
+  const withExtension = extensionDir === undefined ? [] : [`--disable-extensions-except=${extensionDir}`, `--load-extension=${extensionDir}`];
   const chrome = spawn(
     chromium.executablePath(),
     [
       `--user-data-dir=${dir}`,
       `--remote-debugging-port=${DEBUG_PORT}`,
-      `--disable-extensions-except=${extensionDir}`,
-      `--load-extension=${extensionDir}`,
+      ...withExtension,
       "--no-first-run",
       "--no-default-browser-check",
       "--window-size=900,700",
@@ -83,12 +83,41 @@ async function main(): Promise<void> {
   if (extension === undefined || profile === undefined || pageUrl === undefined || screenshot === undefined) {
     throw new Error("usage: macAx.ts <extension> <profile> <page> <screenshot> [airtable]");
   }
-  const { page, close } = await openChrome(extension, profile, pageUrl);
+  await checkPanel(pageUrl, profile, screenshot);
+  await checkExtensionOwnsThePage(extension, `${profile}-extension`, pageUrl);
+}
+
+// Chrome with the extension: its list shows and the panel never picks for the field.
+async function checkExtensionOwnsThePage(extensionDir: string, dir: string, url: string): Promise<void> {
+  const { page, close } = await openChrome(extensionDir, dir, url);
   try {
     bringToFront();
     await page.waitForTimeout(TREE_WAIT_MS);
     const email = page.locator("#email");
-    // A click the page sees as the person's, so the extension would show its list if it didn't stand down.
+    await email.click();
+    await page.waitForTimeout(1_500);
+    const lists = await page.evaluate(() =>
+      [...document.querySelectorAll("prefill-suggestions")].map((host) => {
+        const box = host.getBoundingClientRect();
+        return { top: Math.round(box.top), height: Math.round(box.height), open: host.matches(":popover-open") };
+      }),
+    );
+    console.log(`lists after one click: ${JSON.stringify(lists)}`);
+    check(lists.filter((list) => list.height > 0).length === 1, "with the extension running, its own list shows, once");
+    await page.waitForTimeout(PICK_WAIT_MS);
+    check((await email.inputValue()) === "", "with the extension running, the app's panel stays away");
+  } finally {
+    close();
+  }
+}
+
+// Chrome without the extension: the app's panel serves the page through Accessibility.
+async function checkPanel(pageUrl: string, profile: string, screenshot: string): Promise<void> {
+  const { page, close } = await openChrome(undefined, profile, pageUrl);
+  try {
+    bringToFront();
+    await page.waitForTimeout(TREE_WAIT_MS);
+    const email = page.locator("#email");
     await email.click();
     await page.waitForTimeout(1_500);
     const box = await screenBox(page, email);
@@ -99,7 +128,6 @@ async function main(): Promise<void> {
     } catch {
       console.log("no screenshot: the screen can't be captured right now (locked or asleep)");
     }
-    check(!(await page.locator("prefill-suggestions").isVisible()), "the extension shows no list of its own beside the app's panel");
     await page.waitForTimeout(PICK_WAIT_MS);
     const picked = await email.inputValue();
     check(EMAILS.includes(picked), `the email field takes one of the card's emails: ${picked}`);

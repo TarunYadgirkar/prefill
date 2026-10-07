@@ -1,9 +1,10 @@
 #!/bin/zsh
 # Checks Prefill's own panel in another app, through Accessibility: builds a test copy of
 # the Mac app with the Alex Rivera card (testbed/mac-e2e) and its own store, runs it watching
-# only Chrome for Testing, opens the test page there with the extension loaded, focuses the
-# email field from Playwright, checks the extension stood down, and lets the test copy pick
-# the first row, then empties the form, focuses the phone field and lets it press Fill form.
+# only Chrome for Testing, opens the test page there without the extension, focuses the
+# email field from Playwright and lets the test copy pick the first row, then empties the
+# form, focuses the phone field and lets it press Fill form. Then it opens the page again
+# with the extension loaded and checks the extension's list shows and the panel stays away.
 # The process needs Accessibility:
 # run from a terminal that has it. Screenshot: assets/generated/mac-ax-panel.png.
 # PREFILL_E2E_AIRTABLE=1 also fills (never submits) the real Airtable form.
@@ -40,8 +41,8 @@ osascript -e "quit app id \"$INSTALLED_ID\"" 2>/dev/null || true
 sleep 1
 
 step "Starting the test app with the Alex Rivera card"
-mkdir -p $WORK/store $WORK/profile/NativeMessagingHosts
-cat >$WORK/profile/NativeMessagingHosts/com.tarunyadgirkar.prefill.json <<EOF2
+mkdir -p $WORK/store $WORK/profile-extension/NativeMessagingHosts
+cat >$WORK/profile-extension/NativeMessagingHosts/com.tarunyadgirkar.prefill.json <<EOF2
 {
   "name": "com.tarunyadgirkar.prefill",
   "description": "Prefill",

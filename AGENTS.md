@@ -35,7 +35,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Copies from two devices merge, and copies are never deleted.
 - **`CNContactStoreGateway`:**
   - Reads both contacts as one `CardRecord` and writes each part back to its own contact.
-  - Callers (`CardWriter`, never-drop guard, readers, Siri, Mac) don't know about the split.
+  - Callers (`CardWriter`, never-drop guard, readers, Mac) don't know about the split.
 - **`Memory`** (`PrefillKit/Memory/`): a read-only view of every answer (contact values, links, custom fields) with its origin, where it's stored and `uses(of:)` ("Used on"). The app's Inbox and You screens read it through `AppSupport/MemoryLookup.swift`. The message routers still read `CardRecord` directly (see PLAN 3.2).
 - **Per-device app state** (pins, usage, picks, muted sites, review queue):
   - iPhone: the Keychain store for Personal, the App Group store for AppStore.
@@ -48,7 +48,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 |---|---|
 | `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values, `why.ts` words the line under each, `picks.ts` reports picks. `dropdown.ts` is Prefill's own list, in Safari and Chromium. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
-| `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: Sites, Restore, Delete), Siri intents. |
+| `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: sites Prefill doesn't save on, Restore, Delete). |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
 | `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu (with the first-run checklist, `SetupChecklist.swift`) and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
@@ -92,7 +92,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 ## Open items
 
-- **Device-only checks not yet done:** Siri, the Focus filter, snippet buttons, and iCloud carrying custom-field labels between devices.
+- **Device-only check not yet done:** iCloud carrying custom-field labels between devices.
 - **Minimal mode:**
   - At most 3 values with no labels.
   - WebKit's in-page list always shows.
@@ -121,10 +121,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 ## Ongoing
 
-Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the to-do list. Done and merged on Oct 6: Phases 1, 2, 3 and 5, task 2.0 (the Safari tests read Prefill's list) and 10.1 (docs as built so far).
+Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the to-do list. Done on Oct 6: Phases 1, 2, 3, 5 and 6 (cuts: Siri, Shortcuts, the Focus filter, the Sites screen and the match-words field are gone), task 2.0 (the Safari tests read Prefill's list) and 10.1 (docs as built so far).
 
-Next, in the plan's order: Phase 4 (freeze the card to name and phone) waits for Tarun's yes; Phases 6 to 9 are open. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
+Next, in the plan's order: Phase 4 (freeze the card to name and phone) waits for Tarun's yes; Phase 7 (resume import) was dropped; Phase 9 (two-step setup, Mac checklist) is on `feat/phase9-setup`, not merged. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
 
 Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 
-Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu, its first-run checklist and the Settings window on screen (only built), the large-text tour, and Safari's bubble on a field Fill form filled.
+Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu, its first-run checklist and the Settings window on screen (only built), the large-text tour, Safari's bubble on a field Fill form filled, and the Advanced list of sites Prefill doesn't save on (only built).

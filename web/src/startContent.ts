@@ -11,7 +11,21 @@ function isConnected(): boolean {
   }
 }
 
+// Chrome can run the script twice in one page: once from the manifest and once from the
+// background script adding Prefill to open tabs at install, so each list would open twice.
+// The copy that starts first marks the page; a later one steps aside while it's connected.
+const RUNNING = Symbol.for("prefill.content");
+type Marked = typeof globalThis & { [RUNNING]?: () => boolean };
+
+function claimPage(): boolean {
+  const page = globalThis as Marked;
+  if (page[RUNNING]?.() === true) return false;
+  page[RUNNING] = isConnected;
+  return true;
+}
+
 export function startContent(kind: NonNullable<PageEnvironment["browser"]>): void {
+  if (!claimPage()) return;
   const frame = {
     protocol: location.protocol,
     hostname: location.hostname,

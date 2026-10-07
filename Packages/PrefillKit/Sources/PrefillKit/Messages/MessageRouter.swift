@@ -69,7 +69,7 @@ public struct MessageRouter: Sendable {
             }
             let page = PageSignal(
                 host: request.host, hints: request.hints, now: date, matchEachSite: true,
-                siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+                siteKinds: state.siteKinds
             )
             let result = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page))
             if result.outcome == .saved { noteCardWrite(at: date) }

@@ -49,6 +49,15 @@ struct ModelTests {
         #expect(decoded == state)
     }
 
+    @Test func settingsStoredWithAFocusLabelStillRead() throws {
+        let old = try DocumentCoder.encode(AppState(values: [Alex.homeEmail], settings: Settings(matchEachSite: false)))
+        var json = try #require(JSONSerialization.jsonObject(with: old) as? [String: Any])
+        json["settings"] = ["matchEachSite": false, "saveNewInfo": true, "focusLabel": "work"]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoded = try DocumentCoder.decode(AppState.self, from: data)
+        #expect(decoded == AppState(values: [Alex.homeEmail], settings: Settings(matchEachSite: false)))
+    }
+
     @Test func rejectingKeepsTheNewestIDsOnceUpToTheCap() {
         let many = (0..<AppState.maxRejected).map { Alex.value(.email("old\($0)@example.net"), label: nil).id }
         let state = AppState(rejectedValueIDs: many).rejecting(many[1]).rejecting(Alex.schoolEmail.id)

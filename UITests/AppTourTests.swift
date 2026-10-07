@@ -37,7 +37,7 @@ final class AppTourTests: XCTestCase {
         snapAs("inbox-school-label")
     }
 
-    // Records a reorder in the You tab and a pin on a site, for frame-by-frame checking.
+    // Records a reorder in the You tab, for frame-by-frame checking.
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")
         app.launch()
@@ -52,20 +52,6 @@ final class AppTourTests: XCTestCase {
         pause(2)
         call("/record/stop")
         app.navigationBars.buttons["Done"].tap()
-        openSites()
-        let site = app.buttons["site-example.org"]
-        swipeUp(until: site)
-        site.tap()
-        let school = app.buttons["site-value-alex.school@example.edu"]
-        swipeUp(until: school)
-        XCTAssertTrue(school.waitForExistence(timeout: 5))
-        call("/record/start?name=motion-pin-\(variant)")
-        pause(2)
-        school.tap()
-        pause(2)
-        school.tap()
-        pause(2)
-        call("/record/stop")
     }
 
     private func walkOnboarding() {
@@ -199,14 +185,8 @@ final class AppTourTests: XCTestCase {
         tab("Settings")
         XCTAssertTrue(app.switches["match-each-site"].waitForExistence(timeout: 10))
         snapAs("settings")
-        openSites()
-        let site = app.buttons["site-example.org"]
-        XCTAssertTrue(site.waitForExistence(timeout: 10))
-        snap("sites")
-        site.tap()
-        XCTAssertTrue(app.navigationBars["example.org"].waitForExistence(timeout: 5))
-        snap("site-detail")
-        app.navigationBars.buttons.firstMatch.tap()
+        openMutedSites()
+        snap("muted-sites")
         app.navigationBars.buttons.firstMatch.tap()
         swipeUp(until: app.buttons["restore-card"])
         app.buttons["restore-card"].tap()

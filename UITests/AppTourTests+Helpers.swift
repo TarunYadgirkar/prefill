@@ -87,9 +87,9 @@ extension AppTourTests {
         _ = try? Data(contentsOf: url)
     }
 
-    func openSites() {
+    func openMutedSites() {
         tab("Settings")
-        let sites = app.buttons["sites"]
+        let sites = app.buttons["muted-sites"]
         swipeUp(until: sites)
         sites.tap()
         pause(1)
