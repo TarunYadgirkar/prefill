@@ -32,9 +32,12 @@ public struct Answer: Identifiable, Hashable, Sendable {
     public let origin: Origin
     public let place: Place
     public let createdAt: Date?
+    // The parts of an address, for callers that lay it out on one line.
+    public let address: PostalAddress?
 
     public init(
-        id: UUID, question: Question, text: String, label: String?, origin: Origin, place: Place, createdAt: Date?
+        id: UUID, question: Question, text: String, label: String?, origin: Origin, place: Place, createdAt: Date?,
+        address: PostalAddress? = nil
     ) {
         self.id = id
         self.question = question
@@ -43,6 +46,7 @@ public struct Answer: Identifiable, Hashable, Sendable {
         self.origin = origin
         self.place = place
         self.createdAt = createdAt
+        self.address = address
     }
 
     static func customID(_ field: CustomField) -> UUID {

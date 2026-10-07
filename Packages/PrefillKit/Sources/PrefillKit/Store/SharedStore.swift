@@ -26,6 +26,8 @@ public enum StoreError: Error, Sendable, Hashable {
 enum StoreDocument: String, CaseIterable {
     case appState = "app-state"
     case events = "ext-events"
+    case keyboardValues = "keyboard-values"
+    case keyboardSeen = "keyboard-seen"
 }
 
 enum StoreLog {
@@ -50,15 +52,22 @@ public enum StoreFactory {
     public static let keychainGroupKey = "PrefillKeychainGroup"
 
     public static func make(bundle: Bundle = .main) -> any SharedStore {
-        let backend = backend(info: bundle.infoDictionary ?? [:]) { group in
-            FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
-        }
+        let backend = backend(bundle: bundle)
         StoreLog.logger.info("store backend \(backend.name, privacy: .public)")
         switch backend {
-        case .appGroup(let url):
-            return AppGroupStore(directory: url.appending(path: "Prefill", directoryHint: .isDirectory))
+        case .appGroup(let url): return AppGroupStore(directory: directory(in: url))
         case .keychain(let group): return KeychainStore(accessGroup: group)
         }
+    }
+
+    static func backend(bundle: Bundle) -> Backend {
+        backend(info: bundle.infoDictionary ?? [:]) { group in
+            FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group)
+        }
+    }
+
+    static func directory(in container: URL) -> URL {
+        container.appending(path: "Prefill", directoryHint: .isDirectory)
     }
 
     static func backend(info: [String: Any], containerURL: (String) -> URL?) -> Backend {
