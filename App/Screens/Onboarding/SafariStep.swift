@@ -58,7 +58,7 @@ struct DoneStep: View {
     var body: some View {
         OnboardingStepLayout(
             title: "Prefill is ready",
-            message: "Click any field in Safari and pick a value."
+            message: "Tap any field in Safari and pick a value."
         ) {
             Text("""
                 What you pick comes first on that site next time. New values you type wait in the Inbox \

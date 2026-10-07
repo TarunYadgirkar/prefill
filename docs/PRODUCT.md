@@ -51,7 +51,7 @@ Underneath, Prefill still manages your contact card, because Safari's own bar an
 - On contact fields in Safari the list sits above the field, because Safari's own suggestion bubble takes every tap in a band under it.
 
 **The iPhone app:**
-- **Setup:** two steps. Choose your contact card and see what's on it (with the optional offer to keep it to name and phone), then turn on the Safari extension, with checks that turn green on their own. It ends on "Click any field in Safari and pick a value."
+- **Setup:** two steps. Choose your contact card and see what's on it (with the optional offer to keep it to name and phone), then turn on the Safari extension, with checks that turn green on their own. It ends on "Tap any field in Safari and pick a value."
 - **Inbox:** what needs a decision first (values Prefill wasn't sure are yours), then what Prefill did recently, each with a mark you can read at a glance.
 - **You:** everything Prefill knows, searchable, grouped into Contact, Links and Answers. A value's page shows where it's stored, which sites it was used on, and which sites it's first on.
 - **Settings:** the two switches, Sharing your card, the Apple Intelligence status, Safari's switches, and Advanced (sites Prefill doesn't save on, card, restore, delete).
