@@ -23,7 +23,7 @@ async function load(html: string, overrides: Partial<PageEnvironment> = {}) {
   document.body.innerHTML = html;
   const send = vi
     .fn<(request: ExtensionRequest) => Promise<unknown>>()
-    .mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+    .mockResolvedValue({ type: "pong" });
   stop = startPage({
     doc: document,
     win: window,
@@ -49,13 +49,21 @@ function typeAndSubmit(): void {
     ?.dispatchEvent(new Event("submit", { bubbles: true }));
 }
 
-it("tells the app which contact fields a page has", async () => {
+const types = (send: Awaited<ReturnType<typeof load>>): string[] =>
+  send.mock.calls.map(([request]) => request.type);
+
+it("never asks the app to reorder the card for a page", async () => {
   const send = await load('<input type="email" autocomplete="email">');
-  expect(send).toHaveBeenCalledWith({
-    type: "pageContext",
-    host: "shop.example.net",
-    fields: [{ kind: "email" }],
-  });
+  expect(types(send)).toEqual(["contactSuggestions"]);
+});
+
+// Safari's bar offers the card's name, so a second list there would only repeat it.
+it.each([
+  ["safari", [{ kind: "email" }]],
+  ["chromium", [{ kind: "name" }, { kind: "email" }]],
+] as const)("in %s asks for %j", async (browser, fields) => {
+  const send = await load('<input autocomplete="name"><input type="email" autocomplete="email">', { browser });
+  expect(send).toHaveBeenCalledWith({ type: "contactSuggestions", host: "shop.example.net", fields });
 });
 
 it("stays silent on a page without contact fields", async () => {
@@ -96,7 +104,7 @@ it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com
   "runs in a job application frame from %s, under its own host",
   async (hostname) => {
     const send = await load('<input type="email" autocomplete="email">', { isTopFrame: false, hostname });
-    expect(send).toHaveBeenCalledWith({ type: "pageContext", host: hostname, fields: [{ kind: "email" }] });
+    expect(send).toHaveBeenCalledWith({ type: "contactSuggestions", host: hostname, fields: [{ kind: "email" }] });
   },
 );
 
@@ -105,9 +113,7 @@ it("runs on http only on this device itself", async () => {
     protocol: "http:",
     hostname: "localhost",
   });
-  expect(
-    send.mock.calls.map(([request]) => (request as { type: string }).type),
-  ).toEqual(["contactSuggestions", "pageContext"]);
+  expect(types(send)).toEqual(["contactSuggestions"]);
 });
 
 it("asks Safari's app for every value, for the field's own list", async () => {

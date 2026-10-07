@@ -57,8 +57,6 @@ def answer(request):
     if kind == "ping":
         return {"type": "pong"}
     if kind == "contactSuggestions":
-        if request.get("offCard"):
-            return {"type": "contactSuggestionsResult", "emails": [], "phones": [], "addresses": []}
         kinds = {field["kind"] for field in request.get("fields", [])}
         return {
             "type": "contactSuggestionsResult",
@@ -81,8 +79,6 @@ def answer(request):
         return {"type": "pickedResult", "remembered": remembered}
     if kind == "capture":
         return {"type": "captureResult", "saved": 0, "review": 0, "ignored": 0}
-    if kind == "pageContext":
-        return {"type": "pageContextResult", "status": "unchanged"}
     return {"type": "error", "reason": "unknown request"}
 
 

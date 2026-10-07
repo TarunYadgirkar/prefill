@@ -1,7 +1,6 @@
 import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { classify } from "./classify";
-import { installContext } from "./context";
 import { installCustom } from "./custom";
 import { SAFARI_CONTACT, showDropdown, type Attach } from "./dropdown";
 import { isContact, type FieldElement } from "./fieldTypes";
@@ -23,8 +22,8 @@ export interface PageEnvironment {
   isSecureContext: boolean;
   isTopFrame: boolean;
   send: (request: ExtensionRequest) => Promise<unknown>;
-  // Safari fills contact fields from the card, so there Prefill reorders the card for the
-  // page. Chrome and Arc don't read the card, so there Prefill shows its own list of values.
+  // Prefill shows its own list in both. Safari's bar also offers the card's name and phone,
+  // so there name fields get no second list.
   browser?: "safari" | "chromium";
   // Hands over the page's one-tap fill, for Safari's Prefill sheet.
   onFill?: (fill: PageFill) => void;
@@ -34,8 +33,7 @@ type FrameFacts = Pick<PageEnvironment, "protocol" | "hostname" | "isSecureConte
 
 // Runs in the top frame of secure pages, and in a frame only when it shows one of the job
 // application forms in atsFrames.ts over https, under that form's own host. So a network
-// attacker on plain http or a frame from any other site can't feed the card values or
-// reorder it.
+// attacker on plain http or a frame from any other site can't feed the card values.
 export function isPrefillFrame(env: FrameFacts): boolean {
   if (!env.isSecureContext || !isTrustedPage(env.protocol, env.hostname)) return false;
   return env.isTopFrame || isAtsFrame(env.protocol, env.hostname);
@@ -49,17 +47,13 @@ export function startPage(env: PageEnvironment): () => void {
   };
   const isChromium = env.browser === "chromium";
   // Every list is Prefill's own, in a closed shadow root, in Safari as in Chrome: Safari's
-  // bar shows at most three values with no labels, and nothing once the card is minimal,
-  // so the field's own list sits under it with every value, next to the Fill form pill.
+  // bar shows only what the card holds, at most three values with no labels, so the field's
+  // own list sits under it with every value, next to the Fill form pill. Prefill never
+  // reorders the card for a page.
   const shown = { attach: showDropdown, skip: isFilled };
   const contactList = contactAttach(isChromium);
-  // In Safari the card's order still follows the page.
-  const values = [
-    ...(isChromium ? [] : [installContext(env.doc, env.win, { host, send: env.send })]),
-    installSuggestions(env.doc, { host, send: env.send, ...shown, attach: contactList }),
-  ];
   const stops = [
-    ...values,
+    installSuggestions(env.doc, { host, send: env.send, ...shown, attach: contactList, skipNames: !isChromium }),
     installCapture(env.doc, env.win, { host, send }),
     installLearn(env.doc, env.win, { host, send: env.send }),
     installLinks(env.doc, { host, send: env.send, ...shown }),

@@ -3,7 +3,6 @@
     "fieldKind": ["email", "phone", "address", "name", "link"],
     "linkType": ["github", "website", "linkedin", "x", "other"],
     "sectionHint": ["home", "work", "shipping", "billing"],
-    "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"],
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
     "recentState": ["saved", "waiting", "removed"],
     "pickKind": ["email", "phone", "address", "link", "custom"],
@@ -11,15 +10,6 @@
   },
   "requests": {
     "ping": { "type": "ping" },
-    "pageContext": {
-      "type": "pageContext",
-      "host": "shop.example.net",
-      "fields": [
-        { "kind": "email", "section": "work" },
-        { "kind": "phone" },
-        { "kind": "address", "section": "shipping" }
-      ]
-    },
     "capture": {
       "type": "capture",
       "host": "shop.example.net",
@@ -68,12 +58,6 @@
   },
   "responses": {
     "pong": { "type": "pong" },
-    "pageContextResult": { "type": "pageContextResult", "status": "saved" },
-    "pageContextFailed": {
-      "type": "pageContextResult",
-      "status": "failed",
-      "reason": "Prefill can't reach your contact card. Open Prefill to give it access again."
-    },
     "captureResult": { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 },
     "popupStateResult": {
       "type": "popupStateResult",

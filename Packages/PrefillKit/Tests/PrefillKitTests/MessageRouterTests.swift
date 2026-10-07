@@ -29,7 +29,7 @@ final class MemoryStore: SharedStore {
         documents.withLock { documents in
             let events = documents.events
             documents.events = ExtensionEvents(
-                usage: events.usage, cardWrites: events.cardWrites, saves: events.saves, pins: events.pins,
+                usage: events.usage, saves: events.saves, pins: events.pins,
                 mutes: events.mutes
             )
         }
@@ -41,10 +41,10 @@ private enum Page {
     static let siteB = "www.site-b.example"
     static let newEmail = "new.person@example.org"
 
-    static func context(_ host: String, section: String? = nil) -> [String: Any] {
+    static func suggestions(_ host: String, section: String? = nil) -> [String: Any] {
         var field: [String: Any] = ["kind": "email"]
         field["section"] = section
-        return ["type": "pageContext", "host": host, "fields": [field, ["kind": "phone"]]]
+        return ["type": "contactSuggestions", "host": host, "fields": [field, ["kind": "phone"]]]
     }
 
     static func signup(_ host: String, email: String, submitted: Bool = true) -> [String: Any] {
@@ -122,15 +122,20 @@ struct MessageRouterTests {
         #expect(reply as? [String: String] == ["type": "pong"])
     }
 
-    @Test func pageContextBeforeSetUpLeavesTheCardAlone() {
-        let reply = router(MemoryStore()).route(Page.context(Page.siteA))
-        #expect(reply == .pageContext(PageContextResponse(status: .notSetUp)))
+    private func firstSuggested(_ reply: ExtensionResponse) -> String? {
+        guard case .contactSuggestions(let body) = reply else { return nil }
+        return body.emails.first?.value
+    }
+
+    @Test func aRetiredPageContextIsAnUnknownMessage() {
+        let reply = router(linked()).route(["type": "pageContext", "host": Page.siteA, "fields": [["kind": "email"]]])
+        #expect(reply == .error(reason: "unknown message"))
         #expect(gateway.fetches == 0)
     }
 
     @Test func aPageWithFormsConfirmsTheExtensionRunsOnWebsites() throws {
         let store = MemoryStore()
-        _ = router(store).route(Page.context(Page.siteA))
+        _ = router(store).route(Page.suggestions(Page.siteA))
         #expect(try store.readEvents().lastPageSeen == .testNow)
     }
 
@@ -138,73 +143,43 @@ struct MessageRouterTests {
         let earlier = Date.testNow.addingTimeInterval(-3_600)
         let store = MemoryStore()
         try store.appendEvents(ExtensionEvents(lastPageSeen: earlier))
-        _ = router(store).route(Page.context(Page.siteA))
+        _ = router(store).route(Page.suggestions(Page.siteA))
         #expect(try store.readEvents().lastPageSeen == earlier)
     }
 
-    @Test func pageContextWithMatchEachSiteOffLeavesTheCardAlone() {
-        let reply = router(linked(Settings(matchEachSite: false))).route(Page.context(Page.siteA))
-        #expect(reply == .pageContext(PageContextResponse(status: .off)))
-        #expect(gateway.fetches == 0)
-    }
-
-    @Test func pageContextPutsTheValueUsedOnThisSiteFirst() {
+    // Prefill's list does the ranking for the page; the card keeps one order everywhere.
+    @Test func theValueUsedOnThisSiteComesFirstWithoutACardWrite() {
         let store = linked()
         try? store.appendEvents(
             usage: [UsageEvent(valueID: Alex.schoolEmail.id, host: "site-a.example", date: .daysAgo(1))], captures: []
         )
-        let router = router(store)
-        #expect(router.route(Page.context(Page.siteA)) == .pageContext(PageContextResponse(status: .saved)))
-        #expect(firstEmail == "alex.school@example.edu")
-        #expect(router.route(Page.context(Page.siteA)) == .pageContext(PageContextResponse(status: .unchanged)))
-        #expect(gateway.saves.count == 1)
-    }
-
-    @Test func pagesGetOnlyAFewCardRewritesAMinute() {
-        let busy = Array(repeating: Date.testNow.addingTimeInterval(-30), count: MessageRouter.maxCardWritesPerWindow)
-        let store = MemoryStore(
-            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: busy)
-        )
-        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
-        #expect(reply == .pageContext(PageContextResponse(status: .unchanged)))
+        #expect(firstSuggested(router(store).route(Page.suggestions(Page.siteA))) == "alex.school@example.edu")
         #expect(gateway.saves.isEmpty)
-    }
-
-    @Test func aCardRewriteIsNotedAndOldOnesExpire() {
-        let old = Array(repeating: Date.testNow.addingTimeInterval(-61), count: MessageRouter.maxCardWritesPerWindow)
-        let store = MemoryStore(
-            AppState(values: Alex.allValues, cardLink: link), events: ExtensionEvents(cardWrites: old)
-        )
-        let reply = router(store).route(Page.context(Page.siteB, section: "work"))
-        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
-        #expect(store.events.cardWrites.last == .testNow)
+        #expect(firstEmail == Alex.card.emails.first?.payload.display)
     }
 
     @Test func aWorkHintPutsTheWorkEmailFirst() {
-        let reply = router(linked()).route(Page.context(Page.siteB, section: "work"))
-        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
-        #expect(firstEmail == "alex@work.example.org")
-        #expect(gateway.saves.last?.author == CardWriter.transactionAuthor)
+        let reply = router(linked()).route(Page.suggestions(Page.siteB, section: "work"))
+        #expect(firstSuggested(reply) == "alex@work.example.org")
+        #expect(gateway.saves.isEmpty)
     }
 
     @Test func aSiteKindFromTheModelPutsTheWorkEmailFirst() {
         let store = MemoryStore(
             AppState(values: Alex.allValues, cardLink: link, siteKinds: ["site-b.example": .work])
         )
-        #expect(router(store).route(Page.context(Page.siteB)) == .pageContext(PageContextResponse(status: .saved)))
-        #expect(firstEmail == "alex@work.example.org")
+        #expect(firstSuggested(router(store).route(Page.suggestions(Page.siteB))) == "alex@work.example.org")
     }
 
     @Test func theFocusLabelReachesPagesFromSafari() {
-        let reply = router(linked(Settings(focusLabel: "work"))).route(Page.context(Page.siteA))
-        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
-        #expect(firstEmail == "alex@work.example.org")
+        let reply = router(linked(Settings(focusLabel: "work"))).route(Page.suggestions(Page.siteA))
+        #expect(firstSuggested(reply) == "alex@work.example.org")
     }
 
-    @Test func anUnreachableCardIsReportedWithAReason() {
+    @Test func anUnreachableCardSuggestsNothing() {
         gateway.state.withLock { $0.fetchError = .noAccess }
-        let reply = router(linked()).route(Page.context(Page.siteA))
-        #expect(reply == .pageContext(PageContextResponse(status: .failed, reason: CardWriteFailure.noAccess.reason)))
+        let reply = router(linked()).route(Page.suggestions(Page.siteA))
+        #expect(reply == .contactSuggestions(ContactSuggestionsResponse()))
     }
 
     @Test func captureBeforeSetUpStoresNothing() {
@@ -215,12 +190,12 @@ struct MessageRouterTests {
         #expect(gateway.fetches == 0)
     }
 
-    @Test func aNewEmailFromASignUpGoesOnTheCardFirstForThatSite() throws {
+    // The card gains the value at the end and keeps its order; Prefill's list puts it first.
+    @Test func aNewEmailFromASignUpGoesOnTheCardAndFirstInTheListForThatSite() throws {
         let store = linked()
         let reply = router(store).route(Page.signup(Page.siteA, email: Page.newEmail))
         #expect(reply == .capture(CaptureResponse(saved: 1, review: 0, ignored: 1)))
-        #expect(firstEmail == Page.newEmail)
-        #expect(gateway.card.emails.count == 4)
+        #expect(gateway.card.emails.map(\.payload.display) == Alex.card.emails.map(\.payload.display) + [Page.newEmail])
         let capture = try #require(store.events.captures.first)
         #expect(capture.verdict == .saved)
         #expect(capture.host == "site-a.example")
@@ -233,12 +208,9 @@ struct MessageRouterTests {
         _ = router.route(Page.signup(Page.siteA, email: Page.newEmail))
         let duplicate = router.route(Page.signup(Page.siteB, email: "alex@work.example.org"))
         #expect(duplicate == .capture(CaptureResponse(saved: 0, review: 0, ignored: 1)))
-        #expect(firstEmail == Page.newEmail)
-
-        _ = router.route(Page.context(Page.siteB))
-        #expect(firstEmail == "alex@work.example.org")
-        _ = router.route(Page.context(Page.siteA))
-        #expect(firstEmail == Page.newEmail)
+        #expect(firstSuggested(router.route(Page.suggestions(Page.siteB))) == "alex@work.example.org")
+        #expect(firstSuggested(router.route(Page.suggestions(Page.siteA))) == Page.newEmail)
+        #expect(firstEmail == Alex.card.emails.first?.payload.display)
     }
 
     @Test func aGiftRecipientNeverReachesTheCard() {

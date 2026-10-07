@@ -45,7 +45,8 @@ struct MessageLimitTests {
         let email: [String: Any] = ["kind": "email", "userTyped": true, "value": "a@b.c"]
         #expect(failure(capture(fields: Array(repeating: email, count: 21))) == "tooLarge")
         let page: [String: Any] = [
-            "type": "pageContext", "host": "shop.example.net", "fields": Array(repeating: ["kind": "email"], count: 41)
+            "type": "contactSuggestions", "host": "shop.example.net",
+            "fields": Array(repeating: ["kind": "email"], count: 41)
         ]
         #expect(failure(page) == "tooLarge")
     }

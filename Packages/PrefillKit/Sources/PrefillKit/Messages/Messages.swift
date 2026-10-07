@@ -20,48 +20,12 @@ public struct PageField: Codable, Sendable, Hashable {
     }
 }
 
-public struct PageContextRequest: Codable, Sendable, Hashable {
-    public let host: String
-    public let fields: [PageField]
-
-    public init(host: String, fields: [PageField]) {
-        self.host = host
-        self.fields = fields
-    }
-
-    public var hints: [ContactKind: SectionHint] {
-        SectionHint.firstPerKind(fields.map { ($0.kind, $0.section) })
-    }
-}
-
 extension SectionHint {
-    // One card order serves the whole page, so the first field of a kind sets its hint.
+    // The first field of a kind sets its hint for the page.
     static func firstPerKind(_ fields: [(FieldKind, SectionHint?)]) -> [ContactKind: SectionHint] {
         fields.reduce(into: [:]) { hints, field in
             guard let kind = field.0.contactKind, hints[kind] == nil, let section = field.1 else { return }
             hints[kind] = section
-        }
-    }
-}
-
-public enum SyncStatus: String, Codable, Sendable, CaseIterable {
-    case unchanged, saved, failed, off, notSetUp
-}
-
-public struct PageContextResponse: Codable, Sendable, Hashable {
-    public let status: SyncStatus
-    public let reason: String?
-
-    public init(status: SyncStatus, reason: String? = nil) {
-        self.status = status
-        self.reason = reason
-    }
-
-    public init(outcome: CardWriteOutcome) {
-        switch outcome {
-        case .unchanged: self.init(status: .unchanged)
-        case .saved: self.init(status: .saved)
-        case .failed(let failure): self.init(status: .failed, reason: failure.reason)
         }
     }
 }
@@ -139,7 +103,6 @@ public struct CaptureResponse: Codable, Sendable, Hashable {
 
 public enum ExtensionRequest: Sendable, Hashable {
     case ping
-    case pageContext(PageContextRequest)
     case capture(CaptureRequest)
     case popupState(PopupStateRequest)
     case pin(PinRequest)
@@ -155,7 +118,6 @@ public enum ExtensionRequest: Sendable, Hashable {
 
 public enum ExtensionResponse: Sendable, Hashable {
     case pong
-    case pageContext(PageContextResponse)
     case capture(CaptureResponse)
     case popupState(PopupStateResponse)
     case linkSuggestions(LinkSuggestionsResponse)
@@ -175,12 +137,12 @@ private struct ErrorBody: Codable {
 }
 
 private enum RequestType: String, Codable {
-    case ping, pageContext, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions
+    case ping, capture, popupState, pin, unpin, undoCapture, muteSite, linkSuggestions
     case contactSuggestions, customSuggestions, answers, picked
 }
 
 private enum ResponseType: String, Codable {
-    case pong, pageContextResult, captureResult, popupStateResult, linkSuggestionsResult, error
+    case pong, captureResult, popupStateResult, linkSuggestionsResult, error
     case contactSuggestionsResult, customSuggestionsResult, answersResult, pickedResult
 }
 
@@ -189,7 +151,6 @@ extension ExtensionRequest: Codable {
         let type = try decoder.container(keyedBy: TypeKey.self).decode(String.self, forKey: .type)
         switch RequestType(rawValue: type) {
         case .ping: self = .ping
-        case .pageContext: self = .pageContext(try PageContextRequest(from: decoder))
         case .capture: self = .capture(try CaptureRequest(from: decoder))
         case .linkSuggestions: self = .linkSuggestions(try LinkSuggestionsRequest(from: decoder))
         case .contactSuggestions: self = .contactSuggestions(try ContactSuggestionsRequest(from: decoder))
@@ -208,7 +169,7 @@ extension ExtensionRequest: Codable {
         case .muteSite: .muteSite(try MuteSiteRequest(from: decoder))
         case .answers: .answers(try AnswersRequest(from: decoder))
         case .picked: .picked(try PickedRequest(from: decoder))
-        case .ping, .pageContext, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions:
+        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions:
             throw MessageError.unknownType
         }
     }
@@ -222,7 +183,6 @@ extension ExtensionRequest: Codable {
     private var type: RequestType {
         switch self {
         case .ping: .ping
-        case .pageContext: .pageContext
         case .capture: .capture
         case .popupState: .popupState
         case .pin: .pin
@@ -240,7 +200,6 @@ extension ExtensionRequest: Codable {
     private var body: (any Encodable)? {
         switch self {
         case .ping: nil
-        case .pageContext(let body): body
         case .capture(let body): body
         case .popupState(let body): body
         case .pin(let body): body
@@ -261,7 +220,6 @@ extension ExtensionResponse: Codable {
         let type = try decoder.container(keyedBy: TypeKey.self).decode(String.self, forKey: .type)
         switch ResponseType(rawValue: type) {
         case .pong: self = .pong
-        case .pageContextResult: self = .pageContext(try PageContextResponse(from: decoder))
         case .captureResult: self = .capture(try CaptureResponse(from: decoder))
         case .popupStateResult: self = .popupState(try PopupStateResponse(from: decoder))
         case .error: self = .error(reason: try ErrorBody(from: decoder).reason)
@@ -277,7 +235,7 @@ extension ExtensionResponse: Codable {
         case .customSuggestionsResult: .customSuggestions(try CustomSuggestionsResponse(from: decoder))
         case .answersResult: .answers(try AnswersResponse(from: decoder))
         case .pickedResult: .picked(try PickedResponse(from: decoder))
-        case .pong, .pageContextResult, .captureResult, .popupStateResult, .error: throw MessageError.unknownType
+        case .pong, .captureResult, .popupStateResult, .error: throw MessageError.unknownType
         }
     }
 
@@ -292,7 +250,6 @@ extension ExtensionResponse: Codable {
     private var type: ResponseType {
         switch self {
         case .pong: .pong
-        case .pageContext: .pageContextResult
         case .capture: .captureResult
         case .popupState: .popupStateResult
         case .linkSuggestions: .linkSuggestionsResult
@@ -307,7 +264,6 @@ extension ExtensionResponse: Codable {
     private var body: (any Encodable)? {
         switch self {
         case .pong: nil
-        case .pageContext(let body): body
         case .capture(let body): body
         case .popupState(let body): body
         case .linkSuggestions(let body): body

@@ -19,13 +19,6 @@ export const LINK_TYPES = [
   "other",
 ] as const;
 export const SECTION_HINTS = ["home", "work", "shipping", "billing"] as const;
-export const SYNC_STATUSES = [
-  "unchanged",
-  "saved",
-  "failed",
-  "off",
-  "notSetUp",
-] as const;
 // "submit" is a form the person sent. "flush" is what they typed before the page was hidden,
 // which is never saved straight to the card.
 export const CAPTURE_TRIGGERS = ["submit", "flush"] as const;
@@ -77,7 +70,6 @@ export const LIMITS = {
 export type FieldKind = (typeof FIELD_KINDS)[number];
 export type LinkType = (typeof LINK_TYPES)[number];
 export type SectionHint = (typeof SECTION_HINTS)[number];
-export type SyncStatus = (typeof SYNC_STATUSES)[number];
 export type CaptureTrigger = (typeof CAPTURE_TRIGGERS)[number];
 export type ContactKind = (typeof CONTACT_KINDS)[number];
 export type PopupStatus = (typeof POPUP_STATUSES)[number];
@@ -237,11 +229,6 @@ const capturedField = refine(
 
 const pageRequests = {
   ping: object({ type: literal("ping") }),
-  pageContext: object({
-    type: literal("pageContext"),
-    host: hostName,
-    fields: arrayOf(pageField, LIMITS.pageFields),
-  }),
   capture: object({
     type: literal("capture"),
     host: hostName,
@@ -258,7 +245,6 @@ const pageRequests = {
     type: literal("contactSuggestions"),
     host: hostName,
     fields: arrayOf(pageField, LIMITS.pageFields),
-    offCard: optional(boolean),
   }),
   customSuggestions: object({
     type: literal("customSuggestions"),
@@ -333,11 +319,6 @@ const popupRecent = object({
 
 const pageResponses = {
   pong: object({ type: literal("pong") }),
-  pageContextResult: object({
-    type: literal("pageContextResult"),
-    status: oneOf(SYNC_STATUSES),
-    reason: optional(text(LIMITS.reason)),
-  }),
   captureResult: object({
     type: literal("captureResult"),
     saved: count,
@@ -395,7 +376,6 @@ export type PostalAddress = Parsed<typeof postalAddress>;
 export type PageField = Parsed<typeof pageField>;
 export type CapturedField = Parsed<typeof capturedField>;
 export type Ping = Parsed<typeof pageRequests.ping>;
-export type PageContextRequest = Parsed<typeof pageRequests.pageContext>;
 export type CaptureRequest = Parsed<typeof pageRequests.capture>;
 export type LinkSuggestionsRequest = Parsed<
   typeof pageRequests.linkSuggestions
@@ -412,7 +392,6 @@ export type PageRequest =
   | Ping
   | AnswersRequest
   | PickedRequest
-  | PageContextRequest
   | CaptureRequest
   | LinkSuggestionsRequest
   | ContactSuggestionsRequest
@@ -430,7 +409,6 @@ export type SheetRequest =
   | MuteSiteRequest;
 export type ExtensionRequest = PageRequest | SheetRequest;
 export type Pong = Parsed<typeof pageResponses.pong>;
-export type PageContextResult = Parsed<typeof pageResponses.pageContextResult>;
 export type CaptureResult = Parsed<typeof pageResponses.captureResult>;
 export type ErrorResponse = Parsed<typeof pageResponses.error>;
 export type SuggestedLink = Parsed<typeof suggestedLink>;
@@ -451,7 +429,6 @@ export type PageResponse =
   | Pong
   | AnswersResult
   | PickedResult
-  | PageContextResult
   | CaptureResult
   | LinkSuggestionsResult
   | ContactSuggestionsResult

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { Choice, TextField } from "./dropdown";
 import {
   customChoices,
   installCustom,
@@ -35,10 +36,16 @@ describe("installCustom", () => {
           { values: [{ value: "LinkedIn", why: "card" }] },
         ],
       });
+    const shown = new Map<TextField, string[]>();
+    const attach = (element: TextField, choices: readonly Choice[]) => {
+      shown.set(element, choices.map((choice) => choice.value));
+      return () => shown.delete(element);
+    };
     const stop = installCustom(document, {
       host: () => "boards.example.io",
       send,
       isUserEvent: () => true,
+      attach,
     });
     await Promise.resolve();
     const asked = send.mock.calls[0]?.[0];
@@ -52,15 +59,10 @@ describe("installCustom", () => {
     const school = document.getElementById("school") as HTMLInputElement;
     school.dispatchEvent(new Event("pointerdown", { bubbles: true }));
     school.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
-    const list = document.getElementById(school.getAttribute("list") ?? "");
-    expect(
-      [...(list?.querySelectorAll("option") ?? [])].map(
-        (option) => option.value,
-      ),
-    ).toEqual(["UC Berkeley"]);
+    expect(shown.get(school)).toEqual(["UC Berkeley"]);
 
     school.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
-    expect(school.hasAttribute("list")).toBe(false);
+    expect(shown.has(school)).toBe(false);
     stop();
   });
 
@@ -74,6 +76,7 @@ describe("installCustom", () => {
       host: () => "example.net",
       send,
       isUserEvent: () => true,
+      attach: () => () => undefined,
     });
     await Promise.resolve();
     expect(send).not.toHaveBeenCalled();

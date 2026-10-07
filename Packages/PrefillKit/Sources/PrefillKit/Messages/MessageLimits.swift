@@ -31,8 +31,6 @@ extension ExtensionRequest {
     var isWithinLimits: Bool {
         switch self {
         case .ping: true
-        case .pageContext(let body):
-            body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
         case .capture(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.captureFields
                 && body.fields.allSatisfy(\.isWithinLimits)
@@ -82,7 +80,6 @@ extension ExtensionRequest {
     var isWellFormed: Bool {
         switch self {
         case .ping: true
-        case .pageContext(let body): MessageText.isHost(body.host)
         case .capture(let body): MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
         case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions, .contactSuggestions:
             MessageText.isHost(host)
@@ -99,7 +96,6 @@ extension ExtensionRequest {
     var host: String {
         switch self {
         case .ping: ""
-        case .pageContext(let body): body.host
         case .capture(let body): body.host
         case .popupState(let body): body.host
         case .pin(let body): body.host

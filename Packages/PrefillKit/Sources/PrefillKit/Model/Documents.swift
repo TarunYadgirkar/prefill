@@ -88,14 +88,12 @@ public struct AppState: Codable, Sendable, Hashable {
 
 // Written only by the extension, append-only. The caps keep the Keychain item small
 // (about 120 bytes per usage event, 400 per capture, so well under 150 KB in total)
-// while still covering months of form fills. `cardWrites` holds when page context last
-// rewrote the card, so a page can't make it churn. `saves` holds when captures went onto
-// the card, for the hourly limit. `pins` and `mutes` are choices made in Safari's Prefill
+// while still covering months of form fills. `saves` holds when captures went onto the
+// card, for the hourly limit. `pins` and `mutes` are choices made in Safari's Prefill
 // sheet, which the app folds into AppState.
 public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxUsage = 500
     public static let maxCaptures = 200
-    public static let maxCardWrites = 20
     public static let maxSaves = 20
     public static let maxPins = 100
     public static let maxMutes = 100
@@ -105,7 +103,6 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
-    public let cardWrites: [Date]
     public let saves: [Date]
     public let pins: [PinEvent]
     public let mutes: [MuteEvent]
@@ -117,13 +114,12 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public let lastPageSeen: Date?
 
     public init(
-        usage: [UsageEvent] = [], captures: [Capture] = [], cardWrites: [Date] = [],
-        saves: [Date] = [], pins: [PinEvent] = [], mutes: [MuteEvent] = [], answers: [LearnedAnswer] = [],
+        usage: [UsageEvent] = [], captures: [Capture] = [], saves: [Date] = [], pins: [PinEvent] = [],
+        mutes: [MuteEvent] = [], answers: [LearnedAnswer] = [],
         questions: [FormQuestion] = [], answerPicks: [AnswerPick] = [], lastPageSeen: Date? = nil
     ) {
         self.usage = usage
         self.captures = captures
-        self.cardWrites = cardWrites
         self.saves = saves
         self.pins = pins
         self.mutes = mutes
@@ -133,12 +129,12 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         self.lastPageSeen = lastPageSeen
     }
 
-    // Documents written before `cardWrites`, `saves`, `pins`, `mutes` and `answers` existed still read.
+    // Documents written before `saves`, `pins`, `mutes` and `answers` existed still read. The
+    // `cardWrites` that pages' card rewrites left in older documents are ignored.
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         usage = try container.decode([UsageEvent].self, forKey: .usage)
         captures = try container.decode([Capture].self, forKey: .captures)
-        cardWrites = try container.decodeIfPresent([Date].self, forKey: .cardWrites) ?? []
         saves = try container.decodeIfPresent([Date].self, forKey: .saves) ?? []
         pins = try container.decodeIfPresent([PinEvent].self, forKey: .pins) ?? []
         mutes = try container.decodeIfPresent([MuteEvent].self, forKey: .mutes) ?? []
@@ -152,7 +148,6 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
         ExtensionEvents(
             usage: Array((usage + new.usage).suffix(Self.maxUsage)),
             captures: Self.trimmed(captures + new.captures),
-            cardWrites: Array((cardWrites + new.cardWrites).suffix(Self.maxCardWrites)),
             saves: Array((saves + new.saves).suffix(Self.maxSaves)),
             pins: Array((pins + new.pins).suffix(Self.maxPins)),
             mutes: Array((mutes + new.mutes).suffix(Self.maxMutes)),
@@ -179,9 +174,9 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     }
 
     public func appending(
-        usage newUsage: [UsageEvent], captures newCaptures: [Capture], cardWrites newWrites: [Date] = []
+        usage newUsage: [UsageEvent], captures newCaptures: [Capture]
     ) -> ExtensionEvents {
-        appending(ExtensionEvents(usage: newUsage, captures: newCaptures, cardWrites: newWrites))
+        appending(ExtensionEvents(usage: newUsage, captures: newCaptures))
     }
 }
 

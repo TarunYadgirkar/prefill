@@ -1,4 +1,6 @@
-import { contactFields } from "./context";
+import { classify } from "./classify";
+import { fieldElements } from "./dom";
+import { isContact } from "./fieldTypes";
 import {
   FILL_PAGE,
   isContactKind,
@@ -10,6 +12,19 @@ import {
 } from "./messages";
 import { isTrustedPage } from "./origin";
 import type { PageFill } from "./page";
+
+// Fields looked at per page, so a page full of inputs costs a bounded amount of work.
+const MAX_INSPECTED = 200;
+
+// The kinds of email, phone and address fields on the page.
+export function contactKinds(root: ParentNode): ContactKind[] {
+  const kinds = new Set<ContactKind>();
+  for (const element of fieldElements(root, MAX_INSPECTED)) {
+    const field = classify(element);
+    if (isContact(field) && isContactKind(field.kind)) kinds.add(field.kind);
+  }
+  return [...kinds];
+}
 
 export interface PageFacts {
   doc: Document;
@@ -56,15 +71,11 @@ export function answerPageNeeds(
     !isTrustedPage(page.protocol, page.hostname)
   )
     return undefined;
-  const kinds = new Set<ContactKind>();
-  for (const field of contactFields(page.doc)) {
-    if (isContactKind(field.kind)) kinds.add(field.kind);
-  }
   const fill = page.fill;
   const fillable = fill === undefined ? Promise.resolve(undefined) : fill.count().catch(() => undefined);
   return fillable.then((count) => ({
     host: page.hostname,
-    kinds: [...kinds],
+    kinds: contactKinds(page.doc),
     ...(count === undefined ? {} : { fillable: count }),
   }));
 }

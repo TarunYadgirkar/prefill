@@ -1,6 +1,5 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
-import { attachDatalist } from "./datalist";
 import type { Attach, Choice } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { reportPick } from "./picks";
@@ -20,8 +19,8 @@ export interface LinkOptions {
   send: (request: LinkSuggestionsRequest | PickedRequest) => Promise<unknown>;
   // Only focus the browser made counts. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
-  // How the links are shown: a datalist for Safari's bar unless the caller draws its own list.
-  attach?: Attach;
+  // Draws Prefill's list under the field (showDropdown in pages).
+  attach: Attach;
   // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
   skip?: (element: FieldElement) => boolean;
 }
@@ -113,22 +112,17 @@ function wantedOnPage(doc: Document): LinkType[] {
   return [...new Set(fieldElements(doc, MAX_INSPECTED).flatMap(linkTypesOf))];
 }
 
-// When the person focuses a field that asks for a profile link, offers the card's links of
-// those kinds in Safari's bar through a datalist, which goes away again when the field
-// loses focus. Safari reads the list as the field takes focus, so the links are fetched
-// when the page loads and the list is attached right away; a field that shows up later
-// gets its list once the app answers. A field with a list of its own is left alone.
+// When the person focuses a field that asks for a profile link, offers the person's links of
+// those kinds in Prefill's own list, which goes away again when the field loses focus. The
+// links are fetched when the page loads so the list shows right away; a field that shows up
+// later gets its list once the app answers. A field with a list of its own is left alone.
 export function installLinks(doc: Document, options: LinkOptions): () => void {
   const isUserEvent =
     options.isUserEvent ?? ((event: Event) => event.isTrusted);
-  const attach = options.attach ?? attachDatalist;
-  // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
+  const attach = options.attach;
   // Prefill's own list would sit on top of the page's, so it skips fields that have one.
   const isTaken = (element: FieldElement): boolean =>
-    options.skip?.(element) === true ||
-    (attach === attachDatalist
-      ? element.hasAttribute("list")
-      : hasOwnList(element));
+    options.skip?.(element) === true || hasOwnList(element);
   const gestures = trackGestures(doc, isUserEvent);
   let known:
     | { types: ReadonlySet<LinkType>; links: readonly SuggestedLink[] }
