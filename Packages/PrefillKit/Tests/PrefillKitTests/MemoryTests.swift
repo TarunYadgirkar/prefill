@@ -115,4 +115,14 @@ struct MemoryUsesTests {
         #expect(sites(Answer.customID(school)) == ["greenhouse.io"])
         #expect(sites(Answer.customID(gpa)) == [])
     }
+
+    @Test func aCustomAnswerPickedFromTheListCountsWhereItWasPicked() {
+        let events = ExtensionEvents(answerPicks: [
+            AnswerPick(words: "gpa", label: "GPA", date: .daysAgo(2), host: "jobs.lever.co"),
+            AnswerPick(words: "grade point", label: "GPA", date: .daysAgo(1))
+        ])
+        let memory = Memory.read(card: card, placement: fullPlacement, state: AppState(), events: events)
+        let answer = memory.answers.first { $0.id == Answer.customID(gpa) }
+        #expect(answer.map { memory.uses(of: $0).map(\.site) } == ["lever.co"])
+    }
 }

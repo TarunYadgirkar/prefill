@@ -2,8 +2,8 @@ import Foundation
 
 // "Used on": the sites an answer went into, newest first, each site once at its latest use.
 // Fills, saves and picks of contact values and links leave UsageEvents, sheet picks leave
-// PinEvents, and a custom field's answer counts where the person typed it on a form. A
-// custom answer picked from Prefill's list isn't here: AnswerPick keeps no site.
+// PinEvents, and a custom field's answer counts where the person typed it on a form or
+// picked it from Prefill's list.
 extension Memory {
     public struct Use: Hashable, Sendable {
         public let site: String
@@ -25,7 +25,11 @@ extension Memory {
         let learned = events.answers.compactMap { answer in
             fields.first(where: answer.matches).map { (Answer.customID($0), Use(host: answer.host, date: answer.date)) }
         }
-        return Dictionary(grouping: usage + pins + learned, by: \.0).mapValues { latestPerSite($0.map(\.1)) }
+        let picked = events.answerPicks.compactMap { pick -> (UUID, Use)? in
+            guard let host = pick.host, let field = fields.first(where: { $0.label == pick.label }) else { return nil }
+            return (Answer.customID(field), Use(host: host, date: pick.date))
+        }
+        return Dictionary(grouping: usage + pins + learned + picked, by: \.0).mapValues { latestPerSite($0.map(\.1)) }
     }
 
     private static func latestPerSite(_ uses: [Use]) -> [Use] {
