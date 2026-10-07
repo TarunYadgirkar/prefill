@@ -16,6 +16,7 @@ struct ShortCardOffer: View {
                 and one phone number on its own contact, \(prefillName), and still offer it in every form.
                 """)
             .textRole(.body)
+            .accessibilityIdentifier("short-card-offer")
             if phones.count > 1 {
                 Picker("Phone to keep", selection: keptPhone) {
                     ForEach(phones) { phone in
@@ -43,7 +44,6 @@ struct ShortCardOffer: View {
             Text("These \(moves.count) move off your card. You can put them back in Settings, Sharing your card.")
                 .textRole(.footnote)
         }
-        .accessibilityIdentifier("short-card-offer")
     }
 
     @ViewBuilder private var buttons: some View {

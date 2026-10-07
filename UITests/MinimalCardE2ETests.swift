@@ -76,10 +76,12 @@ final class MinimalCardE2ETests: XCTestCase {
     // The Inbox lists exactly what moves; the one button under that list is the confirmation.
     private func moveToMinimalCard() {
         app.tabBars.buttons["Inbox"].firstMatch.tap()
-        let keep = app.buttons["short-card-keep"].firstMatch
-        XCTAssertTrue(keep.waitForExistence(timeout: 10), "no offer to keep the card short")
-        for _ in 0..<8 where !keep.isHittable { app.swipeUp() }
+        let offer = app.descendants(matching: .any)["short-card-offer"].firstMatch
+        XCTAssertTrue(offer.waitForExistence(timeout: 10), "no offer to keep the card short")
         E2EServer.screenshot("minimal-card-offer")
+        let keep = app.buttons["short-card-keep"].firstMatch
+        for _ in 0..<8 where !(keep.exists && keep.isHittable) { app.swipeUp() }
+        XCTAssertTrue(keep.isHittable, "no Keep only name and phone button")
         keep.tap()
         XCTAssertTrue(
             app.descendants(matching: .any)["short-card-offer"].waitForNonExistence(timeout: 10),
