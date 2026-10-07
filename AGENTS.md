@@ -131,6 +131,8 @@ Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the
 
 Phase 4 (freeze the card to name and phone) is built on `feat/phase4-freeze-card` except 4.3's onboarding wording (Phase 9's setup is merged; its card step doesn't offer the short card yet) and the device check 4.6. Phase 7 (resume import) was dropped. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
 
+Next with the iPhone plugged in: Phase 11, getting Prefill into other apps on the iPhone (Partiful's in-app form got nothing, since Safari extensions only run in Safari). Two device spikes first, the long-press "AutoFill › Prefill" insert and a Prefill keyboard; see PLAN Phase 11. Also on Oct 7: Prefill now works on pages that wrap everything in `aria-hidden` (Meta's job applications, fixture `web/src/fixtures/meta-careers.html`).
+
 Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 
 Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu, its first-run checklist and the Settings window on screen (only built), the large-text tour, Safari's bubble on a field Fill form filled, and the Advanced list of sites Prefill doesn't save on (only built).

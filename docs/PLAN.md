@@ -108,6 +108,10 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 9.3 Tour test and merge
 - **Phase 10: Docs**
   - [x] 10.1 PRODUCT.md, AGENTS.md and README.md describe v2 (as built so far; update again after Phases 4 and 6 to 9)
+- **Phase 11: Outside Safari on the iPhone** (Gate: the iPhone plugged in and unlocked; both spikes run on the device, not the simulator)
+  - [ ] 11.1 Spike: insert a value from the long-press menu (AutoFill › Prefill)
+  - [ ] 11.2 Spike: a Prefill keyboard that reads the person's values
+  - [ ] 11.3 Decide with Tarun, then build the one that works
 
 ---
 
@@ -535,6 +539,34 @@ As built (`MacApp/Views/SetupChecklist.swift`): Contacts is the authorization st
 - README.md: what the iPhone gets is "Prefill's list under each field", not "Apple's own suggestion bar".
 
 ---
+
+## Phase 11: Outside Safari on the iPhone
+
+**Why:** asked for on Oct 7 after Partiful's in-app form (opened from Messages) got nothing from Prefill. On the iPhone, Prefill only runs in Safari: iOS lets a Safari Web Extension into Safari pages and nowhere else. In other apps today, the only reach is the contact card, which iOS's own bar offers on fields an app marks as email, phone or address; links and custom answers never get there.
+
+**Done when:** in a third-party app (Partiful is the reference: "What is your Github profile link?", "What is the name of your company?"), the person can put a saved link or custom answer into a field in two taps or fewer, on Tarun's iPhone, with the free personal team.
+
+### 11.1 Spike: long-press insert
+
+- `research/REPORT.md` (Spike results, "Text insert") found a credential provider that declares only `ProvidesTextToInsert` is listed under the field's edit menu (AutoFill › Passwords › provider), but the inserted text never landed in the Simulator ("requires a valid sessionID"), and `ASSettingsHelper.requestToTurnOnCredentialProviderExtension` never prompted. Code is in `spikes/textinsert`.
+- Re-run that spike on the iPhone, signed with the personal team (check the credential-provider entitlement is allowed there; if it isn't, record that and stop).
+- Check in a native app (Notes, then Partiful) and in Safari: is Prefill listed, how many taps, does the text land, can it offer links and custom answers (read from the Prefill contact through Contacts, which the extension can reach if it inherits the app's grant; verify).
+- Also note whether iOS's own edit menu "AutoFill › Contact" offers fields from the person's card, including URLs, since links already live on the Prefill contact and could be put on the card.
+- Record results with screenshots in `assets/generated/spike-device-textinsert-*.png` and a row in REPORT.md's spike table.
+
+### 11.2 Spike: Prefill keyboard
+
+- A minimal custom keyboard extension (new target, `spikes/keyboard` first, not in the shipping project) with one suggestion row above a standard key layout, or only the suggestion row plus a globe key to switch back.
+- The open question is data: the free team has no App Groups (AGENTS.md). Try, in order, and record which works on the device:
+  1. The keyboard with `RequestsOpenAccess` reading Contacts directly (does a keyboard extension get Contacts access at all, and does it inherit the app's grant?).
+  2. A shared Keychain access group (is `keychain-access-groups` allowed for the personal team?) holding a small export of values the app writes.
+  3. Values carried on the Prefill contact only, read through Contacts.
+- Show values matched to the field the way the Mac panel does: the keyboard sees the host app's `textContentType`, `keyboardType` and the text around the cursor (`documentContextBeforeInput`), not the field's label, so measure how well it can guess the question (Partiful's fields are plain text boxes) and fall back to a short list (email, phone, LinkedIn, GitHub, most-used answers).
+- Note the costs to tell Tarun: switching keyboards, no secure fields, apps that refuse third-party keyboards, and Full Access's privacy prompt.
+
+### 11.3 Decide and build
+
+- Bring both results to Tarun with the tap count and what each can offer. Build only the chosen one, as its own branch, with the same safety rules as the extension (never in password or one-time-code fields, nothing sent anywhere).
 
 ## Risks and what to do about them
 
