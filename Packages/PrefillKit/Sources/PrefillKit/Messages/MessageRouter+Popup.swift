@@ -1,7 +1,7 @@
 import Foundation
 
-// Safari's Prefill sheet: what Safari will offer on this site, picking a value there, the
-// values saved from the site with Undo, and "Don't save on this site". Every answer is the
+// Safari's Prefill sheet: what Prefill's list offers first on this site, picking a value
+// there, the values saved from the site with Undo, and "Don't save on this site". Every answer is the
 // sheet's state for the site, so the sheet redraws from the reply.
 extension MessageRouter {
     func sheet(_ request: ExtensionRequest) -> PopupStateResponse {
@@ -11,7 +11,7 @@ extension MessageRouter {
         case .unpin(let body): choose(nil, kind: body.kind, host: body.host)
         case .undoCapture(let body): undoCapture(body)
         case .muteSite(let body): muteSite(body)
-        case .ping, .pageContext, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers,
+        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers,
              .picked:
             PopupStateResponse(failure: .other)
         }
@@ -54,25 +54,16 @@ extension MessageRouter {
         )
     }
 
-    // Pins the value for the site, or with a nil value unpins it, and puts the card in this
-    // site's order right away so the next tap in a field shows it.
+    // Pins the value for the site, or with a nil value unpins it, so Prefill's list offers
+    // it first there from the next tap in a field. The card itself never changes.
     func choose(_ valueID: UUID?, kind: ContactKind, host: String) -> PopupStateResponse {
         guard let stored = appState() else { return PopupStateResponse(failure: .other) }
-        guard let link = stored.cardLink else { return PopupStateResponse(status: .notSetUp) }
+        guard stored.cardLink != nil else { return PopupStateResponse(status: .notSetUp) }
         guard stored.settings.matchEachSite else { return popupState(host: host, kinds: [kind]) }
-        let date = now()
         let site = Normalizer.registrableDomain(host)
-        guard append(ExtensionEvents(pins: [PinEvent(host: site, kind: kind, valueID: valueID, date: date)])) else {
+        guard append(ExtensionEvents(pins: [PinEvent(host: site, kind: kind, valueID: valueID, date: now())])) else {
             return PopupStateResponse(failure: .other)
         }
-        guard let state = currentState() else { return PopupStateResponse(failure: .other) }
-        let page = PageSignal(
-            host: host, hints: [:], now: date, matchEachSite: true,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
-        )
-        let outcome = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page)).outcome
-        if case .failed(let failure) = outcome { return PopupStateResponse(failure: failure) }
-        if outcome == .saved { noteCardWrite(at: date) }
         return popupState(host: host, kinds: [kind])
     }
 

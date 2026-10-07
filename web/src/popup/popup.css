@@ -1,5 +1,4 @@
-/* Safari's Prefill sheet. Colors mirror App/Theme/Palette.swift: the keyboard values were
-   sampled from iOS 27 screenshots, the rest are the system grouped colors. */
+/* Safari's Prefill sheet. Colors mirror App/Theme/Palette.swift: the system grouped colors. */
 :root {
   color-scheme: light dark;
   --canvas: #f2f2f7;
@@ -9,15 +8,10 @@
   --separator: rgb(60 60 67 / 0.29);
   --accent-text: #0068d6;
   --critical: #d70015;
-  --keyboard-surface: #e2e3e9;
-  --keyboard-separator: #cdced4;
-  --keyboard-caption: #3c3c3e;
-  --keyboard-value: #343434;
   --marigold: #ffb43a;
   --segment-track: rgb(118 118 128 / 0.12);
   --segment-thumb: #ffffff;
   --radius-group: 10px;
-  --radius-bar: 26px;
   --gutter: 16px;
   --row-height: 44px;
   --ease: cubic-bezier(0.2, 0, 0, 1);
@@ -32,10 +26,6 @@
     --separator: rgb(84 84 88 / 0.65);
     --accent-text: #0a84ff;
     --critical: #ff6961;
-    --keyboard-surface: #222223;
-    --keyboard-separator: #323235;
-    --keyboard-caption: #b2b2b2;
-    --keyboard-value: #b2b2b2;
     --segment-track: rgb(118 118 128 / 0.24);
     --segment-thumb: #636366;
   }
@@ -98,74 +88,9 @@ h2 {
   color: var(--critical);
 }
 
-/* The QuickType row, on the keyboard's surface with its rounded top corners. */
-.bar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  min-height: 52px;
-  padding: 0 4px;
-  border-radius: var(--radius-bar) var(--radius-bar) 8px 8px;
-  background: var(--keyboard-surface);
-}
-
-.bar.alone {
-  grid-template-columns: 1fr;
-  padding: 0 44px;
-}
-
-.slot {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  padding: 6px 8px;
-  min-width: 0;
-  text-align: center;
-}
-
-.slot + .slot {
-  box-shadow: inset 1px 0 0 var(--keyboard-separator);
-}
-
-.slot .lines {
-  display: grid;
-  justify-items: center;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.slot .caption {
-  font: -apple-system-footnote;
-  color: var(--keyboard-caption);
-}
-
-.slot .text {
-  font: -apple-system-callout;
-  color: var(--keyboard-value);
-}
-
-.slot .caption,
-.slot .text {
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-/* Slot one carries a marigold mark, never a fill. */
-.slot.first::after {
-  content: "";
-  position: absolute;
-  inset: auto 30% 2px;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--marigold);
-  box-shadow: 0 0 8px var(--marigold);
-}
-
-.slot.empty {
-  font: -apple-system-footnote;
-  color: var(--keyboard-caption);
+/* The value Prefill's list offers first here: a marigold mark on its leading edge. */
+.row.first {
+  box-shadow: inset 3px 0 0 var(--marigold);
 }
 
 .segments {
@@ -362,7 +287,7 @@ label.row .text {
   }
 }
 
-/* One-tap fill: a filled button like the system's prominent style, above the bar. */
+/* One-tap fill: a filled button like the system's prominent style, above the list. */
 .fill {
   margin: 4px 0 20px;
 }
