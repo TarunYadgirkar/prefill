@@ -6,6 +6,9 @@ import SwiftUI
 // fits on screen fills it, so its content can center itself in what's left with spacers; a
 // page that doesn't fit scrolls.
 struct OnboardingStepLayout<Content: View, Actions: View>: View {
+    static var stepCount: Int { 2 }
+
+    var step: Int?
     let title: LocalizedStringKey
     var message: LocalizedStringKey?
     @ViewBuilder var content: () -> Content
@@ -36,6 +39,10 @@ struct OnboardingStepLayout<Content: View, Actions: View>: View {
     private var page: some View {
         VStack(alignment: .leading, spacing: Spacing.large) {
             VStack(alignment: .leading, spacing: Spacing.small) {
+                if let step {
+                    Text("Step \(step) of \(Self.stepCount)")
+                        .textRole(.stepCount)
+                }
                 Text(title)
                     .textRole(.stepTitle)
                     .accessibilityAddTraits(.isHeader)

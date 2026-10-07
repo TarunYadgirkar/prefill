@@ -72,6 +72,7 @@ final class AppTourTests: XCTestCase {
         alex.tap()
         let next = app.buttons["continue"]
         XCTAssertTrue(next.waitForExistence(timeout: 10))
+        XCTAssertTrue(element("card-summary").exists)
         snap("onboarding-linked")
         swipeUp(until: next)
         next.tap()
@@ -83,12 +84,13 @@ final class AppTourTests: XCTestCase {
         walkSafariStep()
     }
 
+    // Step two, then the done screen.
     private func walkSafariStep() {
         let open = app.buttons["open-safari-settings"]
-        let finish = app.buttons["finish-onboarding"]
+        let next = app.buttons["safari-next"]
         // Prefill reads Allow Extension from Safari, which can lag the switch the tour turned off,
-        // so the step may already offer to finish.
-        if !finish.waitForExistence(timeout: 5) {
+        // so the step may already offer to continue.
+        if !next.waitForExistence(timeout: 5) {
             XCTAssertTrue(open.waitForExistence(timeout: 10))
             snap("onboarding-safari")
             swipeUp(until: open)
@@ -98,13 +100,18 @@ final class AppTourTests: XCTestCase {
         }
         // With two Prefill builds on the simulator, Settings may list the other one's extension;
         // the tour is about the app's screens, so it finishes setup later then.
-        guard finish.waitForExistence(timeout: 15) else {
+        guard next.waitForExistence(timeout: 15) else {
             let later = app.buttons["finish-later"]
             swipeUp(until: later)
             later.tap()
             return
         }
         snap("onboarding-safari-on")
+        swipeUp(until: next)
+        next.tap()
+        let finish = app.buttons["finish-onboarding"]
+        XCTAssertTrue(finish.waitForExistence(timeout: 10))
+        snap("onboarding-done")
         swipeUp(until: finish)
         finish.tap()
     }

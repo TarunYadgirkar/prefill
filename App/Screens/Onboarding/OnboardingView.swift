@@ -5,6 +5,7 @@ enum OnboardingRoute: Hashable {
     case chooser
     case sharing
     case safari
+    case done
 }
 
 struct OnboardingView: View {
@@ -18,16 +19,17 @@ struct OnboardingView: View {
                     switch route {
                     case .chooser: CardChooser(path: $path)
                     case .sharing: SharingStep(path: $path)
-                    case .safari: SafariStep()
+                    case .safari: SafariStep(path: $path)
+                    case .done: DoneStep()
                     }
                 }
         }
     }
 }
 
-// Step two, for a card that holds more than a name and phone number: the Sharing screen with
-// everything but the first phone number already chosen, so keeping a minimal card is one
-// confirmed tap. NameDrop and Share Contact then send only the name and that number.
+// The rest of step one, for a card that holds more than a name and phone number: the optional
+// Sharing offer, with everything but the first phone number already chosen, so keeping a
+// minimal card is one confirmed tap. NameDrop and Share Contact then send only the name and that number.
 private struct SharingStep: View {
     @Environment(AppModel.self) private var model
     @Binding var path: [OnboardingRoute]

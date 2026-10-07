@@ -1,22 +1,27 @@
 import PrefillKit
 import SwiftUI
 
-// The menu bar window: the inbox first, or what stops Prefill from working, then the switch
-// for every app and the browsers.
+// The menu bar window: the setup list until it's done, then the inbox, or what stops Prefill
+// from working, then the switch for every app and the browsers.
 struct MenuContent: View {
     @Environment(MacModel.self) private var model
 
     private var isReady: Bool { model.access == .granted && model.hasMeCard && model.card != nil }
+    private var setup: SetupProgress { SetupProgress(model: model, engine: AutofillEngine.shared) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.medium) {
+            if !setup.isComplete {
+                SetupChecklist(progress: setup)
+                Divider()
+            }
             if isReady {
                 ReviewList()
-            } else {
+            } else if setup.hasContacts {
                 CardStatus()
             }
             Divider()
-            AutofillSection()
+            AutofillSection(explainsAccess: setup.isComplete)
             Divider()
             BrowserList(browsers: model.browsers.filter(\.isInstalled))
             Divider()
