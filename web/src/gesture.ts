@@ -16,7 +16,24 @@ interface Gesture {
 
 export interface GestureGate {
   allows: (element: FieldElement) => boolean;
+  // Lets exactly this field through once, for focus Prefill's own button moved there on the
+  // person's click. Only the Fill form pill calls it, from its closed shadow root.
+  allowNext: (element: FieldElement) => void;
   stop: () => void;
+}
+
+// Shared by every gate on the page, since each of Prefill's lists keeps its own. A grant
+// lets one check through, and ends unused when its field loses focus, another field takes
+// focus, or a second has passed.
+interface Grant {
+  element: FieldElement;
+  at: number;
+}
+const grants = new WeakMap<Document, Grant>();
+
+function isGranted(doc: Document, element: FieldElement, now: number): boolean {
+  const grant = grants.get(doc);
+  return grant?.element === element && now - grant.at <= GESTURE_MS && isInView(element);
 }
 
 function isPointedAt(gesture: Gesture, element: FieldElement): boolean {
@@ -53,22 +70,35 @@ export function trackGestures(
   // after it: a page that moves focus from script can't collect a list on every field it
   // focuses, whichever of Prefill's lists asks first.
   const bind = (event: Event): void => {
+    if (grants.get(doc)?.element !== eventOrigin(event)) grants.delete(doc);
     if (last?.key === "Tab" && last.focused === undefined)
       last.focused = eventOrigin(event);
+  };
+  const leave = (event: Event): void => {
+    if (grants.get(doc)?.element === eventOrigin(event)) grants.delete(doc);
   };
   doc.addEventListener("pointerdown", record, true);
   doc.addEventListener("keydown", record, true);
   doc.addEventListener("focusin", bind, true);
+  doc.addEventListener("focusout", leave, true);
   return {
     allows: (element) => {
+      if (isGranted(doc, element, now())) {
+        grants.delete(doc);
+        return true;
+      }
       if (!follows(last, element, now()) || !isInView(element)) return false;
       if (last?.key === "Tab") last.focused = element;
       return true;
+    },
+    allowNext: (element) => {
+      grants.set(doc, { element, at: now() });
     },
     stop: () => {
       doc.removeEventListener("pointerdown", record, true);
       doc.removeEventListener("keydown", record, true);
       doc.removeEventListener("focusin", bind, true);
+      doc.removeEventListener("focusout", leave, true);
     },
   };
 }

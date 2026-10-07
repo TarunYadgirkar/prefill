@@ -110,6 +110,20 @@ extension CardRecord {
         }
     }
 
+    // Every contact value as it was, every custom field in its place under its label, a new
+    // value only in the fields `ids` names, and at most one application's answers added.
+    func keepsEveryValue(of basis: CardRecord, replacingAnswers ids: Set<String>) -> Bool {
+        let added = customFields.count - basis.customFields.count
+        guard added >= 0, added <= JobQuestion.allCases.count else { return false }
+        let keepsFields = zip(basis.customFields, customFields).allSatisfy { before, after in
+            before.label == after.label && before.matchWords == after.matchWords
+                && (before.value == after.value || ids.contains(before.id))
+        }
+        return keepsFields && ContactKind.allCases.allSatisfy { kind in
+            Set(basis.entries(kind).map(\.key)) == Set(entries(kind).map(\.key))
+        }
+    }
+
     // This card with any value or custom field of `basis` it lost put back at the end.
     func restoringValues(of basis: CardRecord) -> CardRecord {
         // A field whose label is still there was edited, not lost; putting the old answer

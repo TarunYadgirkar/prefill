@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { pickOption } from "./choices";
 import { declineOption } from "./demographics";
-import { choicesFor, fillForm, findSlots } from "./fill";
+import { choicesFor, fillableCount, fillForm, findSlots } from "./fill";
+import { fieldsLeft, nextLeft } from "./fillLeft";
 import type { ExtensionRequest } from "./messages";
 
 const options = (...texts: string[]) => texts.map((text) => ({ text, value: text }));
@@ -32,26 +33,33 @@ const APPLICATION = `<form id="app">
   <button type="submit">Submit Application</button>
 </form>`;
 
+const card = (value: string) => ({ value, why: "card" });
+
 function reply(request: ExtensionRequest): unknown {
   switch (request.type) {
     case "contactSuggestions":
       return {
         type: "contactSuggestionsResult",
-        emails: ["tarun@example.com", "tarun@berkeley.edu"],
-        phones: ["+1 510 555 0134"],
-        addresses: [{ street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" }],
+        emails: [card("tarun@example.com"), card("tarun@berkeley.edu")],
+        phones: [card("+1 510 555 0134")],
+        addresses: [
+          {
+            address: { street: "2400 Durant Ave", city: "Berkeley", state: "CA", postalCode: "94704", country: "United States" },
+            why: "card",
+          },
+        ],
         name: { given: "Tarun", family: "Yadgirkar" },
       };
     case "linkSuggestions":
-      return { type: "linkSuggestionsResult", links: [{ type: "linkedin", url: "https://linkedin.com/in/tarun" }] };
+      return { type: "linkSuggestionsResult", links: [{ type: "linkedin", url: "https://linkedin.com/in/tarun", why: "card" }] };
     case "customSuggestions":
       return {
         type: "customSuggestionsResult",
         fields: request.fields.map(({ text }) => ({
           values: /school/iu.test(text)
-            ? ["University of California, Berkeley"]
+            ? [card("University of California, Berkeley")]
             : /authorized/iu.test(text)
-              ? ["Yes"]
+              ? [card("Yes")]
               : [],
         })),
       };
@@ -64,7 +72,20 @@ const value = (id: string): string => (document.getElementById(id) as HTMLInputE
 const selected = (id: string): string =>
   (document.getElementById(id) as HTMLSelectElement).selectedOptions[0]?.text ?? "";
 
+// jsdom draws nothing: the field last scrolled into view is what sits at any point, unless
+// a test covers it.
+const covered = new Set<Element>();
+function stubDrawing(): void {
+  const drawn: { shown: Element | null } = { shown: null };
+  Element.prototype.scrollIntoView = function (this: Element) {
+    drawn.shown = this;
+  };
+  document.elementFromPoint = () => (drawn.shown !== null && covered.has(drawn.shown) ? document.body : drawn.shown);
+}
+
 beforeEach(() => {
+  covered.clear();
+  stubDrawing();
   document.body.innerHTML = APPLICATION;
   vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
 });
@@ -133,6 +154,48 @@ describe("one-tap fill", () => {
     expect(value("phone")).toBe("+1 510 555 0100");
     expect(selected("gender")).toBe("Please select");
     expect(document.querySelector<HTMLInputElement>("input[name=auth]:checked")).toBeNull();
+  });
+
+  it("counts the fields it has an answer for, and leaves the rest in page order", async () => {
+    const form = document.getElementById("app");
+    form?.insertAdjacentHTML("afterbegin", '<label for="why">Why do you want to work here?</label><input id="why" type="text">');
+    form?.insertAdjacentHTML("beforeend", '<label for="start">Earliest start date</label><input id="start" type="text">');
+    const send = vi.fn((request: ExtensionRequest) => Promise.resolve(reply(request)));
+    const options = { host: () => "boards.greenhouse.io", send };
+    expect(findSlots(document)).toHaveLength(12);
+    expect(await fillableCount(document, options)).toBe(10);
+    await fillForm(document, options);
+    const left = fieldsLeft(document);
+    expect(left.map((field) => field.id)).toEqual(["why", "start"]);
+    expect(nextLeft(left, left[0])?.id).toBe("start");
+    expect(nextLeft(left, left[1])?.id).toBe("why");
+  });
+
+  it("never jumps to a field the page covers or hides", () => {
+    document.body.innerHTML =
+      '<form><input id="a"><input id="covered"><input id="faded" style="opacity:0"><input id="b"></form>';
+    const field = (id: string) => document.getElementById(id) as HTMLInputElement;
+    covered.add(field("covered"));
+    const left = fieldsLeft(document);
+    expect(nextLeft(left, field("a"))?.id).toBe("b");
+    expect(nextLeft(left, field("b"))?.id).toBe("a");
+  });
+
+  it("tells the app about a pick from a filled field's list, as any list does", async () => {
+    const send = vi.fn((request: ExtensionRequest) =>
+      Promise.resolve(request.type === "picked" ? { type: "pickedResult", remembered: true } : reply(request)),
+    );
+    await fillForm(document, { host: () => "boards.greenhouse.io", send });
+    const [first, second] = choicesFor(document.getElementById("email") as HTMLInputElement) ?? [];
+    first?.onPick?.();
+    second?.onPick?.();
+    expect(send).toHaveBeenLastCalledWith({
+      type: "picked",
+      host: "boards.greenhouse.io",
+      kind: "email",
+      value: "tarun@berkeley.edu",
+    });
+    expect(send.mock.calls.filter(([request]) => request.type === "picked")).toHaveLength(1);
   });
 
   it("stays off sign-in forms", () => {

@@ -30,7 +30,10 @@ describe("installCustom", () => {
       .fn<CustomOptions["send"]>()
       .mockResolvedValue({
         type: "customSuggestionsResult",
-        fields: [{ values: ["UC Berkeley"] }, { values: ["LinkedIn"] }],
+        fields: [
+          { values: [{ value: "UC Berkeley", why: "card" }] },
+          { values: [{ value: "LinkedIn", why: "card" }] },
+        ],
       });
     const stop = installCustom(document, {
       host: () => "boards.example.io",
@@ -109,7 +112,13 @@ describe("customChoices", () => {
   it("hears about a pick of an answer that wasn't first, or of a guess", () => {
     const picked: string[] = [];
     const choices = customChoices(
-      { values: ["UC Berkeley", "Berkeley High"], guesses: ["EECS"] },
+      {
+        values: [
+          { value: "UC Berkeley", why: "card" },
+          { value: "Berkeley High", why: "card" },
+        ],
+        guesses: ["EECS"],
+      },
       (value) => picked.push(value),
     );
     choices.forEach((choice) => choice.onPick?.());

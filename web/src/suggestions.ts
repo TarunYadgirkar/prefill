@@ -9,6 +9,7 @@ import {
 } from "./dropdown";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
+import { labelled, whyDetail } from "./why";
 import {
   isContact,
   type ContactField,
@@ -24,6 +25,7 @@ import {
   type PageField,
   type PickedRequest,
   type PostalAddress,
+  type SuggestedValue,
 } from "./messages";
 
 export type Suggestions = Omit<ContactSuggestionsResult, "type">;
@@ -80,33 +82,36 @@ const NAME_PARTS: Partial<Record<FieldPart, (name: Name) => string>> = {
 const BY_KIND: Partial<
   Record<
     FieldKind,
-    (part: FieldPart | undefined, values: Suggestions) => string[]
+    (part: FieldPart | undefined, values: Suggestions) => SuggestedValue[]
   >
 > = {
   email: (_part, values) => values.emails,
   phone: (part, values) => (part === "partial" ? [] : values.phones),
   address: (part, values) => {
     const pick = ADDRESS_PARTS[part ?? "street"];
-    return pick === undefined ? [] : values.addresses.map(pick);
+    return pick === undefined
+      ? []
+      : values.addresses.map(({ address, ...why }) => ({ ...why, value: pick(address) }));
   },
   name: (part, values) => {
     const pick = NAME_PARTS[part ?? "full"];
     return pick === undefined || values.name === undefined
       ? []
-      : [pick(values.name)];
+      : [{ value: pick(values.name), why: "card" }];
   },
 };
 
-// What the browser's dropdown offers a field, best first, each value once.
+// What the browser's dropdown offers a field, best first, each value once, with why it's there.
 export function suggestionOptions(
   field: ContactField,
   values: Suggestions,
-): string[] {
+): SuggestedValue[] {
   const all = BY_KIND[field.kind]?.(field.part, values) ?? [];
-  const trimmed = all
-    .map((value) => value.trim())
-    .filter((value) => value.length > 0);
-  return [...new Set(trimmed)].slice(0, LIMITS.suggestions);
+  const seen = new Set<string>();
+  return all
+    .map((offered) => ({ ...offered, value: offered.value.trim() }))
+    .filter(({ value }) => value.length > 0 && !seen.has(value) && seen.add(value))
+    .slice(0, LIMITS.suggestions);
 }
 
 // A pick of a value that wasn't first is worth remembering. An address is remembered by
@@ -124,6 +129,23 @@ export const KIND_LABELS: Partial<Record<FieldKind, string>> = {
   address: "Address",
   name: "Name",
 };
+
+// The list a contact field shows, each value saying why it's there. `onPick` hears about
+// a pick worth remembering: one that wasn't first, of a kind the app pins.
+export function contactChoices(
+  field: ContactField,
+  values: Suggestions,
+  onPick?: (kind: PickedRequest["kind"], value: string) => void,
+): Choice[] {
+  const kind = pickKind(field);
+  const word = KIND_LABELS[field.kind] ?? "";
+  return suggestionOptions(field, values).map((offered, index) => {
+    const choice = { value: offered.value, detail: whyDetail(offered, labelled(offered.label, word)) };
+    return kind === undefined || onPick === undefined || index === 0
+      ? choice
+      : { ...choice, onPick: () => { onPick(kind, offered.value); } };
+  });
+}
 
 function isTextField(
   element: FieldElement,
@@ -202,14 +224,7 @@ export function installSuggestions(
   const offer = (): void => {
     if (focused === undefined || detach !== undefined || known === undefined)
       return;
-    const detail = KIND_LABELS[focused.field.kind] ?? "";
-    const kind = pickKind(focused.field);
-    const choices: Choice[] = suggestionOptions(focused.field, known).map(
-      (value, index) =>
-        kind === undefined || index === 0
-          ? { value, detail }
-          : { value, detail, onPick: () => { picked(kind, value); } },
-    );
+    const choices = contactChoices(focused.field, known, picked);
     if (choices.length > 0) detach = attach(focused.element, choices);
   };
 

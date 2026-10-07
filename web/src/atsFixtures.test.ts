@@ -163,7 +163,7 @@ describe("questions Lever doesn't label", () => {
       asked.push(...request.fields.map((field) => field.text));
       return Promise.resolve({
         type: "customSuggestionsResult",
-        fields: request.fields.map(({ text }) => ({ values: /returning to your studies/u.test(text) ? ["Yes"] : [] })),
+        fields: request.fields.map(({ text }) => ({ values: /returning to your studies/u.test(text) ? [{ value: "Yes", why: "card" }] : [] })),
       });
     };
     await fillForm(document, { host: () => "jobs.lever.co", send });

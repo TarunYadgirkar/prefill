@@ -1,6 +1,7 @@
 import { eventOrigin, isFieldElement, onViewportChange, placeFixed } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import type { FillResult } from "./fill";
+import { nextLeft } from "./fillLeft";
 import type { GestureGate } from "./gesture";
 
 // The one-tap button: when the person clicks or tabs into a field of a form Prefill can
@@ -10,15 +11,17 @@ import type { GestureGate } from "./gesture";
 
 export interface FillChipOptions {
   gate: GestureGate;
-  // How many empty fields Prefill could fill in the anchor's form.
-  count: (anchor: FieldElement) => number;
+  // How many empty fields Prefill has an answer for in the anchor's form.
+  count: (anchor: FieldElement) => Promise<number>;
   fill: (anchor: FieldElement) => Promise<FillResult>;
+  // The fields of the anchor's form a fill left empty, in page order.
+  left: (anchor: FieldElement) => readonly FieldElement[];
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
 }
 
 // Fewer fields than this aren't worth a button: the field's own list covers them.
-const MIN_FIELDS = 3;
+export const MIN_FIELDS = 3;
 const GAP = 6;
 // Like Prefill's list, a tap this soon after the pill appears doesn't count, so a page
 // can't slip it under a tap meant for something else.
@@ -44,6 +47,8 @@ button:focus-visible { outline: 2px solid var(--accent); }
 .main .count { color: var(--muted); font-weight: 400; margin-left: 4px; }
 .close { color: var(--muted); padding: 5px 9px; }
 .status { padding: 5px 4px 5px 12px; color: var(--text); white-space: nowrap; }
+.dot { color: var(--muted); }
+.next { color: var(--accent); }
 .sep { width: 1px; align-self: stretch; margin: 4px 0; background: var(--line); }
 `;
 
@@ -132,14 +137,27 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
       status.textContent = "Filling…";
       pill.replaceChildren(status);
     } else {
-      const status = doc.createElement("span");
-      status.className = "status";
-      status.setAttribute("role", "status");
-      const filled = state.result.filled;
-      status.textContent = filled === 0 ? "Nothing to fill" : `Filled ${String(filled)}`;
-      pill.replaceChildren(status, ...(filled === 0 ? [] : [button("main", "Undo", "undo")]));
+      pill.replaceChildren(...doneParts(state.result.filled));
     }
     place();
+  };
+
+  // "Filled 9 · 4 need you" and Undo: the count jumps to the next field left empty.
+  const doneParts = (filled: number): HTMLElement[] => {
+    const status = doc.createElement("span");
+    status.className = "status";
+    status.setAttribute("role", "status");
+    status.textContent = filled === 0 ? "Nothing to fill" : `Filled ${String(filled)}`;
+    const left = anchor === undefined ? 0 : options.left(anchor).length;
+    const undo = filled === 0 ? [] : [button("main", "Undo", "undo")];
+    if (left === 0) return [status, ...undo];
+    const dot = doc.createElement("span");
+    dot.className = "dot";
+    dot.textContent = "·";
+    dot.setAttribute("aria-hidden", "true");
+    const next = button("next", `${String(left)} ${left === 1 ? "needs" : "need"} you`, "next");
+    next.setAttribute("aria-label", `Go to the next of ${String(left)} fields Prefill couldn’t fill`);
+    return [status, dot, next, ...undo];
   };
 
   const show = (field: FieldElement, count: number): void => {
@@ -164,15 +182,40 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
     return options.gate.allows(target) ? target : undefined;
   };
 
-  const onFocus = (event: Event): void => {
-    const target = offeredField(event);
-    if (target === undefined) return;
-    const count = options.count(target);
+  let asked: FieldElement | undefined;
+  const offer = (target: FieldElement, count: number): void => {
+    if (asked !== target || !target.isConnected) return;
     if (count < MIN_FIELDS) {
       if (state?.name !== "done") hide();
       return;
     }
     show(target, count);
+  };
+
+  const onFocus = (event: Event): void => {
+    const target = offeredField(event);
+    if (target === undefined) return;
+    asked = target;
+    void options
+      .count(target)
+      .catch(() => 0)
+      .then((count) => {
+        offer(target, count);
+      });
+  };
+
+  // Moves to the next field the fill left, and lets exactly that field's list open: the
+  // focus comes from the person's click on the pill, which the gate can't see.
+  const jump = (): void => {
+    const target = anchor === undefined ? undefined : nextLeft(options.left(anchor), anchor);
+    if (target === undefined) return;
+    anchor = target;
+    asked = undefined;
+    options.gate.allowNext(target);
+    target.focus({ preventScroll: true });
+    clearTimeout(doneTimer);
+    doneTimer = setTimeout(hide, DONE_MS);
+    render();
   };
 
   // A click on the field that already has focus, after an undo or a dismissed list, brings
@@ -202,6 +245,9 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
     undo: () => {
       if (state?.name === "done") state.result.undo();
       hide();
+    },
+    next: () => {
+      if (state?.name === "done") jump();
     },
     dismiss: () => {
       dismissed = true;

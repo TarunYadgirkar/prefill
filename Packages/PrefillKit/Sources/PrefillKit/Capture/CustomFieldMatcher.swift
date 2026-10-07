@@ -17,13 +17,18 @@ public enum CustomFieldMatcher {
     ]
 
     public static func values(for fieldText: String, in fields: [CustomField]) -> [String] {
+        matches(for: fieldText, in: fields).map(\.value)
+    }
+
+    // The fields behind `values`: for a value two fields share, the first in the card's order.
+    static func matches(for fieldText: String, in fields: [CustomField]) -> [CustomField] {
         let page = words(fieldText)
         guard !page.isEmpty else { return [] }
         let scored = fields.compactMap { field in score(field, page: page).map { (field, $0) } }
         guard let best = scored.map(\.1).max() else { return [] }
         var seen = Set<String>()
-        let values = scored.filter { $0.1 == best }.map(\.0.value).filter { seen.insert($0).inserted }
-        return Array(values.prefix(maxOffered))
+        let matched = scored.filter { $0.1 == best }.map(\.0).filter { seen.insert($0.value).inserted }
+        return Array(matched.prefix(maxOffered))
     }
 
     static func score(_ field: CustomField, page: Set<String>) -> Int? {

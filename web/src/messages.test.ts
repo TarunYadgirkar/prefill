@@ -8,6 +8,7 @@ import {
   POPUP_STATUSES,
   RECENT_STATES,
   PICK_KINDS,
+  WHYS,
   LIMITS,
   isExtensionRequest,
   isExtensionResponse,
@@ -51,8 +52,8 @@ const linkSuggestions: LinkSuggestionsRequest = {
 const linkSuggestionsResult: LinkSuggestionsResult = {
   type: "linkSuggestionsResult",
   links: [
-    { type: "github", url: "https://github.com/alexrivera" },
-    { type: "website", url: "https://alexrivera.dev" },
+    { type: "github", url: "https://github.com/alexrivera", why: "pinned" },
+    { type: "website", url: "https://alexrivera.dev", why: "card" },
   ],
 };
 
@@ -68,15 +69,22 @@ const contactSuggestions: ContactSuggestionsRequest = {
 
 const contactSuggestionsResult: ContactSuggestionsResult = {
   type: "contactSuggestionsResult",
-  emails: ["alex@work.example.org", "alex.rivera@example.com"],
+  emails: [
+    { value: "alex@work.example.org", why: "pinned", label: "work" },
+    { value: "alex.rivera@example.com", why: "used" },
+  ],
   phones: [],
   addresses: [
     {
-      street: "2400 Durant Ave",
-      city: "Berkeley",
-      state: "CA",
-      postalCode: "94704",
-      country: "United States",
+      address: {
+        street: "2400 Durant Ave",
+        city: "Berkeley",
+        state: "CA",
+        postalCode: "94704",
+        country: "United States",
+      },
+      why: "card",
+      label: "home",
     },
   ],
   name: { given: "Alex", family: "Rivera" },
@@ -100,7 +108,7 @@ const answers: AnswersRequest = {
     { question: "sponsorship", value: "No" },
   ],
 };
-const answersResult: AnswersResult = { type: "answersResult", saved: 2 };
+const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"] };
 const picked: PickedRequest = {
   type: "picked",
   host: "boards.example.io",
@@ -110,7 +118,14 @@ const picked: PickedRequest = {
 const pickedResult: PickedResult = { type: "pickedResult", remembered: true };
 const customSuggestionsResult: CustomSuggestionsResult = {
   type: "customSuggestionsResult",
-  fields: [{ values: ["UC Berkeley"], guesses: [] }, { values: [], guesses: ["EECS"] }],
+  fields: [
+    { values: [{ value: "UC Berkeley", why: "card", label: "School" }], guesses: [] },
+    {
+      values: [{ value: "Yes", why: "learned", label: "Work authorization", site: "example.io" }],
+      guesses: [],
+    },
+    { values: [], guesses: ["EECS"] },
+  ],
 };
 
 const pageContext: PageContextRequest = {
@@ -241,6 +256,7 @@ describe("message contract", () => {
       popupStatus: [...POPUP_STATUSES],
       recentState: [...RECENT_STATES],
       pickKind: [...PICK_KINDS],
+      why: [...WHYS],
     });
   });
 
