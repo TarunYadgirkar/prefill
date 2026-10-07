@@ -222,7 +222,14 @@ export function installSuggestions(
       .then((reply) => {
         const response = parseExtensionResponse(reply);
         if (response?.type !== "contactSuggestionsResult") return;
+        // A pick in Safari's sheet changes the order after the page loaded, so an open list
+        // that the fresh reply reorders is drawn again.
+        const changed = known !== undefined && JSON.stringify(known) !== JSON.stringify(response);
         known = response;
+        if (changed && detach !== undefined) {
+          detach();
+          detach = undefined;
+        }
         offer();
       })
       .catch(() => undefined);
