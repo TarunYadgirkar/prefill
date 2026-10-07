@@ -47,7 +47,10 @@ extension MessageRouter {
             return false
         }
         if events().answerPicks.last(where: { $0.words == key })?.label == field.label { return true }
-        return append(ExtensionEvents(answerPicks: [AnswerPick(words: key, label: field.label, date: now())]))
+        let pick = AnswerPick(
+            words: key, label: field.label, date: now(), host: Normalizer.registrableDomain(request.host)
+        )
+        return append(ExtensionEvents(answerPicks: [pick]))
     }
 
     static func value(matching text: String, kind: ContactKind, on card: CardRecord, at date: Date) -> ContactValue? {

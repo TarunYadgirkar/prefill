@@ -94,10 +94,13 @@ public struct AnswerPick: Codable, Sendable, Hashable {
     public let words: String
     public let label: String
     public let date: Date
+    // The registrable domain it was picked on, for "Used on". Picks saved before it existed have none.
+    public let host: String?
 
-    public init(words: String, label: String, date: Date) {
+    public init(words: String, label: String, date: Date, host: String? = nil) {
         self.words = words
         self.label = label
         self.date = date
+        self.host = host
     }
 }

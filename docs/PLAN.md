@@ -71,7 +71,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
   - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
-  - [ ] 3.2 Suggestion routers read from `Memory`
+  - [x] 3.2 Suggestion routers read from `Memory` (narrowed, see 3.2)
   - [x] 3.3 Usage history per answer ("Used on")
   - [ ] 3.4 Merge
 - **Phase 4: Freeze the Me card** (Gate: Tarun says go)
@@ -301,6 +301,8 @@ public struct Memory: Sendable {
 
 - `contactSuggestions`, `linkSuggestions`, `customSuggestions`, `popupState`, `savedAnswers` take their values from `Memory`. Ranking stays in `Ranker`.
 - No behavior change; the existing tests are the check.
+
+**Done differently (Oct 6):** the routers keep reading `CardRecord`. They rank with `CardPlan` and `Ranker`, which work on card entries and labels, and the custom matcher needs each field's match words, which `Answer` doesn't carry; rerouting through `Memory` would mean converting back inside every router for no change in behavior. `Memory` is the read model for the app's screens (Phase 5, `MemoryLookup`) and for "Used on". What 3.2 did change: a custom answer picked from Prefill's list now records the site (`AnswerPick.host`), so it shows under "Used on".
 
 ### 3.3 "Used on"
 
