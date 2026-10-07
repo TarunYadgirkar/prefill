@@ -113,8 +113,8 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 11.2 Spike: a Prefill keyboard that reads the person's values. The keyboard reads a shared keychain item with Full Access on, and works on the device.
   - [x] 11.3 Decide with Tarun, then build the one that works: the Prefill keyboard (`feat/keyboard`), built; the device check is the lead's.
 - **Phase 12: Keyboard v2** (from Tarun's use on Oct 7)
-  - [ ] 12.1 Compact row layout, like the QuickType bar
-  - [ ] 12.2 Put the likely value first without field labels
+  - [x] 12.1 Compact row layout, like the QuickType bar (`feat/keyboard-v2`, 112 pt, no kind filter)
+  - [x] 12.2 Put the likely value first without field labels (`KeyboardSnapshot.ranked(for:)`)
   - [ ] 12.3 Device check and merge
 - **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
   - [ ] 13.1 Abstain when more than one option fits
@@ -600,6 +600,8 @@ As built (`MacApp/Views/SetupChecklist.swift`): Contacts is the authorization st
 - Row 2: ABC on the leading side; a small kind filter in the middle (All, Contact, Links, Answers) only if it fits without crowding; return then delete on the trailing side, delete rightmost.
 - Tapping a chip types it and returns to the person's keyboard, as now.
 
+- As built (`feat/keyboard-v2`): the panel is 112 pt (6 top, a 52 pt chip row, 6, a 44 pt key row, 4). Chips are key-shaped, caption (footnote) over value (callout), sized to their text up to 70% of the keyboard's width, value truncated in the middle. The row scrolls inside the keys' 3 pt edge, so the first chip lines up with ABC. `KeyboardChipLayout` makes sure the next chip peeks in: a chip that would end near the edge (hiding the next, or cut by less than 48 pt so it looks clipped) gives up width so the next shows 28 pt. The row scrolls back to the start whenever the order changes. Text is capped at xLarge so the height holds. Row 2 is ABC, then return and delete, delete rightmost. The kind filter is left out: on a 375 pt phone ABC, return and delete leave about 150 pt, and four segments need more without crowding; the ranking does that job. Empty states are one line in the chip row ("Open Prefill once to share your info.", "Turn on Allow Full Access for Prefill in Settings.", "Prefill doesn’t type passwords or codes."). Screenshots: `assets/generated/keyboard-v2-{light,dark,375,large-text,empty,not-here,typed-git}.png`, from the app's debug preview (`-keyboardPreview`, now also `-keyboardTyped git`).
+
 ### 12.2 The likely value first
 
 Signals, strongest first:
@@ -608,6 +610,8 @@ Signals, strongest first:
 3. What the person picked in this keyboard most recently (kept by the keyboard in its own defaults, most recent first, per kind), then what was used most recently anywhere (`lastUsed` in the snapshot).
 4. A fixed fallback order: name, primary email, phone, LinkedIn, GitHub, website, then answers.
 The row re-sorts as the person types (`textDidChange`). No field label exists to use, so nothing claims "for this field" without a signal.
+
+- As built: `PrefillKit/Keyboard/KeyboardRanking.swift` and `KeyboardTyped.swift`, pure, tested in `KeyboardRankingTests`. Sort keys in order: typed score (3 the value, its link without scheme or `www.`, or its caption starts with the last typed word; 2 contains it; 1 the kind it suggests, an "@" for emails; for a word of phone characters, phones by digits, with or without the leading 1), the field's traits (`FieldTraits.hint`), the keyboard's recent picks (`KeyboardRecents`, by value id, most recent first, capped at 30, kept by `Keyboard/KeyboardPicks.swift` in the keyboard's own `UserDefaults`, no Full Access needed), the snapshot's `lastUsed`, the fallback (full name, primary email, primary phone, LinkedIn, GitHub, website, answers, then the rest), then the snapshot's order. A value the field already ends with is left out. A tap replaces the word that led to the value (as QuickType does: "github.com/" becomes the full link) and records the pick. The row re-sorts on `textDidChange`. "For this field" and the groups are gone.
 
 ### 12.3 Device check
 
