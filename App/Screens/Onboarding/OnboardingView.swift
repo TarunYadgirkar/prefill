@@ -27,23 +27,36 @@ struct OnboardingView: View {
     }
 }
 
-// The rest of step one, for a card that holds more than a name and phone number: the optional
-// Sharing offer, with everything but the first phone number already chosen, so keeping a
-// minimal card is one confirmed tap. NameDrop and Share Contact then send only the name and that number.
+// The rest of step one, for a card that holds more than a name and phone number: the offer to
+// keep only the name and one phone on it, with the exact list that would move. Share Contact,
+// AirDrop and NameDrop then send only those. "Not now" leaves the card as it is and isn't
+// asked again in the Inbox.
 private struct SharingStep: View {
     @Environment(AppModel.self) private var model
     @Binding var path: [OnboardingRoute]
 
     var body: some View {
-        SharingScreen()
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(model.placement.suggestedMoves.isEmpty ? "Continue" : "Not now") {
-                        path.append(.safari)
-                    }
-                    .accessibilityIdentifier("sharing-next")
+        List {
+            if model.placement.suggestedMoves.isEmpty {
+                Section {
+                    Text("Your card already holds only your name and phone number.").textRole(.body)
                 }
+            } else {
+                ShortCardOffer { path.append(.safari) }
             }
+        }
+        .navigationTitle("Your card")
+        .background(Palette.canvas)
+        .scrollContentBackground(.hidden)
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button(model.placement.suggestedMoves.isEmpty ? "Continue" : "Not now") {
+                    if !model.placement.suggestedMoves.isEmpty { model.declineShortCard() }
+                    path.append(.safari)
+                }
+                .accessibilityIdentifier("sharing-next")
+            }
+        }
     }
 }
 

@@ -5,6 +5,8 @@ import SwiftUI
 // all of it. Lists exactly what would move to Prefill's contact, which keeps offering it in
 // forms. Nothing moves until the person taps the button under that list.
 struct ShortCardOffer: View {
+    // Setup moves on to its next step after either button.
+    var onDone: () -> Void = {}
     @Environment(AppModel.self) private var model
     @State private var keptPhoneID: String?
     @State private var isWorking = false
@@ -53,11 +55,15 @@ struct ShortCardOffer: View {
             Task {
                 await model.moveOffCard(chosen)
                 isWorking = false
+                onDone()
             }
         }
         .prefillButtonStyle(.rowPrimary)
         .accessibilityIdentifier("short-card-keep")
-        Button("Not now") { model.declineShortCard() }
+        Button("Not now") {
+            model.declineShortCard()
+            onDone()
+        }
             .prefillButtonStyle(.rowSecondary)
             .accessibilityIdentifier("short-card-not-now")
     }
