@@ -1,3 +1,4 @@
+import AppKit
 import Darwin
 import Foundation
 import os
@@ -59,6 +60,19 @@ final class RelayServer: Sendable {
         }
     }
 
+    // The host is started by the browser running the extension, so its parent is that browser.
+    private static func noteBrowser(behind connection: Int32) {
+        var host = pid_t(0)
+        var size = socklen_t(MemoryLayout<pid_t>.size)
+        guard getsockopt(connection, SOL_LOCAL, LOCAL_PEERPID, &host, &size) == 0 else { return }
+        var info = proc_bsdinfo()
+        let infoSize = Int32(MemoryLayout<proc_bsdinfo>.size)
+        guard proc_pidinfo(host, PROC_PIDTBSDINFO, 0, &info, infoSize) == infoSize else { return }
+        let browser = pid_t(info.pbi_ppid)
+        guard let bundleID = NSRunningApplication(processIdentifier: browser)?.bundleIdentifier else { return }
+        ExtensionPresence.saw(bundleID: bundleID, pid: browser)
+    }
+
     private func serve(_ connection: Int32) {
         defer { close(connection) }
         RelaySocket.setTimeout(connection)
@@ -69,8 +83,8 @@ final class RelayServer: Sendable {
         guard let body = FrameIO.read(connection, max: NativeFraming.maxRequest) else { return }
         let checked = try? MessageCoding.validatedRequest(body)
         let message = checked.flatMap { try? JSONSerialization.jsonObject(with: $0) }
-        let standingDown = (try? MessageCoding.request(from: message)).flatMap(AutofillMode.standDown)
-        let response = standingDown ?? checked.map { _ in router.route(message) } ?? .error(reason: "unknown message")
+        Self.noteBrowser(behind: connection)
+        let response = checked.map { _ in router.route(message) } ?? .error(reason: "unknown message")
         _ = FrameIO.write(connection, body: MessageCoding.replyData(response))
         answered()
     }

@@ -44,24 +44,23 @@ actor AutofillWorker {
     }
 }
 
-// Whether Prefill shows its own list in every app. While it does, the relay answers the
-// Chrome extension's suggestion requests with nothing, so a field never gets two lists.
-enum AutofillMode {
-    private static let active = Mutex(false)
+// The browsers Prefill's extension is talking from. The extension sees the page itself
+// (autocomplete, names, every option of a select) and fills the whole form, so in those
+// browsers it gives every list and the Accessibility panel stays out. A browser counts until
+// the process that ran the extension's host quits.
+enum ExtensionPresence {
+    private static let browsers = Mutex([String: pid_t]())
 
-    static var isActive: Bool {
-        get { active.withLock { $0 } }
-        set { active.withLock { $0 = newValue } }
+    static func saw(bundleID: String, pid: pid_t) {
+        browsers.withLock { $0[bundleID.lowercased()] = pid }
     }
 
-    static func standDown(_ request: ExtensionRequest) -> ExtensionResponse? {
-        guard isActive else { return nil }
-        return switch request {
-        case .contactSuggestions: .contactSuggestions(ContactSuggestionsResponse())
-        case .linkSuggestions: .linkSuggestions(LinkSuggestionsResponse(links: []))
-        case .customSuggestions(let body):
-            .customSuggestions(CustomSuggestionsResponse(fields: body.fields.map { _ in .init(values: []) }))
-        default: nil
+    static func isActive(in bundleID: String) -> Bool {
+        browsers.withLock { known in
+            guard let pid = known[bundleID.lowercased()] else { return false }
+            if kill(pid, 0) == 0 || errno == EPERM { return true }
+            known[bundleID.lowercased()] = nil
+            return false
         }
     }
 }

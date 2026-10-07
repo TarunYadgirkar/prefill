@@ -99,6 +99,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - AutoFill Contact no longer fills emails and addresses.
   - The Mac has no "put back on card" or Restore yet.
 - **Mac Accessibility mode:**
+  - In a browser whose Prefill extension has sent the app a request, the panel stays out until that browser quits and the extension gives every list and Fill form (`ExtensionPresence`).
   - It doesn't save new values; only the extension does.
   - Arc, Safari, Electron apps and Firefox are untested.
   - The first field clicked right after switching to Chrome may get nothing.
