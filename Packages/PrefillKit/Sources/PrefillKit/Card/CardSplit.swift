@@ -5,7 +5,7 @@ import Foundation
 // custom fields don't feed the bar, and Share Contact sends them along, so Prefill keeps
 // them on a contact of its own in the same account, which iCloud syncs to the person's
 // other devices. With a minimal card the person also moves emails, addresses and extra
-// phone numbers there, and Prefill offers them itself through a datalist.
+// phone numbers there, and Prefill offers them itself in its own list under each field.
 public enum PrefillContact {
     // The markers Prefill finds its contact by, in the department field. The second also
     // says the person chose a minimal card: their card keeps only their name and the phone
@@ -150,17 +150,16 @@ public struct CardPlacement: Sendable, Hashable {
     // What the Sharing screen suggests moving: everything on the card but the phone numbers
     // the person keeps, which is the first one, or on a minimal card every one still there.
     public var suggestedMoves: [CardExtra] {
-        let phones = onCard.filter { $0.kind == .phone }
-        let kept = isMinimal ? phones : Array(phones.prefix(1))
-        return onCard.filter { !kept.contains($0) }
+        isMinimal ? onCard.filter { $0.kind != .phone } : moves(keeping: phonesOnCard.first)
     }
 
-    // Keys of the emails, phones and addresses on the card itself, which Safari offers.
-    public var cardKeys: Set<String> {
-        Set(onCard.compactMap { extra in
-            guard case .entry(let entry) = extra, extra.isCore else { return nil }
-            return entry.key
-        })
+    public var phonesOnCard: [CardExtra] {
+        onCard.filter { $0.kind == .phone }
+    }
+
+    // Everything on the card but the name and `phone`, the one number the person keeps.
+    public func moves(keeping phone: CardExtra?) -> [CardExtra] {
+        onCard.filter { $0 != phone }
     }
 }
 

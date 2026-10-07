@@ -59,11 +59,27 @@ extension MacModel {
 
     // Moves what the person chose off My Card onto Prefill's contact.
     func moveOffCard(_ chosen: [CardExtra]) async {
+        await move { gateway, identifier throws(CardWriteFailure) in
+            try gateway.moveOffCard(chosen, identifier: identifier)
+        }
+    }
+
+    // Puts one email, phone or address Prefill's contact holds back on My Card, only when the
+    // person asks: sharing the card then sends it too.
+    func putOnCard(_ extra: CardExtra) async {
+        await move { gateway, identifier throws(CardWriteFailure) in
+            try gateway.moveOntoCard([extra], identifier: identifier, leavingMinimal: false)
+        }
+    }
+
+    private func move(
+        _ work: @escaping @Sendable (any ContactsGateway, String) throws(CardWriteFailure) -> Void
+    ) async {
         guard let identifier = state.cardLink?.contactIdentifier else { return }
         let gateway = gateway
         let failure = await Task.detached { () -> CardWriteFailure? in
             do throws(CardWriteFailure) {
-                try gateway.moveOffCard(chosen, identifier: identifier)
+                try work(gateway, identifier)
                 return nil
             } catch {
                 return error
