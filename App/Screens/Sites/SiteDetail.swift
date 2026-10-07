@@ -41,7 +41,7 @@ struct SiteDetail: View {
     private var footer: LocalizedStringKey {
         model.state.settings.matchEachSite
             ? "Pin a value so Safari always suggests it first on \(host)."
-            : "Reorder for each site is off, so pins wait until you turn it back on in Settings."
+            : "Putting the value you used on a site first is off in Settings, so pins wait until you turn it on."
     }
 
     private func row(_ value: ContactValue, placement: CardRow.Placement) -> some View {

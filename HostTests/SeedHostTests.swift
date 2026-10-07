@@ -46,7 +46,7 @@ struct SeedHostTests {
         let store = try #require(StoreFactory.make() as? KeychainStore)
         try store.removeAll()
         let events = Self.events(now: .now)
-        try store.appendEvents(usage: events.usage, captures: events.captures)
+        try store.appendEvents(events)
         UserDefaults.standard.removeObject(forKey: "finishedOnboarding")
         #expect(try store.readAppState() == AppState())
         #expect(try store.readEvents().captures.count == events.captures.count)
@@ -98,8 +98,9 @@ struct SeedHostTests {
         #expect(result == .saved)
     }
 
-    // A hand-written history: four sites with their own picks, one saved capture and two
-    // waiting for review. The `.example` names are reserved, so they can't be real sites.
+    // A hand-written history: four sites with their own picks, one saved capture, two
+    // waiting for review, and the work email picked on the work portal. The `.example` names
+    // are reserved, so they can't be real sites.
     private static func events(now: Date) -> ExtensionEvents {
         func ago(_ hours: Double) -> Date { now.addingTimeInterval(-hours * 3_600) }
         func id(_ entry: CardEntry) -> UUID {
@@ -129,6 +130,9 @@ struct SeedHostTests {
             Capture(host: "bluebird-tickets.example", value: phone, date: ago(26), verdict: .needsReview),
             Capture(host: "tidepool.example", value: saved, date: ago(6), verdict: .saved)
         ]
-        return ExtensionEvents(usage: usage, captures: captures)
+        let pins = [
+            PinEvent(host: "portal.work.example.org", kind: .email, valueID: id(emails[1]), date: ago(20))
+        ]
+        return ExtensionEvents(usage: usage, captures: captures, pins: pins)
     }
 }

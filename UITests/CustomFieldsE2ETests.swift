@@ -2,7 +2,7 @@ import XCTest
 
 // Custom fields end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=CustomFieldsE2ETests)
 // after a host test has linked the Alex Rivera card: add the student starter set, with its school
-// already filled in, in the app's Custom tab, then focus the Greenhouse-style "School" field and read Prefill's
+// already filled in, from the You tab's Add menu, then focus the Greenhouse-style "School" field and read Prefill's
 // list under it.
 @MainActor
 final class CustomFieldsE2ETests: XCTestCase {
@@ -19,8 +19,10 @@ final class CustomFieldsE2ETests: XCTestCase {
 
     func testSchoolFieldOffersTheCustomAnswer() {
         SafariDriver.enableExtension()
-        app.launchArguments = ["-finishedOnboarding", "YES", "-studentStarterDone", "NO"]
+        app.launchArguments = ["-finishedOnboarding", "YES"]
         app.launch()
+        // The store starts empty, so the app opens on an empty inbox.
+        if app.staticTexts["Nothing new"].waitForExistence(timeout: 10) { E2EServer.screenshot("inbox-empty") }
         addSchool()
         E2EServer.screenshot("custom-card")
         app.terminate()
@@ -36,19 +38,21 @@ final class CustomFieldsE2ETests: XCTestCase {
     }
 
     private func addSchool() {
-        let tab = app.tabBars.buttons["Card"]
-        XCTAssertTrue(tab.waitForExistence(timeout: 15), "no Card tab")
+        let tab = app.tabBars.buttons["You"]
+        XCTAssertTrue(tab.waitForExistence(timeout: 15), "no You tab")
         tab.tap()
-        app.segmentedControls["kind-picker"].buttons["Custom"].tap()
-        let starters = app.buttons.matching(identifier: "add-student-answers")
-        XCTAssertTrue(starters.firstMatch.waitForExistence(timeout: 5), "no student answers button")
-        (starters.allElementsBoundByIndex.first(where: \.isHittable) ?? starters.firstMatch).tap()
+        app.buttons["add-menu"].firstMatch.tap()
+        let starters = app.buttons["add-student-answers"].firstMatch
+        XCTAssertTrue(starters.waitForExistence(timeout: 5), "no student answers in the Add menu")
+        starters.tap()
         let school = app.textFields["student-school"]
         XCTAssertTrue(school.waitForExistence(timeout: 5), "no school answer")
         XCTAssertEqual(school.value as? String, berkeley)
         E2EServer.screenshot("custom-student-answers")
         app.buttons["save-student-answers"].tap()
+        // Answers sit below the card's contact values, so search brings School on screen.
+        search(app, for: "School")
         let row = app.descendants(matching: .any)["custom-School"].firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "School never showed on the card")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "School never showed in the You tab")
     }
 }

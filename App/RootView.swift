@@ -39,16 +39,13 @@ private struct MainTabs: View {
 
     var body: some View {
         TabView {
-            Tab("Card", systemImage: "person.text.rectangle") {
-                CardScreen()
-            }
-            Tab("Sites", systemImage: "globe") {
-                SitesScreen()
-            }
-            Tab("Recently added", systemImage: "tray.and.arrow.down") {
-                RecentScreen()
+            Tab("Inbox", systemImage: "tray") {
+                InboxScreen()
             }
             .badge(model.waitingCount)
+            Tab("You", systemImage: "person.crop.circle") {
+                YouScreen()
+            }
             Tab("Settings", systemImage: "gearshape") {
                 SettingsScreen()
             }

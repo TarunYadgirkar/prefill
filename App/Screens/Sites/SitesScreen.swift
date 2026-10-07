@@ -1,31 +1,27 @@
 import PrefillKit
 import SwiftUI
 
+// Pushed from Settings, whose stack opens each site (SiteDetail) by its host.
 struct SitesScreen: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if model.sites.isEmpty {
-                    EmptyStateView(
-                        title: "No sites yet", systemImage: "globe",
-                        message: Text("""
-                            After you fill in a form in Safari, the site shows up here with the values Safari \
-                            suggests there.
-                            """)
-                    )
-                } else {
-                    SiteList()
-                }
+        Group {
+            if model.sites.isEmpty {
+                EmptyStateView(
+                    title: "No sites yet", systemImage: "globe",
+                    message: Text("""
+                        After you fill in a form in Safari, the site shows up here with the values Safari \
+                        suggests there.
+                        """)
+                )
+            } else {
+                SiteList()
             }
-            .navigationTitle("Sites")
-            .screenTitleDisplay()
-            .navigationDestination(for: String.self) { host in
-                SiteDetail(host: host)
-            }
-            .background(Palette.canvas)
         }
+        .navigationTitle("Sites")
+        .navigationBarTitleDisplayMode(.inline)
+        .background(Palette.canvas)
     }
 }
 
@@ -101,9 +97,9 @@ struct MatchOffNote: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            Text("Reorder for each site is off, so every site gets your card’s own order.")
+            Text("Putting the value you used on a site first is off, so every site gets your own order.")
                 .textRole(.body)
-            Button("Turn on Reorder for each site") {
+            Button("Turn it on") {
                 model.setMatchEachSite(true)
             }
         }
@@ -112,6 +108,9 @@ struct MatchOffNote: View {
 }
 
 #Preview {
-    SitesScreen()
-        .previewModel()
+    NavigationStack {
+        SitesScreen()
+            .navigationDestination(for: String.self) { SiteDetail(host: $0) }
+    }
+    .previewModel()
 }

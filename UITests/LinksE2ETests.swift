@@ -2,7 +2,7 @@ import XCTest
 
 // Profile links end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=LinksE2ETests)
 // after a host test has linked the Alex Rivera card: add a GitHub link, a website and a
-// LinkedIn link in the app's Links tab, then focus a Greenhouse-style "GitHub/Portfolio:"
+// LinkedIn link from the You tab's Add menu, then focus a Greenhouse-style "GitHub/Portfolio:"
 // field and read Prefill's list under it, which should offer both links in one option first. On the way,
 // Settings > Sharing your card moves the links off the card Safari and NameDrop read onto
 // Prefill's own contact, and the list still offers the links and the card's emails.
@@ -90,20 +90,21 @@ final class LinksE2ETests: XCTestCase {
     }
 
     private func addLink(_ link: String) {
-        let tab = app.tabBars.buttons["Card"]
-        XCTAssertTrue(tab.waitForExistence(timeout: 15), "no Card tab")
+        let tab = app.tabBars.buttons["You"]
+        XCTAssertTrue(tab.waitForExistence(timeout: 15), "no You tab")
         tab.tap()
-        app.segmentedControls["kind-picker"].buttons["Links"].tap()
-        // An empty list shows its own Add link button over the list's add row.
-        let adds = app.buttons.matching(NSPredicate(format: "label == %@", "Add link"))
-        XCTAssertTrue(adds.firstMatch.waitForExistence(timeout: 5), "no add button")
-        let add = adds.allElementsBoundByIndex.first(where: \.isHittable) ?? adds.firstMatch
+        app.buttons["add-menu"].firstMatch.tap()
+        let add = app.buttons["add-link"].firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 5), "no Link in the Add menu")
         add.tap()
         let field = app.textFields["link-field"]
         XCTAssertTrue(field.waitForExistence(timeout: 5), "no link field")
         field.typeText(link)
         app.buttons["add-to-card"].tap()
+        // Links sit below the card's contact values, so search brings the new one on screen.
+        search(app, for: link)
         let row = app.descendants(matching: .any)["value-https://\(link)"].firstMatch
-        XCTAssertTrue(row.waitForExistence(timeout: 10), "\(link) never showed on the card")
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "\(link) never showed in the You tab")
+        closeSearch(app)
     }
 }

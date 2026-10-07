@@ -259,29 +259,6 @@ struct ValueDraft {
     }
 }
 
-struct EmptyKind: View {
-    let kind: ContactKind
-    let add: () -> Void
-
-    var body: some View {
-        EmptyStateView(title: title, systemImage: kind.symbol, message: Text("""
-            Add one here, or fill in a form in Safari and Prefill saves it to your card.
-            """)) {
-            PrefillButton(title: kind.addTitle, systemImage: "plus", action: add)
-                .fixedSize()
-        }
-    }
-
-    private var title: LocalizedStringKey {
-        switch kind {
-        case .email: "No emails on your card"
-        case .phone: "No phone numbers on your card"
-        case .address: "No addresses on your card"
-        case .link: "No links on your card"
-        }
-    }
-}
-
 #Preview("Relabel") {
     RelabelSheet(value: PreviewData.emails[2])
         .previewModel()

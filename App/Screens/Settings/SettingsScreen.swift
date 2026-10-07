@@ -1,31 +1,39 @@
 import PrefillKit
 import SwiftUI
 
+// The two switches that change what Prefill does, then sharing, Safari's status and, under
+// Advanced, what most people never need: sites, the card link, restore and delete.
 struct SettingsScreen: View {
     @Environment(AppModel.self) private var model
-    @State private var isConfirmingRestore = false
-    @State private var isConfirmingDelete = false
-    @State private var isChoosingCard = false
 
     var body: some View {
         NavigationStack {
             Form {
-                Section {
-                    Toggle("Reorder for each site", isOn: matchEachSite)
-                        .accessibilityIdentifier("match-each-site")
-                } footer: {
-                    Text("Before you tap a field, Prefill puts the values you use on that site first.")
-                        .textRole(.footnote)
-                }
                 Section {
                     Toggle("Save new info", isOn: saveNewInfo)
                         .accessibilityIdentifier("save-new-info")
                 } footer: {
                     Text("""
                         Adds new emails, phone numbers and addresses you type into Safari forms to your card. \
-                        When it’s off, they wait in Recently added for you.
+                        When it’s off, they wait in your inbox.
                         """)
                     .textRole(.footnote)
+                }
+                Section {
+                    Toggle("Put the value you used on a site first", isOn: matchEachSite)
+                        .accessibilityIdentifier("match-each-site")
+                } footer: {
+                    Text("When you pick a value on a site, Prefill offers it first there from then on.")
+                        .textRole(.footnote)
+                }
+                Section {
+                    NavigationLink {
+                        SharingScreen()
+                    } label: {
+                        LabeledContent("Sharing your card", value: sharingStatus)
+                    }
+                    .disabled(model.card == nil)
+                    .accessibilityIdentifier("sharing-your-card")
                 }
                 if let line = model.intelligenceState.settingsLine {
                     Section {
@@ -37,102 +45,18 @@ struct SettingsScreen: View {
                         .accessibilityIdentifier("apple-intelligence")
                     }
                 }
-                Section {
-                    ForEach(safariSwitches) { item in
-                        LabeledContent {
-                            Text(item.setting)
-                        } label: {
-                            Label {
-                                Text(item.title)
-                            } icon: {
-                                StatusMark(isDone: item.isDone)
-                            }
-                        }
-                    }
-                    Button {
-                        Task { await SafariExtension.openSettings() }
-                    } label: {
-                        Label("Open Safari settings", systemImage: "arrow.up.forward.app")
-                    }
-                } header: {
-                    Text("Safari").textRole(.groupHeader)
-                }
-                cardSection
-                dataSection
+                SafariSection()
+                AdvancedSection()
             }
             .navigationTitle("Settings")
             .screenTitleDisplay()
-            .sheet(isPresented: $isChoosingCard) {
-                NavigationStack {
-                    CardChooser(path: .constant([]))
-                        .toolbar {
-                            ToolbarItem(placement: .cancellationAction) {
-                                Button("Done") { isChoosingCard = false }
-                            }
-                        }
-                }
+            .navigationDestination(for: SettingsRoute.self) { _ in
+                SitesScreen()
+            }
+            .navigationDestination(for: String.self) { host in
+                SiteDetail(host: host)
             }
         }
-    }
-
-    private var cardSection: some View {
-        Section {
-            LabeledContent("Your card", value: model.cardName)
-            NavigationLink {
-                SharingScreen()
-            } label: {
-                LabeledContent("Sharing your card", value: sharingStatus)
-            }
-            .disabled(model.card == nil)
-            .accessibilityIdentifier("sharing-your-card")
-            Button("Choose a different card") { isChoosingCard = true }
-            Button("Restore original card", role: .destructive) { isConfirmingRestore = true }
-                .disabled(model.state.cardLink == nil)
-                .accessibilityIdentifier("restore-card")
-                .confirmationDialog(
-                    "Restore your original card?", isPresented: $isConfirmingRestore, titleVisibility: .visible
-                ) {
-                    Button("Restore original card", role: .destructive) {
-                        Task { await model.restoreOriginalCard() }
-                    }
-                } message: {
-                    Text(restoreMessage)
-                }
-        } header: {
-            Text("Contact card").textRole(.groupHeader)
-        } footer: {
-            Text("""
-                Safari uses the card set as My Info under Settings, Apps, Safari, AutoFill. It's the same \
-                card NameDrop and Share Contact send.
-                """)
-                .textRole(.footnote)
-        }
-    }
-
-    private var dataSection: some View {
-        Section {
-            Button("Delete Prefill data", role: .destructive) { isConfirmingDelete = true }
-                .accessibilityIdentifier("delete-data")
-                .confirmationDialog(
-                    "Delete Prefill data?", isPresented: $isConfirmingDelete, titleVisibility: .visible
-                ) {
-                    Button("Delete Prefill data", role: .destructive) {
-                        Task { await model.deleteAllData() }
-                    }
-                } message: {
-                    Text("Your contact card stays as it is. You’ll set Prefill up again.")
-                }
-        } footer: {
-            Text("""
-                Prefill keeps which card is yours, the sites you use each value on and recent saves \
-                on this iPhone only.
-                """)
-            .textRole(.footnote)
-        }
-    }
-
-    private var safariSwitches: [SafariSwitch] {
-        SafariSwitch.all(isEnabled: model.extensionEnabled == true, isAllowedOnWebsites: model.isAllowedOnWebsites)
     }
 
     private var sharingStatus: String {
@@ -141,23 +65,44 @@ struct SettingsScreen: View {
         return model.placement.isMinimal ? String(localized: "Name and phone") : ""
     }
 
-    private var restoreMessage: String {
-        let date = model.state.cardLink?.snapshotAt.formatted(date: .long, time: .omitted) ?? ""
-        let restored = String(localized: "Anything added to your card since \(date) comes off it.")
-        guard model.placement.isMinimal else { return restored }
-        return String(localized: """
-            Emails, phone numbers and addresses on Prefill’s contact go back on your card first. \(restored)
-            """)
-    }
-
     private var matchEachSite: Binding<Bool> {
-        Binding { model.state.settings.matchEachSite } set: { isOn in
-            model.setMatchEachSite(isOn)
-        }
+        Binding { model.state.settings.matchEachSite } set: { model.setMatchEachSite($0) }
     }
 
     private var saveNewInfo: Binding<Bool> {
         Binding { model.state.settings.saveNewInfo } set: { model.setSaveNewInfo($0) }
+    }
+}
+
+// Whether Safari runs the extension, since Prefill can't do anything until it does.
+private struct SafariSection: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        Section {
+            ForEach(safariSwitches) { item in
+                LabeledContent {
+                    Text(item.setting)
+                } label: {
+                    Label {
+                        Text(item.title)
+                    } icon: {
+                        StatusMark(isDone: item.isDone)
+                    }
+                }
+            }
+            Button {
+                Task { await SafariExtension.openSettings() }
+            } label: {
+                Label("Open Safari settings", systemImage: "arrow.up.forward.app")
+            }
+        } header: {
+            Text("Safari").textRole(.groupHeader)
+        }
+    }
+
+    private var safariSwitches: [SafariSwitch] {
+        SafariSwitch.all(isEnabled: model.extensionEnabled == true, isAllowedOnWebsites: model.isAllowedOnWebsites)
     }
 }
 

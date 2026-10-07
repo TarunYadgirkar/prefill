@@ -21,6 +21,21 @@ extension MacModel {
 
     var customFields: [CustomField] { card?.customFields ?? [] }
 
+    // Answers Prefill saved from job applications that are still as saved, newest first.
+    var learnedAnswers: [LearnedAnswer] {
+        events.answers.reversed().filter { answer in customFields.contains { answer.matches($0) } }
+    }
+
+    var memory: Memory? {
+        guard let card else { return nil }
+        return Memory.read(card: card, placement: placement, state: state, events: events)
+    }
+
+    func removeLearned(_ answer: LearnedAnswer) async {
+        guard let field = customFields.first(where: answer.matches) else { return }
+        await removeCustomField(field)
+    }
+
     // Returns why the field can't be saved, or nil once it is on the card.
     func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
         if case .failure(let problem) = customFields.saving(field, replacing: old) { return problem.message }

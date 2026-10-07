@@ -82,11 +82,11 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 4.5 Sheet pins without rewriting
   - [ ] 4.6 Device check (NameDrop, Share Contact, bar) and merge
 - **Phase 5: The app is an inbox**
-  - [ ] 5.1 iPhone: Inbox tab
-  - [ ] 5.2 iPhone: You tab (search, groups, value detail)
-  - [ ] 5.3 iPhone: Settings trimmed
-  - [ ] 5.4 Mac menu mirrors the inbox
-  - [ ] 5.5 UI tests and screenshots, merge
+  - [x] 5.1 iPhone: Inbox tab
+  - [x] 5.2 iPhone: You tab (search, groups, value detail)
+  - [x] 5.3 iPhone: Settings trimmed
+  - [x] 5.4 Mac menu mirrors the inbox
+  - [x] 5.5 UI tests and screenshots, merge (large-text tour and empty-inbox shot not run)
 - **Phase 6: Cuts**
   - [ ] 6.1 Remove Siri intents, Shortcuts and the Focus filter
   - [ ] 6.2 Remove the Sites tab
@@ -380,6 +380,7 @@ Record what was checked in AGENTS.md Ongoing. If the phone isn't reachable, mark
 - Empty state: "Nothing new. Prefill adds what you type into forms, and it shows up here."
 - Badge on the tab: items waiting for a decision only.
 - Source: `RecentCaptures`, `ExtensionEvents.answers`, picks, via `Memory`. `RecentScreen.swift` is the starting point; rename to `InboxScreen.swift`.
+- Done as: "Needs you" (waiting) on top, then "Recently". Each row leads with a state mark (ring, check, minus, pin, sparkle; `Palette.attention` for waiting). A value removed or dismissed stays in Recently with Add, so nothing leaves the list. Picks come from `ExtensionEvents.pins` still in force (`AppModel.firstPicks`); a pin made in the app isn't an event, so it doesn't show.
 
 ### 5.2 You (iPhone)
 
@@ -388,15 +389,19 @@ Record what was checked in AGENTS.md Ongoing. If the phone isn't reachable, mark
 - Add: one "Add" button with a menu (Email, Phone, Address, Link, Answer).
 - Reorder stays for emails and phones (it sets the default order when no site rule applies), in an Edit mode, not always on.
 - The student starter set moves into the Add menu as "Common student answers…".
+- Done as: `YouScreen`, `YouList` and `AnswerDetail` read `Memory` for "Used on" and where a value is stored. A contact value has no value editor, so its Edit is the label menu (with "Custom label…"); an answer edits in `CustomFieldSheet`. "First on" lists `AppState.pins` for the value, and removing one unpins it. The Sites screen moved under Settings, and the Card tab's bar and kind picker are gone (`KindHeader` stays for the site screen). Added rows sit below the fold, so the e2e tests search for them.
 
 ### 5.3 Settings
 
 Keep: Save new info (toggle), Put the value you used on a site first (toggle), Sharing your card (row with status "Name and phone"), Intelligence status line, Choose a different card, Restore original card, Delete Prefill data. Group the last three under "Advanced".
 
+Done as: Advanced also holds Sites until 6.2 removes it. The Safari section (the extension's two switches and "Open Safari settings") stays, since nothing else in the app says when the extension is off. The Safari sheet's popup still says "Reorder for each site"; that copy lives in `web/`.
+
 ### 5.4 Mac menu
 
 - `MenuContent`: the inbox first (from `ReviewList`, extended with learned answers and resume items), then the engine toggle, then "Open Prefill Settings…".
 - `SettingsView`: You (searchable list like 5.2, with `CustomFieldsSection` folded in), Sharing, Browsers, Advanced.
+- Done as: the menu shows the card status only when something stops Prefill (no access, no My Card), otherwise the inbox: "Needs you" with Add / Dismiss and the last three learned answers with Remove, or "Nothing new". Settings searches with a plain field, since a Settings window has no toolbar for `.searchable`; the switches sit after the lists, and Advanced holds the card status and the switch for every app. `Memory.answer(forValue:)`, `answer(for:)` and `useCount` (PrefillKit `AppSupport/MemoryLookup.swift`) serve both apps.
 
 ### 5.5 UI tests and merge
 

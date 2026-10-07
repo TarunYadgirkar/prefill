@@ -6,26 +6,36 @@ import SwiftUI
 // My Card leaves them out.
 struct CustomFieldsSection: View {
     @Environment(MacModel.self) private var model
+    var query = ""
     @State private var editing: CustomField?
     @State private var isAdding = false
 
+    private var fields: [CustomField] {
+        let query = query.trimmingCharacters(in: .whitespaces)
+        guard !query.isEmpty else { return model.customFields }
+        return model.customFields.filter {
+            $0.label.localizedStandardContains(query) || $0.value.localizedStandardContains(query)
+        }
+    }
+
     var body: some View {
+        let memory = model.memory
         Section {
-            ForEach(model.customFields) { field in
-                CustomFieldRow(field: field) {
+            ForEach(fields) { field in
+                CustomFieldRow(field: field, useCount: memory?.useCount(memory?.answer(for: field)) ?? 0) {
                     editing = field
                 } remove: {
                     Task { await model.removeCustomField(field) }
                 }
             }
-            Button("Add field…") { isAdding = true }
+            Button("Add answer…") { isAdding = true }
                 .disabled(model.card == nil)
         } header: {
-            Text("Custom fields")
+            Text("Answers")
         } footer: {
             Text("""
-                Chrome and Arc offer a field when a form asks for its label or one of its other words. \
-                The same fields show in Prefill on your iPhone.
+                Chrome and Arc offer an answer when a form asks for its label or one of its other words. \
+                The same answers show in Prefill on your iPhone.
                 """)
             .foregroundStyle(.secondary)
         }
@@ -40,6 +50,7 @@ struct CustomFieldsSection: View {
 
 private struct CustomFieldRow: View {
     let field: CustomField
+    let useCount: Int
     let edit: () -> Void
     let remove: () -> Void
 
@@ -50,6 +61,11 @@ private struct CustomFieldRow: View {
                 Text(field.value)
                 if !field.matchWords.isEmpty {
                     Text("Also matches \(field.alsoMatches)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if useCount > 0 {
+                    Text("Used on ^[\(useCount) site](inflect: true)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

@@ -1,13 +1,13 @@
 import PrefillKit
 import SwiftUI
 
-// The card as Safari sees it: the bar at the top shows the two values Safari suggests first,
-// and the list below is the person's order, with those two values grouped under their own
-// header. Edit shows the drag handles; a long press on a row drags it too.
-struct CardScreen: View {
+// Everything Prefill fills in for the person, in one searchable list: contact values, links
+// and answers. A row opens its detail. Edit shows drag handles on emails and phone numbers,
+// whose order is the one Prefill offers where no site has a pick of its own.
+struct YouScreen: View {
     @Environment(AppModel.self) private var model
-    @State private var kind = ContactKind.email
-    @State private var isCustom = false
+    @State private var query = ""
+    @State private var adding: AddChoice?
     @State private var editMode = EditMode.inactive
 
     var body: some View {
@@ -15,33 +15,34 @@ struct CardScreen: View {
             Group {
                 if let failure = model.cardFailure {
                     CardUnavailable(failure: failure)
-                } else if isCustom {
-                    CustomFieldList()
                 } else {
-                    CardList(kind: kind)
+                    YouList(query: query) { adding = $0 }
                 }
             }
-            .navigationTitle(model.cardName.isEmpty ? String(localized: "Your card") : model.cardName)
+            .navigationTitle(model.cardName.isEmpty ? String(localized: "You") : model.cardName)
             .screenTitleDisplay()
-            .safeAreaBar(edge: .top) {
-                if model.cardFailure == nil {
-                    KindHeader(kind: $kind, values: model.values(kind), isCustom: $isCustom)
-                }
+            .searchable(text: $query, prompt: Text("Search your info"))
+            .navigationDestination(for: YouItem.self) { item in
+                AnswerDetail(item: item)
             }
             .toolbar {
                 if model.cardFailure == nil {
-                    ToolbarItem(placement: .topBarTrailing) {
+                    ToolbarItemGroup(placement: .topBarTrailing) {
                         EditButton()
+                        AddMenu { adding = $0 }
                     }
                 }
             }
             .environment(\.editMode, $editMode)
+            .sheet(item: $adding) { choice in
+                choice.sheet(missingStudentAnswers: StudentStarter.missing(from: model.customFields))
+            }
             .background(Palette.canvas)
         }
     }
 }
 
-private struct CardUnavailable: View {
+struct CardUnavailable: View {
     let failure: CardWriteFailure
 
     var body: some View {
@@ -60,6 +61,6 @@ private struct CardUnavailable: View {
 }
 
 #Preview {
-    CardScreen()
+    YouScreen()
         .previewModel()
 }

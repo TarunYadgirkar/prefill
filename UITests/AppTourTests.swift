@@ -5,12 +5,12 @@ import XCTest
 // appearance; it is skipped in the plain e2e run, which has no seed and no snap server.
 @MainActor
 final class AppTourTests: XCTestCase {
-    private let env = ProcessInfo.processInfo.environment
-    private let app = XCUIApplication()
-    private let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
-    private let tabBarTop: CGFloat = 0.88
+    let env = ProcessInfo.processInfo.environment
+    let app = XCUIApplication()
+    let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+    let tabBarTop: CGFloat = 0.88
 
-    private var variant: String { env["PREFILL_VARIANT"] ?? "light" }
+    var variant: String { env["PREFILL_VARIANT"] ?? "light" }
 
     override func setUpWithError() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] != nil, "needs scripts/ui-tour.sh")
@@ -21,27 +21,28 @@ final class AppTourTests: XCTestCase {
         setExtension(enabled: false)
         app.launch()
         walkOnboarding()
-        walkCard()
-        walkSites()
-        walkRecent()
+        walkInbox()
+        walkYou()
         walkSettings()
     }
 
-    // A school email caught on a form waits in Recently added with School already picked.
+    // A school email caught on a form waits in the inbox with School already picked.
     func testSchoolLabel() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "school")
         app.launch()
-        tab("Recently added")
+        tab("Inbox")
         let chip = element("suggested-label-alex.rivera@learn.example.edu")
         XCTAssertTrue(chip.waitForExistence(timeout: 10))
         XCTAssertTrue((chip.value as? String ?? "").hasPrefix("school"), "label is \(chip.value ?? "none")")
-        snap("recent-school-label")
+        snapAs("inbox-school-label")
     }
 
-    // Records the bar while its values trade places, for frame-by-frame checking.
+    // Records a reorder in the You tab and a pin on a site, for frame-by-frame checking.
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")
         app.launch()
+        tab("You")
+        app.navigationBars.buttons["Edit"].tap()
         let news = element("value-alex.news@example.com")
         let first = element("value-alex.rivera@example.com")
         XCTAssertTrue(news.waitForExistence(timeout: 10))
@@ -50,7 +51,8 @@ final class AppTourTests: XCTestCase {
         news.press(forDuration: 0.8, thenDragTo: first)
         pause(2)
         call("/record/stop")
-        tab("Sites")
+        app.navigationBars.buttons["Done"].tap()
+        openSites()
         let site = app.buttons["site-example.org"]
         swipeUp(until: site)
         site.tap()
@@ -92,98 +94,96 @@ final class AppTourTests: XCTestCase {
         pause(1)
         snap("onboarding-sharing")
         later.tap()
+        walkSafariStep()
+    }
+
+    private func walkSafariStep() {
         let open = app.buttons["open-safari-settings"]
-        XCTAssertTrue(open.waitForExistence(timeout: 10))
-        snap("onboarding-safari")
-        swipeUp(until: open)
-        open.tap()
-        flipAllowExtension(to: true)
-        app.activate()
         let finish = app.buttons["finish-onboarding"]
-        XCTAssertTrue(finish.waitForExistence(timeout: 15))
+        // Prefill reads Allow Extension from Safari, which can lag the switch the tour turned off,
+        // so the step may already offer to finish.
+        if !finish.waitForExistence(timeout: 5) {
+            XCTAssertTrue(open.waitForExistence(timeout: 10))
+            snap("onboarding-safari")
+            swipeUp(until: open)
+            open.tap()
+            flipAllowExtension(to: true)
+            app.activate()
+        }
+        // With two Prefill builds on the simulator, Settings may list the other one's extension;
+        // the tour is about the app's screens, so it finishes setup later then.
+        guard finish.waitForExistence(timeout: 15) else {
+            let later = app.buttons["finish-later"]
+            swipeUp(until: later)
+            later.tap()
+            return
+        }
         snap("onboarding-safari-on")
         swipeUp(until: finish)
         finish.tap()
     }
 
-    private func walkCard() {
-        XCTAssertTrue(app.descendants(matching: .any)["quicktype-bar"].firstMatch.waitForExistence(timeout: 10))
-        snap("card")
-        let school = element("value-alex.school@example.edu")
-        let home = element("value-alex.rivera@example.com")
-        swipeUp(until: school)
-        XCTAssertTrue(school.waitForExistence(timeout: 5))
-        if school.isHittable && home.isHittable {
-            school.press(forDuration: 0.8, thenDragTo: home)
-            pause(2)
-            snap("card-reordered")
-        }
-        let label = app.buttons["label-alex.school@example.edu"]
-        swipeUp(until: label)
-        XCTAssertTrue(label.waitForExistence(timeout: 5))
+    private func walkYou() {
+        tab("You")
+        let work = element("value-alex@work.example.org")
+        XCTAssertTrue(work.waitForExistence(timeout: 10))
+        snapAs("you")
+        work.tap()
+        XCTAssertTrue(element("stored-place").waitForExistence(timeout: 5))
+        snapAs("you-detail")
+        let label = app.buttons["label-alex@work.example.org"]
         label.tap()
         let custom = app.buttons["Custom label…"]
         XCTAssertTrue(custom.waitForExistence(timeout: 5))
-        snap("card-label-menu")
+        snapAs("you-label-menu")
         custom.tap()
         XCTAssertTrue(app.navigationBars["Custom label"].waitForExistence(timeout: 5))
-        snap("card-relabel")
         app.buttons["Cancel"].tap()
-        pickKind("Address")
-        snap("card-address")
-        swipeUp(until: app.buttons["add-value"])
-        app.buttons["add-value"].tap()
+        app.navigationBars.buttons.firstMatch.tap()
+        app.buttons["add-menu"].tap()
+        let address = app.buttons["add-address"]
+        XCTAssertTrue(address.waitForExistence(timeout: 5))
+        snapAs("you-add-menu")
+        address.tap()
         XCTAssertTrue(app.buttons["add-to-card"].waitForExistence(timeout: 5))
         pause(1)
-        snap("card-add")
+        snapAs("you-add")
         app.buttons["Cancel"].tap()
-        pickKind("Email")
+        app.navigationBars.buttons["Edit"].tap()
+        snapAs("you-edit")
+        app.navigationBars.buttons["Done"].tap()
+        search(app, for: "work")
+        snapAs("you-search")
+        closeSearch(app)
     }
 
-    private func walkSites() {
-        tab("Sites")
-        let site = app.buttons["site-example.org"]
-        XCTAssertTrue(site.waitForExistence(timeout: 10))
-        snap("sites")
-        site.tap()
-        XCTAssertTrue(app.navigationBars["example.org"].waitForExistence(timeout: 5))
-        snap("site-detail")
-        let school = app.buttons["site-value-alex.school@example.edu"]
-        swipeUp(until: school)
-        XCTAssertTrue(school.waitForExistence(timeout: 5))
-        school.tap()
-        pause(1)
-        snap("site-pinned")
-        app.navigationBars.buttons.firstMatch.tap()
-    }
-
-    private func walkRecent() {
-        tab("Recently added")
-        let waiting = app.buttons["Save to card"].firstMatch
-        XCTAssertTrue(waiting.waitForExistence(timeout: 10))
-        snap("recent")
-        swipeUp(until: waiting, above: tabBarTop)
-        waiting.tap()
+    private func walkInbox() {
+        tab("Inbox")
+        let add = app.buttons.matching(identifier: "inbox-add").firstMatch
+        XCTAssertTrue(add.waitForExistence(timeout: 10))
+        snapAs("inbox")
+        swipeUp(until: add, above: tabBarTop)
+        add.tap()
         pause(2)
-        let skip = app.buttons["Don’t save"].firstMatch
-        swipeUp(until: skip, above: tabBarTop)
-        skip.tap()
+        let dismiss = app.buttons.matching(identifier: "inbox-dismiss").firstMatch
+        swipeUp(until: dismiss, above: tabBarTop)
+        dismiss.tap()
         pause(1)
-        let remove = app.buttons["Remove from card"].firstMatch
+        let remove = app.buttons.matching(identifier: "inbox-remove").firstMatch
         swipeUp(until: remove, above: tabBarTop)
         XCTAssertTrue(remove.waitForExistence(timeout: 5))
         remove.tap()
         pause(2)
-        snap("recent-after")
+        snapAs("inbox-after")
         // Everything not on the card can go back on it. Counting buttons needs every row on
         // screen, which only the default text size gives.
         guard variant != "large" else { return }
-        let saveAgain = app.buttons.matching(identifier: "Save to card")
-        let removeButtons = app.buttons.matching(identifier: "Remove from card")
-        XCTAssertEqual(saveAgain.count, 2)
+        let putBack = app.buttons.matching(identifier: "inbox-put-back")
+        let removeButtons = app.buttons.matching(identifier: "inbox-remove")
+        XCTAssertEqual(putBack.count, 2)
         let removable = removeButtons.count
-        swipeUp(until: saveAgain.firstMatch, above: tabBarTop)
-        saveAgain.firstMatch.tap()
+        swipeUp(until: putBack.firstMatch, above: tabBarTop)
+        putBack.firstMatch.tap()
         pause(2)
         XCTAssertEqual(removeButtons.count, removable + 1)
     }
@@ -191,100 +191,22 @@ final class AppTourTests: XCTestCase {
     private func walkSettings() {
         tab("Settings")
         XCTAssertTrue(app.switches["match-each-site"].waitForExistence(timeout: 10))
-        snap("settings")
+        snapAs("settings")
+        openSites()
+        let site = app.buttons["site-example.org"]
+        XCTAssertTrue(site.waitForExistence(timeout: 10))
+        snap("sites")
+        site.tap()
+        XCTAssertTrue(app.navigationBars["example.org"].waitForExistence(timeout: 5))
+        snap("site-detail")
+        app.navigationBars.buttons.firstMatch.tap()
+        app.navigationBars.buttons.firstMatch.tap()
         swipeUp(until: app.buttons["restore-card"])
         app.buttons["restore-card"].tap()
         pause(1)
-        snap("settings-restore")
+        snapAs("settings-restore")
         let confirm = NSPredicate(format: "label == 'Restore original card' AND identifier != 'restore-card'")
         app.buttons.matching(confirm).firstMatch.tap()
         pause(2)
-    }
-
-    // MARK: - Helpers
-
-    private func tab(_ title: String) {
-        let button = app.tabBars.buttons[title]
-        XCTAssertTrue(button.waitForExistence(timeout: 5))
-        button.tap()
-        pause(1)
-    }
-
-    private func element(_ identifier: String) -> XCUIElement {
-        app.descendants(matching: .any)[identifier].firstMatch
-    }
-
-    private func pickKind(_ title: String) {
-        app.segmentedControls["kind-picker"].buttons[title].tap()
-        pause(1)
-    }
-
-    // Recent's rows are taller than a swipe at accessibility sizes, so it stops at anything
-    // above the tab bar rather than risk scrolling the row out of the list.
-    private func swipeUp(until element: XCUIElement, above limit: CGFloat = 0.8) {
-        for _ in 0..<8 where !(element.exists && element.isHittable && element.frame.maxY < app.frame.height * limit) {
-            app.swipeUp()
-            pause(0.5)
-        }
-    }
-
-    private func setExtension(enabled: Bool) {
-        settings.terminate()
-        settings.launch()
-        flipAllowExtension(to: enabled)
-        settings.terminate()
-    }
-
-    // SFSafariSettings opens Settings at its root in the simulator, so this walks from
-    // wherever Settings is to Apps, Safari, Extensions, Prefill, the way a person would.
-    private func flipAllowExtension(to enabled: Bool) {
-        let toggle = settings.switches["Allow Extension"]
-        XCTAssertTrue(settings.wait(for: .runningForeground, timeout: 10))
-        if !toggle.waitForExistence(timeout: 3) {
-            openExtensionPage()
-        }
-        XCTAssertTrue(toggle.waitForExistence(timeout: 10))
-        if (toggle.value as? String == "1") != enabled {
-            toggle.switches.firstMatch.tap()
-            pause(1)
-        }
-    }
-
-    private func openExtensionPage() {
-        for _ in 0..<5 where !settings.navigationBars["Settings"].exists {
-            let back = settings.navigationBars.buttons.element(boundBy: 0)
-            guard back.exists else { break }
-            back.tap()
-            pause(1)
-        }
-        for label in ["Apps", "Safari", "Extensions", "Prefill"] {
-            let cell = settings.staticTexts[label].firstMatch
-            for _ in 0..<8 where !isComfortablyVisible(cell) {
-                settings.swipeUp(velocity: .slow)
-                pause(1)
-            }
-            XCTAssertTrue(cell.waitForExistence(timeout: 5), "Settings has no \(label) row")
-            cell.tap()
-            pause(1.5)
-        }
-    }
-
-    // On screen and clear of the floating search bar at the bottom.
-    private func isComfortablyVisible(_ element: XCUIElement) -> Bool {
-        element.exists && element.isHittable && element.frame.maxY < settings.frame.height * 0.75
-    }
-
-    private func pause(_ seconds: TimeInterval) {
-        Thread.sleep(forTimeInterval: seconds)
-    }
-
-    private func snap(_ screen: String) {
-        pause(1)
-        call("/snap?name=ui-\(screen)-\(variant)")
-    }
-
-    private func call(_ path: String) {
-        guard let url = URL(string: "http://127.0.0.1:\(env["PREFILL_SNAP_PORT"] ?? "8834")\(path)") else { return }
-        _ = try? Data(contentsOf: url)
     }
 }
