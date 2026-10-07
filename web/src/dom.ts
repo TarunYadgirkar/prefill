@@ -183,8 +183,10 @@ function isClipped(el: Element): boolean {
   );
 }
 
+// aria-hidden only hides from screen readers, and some pages (Meta's job applications) wrap
+// everything on screen in it, so it doesn't count here.
 function isStyledVisible(el: Element): boolean {
-  if (el.closest("[hidden], [aria-hidden=true]") || isClipped(el)) return false;
+  if (el.closest("[hidden]") || isClipped(el)) return false;
   return typeof el.checkVisibility === "function"
     ? el.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
     : true;
