@@ -109,9 +109,9 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 10: Docs**
   - [x] 10.1 PRODUCT.md, AGENTS.md and README.md describe v2 (as built so far; update again after Phases 4 and 6 to 9)
 - **Phase 11: Outside Safari on the iPhone** (Gate: the iPhone plugged in and unlocked; both spikes run on the device, not the simulator)
-  - [ ] 11.1 Spike: insert a value from the long-press menu (AutoFill › Prefill)
-  - [ ] 11.2 Spike: a Prefill keyboard that reads the person's values
-  - [ ] 11.3 Decide with Tarun, then build the one that works
+  - [x] 11.1 Spike: insert a value from the long-press menu (AutoFill › Prefill). Free team refused: the ASCredentialProvider entitlement needs a paid membership.
+  - [x] 11.2 Spike: a Prefill keyboard that reads the person's values. The keyboard reads a shared keychain item with Full Access on, and works on the device.
+  - [x] 11.3 Decide with Tarun, then build the one that works: the Prefill keyboard (`feat/keyboard`), built; the device check is the lead's.
 
 ---
 
@@ -567,6 +567,12 @@ As built (`MacApp/Views/SetupChecklist.swift`): Contacts is the authorization st
 ### 11.3 Decide and build
 
 - Bring both results to Tarun with the tap count and what each can offer. Build only the chosen one, as its own branch, with the same safety rules as the extension (never in password or one-time-code fields, nothing sent anywhere).
+- Results: 11.1 stopped at signing, since the free team can't get the AutoFill credential provider entitlement (it needs a paid membership). 11.2 worked on Tarun's iPhone: with Full Access on, the keyboard read 9 values from a keychain item the app wrote. The spikes stay in `spikes/` as the record. Tarun chose the keyboard.
+- Built as: target `PrefillKeyboard` (`Keyboard/`, bundle ID `<app>.keyboard`, `RequestsOpenAccess`), embedded in the app for both configurations, with the app's keychain group (and App Group for AppStore); no new restricted entitlements.
+  - Data: `PrefillKit/Keyboard/`. `KeyboardSnapshot.make(memory:)` turns `Memory` into up to 80 `KeyboardValue`s (name parts, emails, phones, one-line addresses, links, answers; each kind most recently used first, from `uses(of:)`). `KeyboardShare` stores it as the `keyboard-values` document in the same store as the app state (keychain item or App Group file), and the keyboard writes `keyboard-seen` each time it's shown. Both go with "Delete Prefill data". The app writes the snapshot after each card refresh and each `commit` (`AppModel+Keyboard.swift`), only when the values changed.
+  - UI: `KeyboardUI/` is shared by the keyboard and the app (its debug preview, `App/Preview/KeyboardPreview.swift`, launched with `-keyboardPreview`). A 290 pt panel: ABC (next keyboard) on the leading edge, return (labeled from `returnKeyType`) and delete (repeats on hold) on the trailing edge, then key-shaped rows grouped "For this field" (from `textContentType`/`keyboardType`), Contact, Links, Answers. A tap types the value and switches back to the person's keyboard. Password, one-time-code and card fields get a line saying Prefill doesn't type there. Colors come from `KeyboardPalette`, which the app's `Palette` also reads.
+  - App: Settings › "Use Prefill in other apps" explains the three steps and shows "On" once the keyboard has been shown.
+  - Checked in the simulator: screenshots `assets/generated/keyboard-*.png` (light, dark, a 375 pt phone, the largest text size before the accessibility sizes, empty state), and the real keyboard enabled in a simulator (`keyboard-sim-installed.png`, before Full Access). Not yet checked on the iPhone.
 
 ## Risks and what to do about them
 
