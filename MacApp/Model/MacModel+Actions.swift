@@ -39,14 +39,27 @@ extension MacModel {
     // Returns why the field can't be saved, or nil once it is on the card.
     func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
         if case .failure(let problem) = customFields.saving(field, replacing: old) { return problem.message }
-        return await editCustomFields(.saveCustomField(field, replacing: old))
+        return await editCard(.saveCustomField(field, replacing: old))
     }
 
     func removeCustomField(_ field: CustomField) async {
-        if let reason = await editCustomFields(.removeCustomField(id: field.id)) { problem = reason }
+        if let reason = await editCard(.removeCustomField(id: field.id)) { problem = reason }
     }
 
-    private func editCustomFields(_ edit: CardEditor.Edit) async -> String? {
+    // Returns why the edit can't be saved, or nil once the card holds it.
+    func editValue(_ value: ContactValue, label: String?, draft: ValueDraft) async -> String? {
+        switch draft.payload(value.kind) {
+        case .failure(let problem): return problem.message
+        case .success(let payload):
+            return await editCard(.replace(value, with: CardEntry(label: label, payload: payload)))
+        }
+    }
+
+    func removeValue(_ value: ContactValue) async {
+        if let reason = await editCard(.remove(value)) { problem = reason }
+    }
+
+    private func editCard(_ edit: CardEditor.Edit) async -> String? {
         guard let identifier = state.cardLink?.contactIdentifier else { return nil }
         let gateway = gateway
         let outcome = await Task.detached {
