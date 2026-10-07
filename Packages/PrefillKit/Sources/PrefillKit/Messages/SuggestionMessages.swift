@@ -61,7 +61,7 @@ extension MessageRouter {
     ) -> ContactSuggestionsResponse {
         let page = PageSignal(
             host: request.host, hints: request.hints, now: now(), matchEachSite: state.settings.matchEachSite,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+            siteKinds: state.siteKinds
         )
         let sync = syncRequest(state, link: link, page: page)
         let target = CardPlan(card: card, request: sync).target

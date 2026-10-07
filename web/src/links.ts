@@ -25,7 +25,7 @@ export interface LinkOptions {
   skip?: (element: FieldElement) => boolean;
 }
 
-// Safari's bar shows at most three datalist options.
+// A short list: the combined option, then the best of each type.
 const MAX_OPTIONS = 3;
 const MAX_INSPECTED = 200;
 

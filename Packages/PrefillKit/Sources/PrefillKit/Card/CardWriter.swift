@@ -88,20 +88,18 @@ public struct PageSignal: Sendable {
     public let hints: [ContactKind: SectionHint]
     public let now: Date
     public let matchEachSite: Bool
-    // AppState.siteKinds and Settings.focusLabel. Without them the host rules still apply.
+    // AppState.siteKinds. Without them the host rules still apply.
     public let siteKinds: [String: SiteKind]
-    public let focusLabel: String?
 
     public init(
         host: String?, hints: [ContactKind: SectionHint], now: Date, matchEachSite: Bool,
-        siteKinds: [String: SiteKind] = [:], focusLabel: String? = nil
+        siteKinds: [String: SiteKind] = [:]
     ) {
         self.host = host
         self.hints = hints
         self.now = now
         self.matchEachSite = matchEachSite
         self.siteKinds = siteKinds
-        self.focusLabel = focusLabel
     }
 
     // The rules first, then what the app's model batch stored for hosts the rules can't place.
@@ -113,8 +111,7 @@ public struct PageSignal: Sendable {
 
     func context(for kind: ContactKind, siteKind: SiteKind) -> RankingContext {
         RankingContext(
-            host: host, hint: hints[kind], now: now, matchEachSite: matchEachSite,
-            siteKind: siteKind, focusLabel: focusLabel
+            host: host, hint: hints[kind], now: now, matchEachSite: matchEachSite, siteKind: siteKind
         )
     }
 }

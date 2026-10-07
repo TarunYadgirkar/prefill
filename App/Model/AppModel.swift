@@ -58,7 +58,7 @@ final class AppModel {
         self.hasDeclinedShortCard = defaults.bool(forKey: Self.declinedShortCardKey)
     }
 
-    // The one model of the running app, shared by its screens and its intents.
+    // The one model of the running app, shared by its screens.
     static let shared = live()
 
     static func live() -> AppModel {
@@ -81,15 +81,6 @@ final class AppModel {
     func values(_ kind: ContactKind) -> [ContactValue] {
         guard let card else { return [] }
         return ManualOrder.values(kind, card: card, known: state.values, now: .now)
-    }
-
-    var sites: [SiteSummary] {
-        guard let card else { return [] }
-        return SiteDirectory.sites(state: state, events: events, card: card, now: .now)
-    }
-
-    func site(_ host: String) -> SiteSummary? {
-        sites.first { $0.host == host }
     }
 
     var recent: [RecentItem] {
@@ -129,14 +120,6 @@ final class AppModel {
         isLoaded = true
         intelligenceState = Intelligence.state
         await refreshInsights()
-    }
-
-    // Siri, Shortcuts and Focus can run an intent before the app has drawn anything, and
-    // the extension may have written since, so each intent reads the store and card first.
-    func refreshForIntent() async {
-        readStore()
-        access = contacts.access
-        await refreshCard()
     }
 
     func refreshCard() async {

@@ -111,8 +111,7 @@ extension MacModel {
     private func settings(matchEachSite: Bool? = nil, saveNewInfo: Bool? = nil) -> PrefillKit.Settings {
         let current = state.settings
         return PrefillKit.Settings(
-            matchEachSite: matchEachSite ?? current.matchEachSite, saveNewInfo: saveNewInfo ?? current.saveNewInfo,
-            focusLabel: current.focusLabel
+            matchEachSite: matchEachSite ?? current.matchEachSite, saveNewInfo: saveNewInfo ?? current.saveNewInfo
         )
     }
 }

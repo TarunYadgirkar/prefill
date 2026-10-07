@@ -171,11 +171,6 @@ struct MessageRouterTests {
         #expect(firstSuggested(router(store).route(Page.suggestions(Page.siteB))) == "alex@work.example.org")
     }
 
-    @Test func theFocusLabelReachesPagesFromSafari() {
-        let reply = router(linked(Settings(focusLabel: "work"))).route(Page.suggestions(Page.siteA))
-        #expect(firstSuggested(reply) == "alex@work.example.org")
-    }
-
     @Test func anUnreachableCardSuggestsNothing() {
         gateway.state.withLock { $0.fetchError = .noAccess }
         let reply = router(linked()).route(Page.suggestions(Page.siteA))

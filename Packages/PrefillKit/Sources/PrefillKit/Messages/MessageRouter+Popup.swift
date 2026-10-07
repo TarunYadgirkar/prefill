@@ -32,7 +32,7 @@ extension MessageRouter {
         let isSiteSpecific = state.settings.matchEachSite
         let page = PageSignal(
             host: host, hints: [:], now: now(), matchEachSite: isSiteSpecific,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+            siteKinds: state.siteKinds
         )
         let target = CardPlan(card: card, request: syncRequest(state, link: link, page: page)).target
         let site = Normalizer.registrableDomain(host)

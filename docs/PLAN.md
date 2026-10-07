@@ -88,10 +88,10 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 5.4 Mac menu mirrors the inbox
   - [x] 5.5 UI tests and screenshots, merge (large-text tour and empty-inbox shot not run)
 - **Phase 6: Cuts**
-  - [ ] 6.1 Remove Siri intents, Shortcuts and the Focus filter
-  - [ ] 6.2 Remove the Sites tab
-  - [ ] 6.3 Match words leave the UI
-  - [ ] 6.4 Merge
+  - [x] 6.1 Remove Siri intents, Shortcuts and the Focus filter
+  - [x] 6.2 Remove the Sites tab
+  - [x] 6.3 Match words leave the UI
+  - [x] 6.4 Merge
 - **Phase 7: Resume import**
   - [ ] 7.1 Text from a PDF, rule pass for contact values and links
   - [ ] 7.2 On-device model pass for answers
@@ -101,7 +101,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 8: One Mac engine** (Gate: phases 1 and 2 merged)
   - [x] 8.1 The extension owns Chromium pages it's running in (Oct 6: until that browser quits, not 60 s; the stand-down is gone)
   - [x] 8.2 Accessibility stays for everything else
-  - [ ] 8.3 Mac checks and merge
+  - [x] 8.3 Mac checks and merge (Oct 7: both scripts pass; found and fixed two content script copies in one tab)
 - **Phase 9: Setup in three steps**
   - [ ] 9.1 New onboarding flow
   - [ ] 9.2 Mac first run

@@ -43,7 +43,7 @@ extension AppModel {
 
     private var unplacedHosts: [String] {
         let variant = Intelligence.modelVariant
-        return sites.map(\.host).filter { host in
+        return SiteDirectory.hosts(state: state, events: events).filter { host in
             SiteSense.rules(host: host, emailDomains: workDomains) == .unknown
                 && state.insight(InsightKey.siteKind(host, variant: variant)) == nil
         }

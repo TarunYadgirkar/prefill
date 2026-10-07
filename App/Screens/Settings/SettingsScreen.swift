@@ -2,7 +2,8 @@ import PrefillKit
 import SwiftUI
 
 // The two switches that change what Prefill does, then sharing, Safari's status and, under
-// Advanced, what most people never need: sites, the card link, restore and delete.
+// Advanced, what most people never need: sites it doesn't save on, the card link, restore
+// and delete.
 struct SettingsScreen: View {
     @Environment(AppModel.self) private var model
 
@@ -50,12 +51,6 @@ struct SettingsScreen: View {
             }
             .navigationTitle("Settings")
             .screenTitleDisplay()
-            .navigationDestination(for: SettingsRoute.self) { _ in
-                SitesScreen()
-            }
-            .navigationDestination(for: String.self) { host in
-                SiteDetail(host: host)
-            }
         }
     }
 

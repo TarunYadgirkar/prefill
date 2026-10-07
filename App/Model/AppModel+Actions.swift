@@ -48,6 +48,11 @@ extension AppModel {
         commit(state.pinning(value?.id, kind: kind, host: host))
     }
 
+    // Undoes "Don't save on this site" from Safari's Prefill sheet.
+    func saveAgain(on host: String) {
+        commit(state.muting(host, isMuted: false))
+    }
+
     // `label` is what the person picked in the inbox, or the suggestion they kept.
     func save(_ item: RecentItem, label: String?) async {
         let outcome = await add(item.value.payload, label: label, source: .captured)
@@ -75,16 +80,12 @@ extension AppModel {
     // Only Prefill's list follows it; the card keeps one order on every site.
     func setMatchEachSite(_ isOn: Bool) {
         let settings = state.settings
-        commit(state.with(settings: Settings(
-            matchEachSite: isOn, saveNewInfo: settings.saveNewInfo, focusLabel: settings.focusLabel
-        )))
+        commit(state.with(settings: Settings(matchEachSite: isOn, saveNewInfo: settings.saveNewInfo)))
     }
 
     func setSaveNewInfo(_ isOn: Bool) {
         let settings = state.settings
-        commit(state.with(settings: Settings(
-            matchEachSite: settings.matchEachSite, saveNewInfo: isOn, focusLabel: settings.focusLabel
-        )))
+        commit(state.with(settings: Settings(matchEachSite: settings.matchEachSite, saveNewInfo: isOn)))
     }
 
     // Puts what a minimal card moved to Prefill's contact back on the card first, so the
@@ -146,8 +147,7 @@ extension AppModel {
         let request = CardSyncRequest(
             cardIdentifier: link.contactIdentifier, known: state.values, additions: additions, usage: [], pins: [],
             page: PageSignal(
-                host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
-                focusLabel: state.settings.focusLabel
+                host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite
             )
         )
         let outcome = await CardWork.sync(gateway, request)

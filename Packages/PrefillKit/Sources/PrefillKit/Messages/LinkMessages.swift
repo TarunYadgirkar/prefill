@@ -1,8 +1,8 @@
 import Foundation
 
 // A focused field that asks for profile links ("GitHub/Portfolio", "LinkedIn") wants the
-// card's links of those types, which the content script offers in Safari's bar through a
-// datalist. Unlike every other reply, this one carries values back to the page.
+// person's links of those types, which the content script offers in Prefill's own list
+// under the field. Like the other suggestion replies, this one carries values to the page.
 public struct LinkSuggestionsRequest: Codable, Sendable, Hashable {
     public let host: String
     public let types: [LinkType]
