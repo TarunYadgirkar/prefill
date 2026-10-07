@@ -7,6 +7,8 @@ struct TextRole {
     let color: Color
 
     static let stepTitle = TextRole(font: .largeTitle.weight(.bold), color: Palette.textPrimary)
+    // "Step 1 of 2" over an onboarding title.
+    static let stepCount = TextRole(font: .subheadline.weight(.semibold), color: Palette.textSecondary)
     static let sectionTitle = TextRole(font: .title3.weight(.semibold), color: Palette.textPrimary)
     static let body = TextRole(font: .body, color: Palette.textPrimary)
     static let bodyEmphasis = TextRole(font: .body.weight(.semibold), color: Palette.textPrimary)

@@ -1,28 +1,33 @@
 import SwiftUI
 
-// The last step: the two Safari switches. "Allow Extension" is read from Safari when the person
-// comes back to Prefill. "All Websites" can't be read, so it is confirmed once the
-// extension has reported a form.
+// Step two: the two Safari switches. "Allow Extension" is read from Safari. "All Websites"
+// can't be read, so it is confirmed once the extension has reported a page with a form. Both
+// are checked again while the step is on screen, so each turns green on its own.
 struct SafariStep: View {
+    private static let recheck: Duration = .seconds(2)
+
     @Environment(AppModel.self) private var model
+    @Binding var path: [OnboardingRoute]
 
     private var isEnabled: Bool { model.extensionEnabled == true }
+    private var isDone: Bool { isEnabled && model.isAllowedOnWebsites }
 
     var body: some View {
         OnboardingStepLayout(
+            step: 2,
             title: "Turn on Prefill in Safari",
             message: """
-                Prefill sees which fields a form asks for and what you type into them. That’s how it saves new \
-                info and picks the right values for each site.
+                Prefill sees which fields a form asks for and what you type into them. That’s how it offers \
+                the right value and saves new ones.
                 """
         ) {
             SafariSwitches(isEnabled: isEnabled, isAllowedOnWebsites: model.isAllowedOnWebsites)
         } actions: {
             if isEnabled {
-                PrefillButton(title: "Start using Prefill") {
-                    model.finishOnboarding()
+                PrefillButton(title: "Continue") {
+                    path.append(.done)
                 }
-                .accessibilityIdentifier("finish-onboarding")
+                .accessibilityIdentifier("safari-next")
             } else {
                 PrefillButton(title: "Open Safari settings", systemImage: "safari") {
                     Task { await SafariExtension.openSettings() }
@@ -33,6 +38,39 @@ struct SafariStep: View {
                 }
                 .accessibilityIdentifier("finish-later")
             }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .task(id: isDone) { await watch() }
+    }
+
+    private func watch() async {
+        while !Task.isCancelled, !isDone {
+            try? await Task.sleep(for: Self.recheck)
+            await model.refreshExtension()
+        }
+    }
+}
+
+// The end of setup: what to do next, in Safari.
+struct DoneStep: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        OnboardingStepLayout(
+            title: "Prefill is ready",
+            message: "Tap any field in Safari and pick a value."
+        ) {
+            Text("""
+                What you pick comes first on that site next time. New values you type wait in the Inbox \
+                for you to check.
+                """)
+            .textRole(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+        } actions: {
+            PrefillButton(title: "Start using Prefill") {
+                model.finishOnboarding()
+            }
+            .accessibilityIdentifier("finish-onboarding")
         }
         .navigationBarTitleDisplayMode(.inline)
     }
@@ -57,7 +95,7 @@ struct SafariSwitch: Identifiable {
             ),
             SafariSwitch(
                 id: 1, title: "All Websites", setting: isAllowed ? "Allow" : "Set to Allow", isDone: isAllowed,
-                note: isAllowed ? nil : "Prefill confirms this the next time you open a page with a form in Safari."
+                note: isAllowed ? nil : "Turns green once you open a page with a form in Safari."
             )
         ]
     }
@@ -130,7 +168,7 @@ private struct SwitchRow: View {
 
 #Preview {
     NavigationStack {
-        SafariStep()
+        SafariStep(path: .constant([]))
     }
     .previewModel(.preview(finished: false))
 }

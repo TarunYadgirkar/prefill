@@ -21,7 +21,7 @@ zsh scripts/install-device.sh <device-udid>
 
 On the iPhone:
 1. Trust the developer profile in Settings → General → VPN & Device Management.
-2. Turn on the Prefill extension in Settings → Apps → Safari → Extensions, and set All Websites to Allow.
+2. Open Prefill. Setup is two steps: choose your contact card, then turn on the extension in Safari (Allow Extension, and All Websites set to Allow). The second step's checks turn green on their own, the last one once Safari opens a page with a form.
 
 A free Apple ID signs the app for 7 days only, so rerun the script weekly, or let the Mac do it.
 
@@ -40,10 +40,10 @@ The agent reinstalls when the last install is 5.5 days old or its profile expire
 zsh scripts/install-mac.sh
 ```
 
-Then:
-1. Allow Contacts from the Prefill menu.
-2. Turn Prefill on in System Settings → Privacy & Security → Accessibility.
-3. Optional: load the extension unpacked in `chrome://extensions` and `arc://extensions` (Developer mode → Load unpacked) from `/Applications/Prefill.app/Contents/Resources/ChromeExtension`. The `Chrome Extension` shortcut in the repo root points there. After each reinstall, click Reload on it in each browser.
+Then open the Prefill menu. Until each item is done it shows a checklist, and each item checks itself:
+1. Allow Contacts.
+2. Turn on Accessibility (System Settings → Privacy & Security → Accessibility). Open takes you there.
+3. Add the browser extension: Copy folder path, then in `chrome://extensions` or `arc://extensions` turn on Developer mode, click Load unpacked, press Command-Shift-G and paste. The folder is `/Applications/Prefill.app/Contents/Resources/ChromeExtension`, and the `Chrome Extension` shortcut in the repo root points there. The item turns green once the extension talks to the app; it's optional, so you can skip it. After each reinstall, click Reload on it in each browser.
 
 ## Develop
 
