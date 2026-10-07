@@ -28,7 +28,7 @@ This document has three parts:
 | Oct 3 | Finish everything, then write docs for future sessions. | This document, `README.md` and `AGENTS.md` |
 | Oct 4 | "Not seamless enough, like AirDrop." Only name and phone may go out when sharing by tapping phones. Research how Apple does it and what other job-application fillers do. | Verified NameDrop sends only the name, one chosen number or email, and the poster. Web audit fixes. Research on Apple's patterns and on Simplify, Jobright and others. |
 | Oct 5 | One-tap fill is fine, but tapping a field must still let me pick another value. Demographic questions: always decline or "No". | One-tap fill: a pill beside the field and a Fill button in Safari's sheet fill the whole form, including selects and yes/no radios, decline demographics, tint what they filled, undo in one tap, and a filled field still lists the other values. |
-| Oct 6 | Look at Prefill like a YC startup: how clean it is to use and how it's layered, and whether there's a smarter way. Then: clicking a field and picking a value stays the default, with Fill form as an option. | The v2 plan in `docs/PLAN.md`. Done so far: picks are remembered per site and per question (Phase 1), every row says why it's there and Fill form says what's left (Phase 2), one read model for every answer with where it was used (Phase 3), and the app became Inbox, You and Settings (Phase 5). Found and fixed on the way: Safari's own suggestion bubble swallowed taps on the first rows of Prefill's list on the iPhone. |
+| Oct 6 | Look at Prefill like a YC startup: how clean it is to use and how it's layered, and whether there's a smarter way. Then: clicking a field and picking a value stays the default, with Fill form as an option. | The v2 plan in `docs/PLAN.md`. Done so far: picks are remembered per site and per question (Phase 1), every row says why it's there and Fill form says what's left (Phase 2), one read model for every answer with where it was used (Phase 3), and the app became Inbox, You and Settings (Phase 5). Phase 6 removed Siri, Shortcuts, the Focus filter, the Sites screen and the match-words field. Found and fixed on the way: Safari's own suggestion bubble swallowed taps on the first rows of Prefill's list on the iPhone. |
 
 ## 2. The product
 
@@ -53,8 +53,7 @@ Underneath, Prefill still manages your contact card, because Safari's own bar an
 **The iPhone app:**
 - **Inbox:** what needs a decision first (values Prefill wasn't sure are yours), then what Prefill did recently, each with a mark you can read at a glance.
 - **You:** everything Prefill knows, searchable, grouped into Contact, Links and Answers. A value's page shows where it's stored, which sites it was used on, and which sites it's first on.
-- **Settings:** the two switches, Sharing your card, the Apple Intelligence status, Safari's switches, and Advanced (sites, card, restore, delete).
-- Siri and a Focus filter still exist; the plan removes them later.
+- **Settings:** the two switches, Sharing your card, the Apple Intelligence status, Safari's switches, and Advanced (sites Prefill doesn't save on, card, restore, delete).
 
 **Mac:**
 - A menu bar app that opens on the same inbox and suggests in any app through Accessibility.
