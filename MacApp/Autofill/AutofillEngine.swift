@@ -221,7 +221,12 @@ final class AutofillEngine {
             guard let focused = self?.watcher?.currentFocus() else { return false }
             return CFEqual(focused, element)
         }
-        guard isStillFocused() else { return }
+        guard isStillFocused() else {
+            #if PREFILL_TEST_BROWSERS
+            e2eLog("pick skipped: focus moved to \(self.watcher?.currentFocus()?.role ?? "nothing")")
+            #endif
+            return
+        }
         Task {
             let method = await FieldFiller.fill(element, with: row.value, isStillFocused: isStillFocused)
             Self.log.info("filled a \(row.kind, privacy: .public) field by \(method.rawValue, privacy: .public)")
@@ -268,7 +273,10 @@ final class AutofillEngine {
         e2eLog("shown \(panel.model.rows.map(\.kind)) at \(panel.frame)")
         Task {
             try? await Task.sleep(for: .seconds(delay))
-            guard let current, CFEqual(current.field.element, field), let first = panel.model.rows.first else { return }
+            guard let current, CFEqual(current.field.element, field), let first = panel.model.rows.first else {
+                e2eLog("autopick skipped: panel \(self.current == nil ? "gone" : "moved")")
+                return
+            }
             let fillsForm = ProcessInfo.processInfo.environment["PREFILL_E2E_AX_FILL_FORM"] == "1" && e2ePicks == 1
             e2ePicks += 1
             if fillsForm { fillForm() } else { pick(first) }
