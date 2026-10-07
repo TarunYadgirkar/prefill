@@ -36,7 +36,8 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **`CNContactStoreGateway`:**
   - Reads both contacts as one `CardRecord` and writes each part back to its own contact.
   - Callers (`CardWriter`, never-drop guard, readers, Siri, Mac) don't know about the split.
-- **Per-device app state** (pins, usage, muted sites, review queue):
+- **`Memory`** (`PrefillKit/Memory/`): a read-only view of every answer (contact values, links, custom fields) with its origin, where it's stored and `uses(of:)` ("Used on"). The app's Inbox and You screens read it through `AppSupport/MemoryLookup.swift`. The message routers still read `CardRecord` directly (see PLAN 3.2).
+- **Per-device app state** (pins, usage, picks, muted sites, review queue):
   - iPhone: the Keychain store for Personal, the App Group store for AppStore.
   - Mac: `~/Library/Application Support/Prefill/Store`.
   - It does not sync.
@@ -45,9 +46,9 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 | Path | What |
 |---|---|
-| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values. `dropdown.ts` is Chromium's own list. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values, `why.ts` words the line under each, `picks.ts` reports picks. `dropdown.ts` is Prefill's own list, in Safari and Chromium. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
-| `App/` | iPhone app: Card (Emails/Phones/Addresses/Links/Custom), Sites, Recent, Settings (Sharing your card, Restore), Siri intents. |
+| `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: Sites, Restore, Delete), Siri intents. |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
 | `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
@@ -119,12 +120,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 ## Ongoing
 
-Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan: click a field and pick a value is the default, Fill form is optional. Its Progress list is the to-do list; take the first unchecked task.
+Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the to-do list. Done and merged on Oct 6: Phases 1, 2, 3 and 5, task 2.0 (the Safari tests read Prefill's list) and 10.1 (docs as built so far).
 
-Phase 1 (Oct 6, merged): a value picked from Prefill's list (`picked` message) is pinned for the site without a Contacts write, links too, and a picked custom answer or guess is remembered for the question's words (`ExtensionEvents.answerPicks`). The Mac panel reports picks. In Safari, Prefill's contact list now sits above the field, because Safari's own suggestion bubble swallows every tap in a band about 100 pt under a contact field (found by the new `PickE2ETests`; before this, the first two rows couldn't be tapped on the iPhone). Rows are buttons. Installed on the Mac; the iPhone wasn't connected, so the daily reinstall job will pick it up. After a reinstall, reload the unpacked extension in Chrome and Arc.
+Next, in the plan's order: Phase 4 (freeze the card to name and phone) waits for Tarun's yes; Phases 6 to 9 are open. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
 
-Known: `CustomFieldsE2ETests`, `LinksE2ETests` and `MinimalCardE2ETests` fail because they still read Safari's keyboard bar from before `d070f61` (task 2.0). A full `scripts/test.sh e2e` takes about 15 minutes and collides with another session's run on port 8846 and the simulator; check `lsof -iTCP:8846` first.
+Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 
-Not yet checked by a person: picking from the list on the iPhone itself, and the list placement above the field at large Dynamic Type sizes.
-
-Bug sweep (Oct 6, merged as `fix/bug-sweep`): failures that were silently ignored now show (Mac card read, saving answers, Undo on learned answers). A passing Contacts error no longer creates a duplicate Prefill contact. Custom-field edits apply to the card as read at save time. A move or merge that hits a label or key collision keeps both values. Mac Fill form skips hidden fields and text typed during the fill. Web Undo covers every fill run, and a learned answer counts only after the person's own press. Not fixed: the host's parent-PID browser check can be spoofed with exec (a residual risk), and the Prefill contact is matched by account, not by the card's name.
+Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu and Settings window on screen (only built), the large-text tour, and Safari's bubble on a field Fill form filled.

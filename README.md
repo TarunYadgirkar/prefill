@@ -1,8 +1,9 @@
 # Prefill
 
-Prefill makes contact AutoFill remember all of your emails, phone numbers, addresses, profile links and answers to common form questions, and offers the right one on each site.
+Prefill remembers your emails, phone numbers, addresses, profile links and answers to common form questions, and offers the right one when you click a field.
 
-- **iPhone (Safari):** works inside Apple's own suggestion bar above the keyboard. There's no extra bar.
+- **iPhone (Safari):** click a field and Prefill's list shows your values, best first, each saying why it's there. What you pick comes first on that site next time. Fill form fills a whole application when you want it.
+- **iPhone app:** an Inbox of what Prefill learned, and a searchable You tab with everything it knows and where each value was used.
 - **Mac:** a menu bar app that suggests in any app (Chrome, Arc, Safari and others) through Accessibility. There's also an optional Chrome/Arc extension that saves new values you type.
 - **Sync:** everything lives in iCloud Contacts, so the iPhone and Mac stay in step with no server and no paid developer account.
 

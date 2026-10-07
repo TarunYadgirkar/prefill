@@ -73,7 +73,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 3.1 `Answer` and `Memory` types over `CardSplit`
   - [x] 3.2 Suggestion routers read from `Memory` (narrowed, see 3.2)
   - [x] 3.3 Usage history per answer ("Used on")
-  - [ ] 3.4 Merge
+  - [x] 3.4 Merge
 - **Phase 4: Freeze the Me card** (Gate: Tarun says go)
   - [ ] 4.1 Stop per-site card rewrites
   - [ ] 4.2 Safari shows Prefill's list for every contact kind
@@ -107,7 +107,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 9.2 Mac first run
   - [ ] 9.3 Tour test and merge
 - **Phase 10: Docs**
-  - [ ] 10.1 PRODUCT.md, AGENTS.md and README.md describe v2
+  - [x] 10.1 PRODUCT.md, AGENTS.md and README.md describe v2 (as built so far; update again after Phases 4 and 6 to 9)
 
 ---
 
