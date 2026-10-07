@@ -86,26 +86,42 @@ function score(option: Option, answer: string): number {
   return best > 0.5 ? best * 0.8 : 0;
 }
 
-// The index of the option that best says `answer`, or -1 when none says it well enough.
-export function pickOption(options: readonly Option[], answer: string): number {
-  let found = -1;
-  let best = 0;
-  options.forEach((option, index) => {
-    if (isPlaceholder(option)) return;
-    const points = score(option, answer);
-    if (points > best) {
-      best = points;
-      found = index;
-    }
-  });
-  return found;
+// How close two options' scores may be before neither clearly says the answer: "Yes" fits
+// "Yes, I will require sponsorship now" and "Yes, but not now" equally, and a guess between
+// them could tell an employer the wrong thing.
+const AMBIGUOUS_MARGIN = 0.1;
+
+// The option that best says an answer, and how many options say it about as well. More than
+// one means the page asks something the answer alone can't settle.
+export interface OptionMatch {
+  index: number;
+  fits: number;
 }
 
-// The first option that matches any of `answers`, in the order the answers come.
-export function pickFirst(options: readonly Option[], answers: readonly string[]): number {
+const NO_MATCH: OptionMatch = { index: -1, fits: 0 };
+
+export function matchOption(options: readonly Option[], answer: string): OptionMatch {
+  const scores = options.map((option) => (isPlaceholder(option) ? 0 : score(option, answer)));
+  const best = Math.max(0, ...scores);
+  if (best === 0) return NO_MATCH;
+  const index = scores.indexOf(best);
+  // An option that says the answer exactly wins outright, even beside others that mean the same.
+  if (best === 1) return { index, fits: 1 };
+  return { index, fits: scores.filter((points) => points > 0 && best - points < AMBIGUOUS_MARGIN).length };
+}
+
+// The index of the option that best says `answer`, or -1 when none says it well enough or
+// more than one does.
+export function pickOption(options: readonly Option[], answer: string): number {
+  const { index, fits } = matchOption(options, answer);
+  return fits === 1 ? index : -1;
+}
+
+// The match for the first of `answers` that any option says, in the order the answers come.
+export function chooseOption(options: readonly Option[], answers: readonly string[]): OptionMatch {
   for (const answer of answers) {
-    const index = pickOption(options, answer);
-    if (index >= 0) return index;
+    const match = matchOption(options, answer);
+    if (match.fits > 0) return match;
   }
-  return -1;
+  return NO_MATCH;
 }

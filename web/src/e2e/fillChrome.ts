@@ -147,6 +147,34 @@ async function checkPickRemembered(page: Page): Promise<void> {
   check((await page.inputValue("#email")) === "alex.rivera@example.com", "the picked email comes first after a reload");
 }
 
+// A "Yes" that fits two options is left for the person and counted as need you, while the
+// option that clearly says "No" is chosen.
+async function checkTwoOptionsFit(context: BrowserContext): Promise<void> {
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 900, height: 1000 });
+  await page.waitForTimeout(500);
+  await page.goto(`http://127.0.0.1:${String(PORT)}/questions.html`);
+  await page.waitForTimeout(1_000);
+  await page.click("#first_name");
+  await pressPill(page, "start");
+  await page.waitForFunction(() => (document.getElementById("email") as HTMLInputElement).value !== "", null, { timeout: 5_000 });
+  await page.waitForTimeout(300);
+  const shown = await values(page);
+  check(shown.sponsorship === "No, I will not require sponsorship", "one tap chooses the one option that says No");
+  check(shown.work_us === "Select ...", "a Yes two options fit is left for the person");
+  const outlined = await page.evaluate(() => document.getElementById("work_us")?.style.getPropertyValue("outline") ?? "");
+  check(outlined !== "", "the list two options fit is outlined");
+  await page.screenshot({ path: join(shots, "fill-chrome-two-options.png") });
+  await pressPill(page, "next");
+  const moved = await page
+    .waitForFunction(() => document.activeElement?.id === "work_us", null, { timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+  check(moved, "need you moves to the list two options fit");
+  await page.screenshot({ path: join(shots, "fill-chrome-two-options-note.png") });
+  await page.close();
+}
+
 async function main(): Promise<void> {
   mkdirSync(shots, { recursive: true });
   const sites = await servedPages();
@@ -210,6 +238,7 @@ async function main(): Promise<void> {
     await checkPickRemembered(page);
     await page.close();
     await checkReactSelect(context);
+    await checkTwoOptionsFit(context);
   } finally {
     await context.close();
     server.kill();

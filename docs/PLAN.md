@@ -117,7 +117,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 12.2 Put the likely value first without field labels
   - [ ] 12.3 Device check and merge
 - **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
-  - [ ] 13.1 Abstain when more than one option fits
+  - [x] 13.1 Abstain when more than one option fits
   - [ ] 13.2 Scoped learning: keep the question and what it applies to
   - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
   - [ ] 13.4 The model sees the question, the options and the candidate answers
@@ -619,6 +619,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 
 ### 13.1 Abstain on ambiguity
 - `web/src/choices.ts`: when more than one option matches the answer with similar strength (two "Yes…" options that mean different things), Fill form leaves the field and marks it "2 options fit, pick one"; it counts toward "need you". Real markup fixtures for the case.
+- Built: `matchOption` scores every option and counts those within 0.1 of the best; an exact match wins outright. Fill form leaves a select, radio group or React-Select box with more than one fit, outlines the select or group (dashed amber, until the person's own change or Undo), and the pill shows the note when "need you" reaches it (`noteFor`). The pill's offer count leaves such fields out. Fixture: `web/src/fixtures/ats-lever-sponsorship.html` (Lever card markup, wording from real custom questions). The Mac's Fill form fills text fields only, so it never chooses options and needed no change.
 
 ### 13.2 Scoped learning
 - `learn.ts` sends the question as asked (and a select's or radio group's options), not only a `JobQuestion` category.
