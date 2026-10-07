@@ -79,15 +79,6 @@ final class AppModel {
         return ManualOrder.values(kind, card: card, known: state.values, now: .now)
     }
 
-    var sites: [SiteSummary] {
-        guard let card else { return [] }
-        return SiteDirectory.sites(state: state, events: events, card: card, now: .now)
-    }
-
-    func site(_ host: String) -> SiteSummary? {
-        sites.first { $0.host == host }
-    }
-
     var recent: [RecentItem] {
         guard let card else { return [] }
         return RecentCaptures.items(events: events, state: state, card: card)

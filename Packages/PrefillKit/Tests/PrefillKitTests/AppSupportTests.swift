@@ -77,41 +77,24 @@ struct CardEditorTests {
 }
 
 struct SiteDirectoryTests {
-    private let state = AppState(values: Alex.allValues)
-
-    @Test func listsSitesNewestFirstWithTheirOwnPicks() {
+    @Test func listsSitesNewestFirst() {
         let events = ExtensionEvents(usage: [
             UsageEvent(valueID: Alex.workEmail.id, host: "portal.work.example.org", date: .daysAgo(1)),
             UsageEvent(valueID: Alex.schoolEmail.id, host: "shop.example.net", date: .daysAgo(3))
         ])
-        let sites = SiteDirectory.sites(state: state, events: events, card: Alex.card, now: .testNow)
-        #expect(sites.map(\.host) == ["example.org", "example.net"])
-        #expect(sites[0].values(.email).first == Alex.workEmail)
-        #expect(sites[1].values(.email).first == Alex.schoolEmail)
+        let pinned = AppState().pinning(Alex.homeEmail.id, kind: .email, host: "example.com")
+        #expect(SiteDirectory.hosts(state: pinned, events: events) == ["example.org", "example.net", "example.com"])
     }
+}
 
-    @Test func aPinBeatsUseAndShowsAsPinned() {
-        let use = UsageEvent(valueID: Alex.workEmail.id, host: "example.net", date: .daysAgo(1))
-        let events = ExtensionEvents(usage: [use])
-        let pinned = state.pinning(Alex.schoolEmail.id, kind: .email, host: "shop.example.net")
-        let site = SiteDirectory.sites(state: pinned, events: events, card: Alex.card, now: .testNow)[0]
-        #expect(site.values(.email).first == Alex.schoolEmail)
-        #expect(site.pinned[.email] == Alex.schoolEmail.id)
-    }
+struct PinningTests {
+    private let state = AppState(values: Alex.allValues)
 
     @Test func pinningAgainReplacesThePinAndNilRemovesIt() {
         let once = state.pinning(Alex.schoolEmail.id, kind: .email, host: "example.net")
         let twice = once.pinning(Alex.workEmail.id, kind: .email, host: "www.example.net")
         #expect(twice.pins == [SitePin(host: "example.net", kind: .email, valueID: Alex.workEmail.id)])
         #expect(twice.pinning(nil, kind: .email, host: "example.net").pins.isEmpty)
-    }
-
-    @Test func withMatchEachSiteOffEverySiteGetsTheCardOrder() {
-        let use = UsageEvent(valueID: Alex.schoolEmail.id, host: "example.net", date: .daysAgo(1))
-        let events = ExtensionEvents(usage: [use])
-        let off = state.with(settings: Settings(matchEachSite: false))
-        let site = SiteDirectory.sites(state: off, events: events, card: Alex.card, now: .testNow)[0]
-        #expect(site.values(.email).first == Alex.homeEmail)
     }
 }
 

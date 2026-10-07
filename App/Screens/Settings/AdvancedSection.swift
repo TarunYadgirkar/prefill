@@ -1,13 +1,9 @@
 import PrefillKit
 import SwiftUI
 
-// Pushed by value, so the sites list can push each site onto the same stack.
-enum SettingsRoute: Hashable {
-    case sites
-}
-
-// Sites, which card is the person's, and the two ways to undo Prefill: restore the card as it
-// was when Prefill linked it, or forget everything Prefill keeps on this iPhone.
+// Sites Prefill doesn't save on, which card is the person's, and the two ways to undo
+// Prefill: restore the card as it was when Prefill linked it, or forget everything Prefill
+// keeps on this iPhone.
 struct AdvancedSection: View {
     @Environment(AppModel.self) private var model
     @State private var isConfirmingRestore = false
@@ -16,8 +12,12 @@ struct AdvancedSection: View {
 
     var body: some View {
         Section {
-            NavigationLink("Sites", value: SettingsRoute.sites)
-            .accessibilityIdentifier("sites")
+            NavigationLink {
+                MutedSitesScreen()
+            } label: {
+                LabeledContent("Sites Prefill doesn’t save on", value: mutedCount)
+            }
+            .accessibilityIdentifier("muted-sites")
             LabeledContent("Your card", value: model.cardName)
             Button("Choose a different card") { isChoosingCard = true }
             restoreButton
@@ -42,6 +42,11 @@ struct AdvancedSection: View {
                     }
             }
         }
+    }
+
+    private var mutedCount: String {
+        let count = model.state.mutedSites.count
+        return count == 0 ? "" : count.formatted()
     }
 
     private var restoreButton: some View {

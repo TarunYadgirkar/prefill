@@ -48,6 +48,11 @@ extension AppModel {
         commit(state.pinning(value?.id, kind: kind, host: host))
     }
 
+    // Undoes "Don't save on this site" from Safari's Prefill sheet.
+    func saveAgain(on host: String) {
+        commit(state.muting(host, isMuted: false))
+    }
+
     // `label` is what the person picked in the inbox, or the suggestion they kept.
     func save(_ item: RecentItem, label: String?) async {
         let outcome = await add(item.value.payload, label: label, source: .captured)
@@ -75,17 +80,13 @@ extension AppModel {
     // Turning it off puts the person's own order back on the card straight away.
     func setMatchEachSite(_ isOn: Bool) {
         let settings = state.settings
-        commit(state.with(settings: Settings(
-            matchEachSite: isOn, saveNewInfo: settings.saveNewInfo
-        )))
+        commit(state.with(settings: Settings(matchEachSite: isOn, saveNewInfo: settings.saveNewInfo)))
         if !isOn { Task { await syncCard() } }
     }
 
     func setSaveNewInfo(_ isOn: Bool) {
         let settings = state.settings
-        commit(state.with(settings: Settings(
-            matchEachSite: settings.matchEachSite, saveNewInfo: isOn
-        )))
+        commit(state.with(settings: Settings(matchEachSite: settings.matchEachSite, saveNewInfo: isOn)))
     }
 
     // Puts what a minimal card moved to Prefill's contact back on the card first, so the
