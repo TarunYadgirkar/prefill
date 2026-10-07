@@ -26,15 +26,16 @@ public enum JobQuestion: String, Codable, Sendable, CaseIterable {
         case .major: "field of study, discipline"
         case .gpa: "grade point average"
         case .graduation: "graduation, grad date"
-        case .authorization: "authorized to work, legally authorized, eligible to work"
+        case .authorization: "authorized to work, legally authorized, legally able, eligible to work"
         case .sponsorship: "sponsor, visa"
         case .heard: "hear about"
         }
     }
 
     // Nil when the answer breaks a custom field's rules, such as a line break.
-    public func field(answer: String) -> CustomField? {
-        try? CustomField.make(label: label, value: answer, alsoMatches: alsoMatches).get()
+    public func field(answer: String, scope: AnswerScope? = nil) -> CustomField? {
+        let label = scope?.label(label) ?? label
+        return try? CustomField.make(label: label, value: answer, alsoMatches: alsoMatches).get()
     }
 }
 

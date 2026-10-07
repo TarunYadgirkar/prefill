@@ -124,6 +124,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
   - A later answer replaces a learned one that still reads as learned, with Undo; an answer the person wrote or edited in the app is never replaced.
+  - Answers can be scoped by the question's words: "Work authorization (US)" and "(Canada)" are separate fields (`AnswerScope`). A US answer is never offered for a Canada question (the list says "No answer for Canada yet"); an unscoped answer for a scoped question, or the reverse, is offered but never filled.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
 - **Prefill keyboard:** built in `feat/keyboard`, checked only in the simulator. Needs Full Access to read the keychain item; not yet run on the iPhone.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.

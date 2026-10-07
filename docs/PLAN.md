@@ -118,7 +118,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 12.3 Device check and merge
 - **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
   - [x] 13.1 Abstain when more than one option fits
-  - [ ] 13.2 Scoped learning: keep the question and what it applies to
+  - [x] 13.2 Scoped learning: keep the question and what it applies to
   - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
   - [ ] 13.4 The model sees the question, the options and the candidate answers
   - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
@@ -626,6 +626,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 - The router keeps scope in the stored label so it still syncs through Contacts: "Work authorization (US)", "Work authorization (Canada)", "Graduation date". Scope words (country, school, employer, term) come from the question text by rules first.
 - A question whose scope differs from a stored answer's gets no fill, and the list says "No answer for Canada yet"; what the person types becomes a separate answer.
 - History and last-confirmed dates live in per-device events until Phase 14.
+- Built: `answers` entries carry `text` (the question as the page words it) and `options` (up to 10, 100 characters each; not stored yet, for 13.4). `AnswerScope` (`PrefillKit/Capture/AnswerScope.swift`) reads a country (authorization, sponsorship) or a term (those and GPA) from the text; the label becomes "Work authorization (US)". Matching scores a field on its label without the scope, then `ScopeFit` sorts each match: same scope (or both unscoped) fills; same kind but different scope is withheld and the entry says `noAnswerFor`; anything else (one side unscoped, or country against term) goes in the new `suggested` list, offered and never filled. Replacement, the once-a-day guard, Undo and `replaceAnswers` work on the scoped label, so they stay within one scope. Employer and school scopes were left out: the real forms name an employer only where the answer doesn't depend on it ("authorized to work for Braeburn"). A question that names two countries has no country scope. Per-device history waits for 13.3.
 
 ### 13.3 Memory kinds
 - `Answer` gains `kind`: fact, contextual fact, preference, draft. Drafts allow line breaks and long text (lift the 200-character cap for drafts only, stored on the Prefill contact as before), are only ever suggested, never filled.

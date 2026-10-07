@@ -22,17 +22,28 @@ public enum CustomFieldMatcher {
 
     // The fields behind `values`: for a value two fields share, the first in the card's order.
     static func matches(for fieldText: String, in fields: [CustomField]) -> [CustomField] {
+        offered(candidates(for: fieldText, in: fields))
+    }
+
+    // Every field whose phrase matches with the most words, before scopes sort them.
+    static func candidates(for fieldText: String, in fields: [CustomField]) -> [CustomField] {
         let page = words(fieldText)
         guard !page.isEmpty else { return [] }
         let scored = fields.compactMap { field in score(field, page: page).map { (field, $0) } }
         guard let best = scored.map(\.1).max() else { return [] }
-        var seen = Set<String>()
-        let matched = scored.filter { $0.1 == best }.map(\.0).filter { seen.insert($0.value).inserted }
-        return Array(matched.prefix(maxOffered))
+        return scored.filter { $0.1 == best }.map(\.0)
     }
 
+    // At most three, one per value.
+    static func offered(_ fields: [CustomField]) -> [CustomField] {
+        var seen = Set<String>()
+        return Array(fields.filter { seen.insert($0.value).inserted }.prefix(maxOffered))
+    }
+
+    // A scope in the label ("Work authorization (Canada)") doesn't have to be in the question:
+    // the scope rules decide what it means for the match.
     static func score(_ field: CustomField, page: Set<String>) -> Int? {
-        ([field.label] + field.matchWords)
+        ([AnswerScope.split(field.label).base] + field.matchWords)
             .map(words)
             .filter { !$0.isEmpty && $0.isSubset(of: page) }
             .map(\.count)

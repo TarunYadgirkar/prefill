@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { labelled, whyDetail } from "./why";
+import { labelled, noAnswerFor, whyDetail } from "./why";
 
 describe("whyDetail", () => {
   it.each([
@@ -24,5 +24,12 @@ describe("labelled", () => {
     ["  ", "Phone", "Phone"],
   ] as const)("puts %s before %s", (label, kind, detail) => {
     expect(labelled(label, kind)).toBe(detail);
+  });
+});
+
+describe("no answer for a scope", () => {
+  it("names the scope the question asks about", () => {
+    expect(noAnswerFor("Canada")).toBe("No answer for Canada yet");
+    expect(noAnswerFor("Summer 2026")).toBe("No answer for Summer 2026 yet");
   });
 });

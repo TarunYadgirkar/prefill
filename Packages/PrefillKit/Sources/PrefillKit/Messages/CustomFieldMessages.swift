@@ -28,16 +28,38 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
         // What the on-device model thinks answers the field when no rule matched: offered
         // as a marked option, never filled in by itself. Their `why` is always `guess`.
         public let guesses: [String]
+        // Answers to the same question kept for no scope or another kind of scope ("Work
+        // authorization" for a question about Canada): offered, never filled.
+        public let suggested: [SuggestedValue]
+        // The question's scope when every answer to it is for another scope of the same kind,
+        // so the list can say "No answer for Canada yet".
+        public let noAnswerFor: String?
 
-        public init(values: [SuggestedValue], guesses: [String] = []) {
+        public init(
+            values: [SuggestedValue], guesses: [String] = [], suggested: [SuggestedValue] = [],
+            noAnswerFor: String? = nil
+        ) {
             self.values = values
             self.guesses = guesses
+            self.suggested = suggested
+            self.noAnswerFor = noAnswerFor
         }
 
         public init(from decoder: any Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let container = try decoder.container(keyedBy: CustomFieldKeys.self)
             values = try container.decode([SuggestedValue].self, forKey: .values)
             guesses = try container.decodeIfPresent([String].self, forKey: .guesses) ?? []
+            suggested = try container.decodeIfPresent([SuggestedValue].self, forKey: .suggested) ?? []
+            noAnswerFor = try container.decodeIfPresent(String.self, forKey: .noAnswerFor)
+        }
+
+        // Most fields have neither, so the reply leaves them out.
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CustomFieldKeys.self)
+            try container.encode(values, forKey: .values)
+            try container.encode(guesses, forKey: .guesses)
+            if !suggested.isEmpty { try container.encode(suggested, forKey: .suggested) }
+            try container.encodeIfPresent(noAnswerFor, forKey: .noAnswerFor)
         }
     }
 
@@ -49,6 +71,20 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
     }
 }
 
+private enum CustomFieldKeys: String, CodingKey {
+    case values, guesses, suggested, noAnswerFor
+}
+
+private typealias Answered = (field: CustomSuggestionsResponse.Field, unanswered: String?)
+
+// What answering one question needs from the card and the events.
+private struct CustomContext {
+    let custom: [CustomField]
+    let recorded: ExtensionEvents
+    let state: AppState
+    let variant: String
+}
+
 extension MessageRouter {
     // Every list is empty before the card is linked or when it can't be read. The answer the
     // person last picked for the same question comes first. A field no rule matched gets the
@@ -58,36 +94,44 @@ extension MessageRouter {
               let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
             return CustomSuggestionsResponse(fields: request.fields.map { _ in .init(values: []) })
         }
-        let custom = card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) }
-        let variant = Intelligence.modelVariant
-        let recorded = events()
-        let picks = recorded.answerPicks
-        var unanswered: [String] = []
-        let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
-            let matched = CustomFieldMatcher.matches(for: field.text, in: custom)
-            let values = matched.map(\.value)
-            let sourced = { (values: [String]) in
-                Self.sourced(values, from: matched + custom, learned: recorded.answers)
-            }
-            // A pick only reorders what the question already matches, or stands in for a guess
-            // where nothing matched, so copying a question's words reaches no other answer.
-            if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks),
-               values.isEmpty || values.contains(picked) {
-                let ordered = [picked] + values.filter { $0 != picked }
-                return .init(values: sourced(Array(ordered.prefix(MessageLimits.customOptions))))
-            }
-            guard values.isEmpty, !CustomFieldMatcher.words(field.text).isEmpty else {
-                return .init(values: sourced(values))
-            }
-            guard let guess = state.guessedAnswer(for: field.text, in: custom, variant: variant) else {
-                let key = InsightKey.answer(field.text, variant: variant)
-                if state.insight(key) == nil { unanswered.append(field.text) }
-                return .init(values: [])
-            }
-            return .init(values: [], guesses: [guess.value])
+        let context = CustomContext(
+            custom: card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) },
+            recorded: events(), state: state, variant: Intelligence.modelVariant
+        )
+        let answered = request.fields.map { answer($0.text, context) }
+        if !context.custom.isEmpty { noteQuestions(answered.compactMap(\.unanswered), host: request.host) }
+        return CustomSuggestionsResponse(fields: answered.map(\.field))
+    }
+
+    // A pick only reorders what the question already matches, or stands in for a guess where
+    // nothing matched, so copying a question's words reaches no other answer, and an answer
+    // withheld for its scope stays withheld.
+    private func answer(_ text: String, _ context: CustomContext) -> Answered {
+        let scoped = CustomFieldMatcher.scopedMatches(for: text, in: context.custom)
+        let source = { (values: [String], fields: [CustomField]) in
+            Self.sourced(values, from: fields + context.custom, learned: context.recorded.answers)
         }
-        if !custom.isEmpty { noteQuestions(unanswered, host: request.host) }
-        return CustomSuggestionsResponse(fields: fields)
+        var fill = CustomFieldMatcher.offered(scoped.fill).map(\.value)
+        var suggest = CustomFieldMatcher.offered(scoped.suggest).map(\.value).filter { !fill.contains($0) }
+        if let picked = Self.pickedAnswer(for: text, in: context.custom, picks: context.recorded.answerPicks),
+           scoped.isEmpty || fill.contains(picked) || suggest.contains(picked) {
+            fill = Array(([picked] + fill.filter { $0 != picked }).prefix(MessageLimits.customOptions))
+            suggest.removeAll { $0 == picked }
+        }
+        let field = CustomSuggestionsResponse.Field(
+            values: source(fill, scoped.fill), suggested: source(suggest, scoped.suggest),
+            noAnswerFor: fill.isEmpty ? scoped.missing?.name : nil
+        )
+        guard fill.isEmpty, scoped.isEmpty, !CustomFieldMatcher.words(text).isEmpty else { return (field, nil) }
+        return guess(text, context)
+    }
+
+    private func guess(_ text: String, _ context: CustomContext) -> Answered {
+        if let guess = context.state.guessedAnswer(for: text, in: context.custom, variant: context.variant) {
+            return (.init(values: [], guesses: [guess.value]), nil)
+        }
+        let known = context.state.insight(InsightKey.answer(text, variant: context.variant)) != nil
+        return (.init(values: []), known ? nil : text)
     }
 
     // A value Prefill learned from a form and that still reads as learned says where from;

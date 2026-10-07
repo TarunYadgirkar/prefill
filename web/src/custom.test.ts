@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Choice, TextField } from "./dropdown";
 import {
   customChoices,
+  fillable,
   installCustom,
   isCustomCandidate,
   type CustomOptions,
@@ -131,5 +132,17 @@ describe("customChoices", () => {
       "Suggested",
     ]);
     expect(picked).toEqual(["Berkeley High", "EECS"]);
+  });
+
+  it("offers an answer for another scope without filling it, and says when there is none for this one", () => {
+    const choices = customChoices(
+      { values: [], suggested: [{ value: "Yes", why: "card", label: "Work authorization" }], noAnswerFor: "Canada" },
+      () => undefined,
+    );
+    expect(choices.map(({ value, detail, tone }) => [value, detail, tone])).toEqual([
+      ["Yes", "Work authorization", "guess"],
+      ["No answer for Canada yet", "", "note"],
+    ]);
+    expect(fillable(choices)).toEqual([]);
   });
 });

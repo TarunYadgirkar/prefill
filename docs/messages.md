@@ -31,8 +31,8 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `linkSuggestionsResult` links | 10, at most 3 of a type |
 | `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
 | `customSuggestions` fields | 40, each `text` 200 characters |
-| `customSuggestionsResult` | one entry per field asked about, each with at most 3 values of 200 characters |
-| `answers` | 8 answers, each `value` 200 characters |
+| `customSuggestionsResult` | one entry per field asked about, each with at most 3 values, 3 guesses and 3 suggested values of 200 characters, and a `noAnswerFor` of 100 |
+| `answers` | 8 answers, each `value` 200 characters, `text` 200 characters, at most 10 `options` of 100 characters |
 | `picked` | `value` 256 characters, `question` 200 characters |
 
 ## Shared values
@@ -152,6 +152,19 @@ The content script sends `customSuggestions` once the page has loaded, and again
 
 The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Each value carries the custom field's `label` and `why`: `learned` with the `site` it was saved from when Prefill learned it from a form and it still reads as learned, else `card`. Before the card is linked, or when it can't be read, every list is empty.
 
+Some answers depend on where or when they apply: "Are you legally authorized to work in the United States?" and "Are you legally able to work in Canada?" want different answers from the same person. Prefill keeps that scope in the custom field's label, so it syncs through Contacts with the label: "Work authorization (US)", "Work authorization (Canada)", "Sponsorship (Summer 2026)". A label whose last words are a country or term in brackets is scoped, whoever wrote it; any other label ("Phone (work)", "School") isn't. The app reads a question's scope from its words, by rules, only for questions whose answer can depend on one: a country for work authorization and sponsorship, else a term ("Summer 2026", "Fall 2025") for those and for GPA. Countries are named or coded as forms write them (`US`, `U.S.`, `USA`, "United States", H-1B and green card for the US; Canada; `UK`, "United Kingdom"; and a dozen more); the short codes count only in capitals, so "tell us" isn't the US, and a question naming two countries has no country scope. Employers and schools aren't scopes: in real forms they appear as "work for Braeburn", where the answer doesn't depend on the employer. The words in a label's brackets don't have to appear in the question; the scope rules decide what they mean:
+
+| Saved answer | Question | What happens |
+| --- | --- | --- |
+| no scope | no scope | Filled, as before. |
+| US | US | Filled. |
+| US | Canada | Never offered. The entry carries `noAnswerFor: "Canada"` and the list says "No answer for Canada yet". |
+| no scope | US | Offered in `suggested`, under its label, never filled. |
+| US | no scope | Offered in `suggested`, never filled. |
+| US | Summer 2026 | Offered in `suggested`, never filled. |
+
+A pick from the list (see `picked`) of a suggested answer makes it the field's value for questions with the same words from then on, as a pick of a guess does; a pick never brings back an answer withheld for its scope. Questions that matched an answer for another scope get no guess.
+
 A field no rule matched may carry a `guesses` entry: the saved answer Apple's on-device model picked for that question, shown in the field's list with a "Suggested" caption and never filled in by one-tap fill. The handler never runs the model itself. It records the question's words (never what the person typed) in the events as a `FormQuestion`, the app asks the model about each one the next time it opens, and caches the answer by label in `AppState.insights` (or "none"), which the handler then serves. On the Mac, the app's own panel asks the model live.
 
 ```json
@@ -168,21 +181,27 @@ A field no rule matched may carry a `guesses` entry: the saved answer Apple's on
   "fields": [
     { "values": [{ "value": "UC Berkeley", "why": "card", "label": "School" }], "guesses": [] },
     { "values": [{ "value": "Yes", "why": "learned", "label": "Work authorization", "site": "example.io" }], "guesses": [] },
-    { "values": [], "guesses": ["EECS"] }
+    { "values": [], "guesses": ["EECS"] },
+    {
+      "values": [],
+      "guesses": [],
+      "suggested": [{ "value": "Yes", "why": "card", "label": "Work authorization" }],
+      "noAnswerFor": "Canada"
+    }
   ]
 }
 ```
 
-The focused field gets Prefill's list of its values, in Safari as in Chrome and Arc.
+The focused field gets Prefill's list of its values, in Safari as in Chrome and Arc: its `values`, then its `suggested` values and guesses in the muted style (a suggested value captioned with its label, such as "Work authorization (US)"), then the "No answer for Canada yet" line, which can't be picked. One-tap fill uses only `values`. The Mac panel shows the same rows without that line.
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 
 
 ## answers
 
-Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
+Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us), one per question as the page words it. Each answer also carries `text`, the question in the page's words as `customSuggestions` sends it, and for a select or radio group `options`, the texts of its choices (not the placeholder), cut to 100 characters each, at most 10. The app reads the answer's scope from `text` (see `customSuggestions`) and saves it under a scoped label, "Work authorization (Canada)", or under the question's own label when the question names no scope; `options` aren't stored yet. An answer without `text` has no scope. Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
 
-With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced, and each learned answer is replaced at most once a day, whatever site asks. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces may also change the value of exactly those learned fields, keeping every contact value and every custom field's label, words and place (`replaceAnswers`), and like any save but the person's own edits it puts back anything a write in between lost. It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved, and `updated` lists the labels of the learned answers it replaced, so the page's pill can name the question: "Saved 2 answers", "Updated your answer to School", "Updated 2 answers" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
+With `action: "learn"` the app saves each answer whose question (with its scope) has no custom field yet, with that label and the question's match words, up to the 20-field limit. A scope is part of the label, so everything below about replacing an answer holds within one scope: a Canada answer never replaces the US one. A page words its own questions, so a question keeps learned answers for at most 3 scopes, and all questions together for at most 6, so a fourth country isn't saved. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced, and each learned answer is replaced at most once a day, whatever site asks. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces may also change the value of exactly those learned fields, keeping every contact value and every custom field's label, words and place (`replaceAnswers`), and like any save but the person's own edits it puts back anything a write in between lost. It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved, and `updated` lists the labels of the learned answers it replaced, so the page's pill can name the question: "Saved 2 answers", "Updated your answer to School", "Updated 2 answers" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
 
 Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved: a new one comes off and a replaced one goes back to the answer it replaced. It replies with how many changed back in `saved`.
 
@@ -191,7 +210,15 @@ Undo sends `action: "undo"` with no answers. The app takes back the answers save
   "type": "answers",
   "host": "boards.example.io",
   "action": "learn",
-  "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
+  "answers": [
+    { "question": "school", "value": "UC Berkeley" },
+    {
+      "question": "sponsorship",
+      "value": "No",
+      "text": "Do you or will you require sponsorship in the future to work in the U.S.?",
+      "options": ["Yes", "No"]
+    }
+  ]
 }
 ```
 

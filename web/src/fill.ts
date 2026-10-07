@@ -2,7 +2,7 @@ import { parseAutocomplete } from "./autocomplete";
 import { chooseOption, isPlaceholder, type Option, type OptionMatch } from "./choices";
 import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
-import { customChoices, fieldText, joinFieldText } from "./custom";
+import { customChoices, fieldText, fillable, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
@@ -308,9 +308,9 @@ function choicesOf(want: Want, answers: Answers, report: Report = NO_REPORT): Ch
     case "link":
       return linkChoices(want.types, answers.links, want.fullUrl, (value) => { report({ kind: "link", value }); });
     case "custom":
-      return customChoices(answers.custom.get(want.text), (value) => {
+      return fillable(customChoices(answers.custom.get(want.text), (value) => {
         report({ kind: "custom", value, question: want.text });
-      }).filter((choice) => choice.tone !== "guess");
+      }));
     case "decline":
       return [];
   }

@@ -65,6 +65,8 @@ export const LIMITS = {
   customValue: 200,
   customOptions: 3,
   answers: 8,
+  // The options an answered select or radio group offered, each cut to `text`.
+  answerOptions: 10,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -259,7 +261,13 @@ const pageRequests = {
     host: hostName,
     action: oneOf(ANSWER_ACTIONS),
     answers: arrayOf(
-      object({ question: oneOf(JOB_QUESTIONS), value: text(LIMITS.customValue) }),
+      object({
+        question: oneOf(JOB_QUESTIONS),
+        value: text(LIMITS.customValue),
+        // The question as the page words it, which can say what the answer applies to.
+        text: optional(text(LIMITS.fieldText)),
+        options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+      }),
       LIMITS.answers,
     ),
   }),
@@ -346,6 +354,10 @@ const pageResponses = {
         // What the app's on-device model thinks answers the field: offered as a marked option.
         // Their `why` is always "guess".
         guesses: optional(arrayOf(text(LIMITS.customValue), LIMITS.customOptions)),
+        // Answers kept for no scope or another kind of scope: offered, never filled.
+        suggested: optional(arrayOf(suggestedValue(LIMITS.customValue), LIMITS.customOptions)),
+        // The question's scope when every answer to it is for another one: "Canada".
+        noAnswerFor: optional(text(LIMITS.text)),
       }),
       LIMITS.pageFields,
     ),

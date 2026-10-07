@@ -172,7 +172,22 @@ async function checkTwoOptionsFit(context: BrowserContext): Promise<void> {
     .catch(() => false);
   check(moved, "need you moves to the list two options fit");
   await page.screenshot({ path: join(shots, "fill-chrome-two-options-note.png") });
+  await checkOtherScope(page);
   await page.close();
+}
+
+// A US answer never fills a question about Canada; that field's list says so instead.
+async function checkOtherScope(page: Page): Promise<void> {
+  check((await page.inputValue("#canada")) === "", "a question about Canada gets no US answer");
+  await page.click("#canada");
+  const listed = await page
+    .locator("prefill-suggestions")
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .then(() => true)
+    .catch(() => false);
+  await page.screenshot({ path: join(shots, "fill-chrome-no-answer-for-scope.png") });
+  check(listed, "its list says there's no answer for Canada yet");
+  check((await page.inputValue("#canada")) === "", "the note never reaches the field");
 }
 
 async function main(): Promise<void> {
