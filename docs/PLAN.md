@@ -112,6 +112,21 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 11.1 Spike: insert a value from the long-press menu (AutoFill › Prefill). Free team refused: the ASCredentialProvider entitlement needs a paid membership.
   - [x] 11.2 Spike: a Prefill keyboard that reads the person's values. The keyboard reads a shared keychain item with Full Access on, and works on the device.
   - [x] 11.3 Decide with Tarun, then build the one that works: the Prefill keyboard (`feat/keyboard`), built; the device check is the lead's.
+- **Phase 12: Keyboard v2** (from Tarun's use on Oct 7)
+  - [ ] 12.1 Compact row layout, like the QuickType bar
+  - [ ] 12.2 Put the likely value first without field labels
+  - [ ] 12.3 Device check and merge
+- **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
+  - [ ] 13.1 Abstain when more than one option fits
+  - [ ] 13.2 Scoped learning: keep the question and what it applies to
+  - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
+  - [ ] 13.4 The model sees the question, the options and the candidate answers
+  - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
+  - [ ] 13.6 Held-out real forms and an accuracy score
+  - [ ] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
+- **Phase 14: Storage off Contacts** (Gate: the paid Apple Developer account; Tarun is getting it)
+  - [ ] 14.1 CloudKit for answers, picks, usage and the inbox; Contacts stays as optional import/export
+  - [ ] 14.2 Normal signing and distribution (no weekly reinstall), and retry the long-press AutoFill route
 
 ---
 
@@ -573,6 +588,62 @@ As built (`MacApp/Views/SetupChecklist.swift`): Contacts is the authorization st
   - UI: `KeyboardUI/` is shared by the keyboard and the app (its debug preview, `App/Preview/KeyboardPreview.swift`, launched with `-keyboardPreview`). A 290 pt panel: ABC (next keyboard) on the leading edge, return (labeled from `returnKeyType`) and delete (repeats on hold) on the trailing edge, then key-shaped rows grouped "For this field" (from `textContentType`/`keyboardType`), Contact, Links, Answers. A tap types the value and switches back to the person's keyboard. Password, one-time-code and card fields get a line saying Prefill doesn't type there. Colors come from `KeyboardPalette`, which the app's `Palette` also reads.
   - App: Settings › "Use Prefill in other apps" explains the three steps and shows "On" once the keyboard has been shown.
   - Checked in the simulator: screenshots `assets/generated/keyboard-*.png` (light, dark, a 375 pt phone, the largest text size before the accessibility sizes, empty state), and the real keyboard enabled in a simulator (`keyboard-sim-installed.png`, before Full Access). Not yet checked on the iPhone.
+
+## Phase 12: Keyboard v2
+
+**Why:** Tarun likes the keyboard but finds the full-width list too big and prefers the spike's row of chips, and in real apps (Partiful) "For this field" never appears, because most apps set no `textContentType` and iOS never gives a keyboard the field's label.
+
+### 12.1 Compact row
+
+- Height close to the system keyboard's suggestion area plus one key row (about 110 to 130 pt), not 290.
+- Row 1: a horizontally scrolling row of chips, caption over value like the QuickType bar, each chip sized to its content up to a maximum width with middle truncation. Chips never clip at the edges: the row has leading and trailing insets, and the next chip peeks to show the row scrolls.
+- Row 2: ABC on the leading side; a small kind filter in the middle (All, Contact, Links, Answers) only if it fits without crowding; return then delete on the trailing side, delete rightmost.
+- Tapping a chip types it and returns to the person's keyboard, as now.
+
+### 12.2 The likely value first
+
+Signals, strongest first:
+1. What's already in the field (`documentContextBeforeInput`): "git" or "github.com/" narrows to GitHub, "@" to emails, digits to phones; matching is on the value and its caption.
+2. The field's content type and keyboard type, as now.
+3. What the person picked in this keyboard most recently (kept by the keyboard in its own defaults, most recent first, per kind), then what was used most recently anywhere (`lastUsed` in the snapshot).
+4. A fixed fallback order: name, primary email, phone, LinkedIn, GitHub, website, then answers.
+The row re-sorts as the person types (`textDidChange`). No field label exists to use, so nothing claims "for this field" without a signal.
+
+### 12.3 Device check
+
+Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and dark.
+
+## Phase 13: Answers that are right, not just remembered
+
+**Why:** the Oct 7 review (`outputs/prefill-product-review.md` in Tarun's notes) found Prefill remembers strings better than it knows when they apply. Decisions: demographic questions keep today's rule (decline when offered, otherwise "No"); storage stays on Contacts until Phase 14.
+
+### 13.1 Abstain on ambiguity
+- `web/src/choices.ts`: when more than one option matches the answer with similar strength (two "Yes…" options that mean different things), Fill form leaves the field and marks it "2 options fit, pick one"; it counts toward "need you". Real markup fixtures for the case.
+
+### 13.2 Scoped learning
+- `learn.ts` sends the question as asked (and a select's or radio group's options), not only a `JobQuestion` category.
+- The router keeps scope in the stored label so it still syncs through Contacts: "Work authorization (US)", "Work authorization (Canada)", "Graduation date". Scope words (country, school, employer, term) come from the question text by rules first.
+- A question whose scope differs from a stored answer's gets no fill, and the list says "No answer for Canada yet"; what the person types becomes a separate answer.
+- History and last-confirmed dates live in per-device events until Phase 14.
+
+### 13.3 Memory kinds
+- `Answer` gains `kind`: fact, contextual fact, preference, draft. Drafts allow line breaks and long text (lift the 200-character cap for drafts only, stored on the Prefill contact as before), are only ever suggested, never filled.
+- The You tab shows the kind, scope, source and history on an answer's page. The inbox shows only exceptions: changed answers, guesses, answers to confirm before reuse.
+
+### 13.4 A model that sees the question
+- The Mac panel and the iPhone app's background pass give the on-device model the question, nearby headings, a select's options, and the candidate answers with their scopes; it returns use-this / needs-a-new-answer / unsure. Only use-this shows as "Suggested", never filled.
+- Cached guesses carry a revision of the answer store and are dropped when answers change.
+
+### 13.5 Fill, verify, ask
+- After filling, read each field back and count only values that took; the pill reports the rest as "need you".
+- When the person changes a filled answer and submits, the pill asks "Update everywhere" or "Just here" instead of replacing silently.
+
+### 13.6 Accuracy you can measure
+- `web/src/fixtures/heldout/`: real forms never used to tune rules, each with the expected answer per field. A script scores right / wrong / missing separately and the number goes in AGENTS.md. Add forms Tarun meets (Meta, Partiful's web form, Google booking forms, Dorm Room Fund).
+- A short guide in `docs/` for watching 5 to 10 people apply with Prefill: time including review and correction, wrong vs missing answers, second-application reuse, setup without help.
+
+### 13.7 Docs
+- README and PRODUCT.md lead with the browser extensions; the app manages and reviews; the Mac panel and the keyboard are manual fallbacks; no "every app" promise.
 
 ## Risks and what to do about them
 
