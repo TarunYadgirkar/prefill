@@ -17,6 +17,8 @@ final class MacModel {
 
     static let shared = MacModel()
     private static let loginItemKey = "registeredLoginItem"
+    private static let heardFromExtensionKey = "heardFromExtension"
+    private static let skippedExtensionKey = "skippedExtension"
 
     private(set) var access = Access.notDetermined
     private(set) var card: CardRecord?
@@ -28,6 +30,10 @@ final class MacModel {
     private(set) var browsers: [BrowserHost] = []
     private(set) var isRelayRunning = false
     private(set) var opensAtLogin = false
+    private(set) var isAccessibilityTrusted = AccessibilityTrust.isTrusted
+    // Set once Prefill's host has relayed a request, which only the browser extension starts.
+    private(set) var hasHeardFromExtension = UserDefaults.standard.bool(forKey: heardFromExtensionKey)
+    private(set) var skippedExtension = UserDefaults.standard.bool(forKey: skippedExtensionKey)
     var problem: String?
 
     let store: any SharedStore
@@ -70,7 +76,7 @@ final class MacModel {
         guard server == nil else { return }
         let router = MessageRouter(store: store, gateway: gateway)
         server = RelayServer(router: router) {
-            Task { @MainActor in MacModel.shared.readStore() }
+            Task { @MainActor in MacModel.shared.relayAnswered() }
         }
         isRelayRunning = server != nil
         cardObserver = NotificationCenter.default.addObserver(
@@ -87,12 +93,33 @@ final class MacModel {
         access = fixedLink == nil ? Self.currentAccess : .granted
         browsers = fixedLink == nil ? HostInstaller.installAll() : []
         opensAtLogin = SMAppService.mainApp.status == .enabled
+        isAccessibilityTrusted = AccessibilityTrust.isTrusted
         guard access == .granted else {
             card = nil
             return
         }
         await linkMeCard()
         await refreshCard()
+    }
+
+    // Contacts and Accessibility are granted in System Settings, which tells Prefill nothing,
+    // so the setup list asks again while it's on screen.
+    func recheckSetup() async {
+        isAccessibilityTrusted = AccessibilityTrust.isTrusted
+        guard fixedLink == nil, Self.currentAccess != access else { return }
+        await refresh()
+    }
+
+    func skipExtension() {
+        skippedExtension = true
+        UserDefaults.standard.set(true, forKey: Self.skippedExtensionKey)
+    }
+
+    private func relayAnswered() {
+        readStore()
+        guard !hasHeardFromExtension else { return }
+        hasHeardFromExtension = true
+        UserDefaults.standard.set(true, forKey: Self.heardFromExtensionKey)
     }
 
     func requestAccess() async {
