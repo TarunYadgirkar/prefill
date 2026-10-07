@@ -58,7 +58,7 @@ targets:
   Prefill:
     type: application
     platform: iOS
-    sources: [App]
+    sources: [App, KeyboardUI]
     settings:
       groups: [sharedContainer]
       base:
@@ -74,6 +74,8 @@ targets:
     dependencies:
       - package: PrefillKit
       - target: PrefillSafari
+        embed: true
+      - target: PrefillKeyboard
         embed: true
   PrefillSafari:
     type: app-extension
@@ -110,6 +112,21 @@ targets:
         INFOPLIST_FILE: Extension/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Prefill
         INFOPLIST_KEY_NSContactsUsageDescription: $(NS_CONTACTS_USAGE)
+    dependencies:
+      - package: PrefillKit
+  # The Prefill keyboard, for apps other than Safari. It joins the same keychain group (and
+  # App Group in the App Store build) to read the values the app shares.
+  PrefillKeyboard:
+    type: app-extension
+    platform: iOS
+    sources: [Keyboard, KeyboardUI]
+    settings:
+      groups: [sharedContainer]
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(PREFILL_BUNDLE_ID).keyboard
+        INFOPLIST_FILE: Keyboard/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     dependencies:
       - package: PrefillKit
   PrefillMac:
