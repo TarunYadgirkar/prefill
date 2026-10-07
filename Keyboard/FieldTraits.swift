@@ -10,7 +10,9 @@ enum FieldTraits {
         .fullStreetAddress: .address, .streetAddressLine1: .address
     ]
     private static let sensitive: Set<UITextContentType> = [
-        .password, .newPassword, .oneTimeCode, .creditCardNumber, .creditCardSecurityCode
+        .password, .newPassword, .oneTimeCode, .creditCardNumber, .creditCardSecurityCode,
+        .creditCardExpiration, .creditCardExpirationMonth, .creditCardExpirationYear,
+        .creditCardName, .creditCardGivenName, .creditCardFamilyName, .creditCardMiddleName, .creditCardType
     ]
 
     static func hint(_ proxy: any UITextDocumentProxy) -> KeyboardFieldHint? {
@@ -25,6 +27,8 @@ enum FieldTraits {
 
     static func isSensitive(_ proxy: any UITextDocumentProxy) -> Bool {
         if proxy.isSecureTextEntry ?? false { return true }
+        // A bare number pad is how most code fields come, and nothing Prefill keeps is all digits.
+        if [.numberPad, .asciiCapableNumberPad].contains(proxy.keyboardType ?? .default) { return true }
         return (proxy.textContentType ?? nil).map(sensitive.contains) ?? false
     }
 

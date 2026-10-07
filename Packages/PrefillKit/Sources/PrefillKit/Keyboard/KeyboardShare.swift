@@ -2,7 +2,9 @@ import Foundation
 
 // What the app and the Prefill keyboard pass each other through the store both reach (the
 // shared keychain group, or the App Group for the App Store build): the app writes the
-// values, the keyboard writes when it was last shown. One writer each.
+// values, the keyboard writes when it was last shown. One writer each. The keyboard shares
+// the whole group, so with Full Access it could read app-state and ext-events too; it only
+// ever reads keyboard-values, and the free team has no way to give it a group of its own.
 public struct KeyboardShare: Sendable {
     private let store: any DocumentStore
 
@@ -18,7 +20,12 @@ public struct KeyboardShare: Sendable {
     }
 
     public func readSnapshot() throws -> KeyboardSnapshot? {
-        try store.readDocument(.keyboardValues).map { try DocumentCoder.decode(KeyboardSnapshot.self, from: $0) }
+        guard let data = try store.readDocument(.keyboardValues), data.count <= KeyboardSnapshot.maxBytes else {
+            return nil
+        }
+        let snapshot = try DocumentCoder.decode(KeyboardSnapshot.self, from: data)
+        let values = Array(snapshot.values.prefix(KeyboardSnapshot.maxValues))
+        return KeyboardSnapshot(values: values, writtenAt: snapshot.writtenAt)
     }
 
     public func writeSnapshot(_ snapshot: KeyboardSnapshot) throws {

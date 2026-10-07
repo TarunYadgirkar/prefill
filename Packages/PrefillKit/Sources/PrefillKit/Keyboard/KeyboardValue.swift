@@ -19,10 +19,14 @@ public struct KeyboardValue: Codable, Hashable, Sendable, Identifiable {
 
     public var id: String { "\(kind.rawValue):\(label):\(text)" }
 
+    // Kept short so the keyboard, which runs under a tight memory limit, decodes little.
+    public static let maxLabel = 100
+    public static let maxText = 2_000
+
     public init(kind: Kind, label: String, text: String, lastUsed: Date? = nil) {
         self.kind = kind
-        self.label = label
-        self.text = text
+        self.label = String(label.prefix(Self.maxLabel))
+        self.text = String(text.prefix(Self.maxText))
         self.lastUsed = lastUsed
     }
 
@@ -36,6 +40,8 @@ public struct KeyboardValue: Codable, Hashable, Sendable, Identifiable {
 // The values the app shares with the keyboard, newest use first within each kind.
 public struct KeyboardSnapshot: Codable, Hashable, Sendable {
     public static let maxValues = 80
+    // Far above 80 capped values; anything bigger didn't come from the app.
+    public static let maxBytes = 256 * 1024
 
     public let values: [KeyboardValue]
     public let writtenAt: Date

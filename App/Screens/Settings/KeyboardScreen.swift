@@ -47,7 +47,7 @@ struct KeyboardScreen: View {
     private var statusSection: some View {
         Section {
             LabeledContent {
-                Text(model.keyboardSeen == nil ? "Not yet" : "On")
+                Text(model.keyboardSeen == nil ? "Not yet" : "Set up")
             } label: {
                 Label {
                     Text("Prefill keyboard")
@@ -62,8 +62,9 @@ struct KeyboardScreen: View {
                     Text("Last opened \(seen, format: .relative(presentation: .named)).")
                 }
                 Text("""
-                    Full Access lets the keyboard read the info Prefill shares with it. \
-                    The keyboard sends nothing anywhere.
+                    Full Access lets the keyboard read what Prefill shares with it. iOS asks for it \
+                    because it would also let a keyboard use the network; Prefill's keyboard has no \
+                    network code and sends nothing.
                     """)
             }
             .textRole(.footnote)

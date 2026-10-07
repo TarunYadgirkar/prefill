@@ -183,7 +183,10 @@ final class AppModel {
         hasDeclinedShortCard = false
         state = AppState()
         events = ExtensionEvents()
+        keyboardValues = []
+        keyboardSeen = nil
         await reload()
+        shareWithKeyboard()
     }
 
     func requestAccess() async {
