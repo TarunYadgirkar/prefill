@@ -3,7 +3,7 @@ import Foundation
 // Files are readable only once the device has been unlocked after a restart (the extension
 // may run while the phone is locked later) and stay out of backups, like the Keychain items
 // of the other backend.
-public struct AppGroupStore: SharedStore {
+public struct AppGroupStore: SharedStore, DocumentStore {
     private static let writing: Data.WritingOptions = [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
 
     private let directory: URL
@@ -48,14 +48,28 @@ public struct AppGroupStore: SharedStore {
         }
     }
 
+    func readDocument(_ document: StoreDocument) throws -> Data? {
+        try data(of: document)
+    }
+
+    func writeDocument(_ document: StoreDocument, data: Data) throws {
+        try coordinate(document, options: .forReplacing) { url in
+            try data.write(to: url, options: Self.writing)
+        }
+    }
+
     private func read<T: Decodable>(_ document: StoreDocument) throws -> T? {
+        try data(of: document).map { try DocumentCoder.decode(T.self, from: $0) }
+    }
+
+    private func data(of document: StoreDocument) throws -> Data? {
         var result: Result<Data?, any Error> = .success(nil)
         var coordinationError: NSError?
         NSFileCoordinator().coordinate(readingItemAt: url(document), options: [], error: &coordinationError) { url in
             result = Result { try Self.contents(of: url) }
         }
         if coordinationError != nil { throw StoreError.coordination }
-        return try result.get().map { try DocumentCoder.decode(T.self, from: $0) }
+        return try result.get()
     }
 
     private func coordinate(

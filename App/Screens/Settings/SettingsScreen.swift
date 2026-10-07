@@ -47,6 +47,14 @@ struct SettingsScreen: View {
                     }
                 }
                 SafariSection()
+                Section {
+                    NavigationLink {
+                        KeyboardScreen()
+                    } label: {
+                        LabeledContent("Use Prefill in other apps", value: model.keyboardSeen == nil ? "" : "On")
+                    }
+                    .accessibilityIdentifier("use-in-other-apps")
+                }
                 AdvancedSection()
             }
             .navigationTitle("Settings")

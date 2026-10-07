@@ -34,24 +34,29 @@ final class AppModel {
     private(set) var hasDeclinedShortCard: Bool
     private(set) var isLoaded = false
     private(set) var intelligenceState = IntelligenceState.unsupported
+    // When the Prefill keyboard was last shown, which says it's turned on.
+    var keyboardSeen: Date?
     var problem: Problem?
 
     let store: any SharedStore
     let gateway: any ContactsGateway
     let contacts: any ContactsSource
+    let keyboard: KeyboardShare?
     private let defaults: UserDefaults
     @ObservationIgnored let intelligence = Intelligence()
     @ObservationIgnored var isAskingModel = false
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
+    @ObservationIgnored var keyboardValues: [KeyboardValue]?
 
     init(
         store: any SharedStore, gateway: any ContactsGateway, contacts: any ContactsSource,
-        defaults: UserDefaults = .standard
+        keyboard: KeyboardShare? = nil, defaults: UserDefaults = .standard
     ) {
         self.store = store
         self.gateway = gateway
         self.contacts = contacts
+        self.keyboard = keyboard
         self.defaults = defaults
         self.access = contacts.access
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
@@ -65,7 +70,9 @@ final class AppModel {
         let gateway = CNContactStoreGateway()
         let store = StoreFactory.make()
         ReinstallCleanup.run(store: store, defaults: .standard)
-        return AppModel(store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway))
+        return AppModel(
+            store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway), keyboard: .make()
+        )
     }
 
     var phase: Phase {
@@ -117,6 +124,7 @@ final class AppModel {
         access = contacts.access
         await refreshCard()
         await refreshExtension()
+        readKeyboardSeen()
         isLoaded = true
         intelligenceState = Intelligence.state
         await refreshInsights()
@@ -136,6 +144,7 @@ final class AppModel {
             if let fresh = await CardWork.placement(gateway, identifier: link.contactIdentifier) {
                 placement = fresh
             }
+            shareWithKeyboard()
         case .failure(let failure):
             cardFailure = failure
         }
@@ -174,7 +183,10 @@ final class AppModel {
         hasDeclinedShortCard = false
         state = AppState()
         events = ExtensionEvents()
+        keyboardValues = []
+        keyboardSeen = nil
         await reload()
+        shareWithKeyboard()
     }
 
     func requestAccess() async {
@@ -184,6 +196,7 @@ final class AppModel {
     // Writes AppState, the one document the app owns.
     func commit(_ next: AppState) {
         state = next
+        shareWithKeyboard()
         do {
             try store.writeAppState(next)
         } catch {

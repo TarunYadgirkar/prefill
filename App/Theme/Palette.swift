@@ -1,9 +1,8 @@
 import SwiftUI
 import UIKit
 
-// Semantic colors, the only colors views use. The keyboard values were sampled from
-// iOS 27 screenshots of the QuickType bar: Safari's in light (assets/generated/ios27-*.png)
-// and the keyboard over Prefill's own form in dark.
+// Semantic colors, the only colors views use. The keyboard colors live in KeyboardPalette,
+// which the Prefill keyboard shares.
 enum Palette {
     static let canvas = Color(uiColor: .systemGroupedBackground)
     static let surface = Color(uiColor: .secondarySystemGroupedBackground)
@@ -32,18 +31,12 @@ enum Palette {
         $0.userInterfaceStyle == .dark ? .systemOrange : UIColor(hex: 0xC86400)
     })
 
-    static let keyboardSurface = dynamic(light: 0xE2E3E9, dark: 0x222223)
-    static let keyboardKey = dynamic(light: 0xFFFFFF, dark: 0x464646)
-    static let keyboardSeparator = dynamic(light: 0xCDCED4, dark: 0x323235)
-    static let keyboardCaption = dynamic(light: 0x3C3C3E, dark: 0xB2B2B2)
-    static let keyboardValue = dynamic(light: 0x343434, dark: 0xB2B2B2)
-    static let keyboardGlyph = dynamic(light: 0x000000, dark: 0xFFFFFF)
-
-    private static func dynamic(light: UInt32, dark: UInt32) -> Color {
-        Color(uiColor: UIColor { traits in
-            UIColor(hex: traits.userInterfaceStyle == .dark ? dark : light)
-        })
-    }
+    static let keyboardSurface = KeyboardPalette.surface
+    static let keyboardKey = KeyboardPalette.key
+    static let keyboardSeparator = KeyboardPalette.separator
+    static let keyboardCaption = KeyboardPalette.caption
+    static let keyboardValue = KeyboardPalette.value
+    static let keyboardGlyph = KeyboardPalette.glyph
 }
 
 private extension UIColor {

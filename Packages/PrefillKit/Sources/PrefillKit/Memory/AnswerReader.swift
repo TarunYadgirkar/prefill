@@ -21,9 +21,10 @@ struct AnswerReader {
     func answer(for entry: CardEntry) -> Answer {
         let id = ValueID.make(kind: entry.payload.kind, key: entry.key)
         let (origin, createdAt) = origin(ofValue: id)
+        let address: PostalAddress? = if case .address(let parts) = entry.payload { parts } else { nil }
         return Answer(
             id: id, question: .kind(entry.payload.kind), text: entry.payload.display, label: entry.label,
-            origin: origin, place: place(of: .entry(entry)), createdAt: createdAt
+            origin: origin, place: place(of: .entry(entry)), createdAt: createdAt, address: address
         )
     }
 

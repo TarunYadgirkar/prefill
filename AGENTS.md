@@ -47,9 +47,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | Path | What |
 |---|---|
 | `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `links.ts`/`custom.ts`/`suggestions.ts` give values, `why.ts` words the line under each, `picks.ts` reports picks. `dropdown.ts` is Prefill's own list, in Safari and Chromium. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
-| `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
+| `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Keyboard/` (the values shared with the keyboard), `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: sites Prefill doesn't save on, Restore, Delete). |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
+| `Keyboard/`, `KeyboardUI/` | The Prefill keyboard for other apps (`PrefillKeyboard` target): a value picker that reads the snapshot the app shares through the store (`PrefillKit/Keyboard/`), types a value and switches back. `KeyboardUI/` is shared with the app for its debug preview and colors. |
 | `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu (with the first-run checklist, `SetupChecklist.swift`) and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
 | `MacShared/` | Code identity checks and the socket used by both sides. |
@@ -123,6 +124,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
   - A later answer replaces a learned one that still reads as learned, with Undo; an answer the person wrote or edited in the app is never replaced.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
+- **Prefill keyboard:** built in `feat/keyboard`, checked only in the simulator. Needs Full Access to read the keychain item; not yet run on the iPhone.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
 
 ## Ongoing

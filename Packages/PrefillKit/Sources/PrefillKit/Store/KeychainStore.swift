@@ -4,7 +4,7 @@ import Synchronization
 
 // Each document is one generic-password item in the shared access group. The free
 // personal team can't use App Groups but does get keychain-access-groups.
-public struct KeychainStore: SharedStore {
+public struct KeychainStore: SharedStore, DocumentStore {
     public static let defaultService = "com.tarunyadgirkar.prefill.store"
     private static let appendLock = Mutex(())
 
@@ -52,6 +52,14 @@ public struct KeychainStore: SharedStore {
             let status = SecItemDelete(query(document) as CFDictionary)
             guard status == errSecSuccess || status == errSecItemNotFound else { throw StoreError.keychain(status) }
         }
+    }
+
+    func readDocument(_ document: StoreDocument) throws -> Data? {
+        try read(document)
+    }
+
+    func writeDocument(_ document: StoreDocument, data: Data) throws {
+        try write(document, data: data)
     }
 
     private func read(_ document: StoreDocument) throws -> Data? {
