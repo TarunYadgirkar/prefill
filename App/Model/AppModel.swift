@@ -54,7 +54,7 @@ final class AppModel {
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
     }
 
-    // The one model of the running app, shared by its screens and its intents.
+    // The one model of the running app, shared by its screens.
     static let shared = live()
 
     static func live() -> AppModel {
@@ -125,14 +125,6 @@ final class AppModel {
         isLoaded = true
         intelligenceState = Intelligence.state
         await refreshInsights()
-    }
-
-    // Siri, Shortcuts and Focus can run an intent before the app has drawn anything, and
-    // the extension may have written since, so each intent reads the store and card first.
-    func refreshForIntent() async {
-        readStore()
-        access = contacts.access
-        await refreshCard()
     }
 
     func refreshCard() async {

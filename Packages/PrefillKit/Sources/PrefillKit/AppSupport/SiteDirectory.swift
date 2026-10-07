@@ -38,7 +38,7 @@ public enum SiteDirectory {
     ) -> [ContactKind: [ContactValue]] {
         let context = RankingContext(
             host: host, hint: nil, now: now, matchEachSite: state.settings.matchEachSite,
-            siteKind: state.siteKind(host), focusLabel: state.settings.focusLabel
+            siteKind: state.siteKind(host)
         )
         return orders.mapValues { Ranker.rank($0, usage: usage, pins: state.pins, context: context) }
     }

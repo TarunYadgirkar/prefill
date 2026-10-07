@@ -12,12 +12,10 @@ struct RankerTests {
         host: String? = "shop.example.net",
         hint: SectionHint? = nil,
         matchEachSite: Bool = true,
-        siteKind: SiteKind = .unknown,
-        focusLabel: String? = nil
+        siteKind: SiteKind = .unknown
     ) -> [ContactValue] {
         let context = RankingContext(
-            host: host, hint: hint, now: .testNow, matchEachSite: matchEachSite,
-            siteKind: siteKind, focusLabel: focusLabel
+            host: host, hint: hint, now: .testNow, matchEachSite: matchEachSite, siteKind: siteKind
         )
         return Ranker.rank(values, usage: usage, pins: pins, context: context)
     }
@@ -147,20 +145,6 @@ struct RankerTests {
     @Test func useOnThisSiteBeatsTheSiteKind() {
         let ranked = rank(usage: [use(Alex.homeEmail, on: site, daysAgo: 60)], siteKind: .school)
         #expect(ranked.prefix(2) == [Alex.homeEmail, Alex.schoolEmail])
-    }
-
-    @Test func theSiteKindBeatsTheFocusLabel() {
-        #expect(rank(siteKind: .school, focusLabel: "work") == [Alex.schoolEmail, Alex.workEmail, Alex.homeEmail])
-    }
-
-    @Test func aFocusLabelLiftsItsValueEvenWithoutAHost() {
-        #expect(rank(host: nil, focusLabel: "work").first == Alex.workEmail)
-        #expect(rank(matchEachSite: false, focusLabel: "work").first == Alex.workEmail)
-    }
-
-    @Test func aPinBeatsTheFocusLabel() {
-        let pin = SitePin(host: "example.net", kind: .email, valueID: Alex.schoolEmail.id)
-        #expect(rank(pins: [pin], focusLabel: "work").first == Alex.schoolEmail)
     }
 
     // Recent use lifts a value the card has by half a step, a captured one by a fifth.

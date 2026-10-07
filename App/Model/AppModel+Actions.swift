@@ -76,7 +76,7 @@ extension AppModel {
     func setMatchEachSite(_ isOn: Bool) {
         let settings = state.settings
         commit(state.with(settings: Settings(
-            matchEachSite: isOn, saveNewInfo: settings.saveNewInfo, focusLabel: settings.focusLabel
+            matchEachSite: isOn, saveNewInfo: settings.saveNewInfo
         )))
         if !isOn { Task { await syncCard() } }
     }
@@ -84,7 +84,7 @@ extension AppModel {
     func setSaveNewInfo(_ isOn: Bool) {
         let settings = state.settings
         commit(state.with(settings: Settings(
-            matchEachSite: settings.matchEachSite, saveNewInfo: isOn, focusLabel: settings.focusLabel
+            matchEachSite: settings.matchEachSite, saveNewInfo: isOn
         )))
     }
 
@@ -151,7 +151,7 @@ extension AppModel {
             usage: host == nil ? [] : events.usage, pins: host == nil ? [] : state.pins,
             page: PageSignal(
                 host: host, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
-                siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+                siteKinds: state.siteKinds
             )
         )
         let outcome = await CardWork.sync(gateway, request)
