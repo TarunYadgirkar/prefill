@@ -99,7 +99,6 @@ final class AutofillEngine {
         watcher = FocusWatcher(onlyBundleID: Self.testApp) { [weak self] event in self?.handle(event) }
         watcher?.start()
         isRunning = true
-        AutofillMode.isActive = true
         #if PREFILL_TEST_BROWSERS
         e2eLog("running")
         #endif
@@ -115,7 +114,6 @@ final class AutofillEngine {
         keys = nil
         worker = nil
         isRunning = false
-        AutofillMode.isActive = false
     }
 
     private func handle(_ event: FocusWatcher.Event) {
@@ -133,7 +131,7 @@ final class AutofillEngine {
         #if PREFILL_TEST_BROWSERS
         e2eLog("focus \(element.role) \(element.subrole) \(element.string(kAXRoleDescriptionAttribute) ?? "")")
         #endif
-        guard let bundleID = app.bundleIdentifier, let worker,
+        guard let bundleID = app.bundleIdentifier, let worker, !ExtensionPresence.isActive(in: bundleID),
               let field = FieldReader.read(element, bundleID: bundleID), isGesture(toward: field.frame) else { return }
         let token = focusToken
         #if PREFILL_TEST_BROWSERS

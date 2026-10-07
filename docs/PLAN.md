@@ -99,8 +99,8 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 7.4 Mac import
   - [ ] 7.5 Onboarding offers it; check and merge
 - **Phase 8: One Mac engine** (Gate: phases 1 and 2 merged)
-  - [ ] 8.1 The extension owns Chromium pages it's running in
-  - [ ] 8.2 Accessibility stays for everything else
+  - [x] 8.1 The extension owns Chromium pages it's running in (Oct 6: until that browser quits, not 60 s; the stand-down is gone)
+  - [x] 8.2 Accessibility stays for everything else
   - [ ] 8.3 Mac checks and merge
 - **Phase 9: Setup in three steps**
   - [ ] 9.1 New onboarding flow
@@ -485,6 +485,7 @@ Full checks.
 - `RelayServer` records the last request time per browser bundle ID (the host already checks its parent's signature, so the app knows which browser).
 - `AutofillEngine.focused` skips a field when the front app is in `FocusWatcher.chromium` and that browser's extension spoke within 60 s.
 - `AutofillMode.standDown` applies only to browsers without a recent extension request.
+- As built: `ExtensionPresence` keeps the browser's pid from the host's parent and counts the browser until that process quits, so a long stay on one page never brings the panel back beside the extension's list. Only browsers running the extension send requests, so the stand-down had nothing left to do and is gone; Fill form in Chrome gets the card's values again.
 - Tests: unit test on the decision function (front app, last request time, now).
 
 ### 8.2 Accessibility for everything else
