@@ -92,7 +92,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 6.2 Remove the Sites tab
   - [ ] 6.3 Match words leave the UI
   - [ ] 6.4 Merge
-- **Phase 7: Resume import**
+- **Phase 7: Resume import** (dropped Oct 6 by Tarun; setup has no resume step)
   - [ ] 7.1 Text from a PDF, rule pass for contact values and links
   - [ ] 7.2 On-device model pass for answers
   - [ ] 7.3 Review screen on the iPhone
@@ -103,9 +103,9 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 8.2 Accessibility stays for everything else
   - [ ] 8.3 Mac checks and merge
 - **Phase 9: Setup in three steps**
-  - [ ] 9.1 New onboarding flow
-  - [ ] 9.2 Mac first run
-  - [ ] 9.3 Tour test and merge
+  - [x] 9.1 New onboarding flow (two steps, since Phase 7 was dropped; the card step keeps today's optional short-card offer until Phase 4)
+  - [x] 9.2 Mac first run
+  - [x] 9.3 Tour test and merge
 - **Phase 10: Docs**
   - [x] 10.1 PRODUCT.md, AGENTS.md and README.md describe v2 (as built so far; update again after Phases 4 and 6 to 9)
 
@@ -505,15 +505,20 @@ Full checks.
 
 ### 9.1 iPhone onboarding
 
-1. **Your card.** Find it (or choose one), show it, and offer "Keep only name and phone on my card" with the exact list (4.3).
-2. **Your answers.** Import from resume (7.5) or skip.
-3. **Turn on Prefill in Safari.** The switches, with a live check that turns green when the extension has seen a page (the existing `lastPageSeen` signal).
+1. **Your card.** Find it (or choose one), show it, and offer "Keep only name and phone on my card" with the exact list (4.3). Until Phase 4 is approved this is today's optional Sharing offer.
+2. **Turn on Prefill in Safari.** The switches, with a live check that turns green when the extension has seen a page (the existing `lastPageSeen` signal).
+
+The "Your answers" step (resume import, 7.5) went with Phase 7.
+
+As built: `OnboardingStepLayout` shows "Step 1 of 2"; the linked card step lists the card's emails, phones and addresses; `SafariStep` rereads the extension's state every 2 seconds while it's on screen; `DoneStep` finishes.
 
 Done screen: "Click any field in Safari and pick a value."
 
 ### 9.2 Mac first run
 
 The menu shows a three-item checklist until each is done: Allow Contacts, Turn on Accessibility (with the exact Settings path and an "Open" button), Add the browser extension (Copy folder path, Open chrome://extensions instructions). Each item checks itself.
+
+As built (`MacApp/Views/SetupChecklist.swift`): Contacts is the authorization status; Accessibility is `AXIsProcessTrusted` (or done while "Suggest in every app" is off); the extension is done once the relay has answered Prefill's host (stored, so it survives relaunch) or the person chose "Skip this step". The menu rechecks every 2 seconds while open.
 
 ### 9.3 Tour test and merge
 

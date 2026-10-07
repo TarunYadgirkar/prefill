@@ -50,7 +50,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: Sites, Restore, Delete), Siri intents. |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
-| `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu and settings. |
+| `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu (with the first-run checklist, `SetupChecklist.swift`) and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
 | `MacShared/` | Code identity checks and the socket used by both sides. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
@@ -127,4 +127,4 @@ Next, in the plan's order: Phase 4 (freeze the card to name and phone) waits for
 
 Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 
-Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu and Settings window on screen (only built), the large-text tour, and Safari's bubble on a field Fill form filled.
+Not yet checked by a person: picking from Prefill's list on the iPhone itself, the new Inbox and You tabs on the phone, the Mac menu, its first-run checklist and the Settings window on screen (only built), the large-text tour, and Safari's bubble on a field Fill form filled.
