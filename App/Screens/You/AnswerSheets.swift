@@ -64,7 +64,6 @@ struct CustomFieldSheet: View {
 
     @State private var label = ""
     @State private var value = ""
-    @State private var alsoMatches = ""
     @State private var error: String?
     @FocusState private var isFocused: Bool
 
@@ -86,15 +85,6 @@ struct CustomFieldSheet: View {
                             .foregroundStyle(Palette.destructive)
                     }
                 }
-                Section {
-                    TextField("university, college", text: $alsoMatches)
-                        .textInputAutocapitalization(.never)
-                        .accessibilityLabel("Also matches")
-                } header: {
-                    Text("Also matches")
-                } footer: {
-                    Text("Other words a form might use for this field, separated by commas. Optional.")
-                }
             }
             .navigationTitle(original == nil ? "Add field" : "Edit field")
             .navigationBarTitleDisplayMode(.inline)
@@ -110,15 +100,15 @@ struct CustomFieldSheet: View {
             .onAppear {
                 label = original?.label ?? ""
                 value = original?.value ?? ""
-                alsoMatches = original?.alsoMatches ?? ""
                 isFocused = true
             }
         }
         .presentationBackground(Palette.canvas)
     }
 
+    // Match words are no longer edited, but a field saved with some keeps them.
     private func submit() async {
-        switch CustomField.make(label: label, value: value, alsoMatches: alsoMatches) {
+        switch CustomField.make(label: label, value: value, alsoMatches: original?.alsoMatches ?? "") {
         case .failure(let problem):
             report(problem.message)
         case .success(let field):
