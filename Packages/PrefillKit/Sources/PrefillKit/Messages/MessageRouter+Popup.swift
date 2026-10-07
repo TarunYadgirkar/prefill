@@ -32,7 +32,7 @@ extension MessageRouter {
         let isSiteSpecific = state.settings.matchEachSite
         let page = PageSignal(
             host: host, hints: [:], now: now(), matchEachSite: isSiteSpecific,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+            siteKinds: state.siteKinds
         )
         let target = CardPlan(card: card, request: syncRequest(state, link: link, page: page)).target
         let site = Normalizer.registrableDomain(host)
@@ -68,7 +68,7 @@ extension MessageRouter {
         guard let state = currentState() else { return PopupStateResponse(failure: .other) }
         let page = PageSignal(
             host: host, hints: [:], now: date, matchEachSite: true,
-            siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+            siteKinds: state.siteKinds
         )
         let outcome = CardWriter(gateway: gateway).sync(syncRequest(state, link: link, page: page)).outcome
         if case .failed(let failure) = outcome { return PopupStateResponse(failure: failure) }

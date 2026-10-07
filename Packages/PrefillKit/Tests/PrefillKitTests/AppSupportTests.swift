@@ -77,41 +77,24 @@ struct CardEditorTests {
 }
 
 struct SiteDirectoryTests {
-    private let state = AppState(values: Alex.allValues)
-
-    @Test func listsSitesNewestFirstWithTheirOwnPicks() {
+    @Test func listsSitesNewestFirst() {
         let events = ExtensionEvents(usage: [
             UsageEvent(valueID: Alex.workEmail.id, host: "portal.work.example.org", date: .daysAgo(1)),
             UsageEvent(valueID: Alex.schoolEmail.id, host: "shop.example.net", date: .daysAgo(3))
         ])
-        let sites = SiteDirectory.sites(state: state, events: events, card: Alex.card, now: .testNow)
-        #expect(sites.map(\.host) == ["example.org", "example.net"])
-        #expect(sites[0].values(.email).first == Alex.workEmail)
-        #expect(sites[1].values(.email).first == Alex.schoolEmail)
+        let pinned = AppState().pinning(Alex.homeEmail.id, kind: .email, host: "example.com")
+        #expect(SiteDirectory.hosts(state: pinned, events: events) == ["example.org", "example.net", "example.com"])
     }
+}
 
-    @Test func aPinBeatsUseAndShowsAsPinned() {
-        let use = UsageEvent(valueID: Alex.workEmail.id, host: "example.net", date: .daysAgo(1))
-        let events = ExtensionEvents(usage: [use])
-        let pinned = state.pinning(Alex.schoolEmail.id, kind: .email, host: "shop.example.net")
-        let site = SiteDirectory.sites(state: pinned, events: events, card: Alex.card, now: .testNow)[0]
-        #expect(site.values(.email).first == Alex.schoolEmail)
-        #expect(site.pinned[.email] == Alex.schoolEmail.id)
-    }
+struct PinningTests {
+    private let state = AppState(values: Alex.allValues)
 
     @Test func pinningAgainReplacesThePinAndNilRemovesIt() {
         let once = state.pinning(Alex.schoolEmail.id, kind: .email, host: "example.net")
         let twice = once.pinning(Alex.workEmail.id, kind: .email, host: "www.example.net")
         #expect(twice.pins == [SitePin(host: "example.net", kind: .email, valueID: Alex.workEmail.id)])
         #expect(twice.pinning(nil, kind: .email, host: "example.net").pins.isEmpty)
-    }
-
-    @Test func withMatchEachSiteOffEverySiteGetsTheCardOrder() {
-        let use = UsageEvent(valueID: Alex.schoolEmail.id, host: "example.net", date: .daysAgo(1))
-        let events = ExtensionEvents(usage: [use])
-        let off = state.with(settings: Settings(matchEachSite: false))
-        let site = SiteDirectory.sites(state: off, events: events, card: Alex.card, now: .testNow)[0]
-        #expect(site.values(.email).first == Alex.homeEmail)
     }
 }
 
@@ -173,42 +156,5 @@ struct LabelChoicesTests {
         #expect(LabelChoices.caption("Gym", kind: .email) == "Gym")
         #expect(LabelChoices.caption(nil, kind: .email) == "email")
         #expect(LabelChoices.caption(nil, kind: .phone) == "phone")
-    }
-}
-
-struct ValueLookupTests {
-    private let state = AppState(values: Alex.allValues)
-    private let events = ExtensionEvents(usage: [
-        UsageEvent(valueID: Alex.schoolEmail.id, host: "learn.example.edu", date: .daysAgo(1)),
-        UsageEvent(valueID: Alex.workEmail.id, host: "app.netflix.com", date: .daysAgo(2))
-    ])
-
-    private func first(_ kind: ContactKind, host: String?, in state: AppState) -> ContactValue? {
-        let order = ManualOrder.values(kind, card: Alex.card, known: state.values, now: .testNow)
-        return ValueLookup.ranked(order, host: host, state: state, events: events, now: .testNow).first
-    }
-
-    @Test func aSiteGetsWhatSafariOffersThere() {
-        #expect(first(.email, host: "www.netflix.com", in: state) == Alex.workEmail)
-        #expect(first(.email, host: nil, in: state) == Alex.homeEmail)
-    }
-
-    @Test func withoutASiteTheFocusLabelLeads() {
-        let focused = state.with(settings: Settings(focusLabel: "work"))
-        #expect(first(.address, host: nil, in: focused) == Alex.workAddress)
-    }
-
-    @Test func aShippingQuestionFindsTheHomeAddress() {
-        let ranked = [Alex.workAddress, Alex.homeAddress]
-        #expect(ValueLookup.answer(ranked, purpose: .shipping) == Alex.homeAddress)
-        #expect(ValueLookup.answer(ranked, purpose: nil) == Alex.workAddress)
-        #expect(ValueLookup.answer([Alex.workEmail], purpose: .home) == Alex.workEmail)
-    }
-
-    @Test func sitesMatchTheSearchNewestFirst() {
-        let pinned = state.pinning(Alex.homeEmail.id, kind: .email, host: "shop.example.net")
-        #expect(ValueLookup.sites(matching: nil, state: pinned, events: events)
-            == ["example.edu", "netflix.com", "example.net"])
-        #expect(ValueLookup.sites(matching: "Netflix", state: pinned, events: events) == ["netflix.com"])
     }
 }

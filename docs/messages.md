@@ -183,7 +183,7 @@ The focused field gets a `list` and a `<datalist>` with the values its part asks
 
 ## customSuggestions
 
-A custom field is an answer of the person's own that has no place on a contact card, such as "School" = "UC Berkeley", "Major" = "EECS" or "How did you hear about us" = "LinkedIn". Each has a label, a value and optional extra match words ("university, college" for School). The person adds them in the app's Custom tab on iPhone or in the Mac app's settings.
+A custom field is an answer of the person's own that has no place on a contact card, such as "School" = "UC Berkeley", "Major" = "EECS" or "How did you hear about us" = "LinkedIn". Each has a label and a value. The person adds them from the You tab's Add menu on iPhone or in the Mac app's settings. Fields saved before Oct 6 may also carry extra match words ("university, college" for School); the forms no longer edit them, but they are kept and still match.
 
 They live on the card itself, so iCloud Contacts carries them between the iPhone and the Mac without an App Group or CloudKit. Each one is one of the card's related names: the value is the name, and the label is the field's label followed by ` · Prefill` and any match words, such as `School · Prefill · university, college`. Contacts shows that as an ordinary related name ("School · Prefill" over "UC Berkeley"). Prefill only reads and writes related names whose label carries that marker, so a spouse or parent on the card is never touched, and a card rewrite that reorders values leaves every related name exactly as it was (the save is refused if it wouldn't). A custom label or value may not hold line breaks or the `·` character. The limits: 20 fields, a label of 40 characters, a value of 200, and 100 characters of match words.
 

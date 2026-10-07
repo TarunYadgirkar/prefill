@@ -79,7 +79,7 @@ extension MessageRouter {
         let request = context.request
         let page = PageSignal(
             host: request.host, hints: request.hints, now: context.date, matchEachSite: context.matchEachSite,
-            siteKinds: context.state.siteKinds, focusLabel: context.state.settings.focusLabel
+            siteKinds: context.state.siteKinds
         )
         let usage = context.usage(decisions)
         let sync = syncRequest(context.state, link: context.link, page: page, additions: additions, newUsage: usage)

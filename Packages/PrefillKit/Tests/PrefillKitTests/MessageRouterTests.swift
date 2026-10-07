@@ -195,12 +195,6 @@ struct MessageRouterTests {
         #expect(firstEmail == "alex@work.example.org")
     }
 
-    @Test func theFocusLabelReachesPagesFromSafari() {
-        let reply = router(linked(Settings(focusLabel: "work"))).route(Page.context(Page.siteA))
-        #expect(reply == .pageContext(PageContextResponse(status: .saved)))
-        #expect(firstEmail == "alex@work.example.org")
-    }
-
     @Test func anUnreachableCardIsReportedWithAReason() {
         gateway.state.withLock { $0.fetchError = .noAccess }
         let reply = router(linked()).route(Page.context(Page.siteA))

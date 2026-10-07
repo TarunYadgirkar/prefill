@@ -3,14 +3,10 @@ import Foundation
 public struct Settings: Codable, Sendable, Hashable {
     public let matchEachSite: Bool
     public let saveNewInfo: Bool
-    // The label a Focus filter asks Prefill to prefer everywhere, folded ("work"). Nil when
-    // no Focus filter is on.
-    public let focusLabel: String?
 
-    public init(matchEachSite: Bool = true, saveNewInfo: Bool = true, focusLabel: String? = nil) {
+    public init(matchEachSite: Bool = true, saveNewInfo: Bool = true) {
         self.matchEachSite = matchEachSite
         self.saveNewInfo = saveNewInfo
-        self.focusLabel = focusLabel
     }
 }
 

@@ -34,7 +34,7 @@ struct CustomFieldsSection: View {
             Text("Answers")
         } footer: {
             Text("""
-                Chrome and Arc offer an answer when a form asks for its label or one of its other words. \
+                Chrome and Arc offer an answer when a form asks for its label. \
                 The same answers show in Prefill on your iPhone.
                 """)
             .foregroundStyle(.secondary)
@@ -59,11 +59,6 @@ private struct CustomFieldRow: View {
             VStack(alignment: .leading, spacing: Spacing.hairline) {
                 Text(field.label).foregroundStyle(.secondary)
                 Text(field.value)
-                if !field.matchWords.isEmpty {
-                    Text("Also matches \(field.alsoMatches)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
                 if useCount > 0 {
                     Text("Used on ^[\(useCount) site](inflect: true)")
                         .font(.caption)
@@ -84,17 +79,12 @@ private struct CustomFieldForm: View {
 
     @State private var label = ""
     @State private var value = ""
-    @State private var alsoMatches = ""
     @State private var error: String?
 
     var body: some View {
         Form {
             TextField("Label", text: $label, prompt: Text("School"))
             TextField("Answer", text: $value, prompt: Text("UC Berkeley"))
-            TextField("Also matches", text: $alsoMatches, prompt: Text("university, college"))
-            Text("Other words a form might use for this field, separated by commas. Optional.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
             if let error {
                 Label(error, systemImage: "exclamationmark.circle")
                     .foregroundStyle(.red)
@@ -112,12 +102,12 @@ private struct CustomFieldForm: View {
         .onAppear {
             label = original?.label ?? ""
             value = original?.value ?? ""
-            alsoMatches = original?.alsoMatches ?? ""
         }
     }
 
+    // Match words are no longer edited, but a field saved with some keeps them.
     private func submit() async {
-        switch CustomField.make(label: label, value: value, alsoMatches: alsoMatches) {
+        switch CustomField.make(label: label, value: value, alsoMatches: original?.alsoMatches ?? "") {
         case .failure(let problem):
             error = problem.message
         case .success(let field):

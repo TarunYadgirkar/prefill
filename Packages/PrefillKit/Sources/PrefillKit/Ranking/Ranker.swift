@@ -10,19 +10,16 @@ public struct RankingContext: Sendable {
     public let now: Date
     public let matchEachSite: Bool
     public let siteKind: SiteKind
-    // The folded label a Focus filter prefers, on every site and in the global order.
-    public let focusLabel: String?
 
     public init(
         host: String?, hint: SectionHint?, now: Date, matchEachSite: Bool,
-        siteKind: SiteKind = .unknown, focusLabel: String? = nil
+        siteKind: SiteKind = .unknown
     ) {
         self.host = host.map(Normalizer.registrableDomain)
         self.hint = hint
         self.now = now
         self.matchEachSite = matchEachSite
         self.siteKind = siteKind
-        self.focusLabel = focusLabel
     }
 
     var isSiteSpecific: Bool { matchEachSite && host != nil }
@@ -37,7 +34,7 @@ public enum Ranker {
 
     // Site tiers (pinned through siteKindLabel) apply only with Match each site on and a host.
     enum Tier: Int, Comparable {
-        case pinned, usedHere, hintLabel, hintRelated, siteKindLabel, focusLabel, other
+        case pinned, usedHere, hintLabel, hintRelated, siteKindLabel, other
 
         static func < (lhs: Tier, rhs: Tier) -> Bool { lhs.rawValue < rhs.rawValue }
     }
@@ -100,9 +97,7 @@ public enum Ranker {
 
         func tier(_ value: ContactValue) -> Tier {
             let label = LabelName.of(value.label)
-            let site = context.isSiteSpecific ? siteTier(value, label: label) : .other
-            guard site == .other else { return site }
-            return label != nil && label == context.focusLabel ? .focusLabel : .other
+            return context.isSiteSpecific ? siteTier(value, label: label) : .other
         }
 
         func globalScore(_ value: ContactValue, index: Int) -> Double {

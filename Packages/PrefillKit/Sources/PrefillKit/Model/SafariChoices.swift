@@ -28,7 +28,7 @@ extension AppState {
         return pins.last { Normalizer.registrableDomain($0.host) == site && $0.kind == kind }?.valueID
     }
 
-    func muting(_ host: String, isMuted: Bool) -> AppState {
+    public func muting(_ host: String, isMuted: Bool) -> AppState {
         let site = Normalizer.registrableDomain(host)
         let others = mutedSites.filter { $0 != site }
         return copy(mutedSites: Array((others + (isMuted ? [site] : [])).suffix(Self.maxMutedSites)))
