@@ -16,10 +16,13 @@ public struct LinkSuggestionsRequest: Codable, Sendable, Hashable {
 public struct SuggestedLink: Codable, Sendable, Hashable {
     public let type: LinkType
     public let url: String
+    // `pinned` for the link picked on this site, `card` for the rest.
+    public let why: SuggestionWhy
 
-    public init(type: LinkType, url: String) {
+    public init(type: LinkType, url: String, why: SuggestionWhy = .card) {
         self.type = type
         self.url = url
+        self.why = why
     }
 }
 
@@ -47,7 +50,8 @@ extension MessageRouter {
         let links = order.compactMap { value -> SuggestedLink? in
             guard case .link(let text) = value.payload, ValueRules.isLink(text) else { return nil }
             let type = LinkType.of(text)
-            return wanted.contains(type) ? SuggestedLink(type: type, url: LinkURL.full(text)) : nil
+            guard wanted.contains(type) else { return nil }
+            return SuggestedLink(type: type, url: LinkURL.full(text), why: value.id == pinned ? .pinned : .card)
         }
         let capped = request.types.flatMap { type in
             links.filter { $0.type == type }.prefix(MessageLimits.linksPerType)

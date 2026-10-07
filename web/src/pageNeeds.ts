@@ -60,10 +60,11 @@ export function answerPageNeeds(
   for (const field of contactFields(page.doc)) {
     if (isContactKind(field.kind)) kinds.add(field.kind);
   }
-  const fillable = page.fill?.count();
-  return Promise.resolve({
+  const fill = page.fill;
+  const fillable = fill === undefined ? Promise.resolve(undefined) : fill.count().catch(() => undefined);
+  return fillable.then((count) => ({
     host: page.hostname,
     kinds: [...kinds],
-    ...(fillable === undefined ? {} : { fillable }),
-  });
+    ...(count === undefined ? {} : { fillable: count }),
+  }));
 }

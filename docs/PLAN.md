@@ -63,10 +63,10 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 1.7 End-to-end check and merge
 - **Phase 2: Honest suggestions**
   - [x] 2.0 Update three stale Safari tests to read Prefill's list, not the keyboard bar
-  - [ ] 2.1 Suggestions carry where each value came from
-  - [ ] 2.2 The list shows it (detail line and style)
-  - [ ] 2.3 A later answer replaces a learned one, with Undo
-  - [ ] 2.4 Fill form says what's left and jumps to it
+  - [x] 2.1 Suggestions carry where each value came from
+  - [x] 2.2 The list shows it (detail line and style)
+  - [x] 2.3 A later answer replaces a learned one, with Undo
+  - [x] 2.4 Fill form says what's left and jumps to it
   - [x] 2.5 Keep Prefill's list clear of Safari's suggestion bubble (done in Phase 1)
   - [ ] 2.6 End-to-end check and merge
 - **Phase 3: One memory**
@@ -228,6 +228,7 @@ Today a learned answer is never replaced (AGENTS.md open item). With click-and-p
 - Router: replace the custom field's value through `gateway.save(scope: .personEdit)`, only for a field Prefill learned (match `ExtensionEvents.answers` by label), never for one the person wrote in the app. Keep the old value in the event for Undo.
 - The page shows the existing "Saved" pill as "Updated your answer" with Undo.
 - Tests: replace happens for a learned field; refused for a hand-written one; Undo restores.
+- Built differently: the page can't tell which answers Prefill learned, so `learn.ts` keeps sending `action: "learn"` and the router decides, replacing only a field whose value matches one of its learned answers. The reply gained `updated`; there's no `replace` action.
 
 ### 2.4 Fill form says what's left
 
@@ -239,6 +240,8 @@ Fill form stays optional (the pill beside a field, Fill in Safari's sheet, Fill 
 - A pick on a filled field (`installFilledPicker`, choices built in `applyText`) reports `picked` like any other list (carried over from 1.3).
 - The pill's count today counts recognized fields, so "Fill form 13 fields" can end as "Filled 9". Change the count to fields Prefill has an answer for (it already fetched them for the prefetch), so the promise matches the result.
 - Tests: the "need you" count; the jump focuses the right field; `allowNext` unlocks one field once.
+- Built: the grant is shared by every gate on the page (each list keeps its own gate) and ends when the field loses focus, another takes focus, or after 1 s. The pill's count is async now: it gathers the form's answers on focus (only for forms with at least 3 recognized empty fields). A filled field's list uses `SAFARI_CONTACT` for contact fields in Safari; whether Safari's bubble shows on a filled field wasn't checked in the simulator, it's assumed from it showing on any contact field. `testbed/sites/application.html` gained "Why do you want to work here?", which nothing answers, for the jump.
+- Known and accepted: whether the pill shows (and its count) tells a page, after the person's click or Tab, that Prefill has answers for at least 3 of its fields. It's inherent to offering a pill only where it would fill something.
 
 ### 2.5 Keep the list clear of Safari's bubble
 

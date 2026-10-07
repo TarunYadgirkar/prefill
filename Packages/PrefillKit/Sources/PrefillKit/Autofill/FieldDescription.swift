@@ -37,13 +37,18 @@ public struct AutofillRow: Codable, Sendable, Hashable {
     public let kind: String
     // What to tell the router when the person picks the row, with an empty host.
     public let pick: PickedRequest?
+    // "guess" for the on-device model's pick, drawn apart from the person's own values.
+    public let tone: String?
 
-    public init(value: String, detail: String, kind: String, pick: PickedRequest? = nil) {
+    public init(value: String, detail: String, kind: String, pick: PickedRequest? = nil, tone: String? = nil) {
         self.value = value
         self.detail = detail
         self.kind = kind
         self.pick = pick
+        self.tone = tone
     }
+
+    public var isGuess: Bool { tone == "guess" }
 }
 
 // The question a field answers when the page only prints it before the field, with nothing

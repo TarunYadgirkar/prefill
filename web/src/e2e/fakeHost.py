@@ -30,12 +30,26 @@ def pinned_email():
         return json.load(handle).get("email")
 
 
+def card(value):
+    return {"value": value, "why": "card"}
+
+
 def ranked_emails():
     pin = pinned_email()
-    return sorted(CARD["emails"], key=lambda email: email != pin)
+    ranked = sorted(CARD["emails"], key=lambda email: email != pin)
+    return [{"value": email, "why": "pinned" if email == pin else "card"} for email in ranked]
 
 
 CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"), ("sponsorship", "No"), ("hear", "LinkedIn")]
+
+
+# A question no answer matches gets a guess, which a fill never uses.
+GUESS = ("work here", "Building tools people use every day")
+
+
+def custom_field(text):
+    values = [card(value) for word, value in CUSTOM if word in text][:1]
+    return {"values": values, "guesses": [GUESS[1]] if GUESS[0] in text else []}
 
 
 def answer(request):
@@ -49,14 +63,15 @@ def answer(request):
         return {
             "type": "contactSuggestionsResult",
             "emails": ranked_emails() if "email" in kinds else [],
-            "phones": CARD["phones"] if "phone" in kinds else [],
-            "addresses": CARD["addresses"] if "address" in kinds else [],
+            "phones": [card(phone) for phone in CARD["phones"]] if "phone" in kinds else [],
+            "addresses": [{"address": address, "why": "card"} for address in CARD["addresses"]] if "address" in kinds else [],
             **({"name": CARD["name"]} if "name" in kinds else {}),
         }
     if kind == "linkSuggestions":
-        return {"type": "linkSuggestionsResult", "links": [link for link in LINKS if link["type"] in request.get("types", [])]}
+        links = [{**link, "why": "card"} for link in LINKS if link["type"] in request.get("types", [])]
+        return {"type": "linkSuggestionsResult", "links": links}
     if kind == "customSuggestions":
-        fields = [{"values": [value for word, value in CUSTOM if word in field["text"].lower()][:1]} for field in request.get("fields", [])]
+        fields = [custom_field(field["text"].lower()) for field in request.get("fields", [])]
         return {"type": "customSuggestionsResult", "fields": fields}
     if kind == "picked":
         remembered = request.get("kind") == "email" and request.get("value") in CARD["emails"] and STATE is not None

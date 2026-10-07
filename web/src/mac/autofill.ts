@@ -18,7 +18,7 @@ import {
   type PageResponse,
   type PickedRequest,
 } from "../messages";
-import { KIND_LABELS, SUGGESTED_KINDS, pickKind, suggestionOptions } from "../suggestions";
+import { SUGGESTED_KINDS, contactChoices, pickKind } from "../suggestions";
 
 export type Plan =
   | { kind: "contact"; field: ContactField; request: PageRequest }
@@ -77,13 +77,11 @@ export function plan(field: FieldDescription): Plan {
 
 function contactRows(chosen: Extract<Plan, { kind: "contact" }>, response: PageResponse): Row[] {
   if (response.type !== "contactSuggestionsResult") return [];
-  const detail = KIND_LABELS[chosen.field.kind] ?? "";
   const kind = pickKind(chosen.field);
-  return suggestionOptions(chosen.field, response).map((value, index) => ({
-    value,
-    detail,
+  return contactChoices(chosen.field, response, NO_PICK).map(({ onPick, ...choice }) => ({
+    ...choice,
     kind: chosen.field.kind,
-    ...(kind === undefined || index === 0 ? {} : { pick: picked(kind, value) }),
+    ...(kind === undefined || onPick === undefined ? {} : { pick: picked(kind, choice.value) }),
   }));
 }
 

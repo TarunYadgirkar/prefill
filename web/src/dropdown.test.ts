@@ -39,7 +39,9 @@ function setUp(
       new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }),
     );
   };
-  return { input, hide, rows, press, events };
+  const guesses = (): string[] =>
+    [...(root?.querySelectorAll(".row.guess .value") ?? [])].map((row) => row.textContent);
+  return { input, hide, rows, press, events, guesses };
 }
 
 describe("showDropdown", () => {
@@ -49,6 +51,15 @@ describe("showDropdown", () => {
       host.remove();
     });
     vi.restoreAllMocks();
+  });
+
+  it("draws a guess apart from the person's own values", () => {
+    const { guesses, hide } = setUp(undefined, [
+      { value: "UC Berkeley", detail: "School" },
+      { value: "EECS", detail: "Suggested", tone: "guess" },
+    ]);
+    expect(guesses()).toEqual(["EECS"]);
+    hide();
   });
 
   it("fills the chosen value with input and change events, from the keyboard", () => {

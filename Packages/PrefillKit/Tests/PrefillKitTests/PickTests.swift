@@ -26,6 +26,10 @@ struct PickTests {
     }
 
     private func emails(_ router: MessageRouter, host: String = "boards.example.io") -> [String] {
+        suggested(router, host: host).map(\.value)
+    }
+
+    private func suggested(_ router: MessageRouter, host: String = "boards.example.io") -> [SuggestedValue] {
         let request: [String: Any] = ["type": "contactSuggestions", "host": host, "fields": [["kind": "email"]]]
         guard case .contactSuggestions(let reply) = router.route(request) else { return [] }
         return reply.emails
@@ -37,7 +41,9 @@ struct PickTests {
         #expect(emails(router).first != Alex.schoolEmail.display)
         #expect(router.route(pick("email", "ALEX.school@example.edu ")) == remembered)
         #expect(emails(router).first == Alex.schoolEmail.display)
+        #expect(suggested(router).map(\.why) == [.pinned, .card, .card])
         #expect(emails(router, host: "elsewhere.example").first != Alex.schoolEmail.display)
+        #expect(suggested(router, host: "elsewhere.example").allSatisfy { $0.why == .card })
         #expect(gateway.saves.isEmpty)
         #expect(store.events.pins.map(\.host) == ["example.io"])
         #expect(store.events.usage.map(\.valueID) == [Alex.schoolEmail.id])
@@ -87,11 +93,11 @@ struct PickTests {
         let ask: [String: Any] = ["type": "linkSuggestions", "host": "boards.example.io", "types": ["website"]]
         let urls = { () -> [String] in
             guard case .linkSuggestions(let reply) = router.route(ask) else { return [] }
-            return reply.links.map(\.url)
+            return reply.links.map { "\($0.url) \($0.why.rawValue)" }
         }
-        #expect(urls() == ["https://alexrivera.dev", "https://alex.example.blog"])
+        #expect(urls() == ["https://alexrivera.dev card", "https://alex.example.blog card"])
         #expect(router.route(pick("link", "alex.example.blog")) == remembered)
-        #expect(urls() == ["https://alex.example.blog", "https://alexrivera.dev"])
+        #expect(urls() == ["https://alex.example.blog pinned", "https://alexrivera.dev card"])
     }
 
     private func answers(_ router: MessageRouter, _ question: String) -> CustomSuggestionsResponse.Field? {
@@ -114,9 +120,9 @@ struct PickTests {
         let gateway = FakeGateway(card: Alex.card.replacingCustomFields(with: fields))
         let store = linked()
         let router = MessageRouter(store: store, gateway: gateway, now: { .testNow })
-        #expect(answers(router, "School name")?.values == ["UC Berkeley", "Cal"])
+        #expect(answers(router, "School name")?.values.map(\.value) == ["UC Berkeley", "Cal"])
         #expect(router.route(customPick("Cal", question: "School name?")) == remembered)
-        #expect(answers(router, "name, school")?.values == ["Cal", "UC Berkeley"])
+        #expect(answers(router, "name, school")?.values.map(\.value) == ["Cal", "UC Berkeley"])
         #expect(router.route(customPick("Stanford", question: "School name")) == ignored)
         #expect(router.route(customPick("UC Berkeley", question: "the")) == ignored)
         #expect(router.route(customPick("", question: "School")) == ignored)
@@ -128,8 +134,8 @@ struct PickTests {
         let fields = [CustomField(label: "School", value: "UC Berkeley", matchWords: [])]
         let gateway = FakeGateway(card: Alex.card.replacingCustomFields(with: fields))
         let router = MessageRouter(store: linked(), gateway: gateway, now: { .testNow })
-        #expect(answers(router, "Alma mater")?.values == [])
+        #expect(answers(router, "Alma mater")?.values.map(\.value) == [])
         #expect(router.route(customPick("UC Berkeley", question: "Alma mater")) == remembered)
-        #expect(answers(router, "Alma mater")?.values == ["UC Berkeley"])
+        #expect(answers(router, "Alma mater")?.values.map(\.value) == ["UC Berkeley"])
     }
 }

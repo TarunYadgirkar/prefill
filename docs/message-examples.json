@@ -6,7 +6,8 @@
     "syncStatus": ["unchanged", "saved", "failed", "off", "notSetUp"],
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
     "recentState": ["saved", "waiting", "removed"],
-    "pickKind": ["email", "phone", "address", "link", "custom"]
+    "pickKind": ["email", "phone", "address", "link", "custom"],
+    "why": ["pinned", "used", "card", "learned", "guess", "resume"]
   },
   "requests": {
     "ping": { "type": "ping" },
@@ -99,24 +100,35 @@
     "linkSuggestionsResult": {
       "type": "linkSuggestionsResult",
       "links": [
-        { "type": "github", "url": "https://github.com/alexrivera" },
-        { "type": "website", "url": "https://alexrivera.dev" }
+        { "type": "github", "url": "https://github.com/alexrivera", "why": "pinned" },
+        { "type": "website", "url": "https://alexrivera.dev", "why": "card" }
       ]
     },
     "contactSuggestionsResult": {
       "type": "contactSuggestionsResult",
-      "emails": ["alex@work.example.org", "alex.rivera@example.com"],
+      "emails": [
+        { "value": "alex@work.example.org", "why": "pinned", "label": "work" },
+        { "value": "alex.rivera@example.com", "why": "used" }
+      ],
       "phones": [],
       "addresses": [
-        { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
+        {
+          "address": { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" },
+          "why": "card",
+          "label": "home"
+        }
       ],
       "name": { "given": "Alex", "family": "Rivera" }
     },
     "customSuggestionsResult": {
       "type": "customSuggestionsResult",
-      "fields": [{ "values": ["UC Berkeley"], "guesses": [] }, { "values": [], "guesses": ["EECS"] }]
+      "fields": [
+        { "values": [{ "value": "UC Berkeley", "why": "card", "label": "School" }], "guesses": [] },
+        { "values": [{ "value": "Yes", "why": "learned", "label": "Work authorization", "site": "example.io" }], "guesses": [] },
+        { "values": [], "guesses": ["EECS"] }
+      ]
     },
-    "answersResult": { "type": "answersResult", "saved": 2 },
+    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"] },
     "pickedResult": { "type": "pickedResult", "remembered": true },
     "error": { "type": "error", "reason": "unknown message" }
   }

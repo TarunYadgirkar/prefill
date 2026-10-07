@@ -13,7 +13,7 @@ Such a frame works under its own host, not the host of the page around it: its `
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it. Each value in these three replies also says why it is offered and carries its label, and a learned answer the site it was saved from, so a page that can read Prefill's values also learns where one of them was learned.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them. Text lengths count UTF-16 units, as JavaScript's `length` does.
 
@@ -45,8 +45,22 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | Sync status | `unchanged`, `saved`, `failed`, `off`, `notSetUp` |
 | Sheet status | `ready`, `off`, `notSetUp`, `failed` |
 | Recent state | `saved`, `waiting`, `removed` |
+| Why | `pinned`, `used`, `card`, `learned`, `guess`, `resume` |
 
 The `enums` block in `docs/message-examples.json` lists these values. The Swift suite checks it against `FieldKind`, `LinkType`, `SectionHint` and `SyncStatus`, and the Vitest suite checks it against the arrays the TypeScript types and validators are built from.
+
+Every value a suggestion reply carries back says why it is offered, so Prefill's list can say so under it:
+
+| `why` | Meaning |
+| --- | --- |
+| `pinned` | The person picked it on this site before. |
+| `used` | The person typed or picked it on this site before. |
+| `card` | It is on the person's card or Prefill's contact. `label` is the card's label as Safari's bar captions it (`work`, `home`), or the custom field's label (`School`), and is left out for an unlabeled value. |
+| `learned` | Prefill saved it from a form the person submitted. `site` is the registrable domain it was saved from, left out when it isn't a plain host name. Only a `learned` value carries `site`. |
+| `guess` | The on-device model's pick. Only `customSuggestionsResult`'s `guesses` are guesses, so they carry no `why` of their own. |
+| `resume` | From a resume import (not yet sent). |
+
+`pinned` and `used` need Match each site on. A `label` is at most 100 characters, on one line with hidden characters turned into spaces, and left out when nothing is left.
 
 A `name` field is never saved. The capture filter only uses it to tell whether a form is about the person.
 
@@ -118,17 +132,19 @@ The content script asks for the card's links of the types a page's `link` fields
 {
   "type": "linkSuggestionsResult",
   "links": [
-    { "type": "github", "url": "https://github.com/alexrivera" },
-    { "type": "website", "url": "https://alexrivera.dev" }
+    { "type": "github", "url": "https://github.com/alexrivera", "why": "pinned" },
+    { "type": "website", "url": "https://alexrivera.dev", "why": "card" }
   ]
 }
 ```
+
+A link's `why` is `pinned` for the one picked on this site and `card` for the rest.
 
 The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The content script attaches them when the field takes focus, from the links it already has, and the `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
 
 ## contactSuggestions
 
-Chrome and Arc fill contact fields from their own saved addresses, never from the card, so in those browsers the content script doesn't send `pageContext` and the card's order never changes for a Chrome page. It sends `contactSuggestions` instead, once the page has loaded and again each time the person focuses a contact field (after a click, tap or Tab, as for links, on an `input` of type text, email, tel or search without a `list` of its own). `fields` has one entry per kind and section on the page. The reply holds the card's values of those kinds in the order the card would take on this site (the same ranking `pageContext` uses: pins, use on the site, section hints, site kind), up to five of each, without saving the card. `name` is the card's given and family name. Before the card is linked, or when it can't be read, every list is empty.
+Chrome and Arc fill contact fields from their own saved addresses, never from the card, so in those browsers the content script doesn't send `pageContext` and the card's order never changes for a Chrome page. It sends `contactSuggestions` instead, once the page has loaded and again each time the person focuses a contact field (after a click, tap or Tab, as for links, on an `input` of type text, email, tel or search without a `list` of its own). `fields` has one entry per kind and section on the page. The reply holds the card's values of those kinds in the order the card would take on this site (the same ranking `pageContext` uses: pins, use on the site, section hints, site kind), up to five of each, without saving the card. Each is an object with the `value` (for an address, `address` with its parts), its `why` (`pinned`, `used` or `card`) and its `label`. `name` is the card's given and family name. Before the card is linked, or when it can't be read, every list is empty.
 
 ```json
 {
@@ -141,10 +157,17 @@ Chrome and Arc fill contact fields from their own saved addresses, never from th
 ```json
 {
   "type": "contactSuggestionsResult",
-  "emails": ["alex@work.example.org", "alex.rivera@example.com"],
+  "emails": [
+    { "value": "alex@work.example.org", "why": "pinned", "label": "work" },
+    { "value": "alex.rivera@example.com", "why": "used" }
+  ],
   "phones": [],
   "addresses": [
-    { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" }
+    {
+      "address": { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" },
+      "why": "card",
+      "label": "home"
+    }
   ],
   "name": { "given": "Alex", "family": "Rivera" }
 }
@@ -166,7 +189,7 @@ They live on the card itself, so iCloud Contacts carries them between the iPhone
 
 The content script sends `customSuggestions` once the page has loaded, and again for one field each time the person focuses it (after a click, tap or Tab, as for links). It covers text inputs without a `list` of their own that nothing else claims: not a contact or link field, no `autocomplete` token, nothing sensitive or of `type=password`, not a search box, and not on a sign-in form. Text areas and selects never show a datalist, so they are left out. Each entry's `text` is the field's label, placeholder, name and id, joined, with hidden characters turned into spaces and cut to 200 characters.
 
-The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Before the card is linked, or when it can't be read, every list is empty.
+The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Each value carries the custom field's `label` and `why`: `learned` with the `site` it was saved from when Prefill learned it from a form and it still reads as learned, else `card`. Before the card is linked, or when it can't be read, every list is empty.
 
 A field no rule matched may carry a `guesses` entry: the saved answer Apple's on-device model picked for that question, shown in the field's list with a "Suggested" caption and never filled in by one-tap fill. The handler never runs the model itself. It records the question's words (never what the person typed) in the events as a `FormQuestion`, the app asks the model about each one the next time it opens, and caches the answer by label in `AppState.insights` (or "none"), which the handler then serves. On the Mac, the app's own panel asks the model live.
 
@@ -179,7 +202,14 @@ A field no rule matched may carry a `guesses` entry: the saved answer Apple's on
 ```
 
 ```json
-{ "type": "customSuggestionsResult", "fields": [{ "values": ["UC Berkeley"], "guesses": [] }, { "values": [], "guesses": ["EECS"] }] }
+{
+  "type": "customSuggestionsResult",
+  "fields": [
+    { "values": [{ "value": "UC Berkeley", "why": "card", "label": "School" }], "guesses": [] },
+    { "values": [{ "value": "Yes", "why": "learned", "label": "Work authorization", "site": "example.io" }], "guesses": [] },
+    { "values": [], "guesses": ["EECS"] }
+  ]
+}
 ```
 
 The focused field gets a `list` and a `<datalist>` of its values, which Safari's QuickType bar shows (Safari has no contact suggestion of its own for such a field) and Chrome and Arc show in their dropdown. As with links, any script on the page can read the datalist while it is there.
@@ -191,9 +221,9 @@ In Chrome and Arc the messages travel through a native messaging host (`com.taru
 
 Prefill learns the answers a person gives on job applications. When the person submits a form (a submit event within a second of their own click on the form's submit button or Enter in one of its fields, because a script's `requestSubmit()` also makes a trusted submit event), the content script looks at the text inputs, selects and radio groups they changed themselves, drops any whose value or question has changed since the person's last edit, and keeps the ones that ask one of eight questions: `school`, `degree`, `major`, `gpa`, `graduation`, `authorization`, `sponsorship` and `heard` (how did you hear about us). Demographic questions, sign-in forms, contact fields and anything sensitive are never read, and a value Prefill filled in is not sent because the person didn't change it.
 
-With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit and at most 8 a day across every site. The card save may only add custom fields after the ones there (`CardSaveScope.addAnswers`). It saves nothing when Save new info is off, the site is muted or the card isn't linked. An answer the person already has is never replaced. The reply says how many were saved, and the page then shows a pill, "Saved 2 answers" with Undo, for 8 seconds.
+With `action: "learn"` the app saves each answer whose question has no custom field yet, with that question's label and match words, up to the 20-field limit. When the question's custom field holds a different answer that Prefill learned from an earlier form and that still reads exactly as learned, the new answer replaces it, keeping the field's label and match words; the old answer is kept in the event for Undo. A custom field the person wrote or edited in the app is never replaced, and each learned answer is replaced at most once a day, whatever site asks. New and replaced answers together count toward at most 8 a day across every site. A save that only adds may only add custom fields after the ones there (`CardSaveScope.addAnswers`); one that replaces may also change the value of exactly those learned fields, keeping every contact value and every custom field's label, words and place (`replaceAnswers`), and like any save but the person's own edits it puts back anything a write in between lost. It saves nothing when Save new info is off, the site is muted or the card isn't linked. The reply says how many answers were saved, and `updated` lists the labels of the learned answers it replaced, so the page's pill can name the question: "Saved 2 answers", "Updated your answer to School", "Updated 2 answers" or "Saved 1 answer and updated 1", with Undo, for 8 seconds.
 
-Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved, and replies with how many came off.
+Undo sends `action: "undo"` with no answers. The app takes back the answers saved from that site in the last 10 minutes that are still exactly as saved: a new one comes off and a replaced one goes back to the answer it replaced. It replies with how many changed back in `saved`.
 
 ```json
 {
@@ -205,7 +235,7 @@ Undo sends `action: "undo"` with no answers. The app takes back the answers save
 ```
 
 ```json
-{ "type": "answersResult", "saved": 2 }
+{ "type": "answersResult", "saved": 2, "updated": ["Work authorization"] }
 ```
 
 ## picked
@@ -344,6 +374,8 @@ The sheet talks to the page's content script, not to the app, with two messages 
 ```
 
 Both answer `{ "type": "fillPageResult", "filled": 11 }`, the number of fields filled (0 after an undo).
+
+The pill offers to fill only the fields the app has an answer for: on a focus in a form with at least three empty fields Prefill recognizes, it asks the same three questions and counts the fields that would get a value, so "Fill form 9 fields" ends as "Filled 9". After a fill it says what's left, "Filled 9 · 4 need you": the fields of the form Prefill recognizes that are still empty. A click on "4 need you" moves focus to the next of them in page order that the person can see once it is scrolled into view (drawn, not hidden by style or clipping, and the field or its label is what sits at its centre); any other is skipped. That field's own list opens there. That focus comes from Prefill's own button, which the click-or-Tab gate can't see, so the pill lets exactly that field through, for one check (`allowNext`), ending unused when it loses focus, another field takes focus, or a second passes. The count for a form is kept until a field on the page changes, so moving between fields doesn't ask the app each time. A pick from the list on a field the fill filled is reported with `picked` like any other list's, and in Safari that list on a contact field sits clear of Safari's bubble, as the field's own list does.
 
 What a page can and can't do: it can't press the pill (a closed shadow root that ignores untrusted clicks and any tap in its first 400 ms) or send the sheet's messages. It can still lure a person into tapping where the pill appears, the same risk Prefill's own list has; the pill only appears right after the person's own click or Tab into a field, and a fill only reaches visible, empty, non-sensitive fields of that form.
 

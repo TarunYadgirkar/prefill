@@ -23,19 +23,20 @@ public struct CustomSuggestionsRequest: Codable, Sendable, Hashable {
 
 public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
     public struct Field: Codable, Sendable, Hashable {
-        public let values: [String]
+        // Each with the custom field's label, or `learned` and the site it was saved from.
+        public let values: [SuggestedValue]
         // What the on-device model thinks answers the field when no rule matched: offered
-        // as a marked option, never filled in by itself.
+        // as a marked option, never filled in by itself. Their `why` is always `guess`.
         public let guesses: [String]
 
-        public init(values: [String], guesses: [String] = []) {
+        public init(values: [SuggestedValue], guesses: [String] = []) {
             self.values = values
             self.guesses = guesses
         }
 
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            values = try container.decode([String].self, forKey: .values)
+            values = try container.decode([SuggestedValue].self, forKey: .values)
             guesses = try container.decodeIfPresent([String].self, forKey: .guesses) ?? []
         }
     }
@@ -59,18 +60,25 @@ extension MessageRouter {
         }
         let custom = card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) }
         let variant = Intelligence.modelVariant
-        let picks = events().answerPicks
+        let recorded = events()
+        let picks = recorded.answerPicks
         var unanswered: [String] = []
         let fields = request.fields.map { field -> CustomSuggestionsResponse.Field in
-            let values = CustomFieldMatcher.values(for: field.text, in: custom)
+            let matched = CustomFieldMatcher.matches(for: field.text, in: custom)
+            let values = matched.map(\.value)
+            let sourced = { (values: [String]) in
+                Self.sourced(values, from: matched + custom, learned: recorded.answers)
+            }
             // A pick only reorders what the question already matches, or stands in for a guess
             // where nothing matched, so copying a question's words reaches no other answer.
             if let picked = Self.pickedAnswer(for: field.text, in: custom, picks: picks),
                values.isEmpty || values.contains(picked) {
                 let ordered = [picked] + values.filter { $0 != picked }
-                return .init(values: Array(ordered.prefix(MessageLimits.customOptions)))
+                return .init(values: sourced(Array(ordered.prefix(MessageLimits.customOptions))))
             }
-            guard values.isEmpty, !CustomFieldMatcher.words(field.text).isEmpty else { return .init(values: values) }
+            guard values.isEmpty, !CustomFieldMatcher.words(field.text).isEmpty else {
+                return .init(values: sourced(values))
+            }
             guard let guess = state.guessedAnswer(for: field.text, in: custom, variant: variant) else {
                 let key = InsightKey.answer(field.text, variant: variant)
                 if state.insight(key) == nil { unanswered.append(field.text) }
@@ -80,6 +88,28 @@ extension MessageRouter {
         }
         if !custom.isEmpty { noteQuestions(unanswered, host: request.host) }
         return CustomSuggestionsResponse(fields: fields)
+    }
+
+    // A value Prefill learned from a form and that still reads as learned says where from;
+    // any other is the person's own, under its label. `fields` holds the question's matches
+    // first, so a value two fields share takes the label of the one that matched.
+    static func sourced(
+        _ values: [String], from fields: [CustomField], learned: [LearnedAnswer]
+    ) -> [SuggestedValue] {
+        values.map { value in
+            guard let field = fields.first(where: { $0.value == value }) else { return SuggestedValue(value: value) }
+            // A label synced from another device may hold characters the page's parser refuses.
+            let plain = MessageText.oneLine(field.label, max: MessageLimits.text)
+            let label = plain.trimmingCharacters(in: .whitespaces).isEmpty ? nil : plain
+            guard let answer = learned.last(where: { $0.matches(field) }) else {
+                return SuggestedValue(value: value, label: label)
+            }
+            // The page's parser turns away a reply with a site it can't take, and every
+            // answer with it, so a site that isn't a plain host name is left out.
+            let site = MessageText.isHost(answer.host) && answer.host.utf16.count <= MessageLimits.host
+                ? answer.host : nil
+            return SuggestedValue(value: value, why: .learned, label: label, site: site)
+        }
     }
 
     // The person's custom fields, for a guess made outside the router (the Mac's panel).

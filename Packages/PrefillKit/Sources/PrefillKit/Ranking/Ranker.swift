@@ -36,7 +36,7 @@ public enum Ranker {
     static let recencyHalfLife: TimeInterval = 14 * 86_400
 
     // Site tiers (pinned through siteKindLabel) apply only with Match each site on and a host.
-    private enum Tier: Int, Comparable {
+    enum Tier: Int, Comparable {
         case pinned, usedHere, hintLabel, hintRelated, siteKindLabel, focusLabel, other
 
         static func < (lhs: Tier, rhs: Tier) -> Bool { lhs.rawValue < rhs.rawValue }
@@ -57,11 +57,18 @@ public enum Ranker {
     public static func rank(
         _ values: [ContactValue], usage: [UsageEvent], pins: [SitePin], context: RankingContext
     ) -> [ContactValue] {
+        rankWithTiers(values, usage: usage, pins: pins, context: context).map(\.value)
+    }
+
+    // The order, with the tier that put each value where it is, so a list can say why.
+    static func rankWithTiers(
+        _ values: [ContactValue], usage: [UsageEvent], pins: [SitePin], context: RankingContext
+    ) -> [(value: ContactValue, tier: Tier)] {
         let signals = Signals(values: values, usage: usage, pins: pins, context: context)
         return values.enumerated()
             .map { index, value in (value, score(value, index: index, signals: signals)) }
             .sorted { $0.1 < $1.1 }
-            .map(\.0)
+            .map { (value: $0.0, tier: $0.1.tier) }
     }
 
     private static func score(_ value: ContactValue, index: Int, signals: Signals) -> Score {

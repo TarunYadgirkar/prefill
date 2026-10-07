@@ -14,6 +14,7 @@ import {
 import type { FieldElement } from "./fieldTypes";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
+import { GUESS_DETAIL, whyDetail } from "./why";
 import {
   HIDDEN_CHARACTERS,
   LIMITS,
@@ -38,7 +39,6 @@ export interface CustomOptions {
 
 const MAX_INSPECTED = 200;
 export const CUSTOM_DETAIL = "Custom field";
-export const GUESS_DETAIL = "Suggested";
 // A datalist shows on text inputs; text areas and selects never show one, and a search box
 // never wants a saved answer.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text"]);
@@ -52,14 +52,15 @@ export function customChoices(
   field: CustomField | undefined,
   onPick: (value: string) => void,
 ): Choice[] {
-  const answers = (field?.values ?? []).map((value, index) => ({
-    value,
-    detail: CUSTOM_DETAIL,
-    ...(index === 0 ? {} : { onPick: () => { onPick(value); } }),
+  const answers = (field?.values ?? []).map((offered, index) => ({
+    value: offered.value,
+    detail: whyDetail(offered, offered.label ?? CUSTOM_DETAIL),
+    ...(index === 0 ? {} : { onPick: () => { onPick(offered.value); } }),
   }));
   const guesses = (field?.guesses ?? []).map((value) => ({
     value,
     detail: GUESS_DETAIL,
+    tone: "guess" as const,
     onPick: () => { onPick(value); },
   }));
   return [...answers, ...guesses];
@@ -67,7 +68,7 @@ export function customChoices(
 
 // A text area is a message or an essay, not a short question, so it gets no guess.
 function offeredFor(element: TextField, choices: readonly Choice[] | undefined): readonly Choice[] | undefined {
-  return element.localName === "textarea" ? choices?.filter((choice) => choice.detail !== GUESS_DETAIL) : choices;
+  return element.localName === "textarea" ? choices?.filter((choice) => choice.tone !== "guess") : choices;
 }
 
 // A field only gets custom values when nothing else claims it: no contact or link meaning,

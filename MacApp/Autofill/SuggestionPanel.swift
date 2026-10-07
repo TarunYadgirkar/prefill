@@ -180,11 +180,12 @@ private struct SuggestionRow: View {
             VStack(alignment: .leading, spacing: 0) {
                 Text(row.value)
                     .font(.body)
+                    .foregroundStyle(valueStyle)
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Text(row.detail)
                     .font(.caption)
-                    .foregroundStyle(isSelected ? AnyShapeStyle(.white.opacity(0.85)) : AnyShapeStyle(.secondary))
+                    .foregroundStyle(detailStyle)
                     .lineLimit(1)
             }
             Spacer(minLength: 0)
@@ -198,6 +199,17 @@ private struct SuggestionRow: View {
         )
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(.isButton)
+    }
+
+    // A guess reads quieter than the person's own values, with its "Suggested" in the accent.
+    private var valueStyle: AnyShapeStyle {
+        if isSelected { return AnyShapeStyle(.white) }
+        return row.isGuess ? AnyShapeStyle(.secondary) : AnyShapeStyle(.primary)
+    }
+
+    private var detailStyle: AnyShapeStyle {
+        if isSelected { return AnyShapeStyle(.white.opacity(0.85)) }
+        return row.isGuess ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary)
     }
 
     static func symbol(_ kind: String) -> String {

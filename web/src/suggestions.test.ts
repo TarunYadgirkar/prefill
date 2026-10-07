@@ -7,35 +7,29 @@ import {
   type Suggestions,
 } from "./suggestions";
 
+const card = (value: string) => ({ value, why: "card" as const });
+const address = (street: string, postalCode: string) => ({
+  address: { street, city: "Berkeley", state: "CA", postalCode, country: "United States" },
+  why: "card" as const,
+});
+
 const values: Suggestions = {
   emails: [
-    "alex@work.example.org",
-    "alex.rivera@example.com",
-    "alex@work.example.org",
+    card("alex@work.example.org"),
+    card("alex.rivera@example.com"),
+    card("alex@work.example.org"),
   ],
-  phones: ["+1 510 555 0100"],
-  addresses: [
-    {
-      street: "2400 Durant Ave\nApt 5",
-      city: "Berkeley",
-      state: "CA",
-      postalCode: "94704",
-      country: "United States",
-    },
-    {
-      street: "1 Main St",
-      city: "Berkeley",
-      state: "CA",
-      postalCode: "94710",
-      country: "United States",
-    },
-  ],
+  phones: [card("+1 510 555 0100")],
+  addresses: [address("2400 Durant Ave\nApt 5", "94704"), address("1 Main St", "94710")],
   name: { given: "Alex", family: "Rivera" },
 };
 
+const texts = (offered: readonly { value: string }[]): string[] =>
+  offered.map(({ value }) => value);
+
 describe("suggestionOptions", () => {
   it("offers each value once, in the app's order", () => {
-    expect(suggestionOptions({ kind: "email", group: "" }, values)).toEqual([
+    expect(texts(suggestionOptions({ kind: "email", group: "" }, values))).toEqual([
       "alex@work.example.org",
       "alex.rivera@example.com",
     ]);
@@ -43,25 +37,22 @@ describe("suggestionOptions", () => {
 
   it("offers the part of each address and name a field asks for", () => {
     expect(
-      suggestionOptions({ kind: "address", part: "street", group: "" }, values),
+      texts(suggestionOptions({ kind: "address", part: "street", group: "" }, values)),
     ).toEqual(["2400 Durant Ave", "1 Main St"]);
     expect(
-      suggestionOptions(
-        { kind: "address", part: "street2", group: "" },
-        values,
-      ),
+      texts(suggestionOptions({ kind: "address", part: "street2", group: "" }, values)),
     ).toEqual(["Apt 5"]);
     expect(
-      suggestionOptions({ kind: "address", part: "city", group: "" }, values),
+      texts(suggestionOptions({ kind: "address", part: "city", group: "" }, values)),
     ).toEqual(["Berkeley"]);
     expect(
-      suggestionOptions({ kind: "name", part: "full", group: "" }, values),
+      texts(suggestionOptions({ kind: "name", part: "full", group: "" }, values)),
     ).toEqual(["Alex Rivera"]);
     expect(
-      suggestionOptions({ kind: "name", part: "middle", group: "" }, values),
+      texts(suggestionOptions({ kind: "name", part: "middle", group: "" }, values)),
     ).toEqual([]);
     expect(
-      suggestionOptions({ kind: "phone", part: "partial", group: "" }, values),
+      texts(suggestionOptions({ kind: "phone", part: "partial", group: "" }, values)),
     ).toEqual([]);
   });
 });
