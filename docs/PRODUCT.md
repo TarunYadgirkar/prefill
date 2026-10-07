@@ -36,10 +36,10 @@ This document has three parts:
 
 **The idea:** Click a field, pick a value. Prefill shows its own list under (or over) every field it recognizes, with the best answer first and a line saying why it's there, and it remembers what you pick. Fill form, which fills a whole application at once, stays one tap away but is never the default.
 
-Underneath, Prefill still manages your contact card, because Safari's own bar and NameDrop read it:
-- it adds the values you type;
-- it reorders them per site, so Safari's bar agrees with Prefill's list (Phase 4 of the plan would freeze the card to name and phone instead; not started);
-- it keeps links, custom answers and, in minimal mode, emails and addresses on a separate Prefill contact.
+Underneath, Prefill keeps your contact card as the thing you share, because Safari's own bar, NameDrop, AirDrop and Share Contact read it:
+- it never reorders the card for a site (Phase 4); Prefill's list does the ranking;
+- it offers once to keep only your name and one phone on the card, and keeps links, custom answers and, on such a minimal card, emails and addresses on a separate Prefill contact, where new values go too;
+- on a card that isn't minimal it still adds the values you type.
 
 ### What a person gets
 
@@ -70,7 +70,6 @@ iPhone Safari page
   └─ Prefill Safari extension (web/src)
        ├─ Prefill's list under each field (dropdown.ts) ◄── suggestions with why, ranked per site
        ├─ picks ─────────────► remembered per site / per question (no card write)
-       ├─ reorders the Me card per site ─────────────► Safari's own bar
        └─ saves typed values and learned answers ─► Extension handler ─► PrefillKit ─► Contacts (iCloud)
 
 Mac, any app
@@ -107,8 +106,8 @@ for the app's Inbox and You screens.
 
 ### Decisions worth knowing
 
-- **Card rewrite instead of a custom keyboard or bar.** It's the only way to stay in Apple's own bar.
-- **Prefill's own list everywhere, not a datalist.** Safari's bar shows at most three values with no labels; Prefill's list shows every value with why it's there. The datalist path is no longer used.
+- **Card rewrite instead of a custom keyboard or bar.** It was the only way to stay in Apple's own bar. Since Phase 4 the card no longer follows the site: it's what people get when you share it, so it holds your name and phone, and Prefill's list carries the rest.
+- **Prefill's own list everywhere, not a datalist.** Safari's bar shows at most three values with no labels; Prefill's list shows every value with why it's there. The datalist path is gone.
 - **Picks are remembered without writing the card.** A pick goes into per-device events; the card only changes when the person adds, edits or confirms something.
 - **The list sits clear of Safari's bubble.** On contact fields Safari swallows taps in a band about 100 pt under the field, so there Prefill's list goes above the field.
 - **iCloud Contacts as the sync layer.** It's free, needs no server, and works with the free Apple ID.
