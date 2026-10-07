@@ -75,11 +75,11 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 3.3 Usage history per answer ("Used on")
   - [x] 3.4 Merge
 - **Phase 4: Freeze the Me card** (Gate: Tarun says go)
-  - [ ] 4.1 Stop per-site card rewrites
-  - [ ] 4.2 Safari shows Prefill's list for every contact kind
-  - [ ] 4.3 Short card for everyone: setup and the upgrade prompt
-  - [ ] 4.4 Remove the datalist path and `offCard`
-  - [ ] 4.5 Sheet pins without rewriting
+  - [x] 4.1 Stop per-site card rewrites (card writes never rank, not just host-less)
+  - [x] 4.2 Safari shows Prefill's list for every contact kind (MinimalCardE2ETests passes)
+  - [x] 4.3 Short card for everyone: Inbox offer, phone pick, Mac flow, and setup reuses the Inbox offer
+  - [x] 4.4 Remove the datalist path and `offCard`
+  - [x] 4.5 Sheet pins without rewriting (PopupE2ETests updated and passes)
   - [ ] 4.6 Device check (NameDrop, Share Contact, bar) and merge
 - **Phase 5: The app is an inbox**
   - [x] 5.1 iPhone: Inbox tab

@@ -25,8 +25,8 @@ public enum NativeFraming {
 extension MessageCoding {
     // What the native host passes on, and the app answers, for Chrome and Arc: a request a
     // page's content script sends there, which passed every check, rebuilt from its known
-    // fields. Safari's sheet requests and pageContext (which reorders the card) are turned
-    // away, so another extension that claims Prefill's ID can't read or rewrite the card.
+    // fields. Safari's sheet requests are turned away, so another extension that claims
+    // Prefill's ID can't read the card the way the sheet does or pin values for a site.
     public static func validatedRequest(_ body: Data) throws -> Data {
         guard body.count <= MessageLimits.bytes else { throw MessageError.tooLarge }
         let object: Any
@@ -49,7 +49,7 @@ extension ExtensionRequest {
     var isBrowserPageRequest: Bool {
         switch self {
         case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers, .picked: true
-        case .pageContext, .popupState, .pin, .unpin, .undoCapture, .muteSite: false
+        case .popupState, .pin, .unpin, .undoCapture, .muteSite: false
         }
     }
 }

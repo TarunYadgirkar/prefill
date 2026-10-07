@@ -1,6 +1,5 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify, isSignIn } from "./classify";
-import { attachDatalist } from "./datalist";
 import type { Attach, Choice, TextField } from "./dropdown";
 import {
   eventOrigin,
@@ -29,9 +28,8 @@ export interface CustomOptions {
   send: (request: CustomSuggestionsRequest | PickedRequest) => Promise<unknown>;
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
-  // How the values are shown: a datalist for Safari's bar unless the caller draws its own
-  // list, which also works on text areas.
-  attach?: Attach;
+  // Draws Prefill's list under the field (showDropdown in pages).
+  attach: Attach;
   // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
   skip?: (element: FieldElement) => boolean;
   textAreas?: boolean;
@@ -39,8 +37,8 @@ export interface CustomOptions {
 
 const MAX_INSPECTED = 200;
 export const CUSTOM_DETAIL = "Custom field";
-// A datalist shows on text inputs; text areas and selects never show one, and a search box
-// never wants a saved answer.
+// Plain text inputs, and text areas when the caller asks; a search box never wants a saved
+// answer.
 const LIST_INPUTS: ReadonlySet<string> = new Set(["text"]);
 const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
 
@@ -113,9 +111,8 @@ export function joinFieldText(parts: readonly string[]): string {
 }
 
 // Offers the person's custom field values ("School" = "UC Berkeley") on fields whose words
-// match, through a datalist: Safari's bar shows it on fields it doesn't fill from the card,
-// and Chrome's dropdown shows it too. The matches are fetched when the page loads, since
-// Safari reads the list as the field takes focus, and again on each focus, which covers
+// match, in Prefill's own list under the field. The matches are fetched when the page loads,
+// so the list is ready as the field takes focus, and again on each focus, which covers
 // fields a page adds later. The list goes away when the field loses focus.
 export function installCustom(
   doc: Document,
@@ -123,14 +120,10 @@ export function installCustom(
 ): () => void {
   const isUserEvent =
     options.isUserEvent ?? ((event: Event) => event.isTrusted);
-  const attach = options.attach ?? attachDatalist;
-  // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
+  const attach = options.attach;
   // Prefill's own list would sit on top of the page's, so it skips fields that have one.
   const isTaken = (element: FieldElement): boolean =>
-    options.skip?.(element) === true ||
-    (attach === attachDatalist
-      ? element.hasAttribute("list")
-      : hasOwnList(element));
+    options.skip?.(element) === true || hasOwnList(element);
   const isCandidate = (element: FieldElement): element is TextField =>
     isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);

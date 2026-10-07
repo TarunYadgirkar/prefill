@@ -137,7 +137,6 @@ struct CardSplitTests {
         let split = minimalSplit
         let writes = split.writes(for: split.record.replacing(.email, with: Array(Alex.card.emails.reversed())))
         #expect(writes.isEmpty)
-        #expect(split.placement.cardKeys == [Alex.mobile.entry.key])
     }
 
     // NameDrop keeps offering the number the person picked only while the card's phones stay put.
@@ -148,6 +147,18 @@ struct CardSplitTests {
         #expect(split.writes(for: reordered).isEmpty)
         let trimmed = split.writes(for: split.record.replacing(.phone, with: [Alex.workPhone.entry]))
         #expect(trimmed.card?.phones == [Alex.workPhone.entry])
+    }
+
+    // The person picks the one number the card keeps; the first until they pick another.
+    @Test func theMovesKeepOnlyThePhoneThePersonPicks() {
+        let placement = CardSplit(card: Alex.card, copies: []).placement
+        let mobile = CardExtra.entry(Alex.mobile.entry)
+        let work = CardExtra.entry(Alex.workPhone.entry)
+        #expect(placement.phonesOnCard == [mobile, work])
+        #expect(placement.suggestedMoves == placement.moves(keeping: mobile))
+        let keepingWork = placement.moves(keeping: work)
+        #expect(keepingWork.contains(mobile) && !keepingWork.contains(work))
+        #expect(keepingWork.count == placement.onCard.count - 1)
     }
 
     @Test func leavingAMinimalCardPutsEverythingBackOnIt() throws {

@@ -4,7 +4,6 @@ import {
   FIELD_KINDS,
   LINK_TYPES,
   SECTION_HINTS,
-  SYNC_STATUSES,
   POPUP_STATUSES,
   RECENT_STATES,
   PICK_KINDS,
@@ -16,8 +15,6 @@ import {
   type CaptureRequest,
   type CaptureResult,
   type ErrorResponse,
-  type PageContextRequest,
-  type PageContextResult,
   type Ping,
   type Pong,
   type PopupStateRequest,
@@ -128,16 +125,6 @@ const customSuggestionsResult: CustomSuggestionsResult = {
   ],
 };
 
-const pageContext: PageContextRequest = {
-  type: "pageContext",
-  host: "shop.example.net",
-  fields: [
-    { kind: "email", section: "work" },
-    { kind: "phone" },
-    { kind: "address", section: "shipping" },
-  ],
-};
-
 const capture: CaptureRequest = {
   type: "capture",
   host: "shop.example.net",
@@ -176,16 +163,6 @@ const capture: CaptureRequest = {
 };
 
 const pong: Pong = { type: "pong" };
-const pageContextResult: PageContextResult = {
-  type: "pageContextResult",
-  status: "saved",
-};
-const pageContextFailed: PageContextResult = {
-  type: "pageContextResult",
-  status: "failed",
-  reason:
-    "Prefill can't reach your contact card. Open Prefill to give it access again.",
-};
 const captureResult: CaptureResult = {
   type: "captureResult",
   saved: 1,
@@ -252,7 +229,6 @@ describe("message contract", () => {
       fieldKind: [...FIELD_KINDS],
       linkType: [...LINK_TYPES],
       sectionHint: [...SECTION_HINTS],
-      syncStatus: [...SYNC_STATUSES],
       popupStatus: [...POPUP_STATUSES],
       recentState: [...RECENT_STATES],
       pickKind: [...PICK_KINDS],
@@ -266,23 +242,24 @@ describe("message contract", () => {
   ])("accepts the page field %j", (field) => {
     expect(
       isExtensionRequest({
-        type: "pageContext",
+        type: "contactSuggestions",
         host: "example.net",
         fields: [field],
       }),
     ).toBe(true);
   });
 
-  it.each(SYNC_STATUSES)("accepts the sync status %s", (status) => {
-    expect(isExtensionResponse({ type: "pageContextResult", status })).toBe(
-      true,
-    );
+  // Prefill no longer reorders the card for a page, so the old report is an unknown message.
+  it("turns away the retired pageContext messages", () => {
+    expect(
+      isExtensionRequest({ type: "pageContext", host: "example.net", fields: [{ kind: "email" }] }),
+    ).toBe(false);
+    expect(isExtensionResponse({ type: "pageContextResult", status: "saved" })).toBe(false);
   });
 
   it.each(
     Object.entries({
       ping,
-      pageContext,
       capture,
       popupState,
       pin,
@@ -305,8 +282,6 @@ describe("message contract", () => {
   it.each(
     Object.entries({
       pong,
-      pageContextResult,
-      pageContextFailed,
       captureResult,
       popupStateResult,
       linkSuggestionsResult,
@@ -329,10 +304,10 @@ describe("message contract", () => {
     {},
     { type: "launch" },
     { type: "toString" },
-    { type: "pageContext", host: "example.net" },
-    { type: "pageContext", host: "example.net", fields: [{ kind: "fax" }] },
+    { type: "contactSuggestions", host: "example.net" },
+    { type: "contactSuggestions", host: "example.net", fields: [{ kind: "fax" }] },
     {
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "example.net",
       fields: [{ kind: "email", section: "school" }],
     },
@@ -359,7 +334,7 @@ describe("message contract", () => {
       trigger: "script",
       fields: [],
     },
-    { type: "pageContext", host: "Example.net/path", fields: [] },
+    { type: "contactSuggestions", host: "Example.net/path", fields: [] },
     { type: "popupState", host: "example.net", kinds: ["name"] },
     {
       type: "popupState",
@@ -378,7 +353,6 @@ describe("message contract", () => {
   });
 
   it.each([
-    { type: "pageContextResult", status: "done" },
     { type: "captureResult", saved: -1, review: 0, ignored: 0 },
     { type: "error" },
   ])("rejects the response %j", (message) => {
@@ -493,7 +467,7 @@ describe("message limits, mirrored in MessageLimits.swift", () => {
     [
       "too many page fields",
       {
-        type: "pageContext",
+        type: "contactSuggestions",
         host: "example.net",
         fields: Array<unknown>(LIMITS.pageFields + 1).fill({ kind: "email" }),
       },

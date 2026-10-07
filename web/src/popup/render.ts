@@ -44,21 +44,6 @@ function button(label: string, className: string, onTap: () => void, disabled: b
 const valueLines = (value: PopupValue): HTMLElement =>
   el("span", "lines", el("span", "caption", value.caption), el("span", "text", value.text));
 
-// Safari's QuickType row: two slots, the label over the value, the first slot marked.
-function bar(entry: PopupKind | undefined): HTMLElement {
-  const slots = (entry?.values ?? []).slice(0, 2);
-  const row = el("div", slots.length === 1 ? "bar alone" : "bar");
-  row.setAttribute("role", "group");
-  row.setAttribute("aria-label", "Safari suggests");
-  if (slots.length === 0) row.append(el("span", "slot empty", "Nothing on your card yet"));
-  slots.forEach((value, index) => {
-    const slot = el("span", index === 0 ? "slot first" : "slot", valueLines(value));
-    slot.style.setProperty("view-transition-name", `value-${value.id}`);
-    row.append(slot);
-  });
-  return row;
-}
-
 function pinnedNote(entry: PopupKind, view: SheetView, actions: SheetActions): HTMLElement | undefined {
   if (entry.pinnedID === undefined || entry.pinnedID !== entry.values[0]?.id) return undefined;
   const unpin = (): void => {
@@ -67,23 +52,31 @@ function pinnedNote(entry: PopupKind, view: SheetView, actions: SheetActions): H
   return el("p", "pinned", "Picked for this site. ", button("Let Prefill choose", "link", unpin, view.busy));
 }
 
+// Every value of the kind, in the order Prefill's list under a field offers them here. The
+// first is marked; tapping another puts it first on this site. The card itself never changes.
 function choices(entry: PopupKind, view: SheetView, actions: SheetActions): HTMLElement {
+  const plural = KIND_NAMES[entry.kind].plural;
+  if (entry.values.length === 0) return el("section", "group", el("p", "footnote", `No ${plural} saved in Prefill yet.`));
   const isOff = view.state?.status === "off";
-  const rows = entry.values.slice(1).map((value) => {
+  const rows = entry.values.map((value, index) => {
+    if (index === 0) {
+      const first = el("div", "row first", valueLines(value), el("span", "accessory quiet", "First"));
+      first.style.setProperty("view-transition-name", `row-${value.id}`);
+      return el("li", undefined, first);
+    }
     const pick = (): void => {
       actions.send({ type: "pin", host: view.host, kind: entry.kind, valueID: value.id });
     };
     const row = button("", "row choice", pick, view.busy || isOff);
     row.append(valueLines(value), el("span", "accessory", "Use here"));
-    row.setAttribute("aria-label", `Use ${value.text} on this site`);
+    row.setAttribute("aria-label", `Use ${value.text} first on this site`);
     row.style.setProperty("view-transition-name", `row-${value.id}`);
     return el("li", undefined, row);
   });
   const footnote = isOff
-    ? "Reorder for each site is off in Prefill, so Safari offers the same order on every site."
-    : `Tap one to put it first here. Then tap the ${KIND_NAMES[entry.kind].tab.toLowerCase()} field again.`;
-  if (rows.length === 0) return el("section", "group", el("p", "footnote", `No other ${KIND_NAMES[entry.kind].plural} on your card.`));
-  return el("section", "group", el("h2", undefined, "Other choices"), el("ul", "list", ...rows), el("p", "footnote", footnote));
+    ? "“Put the value you used on a site first” is off in Prefill, so its list keeps one order on every site."
+    : `Tap one to put it first in Prefill’s list on this site. Your contact card stays as it is.`;
+  return el("section", "group", el("ul", "list", ...rows), el("p", "footnote", footnote));
 }
 
 function recentRow(item: PopupRecent, view: SheetView, actions: SheetActions): HTMLElement {
@@ -155,14 +148,13 @@ function problem(title: string, detail: string): HTMLElement {
 
 function body(view: SheetView, actions: SheetActions): Child[] {
   const state = view.state;
-  if (state === undefined) return [bar(undefined), el("p", "footnote", "Checking your card…")];
+  if (state === undefined) return [el("p", "footnote", "Checking your card…")];
   if (state.status === "notSetUp") return [problem("Finish setting up Prefill", "Open Prefill to choose your contact card.")];
   const entry = state.kinds.find((item) => item.kind === view.kind);
   if (entry === undefined) return [problem("Prefill couldn't read your card", state.reason ?? "Try again in a moment.")];
   const failure = state.status === "failed" ? el("p", "failure", state.reason ?? "Something went wrong. Try again.") : undefined;
   return [
     kindTabs(view, state.kinds.map((item) => item.kind), actions),
-    bar(entry),
     pinnedNote(entry, view, actions),
     failure,
     choices(entry, view, actions),
@@ -172,7 +164,7 @@ function body(view: SheetView, actions: SheetActions): Child[] {
 }
 
 export function render(root: HTMLElement, view: SheetView, actions: SheetActions): void {
-  const header = el("header", "site", el("p", "eyebrow", "Safari will suggest on"), el("h1", undefined, view.host));
+  const header = el("header", "site", el("p", "eyebrow", "First on this site"), el("h1", undefined, view.host));
   const note = el("p", "note", view.note);
   note.setAttribute("role", "status");
   root.setAttribute("aria-busy", String(view.busy || view.state === undefined));

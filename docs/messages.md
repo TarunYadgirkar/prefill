@@ -9,11 +9,11 @@ The content script runs in the top frame of `https` pages, plus plain `http` on 
 | Exact host | `boards.greenhouse.io`, `boards.eu.greenhouse.io`, `job-boards.greenhouse.io`, `job-boards.eu.greenhouse.io`, `jobs.lever.co`, `jobs.eu.lever.co`, `jobs.ashbyhq.com`, `apply.workable.com`, `jobs.smartrecruiters.com` |
 | That domain or any subdomain | `myworkdayjobs.com` |
 
-Such a frame works under its own host, not the host of the page around it: its `pageContext`, captures and suggestions are for `boards.greenhouse.io`, say, and the career page's top frame runs separately under its own host. The manifest still matches every `http` and `https` page in every frame, because Safari only offers the All Websites switch for a pattern that covers every site, so the script itself bails out anywhere else, before adding any listener, and checks that it is in a secure context and the top frame or a listed frame, and the background script checks the sender's address and frame again. Other frames are left out so an embedded widget from another site can't reorder the card or record values under its own host, and plain `http` is left out so a network attacker can't feed values to the card. A page without email, phone or address fields sends nothing.
+Such a frame works under its own host, not the host of the page around it: its captures and suggestions are for `boards.greenhouse.io`, say, and the career page's top frame runs separately under its own host. The manifest still matches every `http` and `https` page in every frame, because Safari only offers the All Websites switch for a pattern that covers every site, so the script itself bails out anywhere else, before adding any listener, and checks that it is in a secure context and the top frame or a listed frame, and the background script checks the sender's address and frame again. Other frames are left out so an embedded widget from another site can't read the person's values or record values under its own host, and plain `http` is left out so a network attacker can't feed values to the card. A page without email, phone or address fields sends nothing.
 
 Every message is a JSON object with a `type` field. The Swift types live in `Packages/PrefillKit/Sources/PrefillKit/Messages/Messages.swift` and the TypeScript types in `web/src/messages.ts`. Both use the same field names. The examples below are copied from `docs/message-examples.json`, which the Swift and Vitest suites both load, so a renamed field fails a test on each side.
 
-Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): in Chrome and Arc it carries the card's values, and in Safari only the values a minimal card moved to Prefill's contact, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into a datalist the page can read, but only for a field that asks for them and only once the person focuses it. Each value in these three replies also says why it is offered and carries its label, and a learned answer the site it was saved from, so a page that can read Prefill's values also learns where one of them was learned.
+Contact values only travel from the page to the app. No response carries an email, phone number or address back to the page. Safari's Prefill sheet (below) is one place values come back, and it is an extension page, so the background script never relays its messages from a page or hands its replies to one. `contactSuggestions` is another (see below): it carries the person's emails, phones, addresses and name, from the card and Prefill's contact alike, and `customSuggestions` answers a field with the person's own custom fields that match it. The last is `linkSuggestions`: profile and website links do go back to the page, into Prefill's own list under a field that asks for them, and only once the person focuses it. The list sits in a closed shadow root; a value reaches the page's own markup only when the person picks it. Each value in these three replies also says why it is offered and carries its label, and a learned answer the site it was saved from, so a page that can read Prefill's values also learns where one of them was learned.
 
 Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimits` in Swift) and the same shape rules: `host` is a lowercase host name (letters, digits, dots and dashes), no text may hold control, format (bidi overrides, zero-width characters) or line separator characters (a street may hold plain newlines), and an `address` field carries `address` and no `value` while every other kind carries `value` and no `address`. The handler answers `error` to anything that breaks them. Text lengths count UTF-16 units, as JavaScript's `length` does.
 
@@ -21,7 +21,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | --- | --- |
 | Whole message | 64 KB |
 | `host` | 253 characters |
-| `pageContext` fields | 40 |
+| `contactSuggestions` and `customSuggestions` fields | 40 |
 | `capture` fields | 20 |
 | `value` | 256 characters |
 | `autocomplete`, `name`, `label` | 100 characters each |
@@ -64,7 +64,7 @@ Every value a suggestion reply carries back says why it is offered, so Prefill's
 
 A `name` field is never saved. The capture filter only uses it to tell whether a form is about the person.
 
-A `link` field asks for a profile or website address, such as a job application's "GitHub/Portfolio:" or "LinkedIn:" question. The content script reads that from the field's label, name, id or placeholder (GitHub, portfolio, website, personal site, homepage, URL, LinkedIn, Twitter, x.com, other website), or from `type=url` and `autocomplete="url"`, which ask for a website. A field can ask for several link types, in the order its words name them. A link's type comes from its host: github.com, linkedin.com, x.com and twitter.com, and `website` for any other. On the card a link is one of the contact's URL addresses, labeled GitHub, LinkedIn, X or homepage. Link fields are never part of `pageContext`, since Safari's contact bar doesn't show links.
+A `link` field asks for a profile or website address, such as a job application's "GitHub/Portfolio:" or "LinkedIn:" question. The content script reads that from the field's label, name, id or placeholder (GitHub, portfolio, website, personal site, homepage, URL, LinkedIn, Twitter, x.com, other website), or from `type=url` and `autocomplete="url"`, which ask for a website. A field can ask for several link types, in the order its words name them. A link's type comes from its host: github.com, linkedin.com, x.com and twitter.com, and `website` for any other. On the card a link is one of the contact's URL addresses, labeled GitHub, LinkedIn, X or homepage.
 
 ## ping
 
@@ -78,46 +78,13 @@ A `link` field asks for a profile or website address, such as a job application'
 { "type": "pong" }
 ```
 
-## pageContext
+## No card order per page
 
-The content script sends `pageContext` once the page has settled: 300 ms after the last change that added a field, and never more than a second after the first such change, so forms an app renders after load still count and a page that never stops changing still gets one. It sends again when a later form adds a kind or section it hasn't reported yet, such as the address step of a checkout. The card's order is shared by every tab, so it also sends again when the page comes back from the back-forward cache or into view, and on the first focus of an email, phone or address field after load or after either of those. Each report can rewrite the card, which syncs to every device, so a page sends at most five, at least two seconds apart; a report asked for sooner waits and goes out once. It lists the kinds of email, phone and address fields on the page and their section hints, without any values. Name fields are left out because they never change the card's order. The app ranks the person's values for this site and rewrites their card if the first two values of a kind should change.
-
-| Field | Type | Meaning |
-| --- | --- | --- |
-| `host` | string | The page's host name. The app reduces it to the registrable domain, so `shop.example.net` and `example.net` share history. |
-| `fields` | array | One entry per contact field, in page order. |
-| `fields[].kind` | field kind | What the field asks for. |
-| `fields[].section` | section hint, optional | Where the field says the value is used. The first field of a kind that has a section decides the hint for that kind. |
-
-```json
-{
-  "type": "pageContext",
-  "host": "shop.example.net",
-  "fields": [
-    { "kind": "email", "section": "work" },
-    { "kind": "phone" },
-    { "kind": "address", "section": "shipping" }
-  ]
-}
-```
-
-The reply is `pageContextResult`. Its `status` is `saved` when the card was rewritten, `unchanged` when the first two values already fit or when pages have already rewritten the card six times in the last minute, `off` when Match each site is turned off, `notSetUp` when the person hasn't linked their card in Prefill yet, and `failed` when the card could not be read or saved. A failure includes a `reason` written for people. The content script only uses the status, to keep a retry for the next focus after `failed` or `error`; nothing shows the reason yet.
-
-```json
-{ "type": "pageContextResult", "status": "saved" }
-```
-
-```json
-{
-  "type": "pageContextResult",
-  "status": "failed",
-  "reason": "Prefill can't reach your contact card. Open Prefill to give it access again."
-}
-```
+Prefill never reorders the person's card for a page. The card is what NameDrop, AirDrop and Share Contact send, so it keeps one order on every site, and only the person changes it (in the app, or by confirming a move). Prefill's own list under each field does the ranking for the site: pins, use on the site, section hints and site kind, through `contactSuggestions`. The `pageContext` message that used to rewrite the card is gone; an app or host still sent one answers `unknown message`, and the `cardWrites` older event documents hold are read and ignored.
 
 ## linkSuggestions
 
-The content script asks for the card's links of the types a page's `link` fields want once the page has loaded, because Safari reads a field's list as the field takes focus and the app's answer would come too late. It asks again each time the person focuses a `link` field (within a second of a click or tap on the field or its label, or a press of Tab, while the field is on screen and has no `list` of its own; a page that focuses a field from script gets nothing), which also covers fields a page adds later. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
+The content script asks for the person's links of the types a page's `link` fields want once the page has loaded, so the list is ready as the field takes focus. It asks again each time the person focuses a `link` field (within a second of a click or tap on the field or its label, or a press of Tab, while the field is on screen and has no `list` of its own; a page that focuses a field from script gets nothing), which also covers fields a page adds later. The reply lists them in the person's order on the card, up to three of each type the request names, always as full `http` or `https` addresses. Before the card is linked, or when it can't be read, `links` is empty.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
@@ -140,11 +107,11 @@ The content script asks for the card's links of the types a page's `link` fields
 
 A link's `why` is `pinned` for the one picked on this site and `card` for the rest.
 
-The content script then gives the field a `list` and adds a `<datalist>` of up to three options, which Safari's QuickType bar shows on fields it doesn't fill from the card (REPORT.md, Spike results). A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, which keeps them short in the bar, except in a `type=url` field, which gets whole addresses and no combined option. The content script attaches them when the field takes focus, from the links it already has, and the `list` and the datalist go away when the field loses focus. Any script on the page can read the datalist while it is there, so a page can learn the links its fields ask for once the person focuses one.
+The content script then shows Prefill's own list under the field, with up to three options. A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, except in a `type=url` field, which gets whole addresses and no combined option. The list shows when the field takes focus, from the links the content script already has, and goes away when the field loses focus.
 
 ## contactSuggestions
 
-Chrome and Arc fill contact fields from their own saved addresses, never from the card, so in those browsers the content script doesn't send `pageContext` and the card's order never changes for a Chrome page. It sends `contactSuggestions` instead, once the page has loaded and again each time the person focuses a contact field (after a click, tap or Tab, as for links, on an `input` of type text, email, tel or search without a `list` of its own). `fields` has one entry per kind and section on the page. The reply holds the card's values of those kinds in the order the card would take on this site (the same ranking `pageContext` uses: pins, use on the site, section hints, site kind), up to five of each, without saving the card. Each is an object with the `value` (for an address, `address` with its parts), its `why` (`pinned`, `used` or `card`) and its `label`. `name` is the card's given and family name. Before the card is linked, or when it can't be read, every list is empty.
+In every browser the content script offers the person's contact values in Prefill's own list under the field. It sends `contactSuggestions` once the page has loaded and again each time the person focuses a contact field (after a click, tap or Tab, as for links, on an `input` of type text, email, tel or search without a `list` of its own). `fields` has one entry per kind and section on the page. The reply holds the person's values of those kinds, from the card and Prefill's contact alike, ranked for this site (pins, use on the site, section hints, site kind), up to five of each, without saving the card. Each is an object with the `value` (for an address, `address` with its parts), its `why` (`pinned`, `used` or `card`) and its `label`. `name` is the card's given and family name. Before the card is linked, or when it can't be read, every list is empty.
 
 ```json
 {
@@ -173,21 +140,15 @@ Chrome and Arc fill contact fields from their own saved addresses, never from th
 }
 ```
 
-In Safari, where the bar fills contact fields from the card, the content script still sends `pageContext` and also sends `contactSuggestions` with `"offCard": true`, asking only for values the person moved off a minimal card (Settings > Sharing your card). The reply then leaves out every value still on the card and the name, and is empty unless the card is minimal. Safari's bar shows a datalist only when the card has nothing for the field (REPORT.md, Spike results), so these emails and address parts reach the bar on a card that holds just a name and phone number; the phone field keeps the card's own suggestion.
-
-```json
-{ "type": "contactSuggestions", "host": "boards.example.io", "fields": [{ "kind": "email" }], "offCard": true }
-```
-
-The focused field gets a `list` and a `<datalist>` with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. Safari shows at most three of them in its bar, values only, and WebKit also opens its own list under the field. In Chrome and Arc Prefill draws its own list instead. As with links, any script on the page can read the datalist while it is there.
+The focused field gets Prefill's list with the values its part asks for: emails, phone numbers (none for a phone part such as an area code), the first street line, the second, the city, state, postal code or country of each address, or the full, given or family name. In Safari the content script leaves name fields out of the request and the list, because Safari's bar already offers the card's name there; Safari's bar also offers the card's phone. Every other value is in Prefill's list only.
 
 ## customSuggestions
 
 A custom field is an answer of the person's own that has no place on a contact card, such as "School" = "UC Berkeley", "Major" = "EECS" or "How did you hear about us" = "LinkedIn". Each has a label and a value. The person adds them from the You tab's Add menu on iPhone or in the Mac app's settings. Fields saved before Oct 6 may also carry extra match words ("university, college" for School); the forms no longer edit them, but they are kept and still match.
 
-They live on the card itself, so iCloud Contacts carries them between the iPhone and the Mac without an App Group or CloudKit. Each one is one of the card's related names: the value is the name, and the label is the field's label followed by ` · Prefill` and any match words, such as `School · Prefill · university, college`. Contacts shows that as an ordinary related name ("School · Prefill" over "UC Berkeley"). Prefill only reads and writes related names whose label carries that marker, so a spouse or parent on the card is never touched, and a card rewrite that reorders values leaves every related name exactly as it was (the save is refused if it wouldn't). A custom label or value may not hold line breaks or the `·` character. The limits: 20 fields, a label of 40 characters, a value of 200, and 100 characters of match words.
+They live on Prefill's own contact (on the card itself only until that contact exists), so iCloud Contacts carries them between the iPhone and the Mac without an App Group or CloudKit, and Share Contact never sends them from a short card. Each one is one of the contact's related names: the value is the name, and the label is the field's label followed by ` · Prefill` and any match words, such as `School · Prefill · university, college`. Contacts shows that as an ordinary related name ("School · Prefill" over "UC Berkeley"). Prefill only reads and writes related names whose label carries that marker, so a spouse or parent on the card is never touched, and a card rewrite that reorders values leaves every related name exactly as it was (the save is refused if it wouldn't). A custom label or value may not hold line breaks or the `·` character. The limits: 20 fields, a label of 40 characters, a value of 200, and 100 characters of match words.
 
-The content script sends `customSuggestions` once the page has loaded, and again for one field each time the person focuses it (after a click, tap or Tab, as for links). It covers text inputs without a `list` of their own that nothing else claims: not a contact or link field, no `autocomplete` token, nothing sensitive or of `type=password`, not a search box, and not on a sign-in form. Text areas and selects never show a datalist, so they are left out. Each entry's `text` is the field's label, placeholder, name and id, joined, with hidden characters turned into spaces and cut to 200 characters.
+The content script sends `customSuggestions` once the page has loaded, and again for one field each time the person focuses it (after a click, tap or Tab, as for links). It covers text inputs without a `list` of their own that nothing else claims: not a contact or link field, no `autocomplete` token, nothing sensitive or of `type=password`, not a search box, and not on a sign-in form. In pages it covers text areas too; selects are left out. Each entry's `text` is the field's label, placeholder, name and id, joined, with hidden characters turned into spaces and cut to 200 characters.
 
 The app splits each text into lowercase words (at camelCase, digits and punctuation), drops filler words such as "your" and "how", and drops a plural "s". A custom field's label and each of its match words is a phrase; a phrase matches when all its words appear in the field's words, so "Graduation year" matches "Expected graduation year" but not "Year of birth". The custom field whose matching phrase has the most words wins, and fields that tie are all offered, up to three, in the card's order. The reply has one entry per field asked about, in order. Each value carries the custom field's `label` and `why`: `learned` with the `site` it was saved from when Prefill learned it from a form and it still reads as learned, else `card`. Before the card is linked, or when it can't be read, every list is empty.
 
@@ -212,7 +173,7 @@ A field no rule matched may carry a `guesses` entry: the saved answer Apple's on
 }
 ```
 
-The focused field gets a `list` and a `<datalist>` of its values, which Safari's QuickType bar shows (Safari has no contact suggestion of its own for such a field) and Chrome and Arc show in their dropdown. As with links, any script on the page can read the datalist while it is there.
+The focused field gets Prefill's list of its values, in Safari as in Chrome and Arc.
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 
@@ -299,7 +260,7 @@ The app uses `autocomplete`, `name` and `label` to skip fields meant for someone
 }
 ```
 
-The reply is `captureResult`, with counts only. `saved` values went onto the card (ranked first for this site when Match each site is on, and placed after the person's own order when it is off), `review` values wait in Recently added for the person to confirm, and `ignored` fields were skipped. A value already on the card counts toward none of the three, since only its use on this site is recorded, and only when Match each site is on. A new value goes straight onto the card only when the form also holds something already on the card that the person typed themselves: one of its emails, phones or addresses, or its full name (given and family, in one box or split across two). A password box, tags or a lone first name are not enough, since a page controls them. Values go to review instead of the card without that, when the report has `trigger: "flush"`, when the card can't be written, or past the save limits: three new values per form and six per hour across all sites. One site can file at most 20 values for review a day; past that its values count as `ignored`. Before the person has linked their card, or when the card can't be read, the app stores nothing and every field counts as `ignored`.
+The reply is `captureResult`, with counts only. `saved` values went onto the card after the person's own order, or onto Prefill's contact when the card is minimal (only a name and phone; nothing new ever lands on it), `review` values wait in Recently added for the person to confirm, and `ignored` fields were skipped. A value already on the card counts toward none of the three, since only its use on this site is recorded, and only when Match each site is on. A new value goes straight onto the card only when the form also holds something already on the card that the person typed themselves: one of its emails, phones or addresses, or its full name (given and family, in one box or split across two). A password box, tags or a lone first name are not enough, since a page controls them. Values go to review instead of the card without that, when the report has `trigger: "flush"`, when the card can't be written, or past the save limits: three new values per form and six per hour across all sites. One site can file at most 20 values for review a day; past that its values count as `ignored`. Before the person has linked their card, or when the card can't be read, the app stores nothing and every field counts as `ignored`.
 
 ```json
 { "type": "captureResult", "saved": 1, "review": 0, "ignored": 1 }
@@ -313,9 +274,9 @@ Every sheet request carries the `host` it is about, checked like any other host,
 
 | Request | Fields | What the app does |
 | --- | --- | --- |
-| `popupState` | `host`, `kinds` (at most 3) | Reads the card and plans this site's order without saving. |
-| `pin` | `host`, `kind`, `valueID` | Records the pick for the site, rewrites the card so the value is first, and answers for that kind. Does nothing with Match each site off. |
-| `unpin` | `host`, `kind` | Takes the pick back and rewrites the card the same way. |
+| `popupState` | `host`, `kinds` (at most 3) | Reads the person's values and ranks them for this site, without saving. |
+| `pin` | `host`, `kind`, `valueID` | Records the pick for the site, so Prefill's list offers the value first there, and answers for that kind. The card never changes. Does nothing with "Put the value you used on a site first" off. |
+| `unpin` | `host`, `kind` | Takes the pick back. |
 | `undoCapture` | `host`, `valueID` | For a value captured on this site: takes it off the card if it was saved, or turns it down if it was waiting for review. Either way later forms don't save it again. A value the person put on the card is never removed, nor one already undone or turned down that they put back by hand. |
 | `muteSite` | `host`, `muted` | Turns "Don't save on this site" on or off. While it is on, a `capture` from the site is dropped whole. |
 
@@ -325,7 +286,7 @@ These are recorded as events (`pins`, `mutes`, and a `dismissed` capture for an 
 { "type": "pin", "host": "shop.example.net", "kind": "email", "valueID": "5E1D7C1A-8C1B-5F0E-9A6B-2C4D6E8F0A1B" }
 ```
 
-The reply lists, for each kind asked about, every value in the order Safari will offer them on the site (the first two are the bar's two slots), with the label as the bar captions it and the value on one line. `pinnedID` is the value picked for the site, if any. `recent` holds up to five values saved from the site, newest first, and `muted` says whether the site is muted.
+The reply lists, for each kind asked about, every value in the order Prefill's list offers them on the site, first first, with the label's caption and the value on one line. `pinnedID` is the value picked for the site, if any. `recent` holds up to five values saved from the site, newest first, and `muted` says whether the site is muted.
 
 | Limit | Value |
 | --- | --- |
@@ -364,7 +325,7 @@ When a `capture` reply has values waiting for review, the background script puts
 
 ## One-tap fill
 
-The pill Prefill shows beside a field the person just clicked or tabbed into, and the Fill button at the top of Safari's sheet, fill the whole form the field is in. The content script asks the app the same three questions the field lists use, once each and only for what the form needs: `contactSuggestions` (without `offCard`, also in Safari, since it fills the fields itself), `linkSuggestions` and `customSuggestions`, whose `text` for a select is its label and for a radio group its legend or question. Nothing new reaches the page that a field's own list wouldn't offer; the difference is that one tap places every value at once.
+The pill Prefill shows beside a field the person just clicked or tabbed into, and the Fill button at the top of Safari's sheet, fill the whole form the field is in. The content script asks the app the same three questions the field lists use, once each and only for what the form needs: `contactSuggestions` (with name fields, also in Safari, since it fills the fields itself), `linkSuggestions` and `customSuggestions`, whose `text` for a select is its label and for a radio group its legend or question. Nothing new reaches the page that a field's own list wouldn't offer; the difference is that one tap places every value at once.
 
 The sheet talks to the page's content script, not to the app, with two messages only this extension's pages can send:
 

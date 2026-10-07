@@ -60,7 +60,7 @@ public enum PopupStatus: String, Codable, Sendable, CaseIterable {
     case ready, off, notSetUp, failed
 }
 
-// One value as Safari's bar shows it: the label's caption over one line of text.
+// One value as the sheet lists it: the label's caption over one line of text.
 public struct PopupValue: Codable, Sendable, Hashable {
     public let id: UUID
     public let caption: String
@@ -81,8 +81,7 @@ public struct PopupValue: Codable, Sendable, Hashable {
     }
 }
 
-// Every value of a kind in the order Safari will offer them on this site; the first two
-// are the bar's two slots.
+// Every value of a kind in the order Prefill's list offers them on this site, first first.
 public struct PopupKind: Codable, Sendable, Hashable {
     public let kind: ContactKind
     public let values: [PopupValue]

@@ -19,6 +19,8 @@ final class AppModel {
     }
 
     static let finishedOnboardingKey = "finishedOnboarding"
+    // Set by "Not now" on the offer to keep only name and phone on the card, so it shows once.
+    static let declinedShortCardKey = "declinedShortCard"
 
     private(set) var state = AppState()
     private(set) var events = ExtensionEvents()
@@ -29,6 +31,7 @@ final class AppModel {
     private(set) var access: ContactsAccess
     private(set) var extensionEnabled: Bool?
     private(set) var hasFinishedOnboarding: Bool
+    private(set) var hasDeclinedShortCard: Bool
     private(set) var isLoaded = false
     private(set) var intelligenceState = IntelligenceState.unsupported
     var problem: Problem?
@@ -52,6 +55,7 @@ final class AppModel {
         self.defaults = defaults
         self.access = contacts.access
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
+        self.hasDeclinedShortCard = defaults.bool(forKey: Self.declinedShortCardKey)
     }
 
     // The one model of the running app, shared by its screens.
@@ -148,6 +152,11 @@ final class AppModel {
         defaults.set(true, forKey: Self.finishedOnboardingKey)
     }
 
+    func declineShortCard() {
+        hasDeclinedShortCard = true
+        defaults.set(true, forKey: Self.declinedShortCardKey)
+    }
+
     // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
     func deleteAllData() async {
         do {
@@ -160,7 +169,9 @@ final class AppModel {
             return
         }
         defaults.removeObject(forKey: Self.finishedOnboardingKey)
+        defaults.removeObject(forKey: Self.declinedShortCardKey)
         hasFinishedOnboarding = false
+        hasDeclinedShortCard = false
         state = AppState()
         events = ExtensionEvents()
         await reload()

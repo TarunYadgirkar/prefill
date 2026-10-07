@@ -13,8 +13,8 @@ public protocol SharedStore: Sendable {
 }
 
 extension SharedStore {
-    public func appendEvents(usage: [UsageEvent], captures: [Capture], cardWrites: [Date] = []) throws {
-        try appendEvents(ExtensionEvents(usage: usage, captures: captures, cardWrites: cardWrites))
+    public func appendEvents(usage: [UsageEvent], captures: [Capture]) throws {
+        try appendEvents(ExtensionEvents(usage: usage, captures: captures))
     }
 }
 

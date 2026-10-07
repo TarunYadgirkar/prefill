@@ -10,7 +10,7 @@ struct InboxScreen: View {
     var body: some View {
         NavigationStack {
             Group {
-                if model.needsYou.isEmpty && model.recently.isEmpty {
+                if model.needsYou.isEmpty && model.recently.isEmpty && !model.offersShortCard {
                     EmptyStateView(
                         title: "Nothing new", systemImage: "tray",
                         message: Text("Prefill adds what you type into forms, and it shows up here.")
@@ -33,6 +33,9 @@ private struct InboxList: View {
 
     var body: some View {
         List {
+            if model.offersShortCard {
+                ShortCardOffer()
+            }
             if !model.needsYou.isEmpty {
                 Section {
                     ForEach(model.needsYou) { item in
@@ -59,6 +62,7 @@ private struct InboxList: View {
         }
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.needsYou)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.recently)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: model.offersShortCard)
         .sheet(item: $editing) { field in
             CustomFieldSheet(original: field)
         }

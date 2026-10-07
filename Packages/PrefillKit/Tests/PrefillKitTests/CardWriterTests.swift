@@ -84,6 +84,15 @@ struct CardWriterTests {
         SitePin(host: "example.net", kind: value.kind, valueID: value.id)
     }
 
+    // The person's own order with the school email first, which the card doesn't have yet.
+    private func emailsFirst(_ emails: [ContactValue]) -> [ContactValue] {
+        emails + Alex.allValues.filter { $0.kind != .email }
+    }
+
+    private var schoolFirst: [ContactValue] {
+        emailsFirst([Alex.schoolEmail, Alex.homeEmail, Alex.workEmail])
+    }
+
     @Test func skipsTheSaveWhenTheFirstTwoAlreadyMatch() {
         let gateway = FakeGateway()
         let result = sync(gateway)
@@ -92,9 +101,35 @@ struct CardWriterTests {
         #expect(gateway.fetches == 1)
     }
 
-    @Test func rewritesTheCardInRankedOrderInOneSave() {
+    // The card is what NameDrop and Share Contact send, so a page never orders it: pins,
+    // use on the site and section hints only order Prefill's list.
+    @Test func aWriteForAPageGivesTheSameCardAsOneWithoutAHost() {
+        let new = Alex.value(.email("alex.new@example.net"), label: nil, source: .captured)
+        let forPage = FakeGateway()
+        let usage = [UsageEvent(valueID: Alex.schoolEmail.id, host: "shop.example.net", date: .daysAgo(1))]
+        let pins = [pin(Alex.workPhone), SitePin(host: "shop.example.net", kind: .email, valueID: Alex.schoolEmail.id)]
+        #expect(sync(forPage, additions: [new], usage: usage, pins: pins, hints: [.email: .work]).outcome == .saved)
+        let hostless = FakeGateway()
+        let request = CardSyncRequest(
+            cardIdentifier: "alex-card", known: Alex.allValues, additions: [new], usage: [], pins: [],
+            page: PageSignal(host: nil, hints: [:], now: .testNow, matchEachSite: true)
+        )
+        #expect(CardWriter(gateway: hostless).sync(request).outcome == .saved)
+        #expect(forPage.card == hostless.card)
+        #expect(forPage.card.emails == (Alex.emails + [new]).map(\.entry))
+        #expect(forPage.card.phones == Alex.card.phones)
+    }
+
+    @Test func sitePinsAloneNeverWriteTheCard() {
         let gateway = FakeGateway()
-        let result = sync(gateway, pins: [pin(Alex.schoolEmail)])
+        #expect(sync(gateway, pins: [pin(Alex.schoolEmail), pin(Alex.workPhone)], hints: [.email: .work]).outcome
+            == .unchanged)
+        #expect(gateway.saves.isEmpty)
+    }
+
+    @Test func rewritesTheCardInThePersonsOrderInOneSave() {
+        let gateway = FakeGateway()
+        let result = sync(gateway, known: schoolFirst)
         #expect(result.outcome == .saved)
         #expect(gateway.saves.count == 1)
         #expect(gateway.card.emails == [Alex.schoolEmail.entry, Alex.homeEmail.entry, Alex.workEmail.entry])
@@ -104,7 +139,7 @@ struct CardWriterTests {
 
     @Test func tagsEverySaveWithPrefillAsTheAuthor() {
         let gateway = FakeGateway()
-        _ = sync(gateway, pins: [pin(Alex.workPhone)])
+        _ = sync(gateway, known: schoolFirst)
         #expect(gateway.saves.map(\.author) == ["prefill"])
     }
 
@@ -139,7 +174,8 @@ struct CardWriterTests {
         let card = Alex.card.replacing(.email, with: Alex.card.emails + [duplicate])
         let gateway = FakeGateway(card: card)
         let deletedElsewhere = Alex.value(.email("old@example.net"), label: nil)
-        _ = sync(gateway, known: [deletedElsewhere] + Alex.allValues, pins: [pin(Alex.workEmail)])
+        let workFirst = emailsFirst([deletedElsewhere, Alex.workEmail, Alex.homeEmail, Alex.schoolEmail])
+        _ = sync(gateway, known: workFirst)
         let written = gateway.card.emails
         #expect(written.count == card.emails.count)
         #expect(Set(written) == Set(card.emails))
@@ -150,7 +186,8 @@ struct CardWriterTests {
     @Test func valuesDeletedElsewhereAreNotWrittenBack() {
         let gateway = FakeGateway()
         let deletedElsewhere = Alex.value(.email("old@example.net"), label: nil)
-        _ = sync(gateway, known: [deletedElsewhere] + Alex.allValues, pins: [pin(Alex.workEmail)])
+        _ = sync(gateway, known: emailsFirst([deletedElsewhere, Alex.workEmail, Alex.homeEmail, Alex.schoolEmail]))
+        #expect(gateway.saves.count == 1)
         #expect(!gateway.card.emails.contains(deletedElsewhere.entry))
     }
 
@@ -175,7 +212,8 @@ struct CardWriterTests {
             CardEntry(label: "School", payload: Alex.schoolEmail.payload), Alex.homeEmail.entry, Alex.workEmail.entry
         ])
         let gateway = FakeGateway(card: card)
-        _ = sync(gateway, pins: [pin(Alex.workEmail)])
+        _ = sync(gateway, known: emailsFirst([Alex.workEmail, Alex.homeEmail, Alex.schoolEmail]))
+        #expect(gateway.saves.count == 1)
         #expect(gateway.card.emails.contains(CardEntry(label: "School", payload: Alex.schoolEmail.payload)))
     }
 
@@ -183,16 +221,8 @@ struct CardWriterTests {
         let asTyped = CardEntry(label: Alex.workLabel, payload: .email("Alex@Work.example.org"))
         let card = Alex.card.replacing(.email, with: [Alex.homeEmail.entry, asTyped, Alex.schoolEmail.entry])
         let gateway = FakeGateway(card: card)
-        _ = sync(gateway, pins: [pin(Alex.workEmail)])
+        _ = sync(gateway, known: emailsFirst([Alex.workEmail, Alex.homeEmail, Alex.schoolEmail]))
         #expect(gateway.card.emails.first == asTyped)
-    }
-
-    @Test func sectionHintsApplyPerKind() {
-        let gateway = FakeGateway()
-        let result = sync(gateway, hints: [.email: .work])
-        #expect(result.outcome == .saved)
-        #expect(gateway.card.emails.first == Alex.workEmail.entry)
-        #expect(gateway.card.phones == Alex.card.phones)
     }
 
     @Test func refetchesBeforeEverySync() {
@@ -257,7 +287,7 @@ struct CardWriterTests {
         gateway.state.withLock { state in
             state.editsBeforeSave = [{ $0.replacing(.email, with: $0.emails + [captured]) }]
         }
-        let result = sync(gateway, pins: [pin(Alex.schoolEmail)])
+        let result = sync(gateway, known: schoolFirst)
         #expect(result.outcome == .saved)
         #expect(gateway.state.withLock(\.calls) == ["fetch", "stale", "save"])
         #expect(gateway.card.emails.first == Alex.schoolEmail.entry)
@@ -272,7 +302,7 @@ struct CardWriterTests {
             return card.replacing(.email, with: card.emails + [another])
         }
         gateway.state.withLock { $0.editsBeforeSave = [edit, edit] }
-        let result = sync(gateway, pins: [pin(Alex.schoolEmail)])
+        let result = sync(gateway, known: schoolFirst)
         #expect(result.outcome == .failed(.changedDuringSave))
         #expect(gateway.saves.isEmpty)
         #expect(gateway.card.emails.count == Alex.card.emails.count + 2)
@@ -305,7 +335,7 @@ struct CardWriterTests {
     @Test func aFailedSaveIsReported() {
         let gateway = FakeGateway()
         gateway.state.withLock { $0.saveError = .notWritable }
-        let result = sync(gateway, pins: [pin(Alex.workEmail)])
+        let result = sync(gateway, known: schoolFirst)
         #expect(result.outcome == .failed(.notWritable))
         #expect(gateway.card == Alex.card)
     }

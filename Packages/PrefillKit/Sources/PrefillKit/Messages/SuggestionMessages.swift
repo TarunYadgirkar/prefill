@@ -1,19 +1,15 @@
 import Foundation
 
-// Chrome and Arc don't fill contact fields from the card, so there the content script
-// offers the card's values itself in a list of its own. Safari fills them from the card,
-// so there it asks only for the values Prefill's contact holds off a minimal card (`offCard`)
-// and offers them through a datalist, which Safari's bar shows when the card has nothing
-// for the field. Like links, this reply carries values back to the page.
+// The content script offers the person's emails, phones, addresses and name in Prefill's
+// own list under each field, in every browser, from the card and Prefill's contact alike.
+// Like links, this reply carries values back to the page.
 public struct ContactSuggestionsRequest: Codable, Sendable, Hashable {
     public let host: String
     public let fields: [PageField]
-    public let offCard: Bool?
 
-    public init(host: String, fields: [PageField], offCard: Bool? = nil) {
+    public init(host: String, fields: [PageField]) {
         self.host = host
         self.fields = fields
-        self.offCard = offCard
     }
 
     var hints: [ContactKind: SectionHint] {
@@ -49,25 +45,19 @@ public struct ContactSuggestionsResponse: Codable, Sendable, Hashable {
 }
 
 extension MessageRouter {
-    // The card's values of the kinds the page asks for, in the order the card would take
-    // on this site, without writing the card: nothing here reads it in Chrome.
+    // The person's values of the kinds the page asks for, ranked for this site, without
+    // writing the card.
     func contactSuggestions(_ request: ContactSuggestionsRequest) -> ContactSuggestionsResponse {
+        notePageSeen()
         guard let state = currentState(), let link = state.cardLink,
               let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
             return ContactSuggestionsResponse()
         }
-        guard request.offCard == true else { return contactSuggestions(request, state: state, link: link, card: card) }
-        guard let placement = try? gateway.placement(identifier: link.contactIdentifier), placement.isMinimal else {
-            return ContactSuggestionsResponse()
-        }
-        let all = contactSuggestions(request, state: state, link: link, card: card, leavingOut: placement.cardKeys)
-        return ContactSuggestionsResponse(emails: all.emails, phones: all.phones, addresses: all.addresses)
+        return contactSuggestions(request, state: state, link: link, card: card)
     }
 
-    // `leavingOut` holds keys of values Safari already offers from the card.
     private func contactSuggestions(
-        _ request: ContactSuggestionsRequest, state: AppState, link: CardLink, card: CardRecord,
-        leavingOut: Set<String> = []
+        _ request: ContactSuggestionsRequest, state: AppState, link: CardLink, card: CardRecord
     ) -> ContactSuggestionsResponse {
         let page = PageSignal(
             host: request.host, hints: request.hints, now: now(), matchEachSite: state.settings.matchEachSite,
@@ -78,8 +68,7 @@ extension MessageRouter {
         let kinds = Set(request.fields.map(\.kind))
         let ranked = { (kind: ContactKind) -> [Ranked] in
             guard let field = FieldKind(rawValue: kind.rawValue), kinds.contains(field) else { return [] }
-            let values = target.entries(kind).filter { !leavingOut.contains($0.key) }
-                .map { ContactValue(entry: $0, createdAt: page.now) }
+            let values = target.entries(kind).map { ContactValue(entry: $0, createdAt: page.now) }
             // The target is already in order; ranking again only reads each value's tier.
             let tiers = Ranker.rankWithTiers(
                 values, usage: sync.usage, pins: sync.pins, context: page.context(for: kind, siteKind: .unknown)

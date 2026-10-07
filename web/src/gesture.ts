@@ -2,7 +2,7 @@ import { eventOrigin, isInView } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 
 // A page can focus a field from script, and the browser marks that focus as trusted too.
-// So a field only gets a datalist of the person's values when they just clicked or tapped
+// So a field only gets a list of the person's values when they just clicked or tapped
 // it (or its label) or pressed Tab, and it is on screen.
 const GESTURE_MS = 1_000;
 

@@ -121,6 +121,25 @@ describe("installSuggestions", () => {
     stop();
   });
 
+  // A pick in Safari's sheet reorders the values after the page loaded.
+  it("redraws an open list when the app's fresh answer reorders it", async () => {
+    document.body.innerHTML = '<input type="email" autocomplete="email">';
+    const emails = [card("alex.rivera@example.com"), card("alex@work.example.org")];
+    const send = vi.fn<SuggestionOptions["send"]>().mockResolvedValue({ type: "contactSuggestionsResult", ...values, emails });
+    const stop = start(send);
+    await Promise.resolve();
+    await Promise.resolve();
+    send.mockResolvedValue({ type: "contactSuggestionsResult", ...values, emails: [...emails].reverse() });
+    const field = firstInput();
+    field.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    field.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    expect(optionsOf(field)).toEqual(["alex.rivera@example.com", "alex@work.example.org"]);
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(optionsOf(field)).toEqual(["alex@work.example.org", "alex.rivera@example.com"]);
+    stop();
+  });
+
   it("gives nothing to a field the page focused by itself", async () => {
     document.body.innerHTML = '<input type="email" autocomplete="email">';
     const stop = start(reply());

@@ -48,16 +48,21 @@ struct SafariChoicesTests {
         #expect(folded.values == Alex.emails)
     }
 
-    @Test func pickingAValueInSafariPutsItInTheFirstSlotRightAway() throws {
+    @Test func pickingAValueInSafariPutsItFirstInPrefillsListWithoutACardWrite() throws {
         let store = linked()
         let reply = try sheet(router(store).route([
             "type": "pin", "host": "shop.\(site)", "kind": "email", "valueID": Alex.workEmail.id.uuidString
         ]))
-        #expect(gateway.card.emails.first?.payload.display == "alex@work.example.org")
         #expect(reply.kinds.first?.values.first?.text == "alex@work.example.org")
         #expect(reply.kinds.first?.pinnedID == Alex.workEmail.id)
         #expect(store.events.pins.map(\.host) == [site])
-        #expect(store.events.cardWrites == [.testNow])
+        #expect(gateway.saves.isEmpty)
+        #expect(gateway.card == Alex.card)
+        let listed = router(store).route([
+            "type": "contactSuggestions", "host": "shop.\(site)", "fields": [["kind": "email"]]
+        ])
+        guard case .contactSuggestions(let body) = listed else { throw MessageError.malformed }
+        #expect(body.emails.first?.value == "alex@work.example.org")
 
         let unpinned = try sheet(router(store).route(["type": "unpin", "host": site, "kind": "email"]))
         #expect(unpinned.kinds.first?.pinnedID == nil)

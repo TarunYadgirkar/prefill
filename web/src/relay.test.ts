@@ -18,19 +18,19 @@ describe("relayToNative", () => {
     expect(sendNative).toHaveBeenCalledWith({ type: "ping" });
   });
 
-  it("forwards a page context request rebuilt from its known fields", async () => {
+  it("forwards a contact suggestions request rebuilt from its known fields", async () => {
     const request = {
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "shop.example.net",
       fields: [{ kind: "email", extra: 1 }],
       note: "x",
     };
     const sendNative = vi
       .fn()
-      .mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+      .mockResolvedValue({ type: "pickedResult", remembered: false });
     await relayToNative(request, fromPage, ID, sendNative);
     expect(sendNative).toHaveBeenCalledWith({
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "shop.example.net",
       fields: [{ kind: "email" }],
     });
@@ -38,13 +38,13 @@ describe("relayToNative", () => {
 
   it("uses the host the browser reports for the sender, not the one in the message", async () => {
     const request = {
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "pay.example.com",
       fields: [{ kind: "email" }],
     };
     const sendNative = vi
       .fn()
-      .mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+      .mockResolvedValue({ type: "pickedResult", remembered: false });
     await relayToNative(request, fromPage, ID, sendNative);
     expect(sendNative).toHaveBeenCalledWith(
       expect.objectContaining({ host: "shop.example.net" }),
@@ -67,7 +67,7 @@ describe("relayToNative", () => {
   ])("turns away messages from %s", (_, sender) => {
     const sendNative = vi.fn();
     const request = {
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "shop.example.net",
       fields: [{ kind: "email" }],
     };
@@ -76,8 +76,8 @@ describe("relayToNative", () => {
   });
 
   it("accepts a job application frame under the frame's own host", async () => {
-    const request = { type: "pageContext", host: "shop.example.net", fields: [{ kind: "email" }] };
-    const sendNative = vi.fn().mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+    const request = { type: "contactSuggestions", host: "shop.example.net", fields: [{ kind: "email" }] };
+    const sendNative = vi.fn().mockResolvedValue({ type: "pickedResult", remembered: false });
     const sender = { ...fromPage, frameId: 3, url: "https://boards.greenhouse.io/embed/job_app?for=acme" };
     await relayToNative(request, sender, ID, sendNative);
     expect(sendNative).toHaveBeenCalledWith(expect.objectContaining({ host: "boards.greenhouse.io" }));
@@ -85,13 +85,13 @@ describe("relayToNative", () => {
 
   it("accepts plain http from this device itself", async () => {
     const request = {
-      type: "pageContext",
+      type: "contactSuggestions",
       host: "localhost",
       fields: [{ kind: "email" }],
     };
     const sendNative = vi
       .fn()
-      .mockResolvedValue({ type: "pageContextResult", status: "unchanged" });
+      .mockResolvedValue({ type: "pickedResult", remembered: false });
     await relayToNative(
       request,
       { ...fromPage, url: "http://localhost:8846/signup.html" },
@@ -106,7 +106,7 @@ describe("relayToNative", () => {
   it("turns a malformed native reply into an error", async () => {
     const sendNative = vi
       .fn()
-      .mockResolvedValue({ type: "pageContextResult", status: "maybe" });
+      .mockResolvedValue({ type: "pickedResult", remembered: "maybe" });
     await expect(
       relayToNative({ type: "ping" }, fromPage, ID, sendNative),
     ).resolves.toEqual({

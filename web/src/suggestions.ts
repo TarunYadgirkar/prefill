@@ -1,12 +1,6 @@
-import { attachDatalist } from "./datalist";
 import { classify } from "./classify";
 import { eventOrigin, hasOwnList, fieldElements, isFieldElement } from "./dom";
-import {
-  showDropdown,
-  type Attach,
-  type Choice,
-  type TextField,
-} from "./dropdown";
+import type { Attach, Choice, TextField } from "./dropdown";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
 import { labelled, whyDetail } from "./why";
@@ -34,14 +28,13 @@ type Name = NonNullable<Suggestions["name"]>;
 export interface SuggestionOptions {
   host: () => string;
   send: (request: ContactSuggestionsRequest | PickedRequest) => Promise<unknown>;
-  // Safari fills contact fields from the card itself, so there Prefill asks only for what a
-  // minimal card left on Prefill's contact, shows it through a datalist, and skips text
-  // areas, which never show one.
-  offCard?: boolean;
+  // Safari's bar already offers the card's name, so in Safari name fields get no second list.
+  skipNames?: boolean;
   // Only events the browser made count. Tests pass their synthetic events through here.
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
-  attach?: Attach;
+  // Draws Prefill's list under the field (showDropdown in pages).
+  attach: Attach;
   // Fields another of Prefill's lists already serves, such as ones a one-tap fill filled.
   skip?: (element: FieldElement) => boolean;
 }
@@ -147,22 +140,16 @@ export function contactChoices(
   });
 }
 
-function isTextField(
-  element: FieldElement,
-  textAreas = true,
-): element is TextField {
-  if (element.localName === "textarea") return textAreas;
+function isTextField(element: FieldElement): element is TextField {
+  if (element.localName === "textarea") return true;
   return (
     element.localName === "input" &&
     LIST_INPUTS.has((element as HTMLInputElement).type.toLowerCase())
   );
 }
 
-function suggestedField(
-  element: FieldElement,
-  textAreas = true,
-): ContactField | undefined {
-  if (!isTextField(element, textAreas)) return undefined;
+function suggestedField(element: FieldElement): ContactField | undefined {
+  if (!isTextField(element)) return undefined;
   const field = classify(element);
   return isContact(field) && SUGGESTED_KINDS.has(field.kind)
     ? field
@@ -187,29 +174,24 @@ function pageFields(
   return [...seen.values()].slice(0, LIMITS.pageFields);
 }
 
-// Offers the card's emails, phone numbers, addresses and name in Prefill's own dropdown,
-// on browsers whose autofill doesn't read the card (Chrome, Arc), and in Safari the values
-// a minimal card left on Prefill's contact, through a datalist that Safari's bar shows when
-// the card has nothing for the field. The values are fetched when the page loads, ranked
-// for the site, and a field gets its list when the person focuses it; the list goes away
-// when the field loses focus. A field with a datalist of its own is left alone.
+// Offers the person's emails, phone numbers, addresses and name in Prefill's own list, from
+// the card and Prefill's contact alike, in every browser. The values are fetched when the
+// page loads, ranked for the site, and a field gets its list when the person focuses it; the
+// list goes away when the field loses focus. A field with a list of its own is left alone.
 export function installSuggestions(
   doc: Document,
   options: SuggestionOptions,
 ): () => void {
   const isUserEvent =
     options.isUserEvent ?? ((event: Event) => event.isTrusted);
-  const attach = options.attach ?? showDropdown;
-  // Safari's bar takes a datalist's values as typing, which a page's combobox handles;
+  const attach = options.attach;
   // Prefill's own list would sit on top of the page's, so it skips fields that have one.
   const isTaken = (element: FieldElement): boolean =>
-    options.skip?.(element) === true ||
-    (attach === attachDatalist
-      ? element.hasAttribute("list")
-      : hasOwnList(element));
-  const offCard = options.offCard === true;
-  const fieldOf = (element: FieldElement): ContactField | undefined =>
-    suggestedField(element, !offCard);
+    options.skip?.(element) === true || hasOwnList(element);
+  const fieldOf = (element: FieldElement): ContactField | undefined => {
+    const field = suggestedField(element);
+    return field?.kind === "name" && options.skipNames === true ? undefined : field;
+  };
   const gestures = trackGestures(doc, isUserEvent, options.now);
   let known: Suggestions | undefined;
   let detach: (() => void) | undefined;
@@ -236,12 +218,18 @@ export function installSuggestions(
         type: "contactSuggestions",
         host: options.host(),
         fields,
-        ...(offCard ? { offCard } : {}),
       })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
         if (response?.type !== "contactSuggestionsResult") return;
+        // A pick in Safari's sheet changes the order after the page loaded, so an open list
+        // that the fresh reply reorders is drawn again.
+        const changed = known !== undefined && JSON.stringify(known) !== JSON.stringify(response);
         known = response;
+        if (changed && detach !== undefined) {
+          detach();
+          detach = undefined;
+        }
         offer();
       })
       .catch(() => undefined);
@@ -256,7 +244,7 @@ export function installSuggestions(
   };
 
   const show = (target: FieldElement): void => {
-    if (detach !== undefined || isTaken(target) || !isTextField(target, !offCard)) return;
+    if (detach !== undefined || isTaken(target) || !isTextField(target)) return;
     const field = fieldOf(target);
     if (field === undefined) return;
     clear();

@@ -46,7 +46,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 | Path | What |
 |---|---|
-| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `context.ts` reorders the card. `links.ts`/`custom.ts`/`suggestions.ts` give values, `why.ts` words the line under each, `picks.ts` reports picks. `dropdown.ts` is Prefill's own list, in Safari and Chromium. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
+| `web/src` | One TypeScript codebase for the Safari extension, the Chromium extension and the Mac Accessibility classifier (`web/src/mac/autofill.ts`, run in JavaScriptCore). `atsFrames.ts` lists the job application frames it runs in. `classify.ts` decides what a field is. `capture.ts` saves typed values. `learn.ts` saves answers to job application questions. `links.ts`/`custom.ts`/`suggestions.ts` give values, `why.ts` words the line under each, `picks.ts` reports picks. `dropdown.ts` is Prefill's own list, in Safari and Chromium. `gesture.ts` is the click-or-Tab gate. `fill.ts` is one-tap fill (`fillChip.ts` its button, `choices.ts` matches select and radio options, `combobox.ts` drives searchable dropdowns like Greenhouse's React-Select, `demographics.ts` declines self-identification questions). |
 | `Packages/PrefillKit` | Shared Swift code: `Card/` (gateway, split, writer, never-drop), `Messages/` (router, limits, validated contracts), `Capture/`, `Ranking/`, `Store/`, `Autofill/` (Mac field rules bridge), `Intelligence/` (on-device FoundationModels labels). |
 | `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: sites Prefill doesn't save on, Restore, Delete). |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
@@ -71,6 +71,12 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Follow-up questions ("If other, please specify") are left alone.
   - Undo puts every field back, and a tap on a filled field offers the other values.
 - **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
+- **The card sends only name and phone (Tarun's rule):** when he AirDrops, NameDrops or Share Contacts his card, it carries only his name and phone number.
+  - Prefill never orders the card for a site: no page message rewrites it, `CardWriter` never ranks, and the sheet's pick only pins in Prefill's list.
+  - On a minimal card nothing new lands on it: captured, added and learned emails, phones, addresses, links and custom fields go to Prefill's contact (`CardSplit.writes`).
+  - The phone kept on the card is never rewritten or reordered (`CardSplit.minimalCardEntries`, `CNCardMapping.isStored`).
+  - Something goes back on the card only when the person asks ("Put on your card", "Put back on card", Restore).
+  - Not yet covered: a card that isn't minimal (the person tapped "Not now") still gets new emails, phones and addresses, and links and custom fields too until Prefill's contact exists.
 - **Never drop data:**
   - Card rewrites go through `CardWriter` plus the never-drop guard.
   - Moves are one save request, read back afterwards.
@@ -94,10 +100,10 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 - **Device-only check not yet done:** iCloud carrying custom-field labels between devices.
 - **Minimal mode:**
-  - At most 3 values with no labels.
-  - WebKit's in-page list always shows.
-  - AutoFill Contact no longer fills emails and addresses.
-  - The Mac has no "put back on card" or Restore yet.
+  - Safari's bar shows only the name and kept phone; Prefill's list under each field shows everything else, and Safari skips name fields in Prefill's list.
+  - AutoFill Contact no longer fills emails and addresses; Fill form does.
+  - The Mac puts values back one at a time ("Put back on card"); it has no Restore yet.
+  - The one-time offer for existing users is the "Keep your card short" section at the top of the Inbox. "Not now" sets `declinedShortCard` in UserDefaults; onboarding's Sharing step (Phase 9 / 4.3) should set the same key when the person declines there.
 - **Mac Accessibility mode:**
   - In a browser whose Prefill extension has sent the app a request, the panel stays out until that browser quits and the extension gives every list and Fill form (`ExtensionPresence`).
   - It doesn't save new values; only the extension does.
@@ -109,7 +115,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Install it from the main checkout: the job keeps the path it was installed from.
 - **One-tap fill:**
   - Checked in Safari on the simulator (`FillE2ETests`), not yet on the iPhone.
-  - In Safari every recognized field now gets Prefill's own list under it (`showDropdown`), as in Chrome; the datalist path is unused. Safari's own suggestion bubble can cover the list's first row.
+  - In Safari every recognized field gets Prefill's own list under it (`showDropdown`), as in Chrome; the datalist path is gone. Safari's own suggestion bubble can cover the list's first row.
   - Undo clears a React-Select box with Backspace, which React-Select ignores unless the box is clearable, so a non-clearable box keeps Prefill's pick. Undo leaves a box alone once it shows something other than Prefill's pick.
   - The pill counts the fields the app has an answer for, and after a fill says how many "need you"; a click there moves to the next empty field and opens its list (the gate's one-field `allowNext`).
 - **Guessed answers:** a field no rule matches gets the on-device model's pick among the custom fields, shown as "Suggested" and never used by Fill form. The Mac panel asks live; on the iPhone the handler notes the question and the app asks on its next launch, so the guess shows from the next visit. Nothing shows until Apple Intelligence is on.
@@ -123,7 +129,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the to-do list. Done on Oct 6: Phases 1, 2, 3, 5 and 6 (cuts: Siri, Shortcuts, the Focus filter, the Sites screen and the match-words field are gone), task 2.0 (the Safari tests read Prefill's list) and 10.1 (docs as built so far).
 
-Next, in the plan's order: Phase 4 (freeze the card to name and phone) waits for Tarun's yes; Phase 7 (resume import) was dropped; Phase 9 (two-step setup, Mac checklist) is on `feat/phase9-setup`, not merged. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
+Phase 4 (freeze the card to name and phone) is built on `feat/phase4-freeze-card` except 4.3's onboarding wording (Phase 9's setup is merged; its card step doesn't offer the short card yet) and the device check 4.6. Phase 7 (resume import) was dropped. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
 
 Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 

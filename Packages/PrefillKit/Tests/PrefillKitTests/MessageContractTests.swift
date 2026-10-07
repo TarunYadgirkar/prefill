@@ -43,12 +43,12 @@ struct MessageContractTests {
     }
 
     @Test func theExamplesFileLoads() {
-        #expect(Self.examples["requests"]?.count == 13)
-        #expect(Self.examples["responses"]?.count == 11)
+        #expect(Self.examples["requests"]?.count == 12)
+        #expect(Self.examples["responses"]?.count == 9)
     }
 
     @Test(arguments: [
-        "ping", "pageContext", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite", "linkSuggestions",
+        "ping", "capture", "popupState", "pin", "unpin", "undoCapture", "muteSite", "linkSuggestions",
         "contactSuggestions", "customSuggestions", "answers", "picked"
     ])
     func requestExamplesRoundTripWithTheSameFieldNames(name: String) throws {
@@ -57,14 +57,25 @@ struct MessageContractTests {
         #expect(try reencoded(request) == json)
     }
 
-    @Test func pageContextDecodesToHintsPerKind() throws {
-        let request = try MessageCoding.request(from: example("requests", "pageContext"))
-        guard case .pageContext(let body) = request else {
-            Issue.record("expected pageContext")
+    @Test func contactSuggestionsDecodesToHintsPerKind() throws {
+        let request = try MessageCoding.request(from: example("requests", "contactSuggestions"))
+        guard case .contactSuggestions(let body) = request else {
+            Issue.record("expected contactSuggestions")
             return
         }
         #expect(body.host == "shop.example.net")
-        #expect(body.hints == [.email: .work, .address: .shipping])
+        #expect(body.hints == [.address: .shipping])
+    }
+
+    // Prefill no longer reorders the card for a page, and Safari asks for every value.
+    @Test func retiredMessagesAndFieldsAreGone() throws {
+        let retired = #"{"type": "pageContext", "host": "example.net", "fields": [{"kind": "email"}]}"#
+        #expect(throws: MessageError.unknownType) {
+            try MessageCoding.request(from: JSONSerialization.jsonObject(with: Data(retired.utf8)))
+        }
+        let offCard = #"{"type": "contactSuggestions", "host": "example.net", "fields": [], "offCard": true}"#
+        let request = try MessageCoding.request(from: JSONSerialization.jsonObject(with: Data(offCard.utf8)))
+        #expect(try reencoded(request) == ["type": "contactSuggestions", "host": "example.net", "fields": []])
     }
 
     @Test func captureDecodesFieldsAndAddress() throws {
@@ -91,8 +102,6 @@ struct MessageContractTests {
 
     @Test(arguments: [
         ("pong", ExtensionResponse.pong),
-        ("pageContextResult", .pageContext(PageContextResponse(status: .saved))),
-        ("pageContextFailed", .pageContext(PageContextResponse(status: .failed, reason: noAccess))),
         ("captureResult", .capture(CaptureResponse(saved: 1, review: 0, ignored: 1))),
         ("popupStateResult", .popupState(popupExample)),
         ("linkSuggestionsResult", .linkSuggestions(LinkSuggestionsResponse(links: [
@@ -130,7 +139,6 @@ struct MessageContractTests {
         #expect(enums["fieldKind"] as? [String] == FieldKind.allCases.map(\.rawValue))
         #expect(enums["linkType"] as? [String] == LinkType.allCases.map(\.rawValue))
         #expect(enums["sectionHint"] as? [String] == SectionHint.allCases.map(\.rawValue))
-        #expect(enums["syncStatus"] as? [String] == SyncStatus.allCases.map(\.rawValue))
         #expect(enums["popupStatus"] as? [String] == PopupStatus.allCases.map(\.rawValue))
         #expect(enums["recentState"] as? [String] == PopupRecentState.allCases.map(\.rawValue))
         #expect(enums["pickKind"] as? [String] == PickKind.allCases.map(\.rawValue))
@@ -146,10 +154,11 @@ struct MessageContractTests {
         (#"{"kind": "ping"}"#, "keyNotFound"),
         (#"{"type": "launch"}"#, "unknownType"),
         (#"{"type": "toString"}"#, "unknownType"),
-        (#"{"type": "pageContext", "host": "example.net"}"#, "keyNotFound"),
-        (#"{"type": "pageContext", "host": "example.net", "fields": [{"kind": "fax"}]}"#, "dataCorrupted"),
+        (#"{"type": "contactSuggestions", "host": "example.net"}"#, "keyNotFound"),
+        (#"{"type": "contactSuggestions", "host": "example.net", "fields": [{"kind": "fax"}]}"#, "dataCorrupted"),
         (
-            #"{"type": "pageContext", "host": "example.net", "fields": [{"kind": "email", "section": "school"}]}"#,
+            #"{"type": "contactSuggestions", "host": "example.net", "#
+                + #""fields": [{"kind": "email", "section": "school"}]}"#,
             "dataCorrupted"
         ),
         (#"{"type": "capture", "host": "example.net", "fields": []}"#, "keyNotFound"),

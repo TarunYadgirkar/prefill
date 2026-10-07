@@ -32,6 +32,12 @@ struct FirstPick: Hashable {
 }
 
 extension AppModel {
+    // A card with more than a name and phone on it, once, until the person moves the rest to
+    // Prefill's contact or says not now. Nothing moves without their tap on the exact list.
+    var offersShortCard: Bool {
+        !hasDeclinedShortCard && !placement.isMinimal && !placement.suggestedMoves.isEmpty
+    }
+
     // Values Prefill wasn't sure about, waiting for Add or Dismiss.
     var needsYou: [RecentItem] {
         recent.filter { $0.state == .waiting }

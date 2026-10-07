@@ -1,7 +1,7 @@
 import XCTest
 
 // A minimal card end to end, run by scripts/test.sh e2e (PREFILL_E2E_ONLY=MinimalCardE2ETests)
-// after a host test has linked the Alex Rivera card. Settings > Sharing your card moves the
+// after a host test has linked the Alex Rivera card. The Inbox's one-time offer moves the
 // emails, addresses and work phone to Prefill's contact, keeping the name and mobile number
 // on the card Safari reads. Prefill's list under each field still offers every email, address
 // part and phone number. Restore original card puts it all back.
@@ -73,23 +73,20 @@ final class MinimalCardE2ETests: XCTestCase {
         return shown
     }
 
+    // The Inbox lists exactly what moves; the one button under that list is the confirmation.
     private func moveToMinimalCard() {
-        app.tabBars.buttons["Settings"].firstMatch.tap()
-        let row = app.buttons["sharing-your-card"].firstMatch
-        for _ in 0..<6 where !row.isHittable { app.swipeUp() }
-        row.tap()
-        let move = app.buttons["move-off-card"].firstMatch
-        XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 10), "no list of values on the card")
-        for _ in 0..<8 where !(move.exists && move.isHittable) { app.swipeUp() }
-        XCTAssertTrue(move.waitForExistence(timeout: 5), "no Move button")
-        E2EServer.screenshot("minimal-card-sharing")
-        move.tap()
-        let confirm = app.buttons["Move off your card"].firstMatch
-        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "no confirmation")
-        E2EServer.screenshot("minimal-card-confirm")
-        confirm.tap()
-        XCTAssertTrue(app.descendants(matching: .any)["card-is-clean"].waitForExistence(timeout: 10))
-        E2EServer.screenshot("minimal-card-sharing-done")
+        app.tabBars.buttons["Inbox"].firstMatch.tap()
+        let offer = app.descendants(matching: .any)["short-card-offer"].firstMatch
+        XCTAssertTrue(offer.waitForExistence(timeout: 10), "no offer to keep the card short")
+        E2EServer.screenshot("minimal-card-offer")
+        let keep = app.buttons["short-card-keep"].firstMatch
+        for _ in 0..<8 where !(keep.exists && keep.isHittable) { app.swipeUp() }
+        XCTAssertTrue(keep.isHittable, "no Keep only name and phone button")
+        keep.tap()
+        XCTAssertTrue(
+            app.descendants(matching: .any)["short-card-offer"].waitForNonExistence(timeout: 10),
+            "the offer stayed after the move"
+        )
     }
 
     private func restoreOriginalCard() {

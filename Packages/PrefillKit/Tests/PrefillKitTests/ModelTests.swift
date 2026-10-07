@@ -78,6 +78,15 @@ struct ModelTests {
         #expect(decoded.captures.first?.kind == .email)
     }
 
+    // Pages' card rewrites left `cardWrites` in older documents; they still read.
+    @Test func eventsWithTheRetiredCardWritesStillDecode() throws {
+        let json = #"{"usage": [], "captures": [], "cardWrites": [800000000], "saves": [800000000]}"#
+        let decoded = try DocumentCoder.decode(ExtensionEvents.self, from: Data(json.utf8))
+        #expect(decoded.saves.count == 1)
+        let reencoded = try #require(String(bytes: DocumentCoder.encode(decoded), encoding: .utf8))
+        #expect(!reencoded.contains("cardWrites"))
+    }
+
     @Test func appendingEventsKeepsOnlyTheNewestUpToTheCap() {
         let old = (0..<ExtensionEvents.maxUsage).map { index in
             UsageEvent(valueID: Alex.homeEmail.id, host: "old.example", date: .daysAgo(Double(1000 - index)))
