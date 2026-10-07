@@ -4,11 +4,13 @@ import UIKit
 
 // The Prefill keyboard. It reads the values the app shares through the keychain group (or
 // the App Group), types the one the person taps and hands them back to their own keyboard.
-// It has no network code and never writes anything but when it was last shown.
+// It has no network code and writes only when it was last shown (to the shared store) and
+// its own recent picks (to its own defaults).
 final class KeyboardViewController: UIInputViewController {
     private let share = KeyboardShare.make()
     private var host: UIHostingController<KeyboardPanel>?
     private var snapshot: KeyboardSnapshot?
+    private let picks = KeyboardPicks()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,18 +58,31 @@ final class KeyboardViewController: UIInputViewController {
         if FieldTraits.isSensitive(textDocumentProxy) { return .notHere }
         guard hasFullAccess else { return .needsFullAccess }
         guard let snapshot, !snapshot.values.isEmpty else { return .needsApp }
-        return .values(snapshot.groups(for: FieldTraits.hint(textDocumentProxy)))
+        return .values(snapshot.ranked(for: context))
+    }
+
+    private var context: KeyboardContext {
+        KeyboardContext(
+            before: textDocumentProxy.documentContextBeforeInput ?? "",
+            hint: FieldTraits.hint(textDocumentProxy),
+            recentPicks: picks.recents.ids
+        )
     }
 
     private var actions: KeyboardActions {
         KeyboardActions(
-            insert: { [weak self] text in
-                self?.textDocumentProxy.insertText(text)
-                self?.advanceToNextInputMode()
-            },
+            insert: { [weak self] value in self?.insert(value) },
             nextKeyboard: { [weak self] in self?.advanceToNextInputMode() },
             returnKey: { [weak self] in self?.textDocumentProxy.insertText("\n") },
             deleteBackward: { [weak self] in self?.textDocumentProxy.deleteBackward() }
         )
+    }
+
+    private func insert(_ value: KeyboardValue) {
+        let replaced = context.replacedLength(for: value)
+        for _ in 0..<replaced { textDocumentProxy.deleteBackward() }
+        textDocumentProxy.insertText(value.text)
+        picks.record(value.id)
+        advanceToNextInputMode()
     }
 }
