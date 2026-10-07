@@ -140,12 +140,15 @@ public struct CardSyncRequest: Sendable {
     }
 }
 
+// Adds values to the card and puts the person's own order on it. It never ranks: the card
+// is what NameDrop and Share Contact send, so it holds the same order on every site, and
+// Prefill's list under each field does the ranking for the page (MessageRouter).
 public struct CardWriter: Sendable {
     public static let transactionAuthor = "prefill"
     private static let visibleSlots = 2
     private static let attempts = 2
     private static let log = PrefillLog.logger("card")
-    // Safari can deliver a capture and a page context to the same handler process at once.
+    // Safari can deliver two captures to the same handler process at once.
     private static let syncLock = Mutex(())
 
     private let gateway: any ContactsGateway
@@ -160,7 +163,7 @@ public struct CardWriter: Sendable {
         Self.syncLock.withLock { _ in
             do throws(CardWriteFailure) {
                 let card = if let current { current } else { try gateway.fetchCard(identifier: request.cardIdentifier) }
-                return write(CardPlan(card: card, request: request), request: request, attempt: 1)
+                return write(CardPlan(card: card, request: request, ranks: false), request: request, attempt: 1)
             } catch {
                 Self.log.error("fetch failed: \(String(describing: error), privacy: .public)")
                 return CardWriteResult(outcome: .failed(error), imported: [])
@@ -180,7 +183,9 @@ public struct CardWriter: Sendable {
             case .unchanged:
                 return CardWriteResult(outcome: .unchanged, imported: plan.imported)
             case .stale(let current) where attempt < Self.attempts:
-                return write(CardPlan(card: current, request: request), request: request, attempt: attempt + 1)
+                return write(
+                    CardPlan(card: current, request: request, ranks: false), request: request, attempt: attempt + 1
+                )
             case .stale:
                 Self.log.error("card kept changing, save skipped")
                 return CardWriteResult(outcome: .failed(.changedDuringSave), imported: plan.imported)
@@ -192,13 +197,15 @@ public struct CardWriter: Sendable {
     }
 }
 
-// Duplicate entries on the card ride along at the end, so nothing on the card is dropped.
+// The person's values in order: their own order with additions at the end, and with
+// `ranks` the order for the page in `request`, which only Prefill's list and the sheet
+// read. Duplicate entries on the card ride along at the end, so nothing is dropped.
 struct CardPlan {
     let card: CardRecord
     let target: CardRecord
     let imported: [ContactValue]
 
-    init(card: CardRecord, request: CardSyncRequest) {
+    init(card: CardRecord, request: CardSyncRequest, ranks: Bool = true) {
         let knownIDs = Set(request.known.map(\.id))
         let onCard = ContactKind.allCases.flatMap { kind in
             card.entries(kind).map { ContactValue(entry: $0, createdAt: request.page.now) }
@@ -207,7 +214,9 @@ struct CardPlan {
         self.imported = onCard.uniqued().filter { !knownIDs.contains($0.id) }
         let siteKind = request.page.siteKind(emailDomains: SiteSense.workDomains(onCard))
         self.target = ContactKind.allCases.reduce(card) { partial, kind in
-            partial.replacing(kind, with: Self.targetEntries(kind, card: card, request: request, siteKind: siteKind))
+            partial.replacing(
+                kind, with: Self.targetEntries(kind, card: card, request: request, siteKind: siteKind, ranks: ranks)
+            )
         }
     }
 
@@ -220,15 +229,15 @@ struct CardPlan {
     }
 
     private static func targetEntries(
-        _ kind: ContactKind, card: CardRecord, request: CardSyncRequest, siteKind: SiteKind
+        _ kind: ContactKind, card: CardRecord, request: CardSyncRequest, siteKind: SiteKind, ranks: Bool
     ) -> [CardEntry] {
         let entries = card.entries(kind)
         let onCard = Dictionary(entries.map { ($0.key, $0) }, uniquingKeysWith: { first, _ in first })
         let pool = manualOrder(kind, entries: entries, request: request)
             .map { value in onCard[value.key].map(value.with(entry:)) ?? value }
-        // Links aren't in Safari's contact bar, so they keep the person's order on every site.
+        // Links keep the person's order on every site.
         let context = request.page.context(for: kind, siteKind: siteKind)
-        let ranked = kind == .link
+        let ranked = !ranks || kind == .link
             ? pool : Ranker.rank(pool, usage: request.usage, pins: request.pins, context: context)
         return ranked.map { CardEntry(label: $0.label, payload: $0.payload) } + duplicates(in: entries)
     }

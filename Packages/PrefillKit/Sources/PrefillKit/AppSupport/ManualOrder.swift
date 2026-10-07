@@ -12,7 +12,7 @@ public enum ManualOrder {
             page: PageSignal(host: nil, hints: [:], now: now, matchEachSite: false)
         )
         let byID = Dictionary(known.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
-        return CardPlan(card: card, request: request).target.entries(kind)
+        return CardPlan(card: card, request: request, ranks: false).target.entries(kind)
             .map { entry in
                 let fresh = ContactValue(entry: entry, createdAt: now)
                 return byID[fresh.id].map { $0.with(entry: entry) } ?? fresh

@@ -72,13 +72,12 @@ extension AppModel {
         commit(state.rejecting(item.value.id).with(values: state.values.filter { $0.id != item.value.id }))
     }
 
-    // Turning it off puts the person's own order back on the card straight away.
+    // Only Prefill's list follows it; the card keeps one order on every site.
     func setMatchEachSite(_ isOn: Bool) {
         let settings = state.settings
         commit(state.with(settings: Settings(
             matchEachSite: isOn, saveNewInfo: settings.saveNewInfo, focusLabel: settings.focusLabel
         )))
-        if !isOn { Task { await syncCard() } }
     }
 
     func setSaveNewInfo(_ isOn: Bool) {
@@ -139,19 +138,16 @@ extension AppModel {
         }
     }
 
-    // Puts the person's own order on the card, or with a host that site's order, the way
-    // Safari's page context does.
+    // Puts the person's own order on the card, with `additions` at the end. On a minimal card
+    // new values go to Prefill's contact instead (CardSplit), and the kept phone never moves.
     @discardableResult
-    func syncCard(
-        additions: [ContactValue] = [], host: String? = nil, reportsProblem: Bool = true
-    ) async -> CardWriteOutcome {
+    func syncCard(additions: [ContactValue] = [], reportsProblem: Bool = true) async -> CardWriteOutcome {
         guard let link = state.cardLink else { return .failed(.cardMissing) }
         let request = CardSyncRequest(
-            cardIdentifier: link.contactIdentifier, known: state.values, additions: additions,
-            usage: host == nil ? [] : events.usage, pins: host == nil ? [] : state.pins,
+            cardIdentifier: link.contactIdentifier, known: state.values, additions: additions, usage: [], pins: [],
             page: PageSignal(
-                host: host, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
-                siteKinds: state.siteKinds, focusLabel: state.settings.focusLabel
+                host: nil, hints: [:], now: .now, matchEachSite: state.settings.matchEachSite,
+                focusLabel: state.settings.focusLabel
             )
         )
         let outcome = await CardWork.sync(gateway, request)
