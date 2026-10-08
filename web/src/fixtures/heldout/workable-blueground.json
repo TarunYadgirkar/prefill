@@ -1,5 +1,5 @@
 {
-  "source": "https://apply.workable.com/huggingface/j/F88446C814/apply/",
+  "source": "https://apply.workable.com/blueground/j/B02DA69C8F/apply/",
   "fields": [
     {
       "field": {
@@ -31,29 +31,39 @@
     },
     {
       "field": {
-        "id": "summary"
+        "id": "headline"
       },
       "want": "needYou"
     },
     {
       "field": {
-        "id": "CA_47143"
+        "id": "input_phone"
       },
       "want": "fill",
       "accept": [
-        "https://github.com/alex-rivera-example"
-      ],
-      "note": "A text area asking for a GitHub profile"
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
     },
     {
       "field": {
-        "id": "CA_47383"
+        "id": "address"
       },
       "want": "fill",
       "accept": [
-        "https://www.linkedin.com/in/alex-rivera-example"
+        "Berkeley, CA, United States",
+        "Berkeley, California, United States",
+        "Berkeley, CA",
+        "Berkeley, United States",
+        "2400 Durant Ave, Berkeley, CA 94704", "2400 Durant Ave, Berkeley, CA 94704, United States"
       ],
-      "note": "A text area asking for LinkedIn"
+      "note": "Asks for city, region and country"
+    },
+    {
+      "field": {
+        "id": "summary"
+      },
+      "want": "needYou"
     },
     {
       "field": {
@@ -63,63 +73,34 @@
     },
     {
       "field": {
-        "id": "CA_10626"
-      },
-      "want": "needYou"
-    },
-    {
-      "field": {
-        "id": "input_CA_10627_input"
+        "name": "QA_12102921"
       },
       "want": "needYou",
-      "note": "Notice period"
+      "note": "Authorized to work in the E.U.; Alex's saved answer is for the US"
     },
     {
       "field": {
-        "name": "CA_10628"
+        "id": "QA_12102922"
       },
       "want": "fill",
       "accept": [
-        "YES"
+        "https://www.linkedin.com/in/alex-rivera-example"
       ],
-      "note": "Eligible to work"
+      "note": "A text area asking for LinkedIn"
     },
     {
       "field": {
-        "id": "CA_10629"
+        "id": "QA_12102923"
       },
-      "want": "needYou"
+      "want": "needYou",
+      "note": "Salary expectations"
     },
     {
       "field": {
-        "name": "QA_12487827"
+        "name": "gdpr"
       },
       "want": "leave",
-      "note": "attestation"
-    },
-    {
-      "field": {
-        "name": "QA_12487828"
-      },
-      "want": "needYou"
-    },
-    {
-      "field": {
-        "name": "QA_12487829"
-      },
-      "want": "needYou"
-    },
-    {
-      "field": {
-        "id": "QA_12487830"
-      },
-      "want": "needYou"
-    },
-    {
-      "field": {
-        "id": "QA_12487831"
-      },
-      "want": "needYou"
+      "note": "privacy consent"
     }
   ]
 }

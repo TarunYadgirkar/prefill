@@ -1,0 +1,66 @@
+{
+  "source": "https://airtable.com/appR9kOURUsBbBjjU/pageDC6dslXYb4uDp/form",
+  "fields": [
+    {
+      "field": {
+        "id": "38f93adb8a67adc09023430c3e2cf51e"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "a38b91513975514c61fab48945edf096"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "f8fab0a767677c91e2a1c5564b06e02b"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "4783236c9a24e1c03d976575fd87d5d4"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "e4fbd06637801659826e466f63830c2b"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "18b55139e215383643e4cb6730abe5e7"
+      },
+      "want": "needYou",
+      "note": "Startup name"
+    },
+    {
+      "field": {
+        "id": "7f317e8aa83def288df26f06c9fde875"
+      },
+      "want": "needYou",
+      "note": "The startup's website, not Alex's"
+    }
+  ]
+}
