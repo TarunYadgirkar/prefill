@@ -179,7 +179,8 @@ export async function scoreForm(html: string, form: FormExpectations, person: Pe
   combos.stop();
   const results = form.fields.map((expectation, index): FieldResult => {
     const elements = elementsOf(targets[index] as Target);
-    const got = elements.map(read).filter((text) => text !== "").join(", ").trim();
+    // What the page chose before the fill (a list with no placeholder) isn't Prefill's answer.
+    const got = elements.map((element) => (read(element) === before.get(element) ? "" : read(element))).filter((text) => text !== "").join(", ").trim();
     return {
       field: describe(expectation.field),
       want: expectation.want,
