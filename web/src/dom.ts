@@ -93,7 +93,7 @@ function ownText(node: Node): string {
   return [...node.childNodes].map(ownText).join(" ");
 }
 
-function labelledByText(el: FieldElement): string {
+function labelledByText(el: Element): string {
   const ids = (el.getAttribute("aria-labelledby") ?? "")
     .split(/\s+/u)
     .filter(Boolean);
@@ -144,6 +144,26 @@ export function nearbyText(el: Element): string {
     if (node !== null && NEARBY_STOPS.has(node.localName)) return "";
   }
   return "";
+}
+
+// The last words before a node in page order: on a waiver, "By typing and signing your name
+// you agree" before the name boxes.
+function lastWordsBefore(node: Element): string {
+  const walker = node.ownerDocument.createTreeWalker(node.ownerDocument.body, NodeFilter.SHOW_TEXT);
+  walker.currentNode = node;
+  for (let text = walker.previousNode(); text !== null; text = walker.previousNode()) {
+    if (/\p{L}{3}/u.test(text.textContent ?? "")) return text.textContent ?? "";
+  }
+  return "";
+}
+
+// What a group of boxes is for, when a field is one part of it (a name in a first and a last
+// box): the group's own label and the words just before it.
+export function groupContext(el: Element): string {
+  const group = el.parentElement?.closest("[role=group], fieldset");
+  if (group === null || group === undefined) return "";
+  const legend = group.localName === "fieldset" ? (group.querySelector("legend")?.textContent ?? "") : "";
+  return squash([legend, labelledByText(group), group.getAttribute("aria-label") ?? "", lastWordsBefore(group)].join(" "));
 }
 
 // The field's label, or the words before it when the page didn't label it.

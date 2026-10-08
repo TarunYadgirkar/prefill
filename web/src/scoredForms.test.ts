@@ -17,6 +17,7 @@ import ashbyOpenAi from "./fixtures/ats-ashby-openai.html?raw";
 import tallySfHacks from "./fixtures/tally-sfhacks.html?raw";
 import greenhouseStripe from "./fixtures/ats-greenhouse-stripe.html?raw";
 import jotformLambOfGodVbs from "./fixtures/jotform-lambofgodvbs.html?raw";
+import jotformLastPatrol from "./fixtures/jotform-lastpatrol.html?raw";
 import tallyUvaWics from "./fixtures/tally-uvawics.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
@@ -44,6 +45,7 @@ import tallyHackHub from "./fixtures/tally-hackhub.html?raw";
 const FIXTURES = {
   greenhouseStripe,
   jotformLambOfGodVbs,
+  jotformLastPatrol,
   tallyUvaWics,
   airtableDormRoomFund,
   airtableIbmStartups,
@@ -384,4 +386,13 @@ describe("Tally's ethnicity checkboxes", () => {
     const checked = [...document.querySelectorAll<HTMLInputElement>("input[type=checkbox]:checked")].map((box) => labelText(box));
     expect(checked).toEqual(["Prefer Not to Answer"]);
   }, 60_000);
+});
+
+describe("a name split in two boxes under a heading", () => {
+  it("is someone else's when the heading says so, and a signature when the words before it say so", async () => {
+    await fillAsAlex("jotformLastPatrol");
+    expect(["first_25", "last_25"].map(valueOf)).toEqual(["", ""]);
+    expect(["29_firstname-3", "29_lastname-3"].map(valueOf)).toEqual(["", ""]);
+    expect(["first_3", "last_3"].map(valueOf)).toEqual(["Alex", "Rivera"]);
+  });
 });

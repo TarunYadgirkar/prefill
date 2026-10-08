@@ -109,7 +109,7 @@ export const NOT_PHONE =
 // A signature typed as a name ("Signature", "Electronic signature", "Type your full name to
 // sign", "Initials" on a waiver) is the person's own act, never filled for them.
 export const SIGNATURE =
-  /signature|\be-?sign|\bsign (?:your|here|below|this)|type your (?:full |legal )?name (?:to|as) (?:sign|your)|^\W*initials?\W*$|\binitial (?:here|below|each)|your initials/iu;
+  /signature|\be-?sign|\bsign (?:your|here|below|this)|\b(?:typing|signing) (?:and signing )?your (?:full |legal )?name|type your (?:full |legal )?name (?:to|as) (?:sign|your)|^\W*initials?\W*$|\binitial (?:here|below|each)|your initials/iu;
 
 // Words that make a field someone else's: an emergency contact, a parent or guardian, a
 // spouse, a reference or referrer, a gift's recipient. Their name, email, phone or address

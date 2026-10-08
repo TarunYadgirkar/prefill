@@ -1,5 +1,5 @@
 import { parseAutocomplete, type AutocompleteDetail } from "./autocomplete";
-import { inferredLabel, isRendered, placeholderText, splitNames } from "./dom";
+import { groupContext, inferredLabel, isRendered, placeholderText, splitNames } from "./dom";
 import {
   IGNORED,
   SENSITIVE,
@@ -86,6 +86,9 @@ export interface FieldDescription {
   names: readonly string[];
   placeholder: string;
   signIn: boolean;
+  // What the group the field belongs to is for (`groupContext`); only read to tell a signature
+  // or someone else's details.
+  context?: string;
 }
 
 function controlOf(field: FieldDescription): ControlOrVerdict {
@@ -250,7 +253,10 @@ function sourcesOf(field: FieldDescription): string[][] {
   );
 }
 
-const isSignature = (sources: readonly string[][]): boolean => sources.flat().some((text) => SIGNATURE.test(text));
+const isSignature = (texts: readonly string[]): boolean => texts.some((text) => SIGNATURE.test(text));
+
+// A field's own words and its group's.
+const withContext = (field: FieldDescription): string[] => [...sourcesOf(field).flat(), field.context ?? ""];
 
 export function isSensitiveText(sources: readonly string[][]): boolean {
   return sources
@@ -372,6 +378,7 @@ export function describe(el: FieldElement): FieldDescription {
     names: [el.getAttribute("name") ?? "", el.id].filter(Boolean),
     placeholder: placeholderText(el),
     signIn: isSignIn(el),
+    context: groupContext(el),
   };
 }
 
@@ -389,7 +396,7 @@ export function classifyForCapture(el: FieldElement): Classification {
 export function classifyDescription(field: FieldDescription, ownOnly = true): Classification {
   const found = classifyOwnOrOther(field);
   if (!ownOnly || !isContact(found)) return found;
-  return sourcesOf(field).flat().some((text) => SOMEONE_ELSE.test(text)) ? IGNORED : found;
+  return withContext(field).some((text) => SOMEONE_ELSE.test(text)) ? IGNORED : found;
 }
 
 function classifyOwnOrOther(field: FieldDescription): Classification {
@@ -398,7 +405,7 @@ function classifyOwnOrOther(field: FieldDescription): Classification {
     return { kind: control };
   if (field.signIn) return IGNORED;
   const sources = sourcesOf(field);
-  if (isSensitiveText(sources) || isSignature(sources)) return SENSITIVE;
+  if (isSensitiveText(sources) || isSignature(withContext(field))) return SENSITIVE;
   const found = positive(field, control, sources);
   if (
     found.kind === "phone" &&
