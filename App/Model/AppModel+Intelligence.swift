@@ -26,7 +26,9 @@ extension AppModel {
         await intelligence.prewarm()
         let labels = await askLabels(items)
         let (siteAnswers, kinds) = await askSiteKinds(hosts)
-        let guesses = await askAnswers(questions)
+        let guesses = await AnswerGuessing.ask(
+            questions, fields: customFields, judge: intelligence, variant: Intelligence.modelVariant
+        )
         guard !labels.isEmpty || !siteAnswers.isEmpty || !guesses.isEmpty else { return }
         commit(state.recording(labels + siteAnswers + guesses, siteKinds: kinds))
     }
@@ -49,27 +51,15 @@ extension AppModel {
         }
     }
 
-    // Form questions the rules couldn't answer, each asked once per model.
-    private var unansweredQuestions: [String] {
+    // Form questions the rules couldn't answer, each asked once per model and per revision of
+    // the answers, so a changed answer asks again.
+    private var unansweredQuestions: [FormQuestion] {
         let variant = Intelligence.modelVariant
         var seen = Set<String>()
-        return events.questions.map(\.text).filter { question in
-            let key = InsightKey.answer(question, variant: variant)
+        return events.questions.filter { question in
+            let key = AppState.answerKey(question, fields: customFields, variant: variant)
             return seen.insert(key).inserted && state.insight(key) == nil
         }
-    }
-
-    // The answer is cached by label; "none" keeps the question from being asked again.
-    private func askAnswers(_ questions: [String]) async -> [CachedInsight] {
-        let labels = customFields.map(\.label)
-        guard !labels.isEmpty else { return [] }
-        var answers: [CachedInsight] = []
-        for question in questions {
-            let label = await intelligence.answerLabel(question: question, labels: labels)
-            let key = InsightKey.answer(question, variant: Intelligence.modelVariant)
-            answers.append(CachedInsight(key: key, answer: label ?? "none"))
-        }
-        return answers
     }
 
     private func askLabels(_ items: [RecentItem]) async -> [CachedInsight] {

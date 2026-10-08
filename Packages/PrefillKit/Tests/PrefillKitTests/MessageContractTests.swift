@@ -121,9 +121,18 @@ struct MessageContractTests {
             .init(values: [
                 SuggestedValue(value: "Yes", why: .learned, label: "Work authorization", site: "example.io")
             ]),
-            .init(values: [], guesses: ["EECS"])
+            .init(values: [], guesses: ["EECS"]),
+            .init(
+                values: [], suggested: [SuggestedValue(value: "Yes", label: "Work authorization")],
+                noAnswerFor: "Canada"
+            ),
+            .init(values: [], drafts: [
+                SuggestedValue(
+                    value: "Dear hiring team,\nI build tools people use every day.", why: .draft, label: "Cover letter"
+                )
+            ])
         ]))),
-        ("answersResult", .answers(AnswersResponse(saved: 2, updated: ["Work authorization"]))),
+        ("answersResult", .answers(AnswersResponse(saved: 2, updated: ["Work authorization"], ask: ["Sponsorship"]))),
         ("pickedResult", .picked(PickedResponse(remembered: true))),
         ("error", .error(reason: "unknown message"))
     ])

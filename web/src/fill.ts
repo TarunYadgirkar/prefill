@@ -1,8 +1,8 @@
 import { parseAutocomplete } from "./autocomplete";
-import { isPlaceholder, pickFirst, type Option } from "./choices";
+import { chooseOption, isPlaceholder, type Option, type OptionMatch } from "./choices";
 import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
-import { customChoices, fieldText, joinFieldText } from "./custom";
+import { askedField, customChoices, fieldText, fillable, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
@@ -13,6 +13,7 @@ import {
   LIMITS,
   parseExtensionResponse,
   type ContactSuggestionsResult,
+  type CustomSuggestionsRequest,
   type CustomSuggestionsResult,
   type ExtensionRequest,
   type ExtensionResponse,
@@ -60,6 +61,8 @@ const MAX_INSPECTED = 300;
 const TEXT_INPUTS: ReadonlySet<string> = new Set(["text", "email", "tel", "url", "number"]);
 // Safari's AutoFill yellow, light enough to read through.
 const TINT = "rgb(255 214 10 / 0.22)";
+// Around a list Prefill left because more than one option fits the answer.
+const UNSURE_OUTLINE = "2px dashed rgb(255 159 10 / 0.9)";
 
 // Tells the app about a pick from a filled field's list, as the field's own list would.
 type Report = (pick: Pick<PickedRequest, "kind" | "value" | "question">) => void;
@@ -77,6 +80,42 @@ const filledChoices = new WeakMap<FieldElement, Choice[]>();
 
 export function choicesFor(element: FieldElement): readonly Choice[] | undefined {
   return filledChoices.get(element);
+}
+
+// Lists a fill left because more than one option fits the answer, with what the pill says
+// when "need you" reaches them.
+const unsure = new WeakMap<FieldElement, string>();
+
+export function noteFor(element: FieldElement): string | undefined {
+  return unsure.get(element);
+}
+
+export const unsureNote = (fits: number): string => `${String(fits)} options fit, pick one`;
+export const MISSED_NOTE = "This one didn’t take, check it";
+
+// Fields a fill set that didn't keep the value (the page put it back or changed it), from the
+// last fill: they count as "need you" even when they aren't empty.
+let missed: FieldElement[] = [];
+
+export function missedFields(scope: ParentNode): FieldElement[] {
+  return missed.filter((field) => field.isConnected && scope.contains(field));
+}
+
+// What a fill put in a field from a saved answer, as the field shows it (a list's option
+// text, a radio button's label), so a submit can tell when the person changed it.
+const filledAnswers = new WeakMap<FieldElement, string>();
+
+export function filledAnswer(element: FieldElement): string | undefined {
+  return filledAnswers.get(element);
+}
+
+// One field a fill set: what puts it back, and whether it still holds what Prefill put there.
+interface Filled {
+  field: FieldElement;
+  undo: () => void;
+  took: () => boolean;
+  // The answer as the field shows it, for a custom answer only.
+  shown?: string | undefined;
 }
 
 // A field the person emptied is theirs again, and gets the lists any field gets.
@@ -170,11 +209,17 @@ function groupLabel(first: HTMLInputElement): string {
   return group === null ? "" : (group.getAttribute("aria-label") ?? labelledBy(group));
 }
 
-// The words before the group: Lever puts the question in a div beside the list of buttons.
-function nearbyWords(inputs: readonly HTMLInputElement[]): string[] {
+// The smallest element holding every button of a group.
+function groupBox(inputs: readonly HTMLInputElement[]): HTMLElement | null {
   let container = inputs[0]?.parentElement ?? null;
   while (container !== null && !inputs.every((input) => container?.contains(input) === true))
     container = container.parentElement;
+  return container;
+}
+
+// The words before the group: Lever puts the question in a div beside the list of buttons.
+function nearbyWords(inputs: readonly HTMLInputElement[]): string[] {
+  const container = groupBox(inputs);
   const text = container === null ? "" : nearbyText(container);
   return text === "" ? [] : [text];
 }
@@ -245,6 +290,24 @@ const customTexts = (slots: readonly Slot[]): string[] =>
     LIMITS.pageFields,
   );
 
+// What a list offers, as the app's request carries it: each option's text, without the placeholder.
+function optionTexts(slot: Slot): string[] {
+  const options =
+    slot.control === "select" ? [...slot.element.options].map(optionOf).filter((option) => !isPlaceholder(option))
+    : slot.control === "radio" ? radioOptions(slot.inputs)
+    : [];
+  return options.map((option) => joinFieldText([option.text], LIMITS.text)).filter(Boolean);
+}
+
+// Each question once, with the heading above its first field and a list's options.
+function customFields(slots: readonly Slot[], texts: readonly string[]): CustomSuggestionsRequest["fields"] {
+  return texts.map((text) => {
+    const slot = slots.find((candidate) => candidate.want.from === "custom" && candidate.want.text === text);
+    const element = slot === undefined ? undefined : slotField(slot);
+    return slot === undefined || element === undefined ? { text } : askedField(text, element, optionTexts(slot));
+  });
+}
+
 // The three questions to the app, each only when some field needs it.
 function requests(slots: readonly Slot[], host: string): (ExtensionRequest | undefined)[] {
   const fields = contactRequest(slots);
@@ -253,7 +316,7 @@ function requests(slots: readonly Slot[], host: string): (ExtensionRequest | und
   return [
     fields.length > 0 ? { type: "contactSuggestions", host, fields } : undefined,
     types.length > 0 ? { type: "linkSuggestions", host, types } : undefined,
-    texts.length > 0 ? { type: "customSuggestions", host, fields: texts.map((text) => ({ text })) } : undefined,
+    texts.length > 0 ? { type: "customSuggestions", host, fields: customFields(slots, texts) } : undefined,
   ];
 }
 
@@ -290,9 +353,9 @@ function choicesOf(want: Want, answers: Answers, report: Report = NO_REPORT): Ch
     case "link":
       return linkChoices(want.types, answers.links, want.fullUrl, (value) => { report({ kind: "link", value }); });
     case "custom":
-      return customChoices(answers.custom.get(want.text), (value) => {
+      return fillable(customChoices(answers.custom.get(want.text), (value) => {
         report({ kind: "custom", value, question: want.text });
-      }).filter((choice) => choice.tone !== "guess");
+      }));
     case "decline":
       return [];
   }
@@ -306,26 +369,52 @@ function setSelect(select: HTMLSelectElement, index: number): void {
   select.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-// Tints a filled field until the person changes it, like Safari's AutoFill does.
-function tint(element: HTMLElement): () => void {
-  const before = element.style.getPropertyValue("background-color");
-  const priority = element.style.getPropertyPriority("background-color");
-  element.style.setProperty("background-color", TINT, "important");
+// Sets one style on an element until the person changes it, and returns what takes it off.
+function highlight(element: HTMLElement, property: string, value: string, until: string, onClear?: () => void): () => void {
+  const before = element.style.getPropertyValue(property);
+  const priority = element.style.getPropertyPriority(property);
+  element.style.setProperty(property, value, "important");
   let done = false;
   const clear = (): void => {
     if (done) return;
     done = true;
-    element.style.setProperty("background-color", before, priority);
-    element.removeEventListener("input", onInput, true);
+    element.style.setProperty(property, before, priority);
+    element.removeEventListener(until, onChange, true);
+    onClear?.();
   };
-  const onInput = (event: Event): void => {
+  const onChange = (event: Event): void => {
     if (event.isTrusted) clear();
   };
-  element.addEventListener("input", onInput, true);
+  element.addEventListener(until, onChange, true);
   return clear;
 }
 
-function applyText(element: TextField, choices: readonly Choice[]): (() => void) | undefined {
+// Tints a filled field until the person changes it, like Safari's AutoFill does.
+const tint = (element: HTMLElement): (() => void) => highlight(element, "background-color", TINT, "input");
+
+// Outlines a list Prefill left for the person, and notes it for the pill, until they choose.
+// A searchable dropdown's box is too small to outline, so it only gets the note.
+function markUnsure(field: FieldElement, box: HTMLElement | undefined, fits: number): () => void {
+  unsure.set(field, unsureNote(fits));
+  const forget = (): void => {
+    unsure.delete(field);
+  };
+  return box === undefined ? forget : highlight(box, "outline", UNSURE_OUTLINE, "change", forget);
+}
+
+// Undo takes off these marks as well as the values.
+type Marks = (() => void)[];
+
+// A page may reformat what it's given ("5105550134" as "(510) 555-0134", trimmed, upper-cased),
+// which still took. A phone-like value compares by its digits.
+const PHONE_LIKE = /^[\d\s()+.-]{7,}$/u;
+function sameValue(shown: string, filled: string): boolean {
+  const plain = (text: string): string => text.trim().replace(/\s+/gu, " ").toLowerCase();
+  if (PHONE_LIKE.test(filled.trim()) && PHONE_LIKE.test(shown.trim())) return shown.replace(/\D/gu, "") === filled.replace(/\D/gu, "");
+  return plain(shown) === plain(filled);
+}
+
+function applyText(element: TextField, choices: readonly Choice[]): Filled | undefined {
   const value = choices[0]?.value;
   if (value === undefined || !element.isConnected || !isEmpty(element)) return undefined;
   fillField(element, value);
@@ -336,82 +425,109 @@ function applyText(element: TextField, choices: readonly Choice[]): (() => void)
   }
   filledChoices.set(element, [...choices]);
   const clear = tint(element);
-  return () => {
+  const undo = (): void => {
     clear();
     if (element.value === value) fillField(element, "");
     filledChoices.delete(element);
   };
+  return { field: element, undo, took: () => sameValue(element.value, value), shown: value.trim() };
 }
 
-const optionIndex = (want: Want, options: readonly Option[], values: readonly string[]): number =>
-  want.from === "decline" ? declineOption(options) : pickFirst(options, values);
+// Which option to choose. A demographic question has one answer, the decline, so only a saved
+// answer can fit more than one option.
+function optionMatch(want: Want, options: readonly Option[], values: readonly string[]): OptionMatch {
+  if (want.from !== "decline") return chooseOption(options, values);
+  const index = declineOption(options);
+  return { index, fits: index < 0 ? 0 : 1 };
+}
 
-function applySelect(select: HTMLSelectElement, want: Want, values: readonly string[]): (() => void) | undefined {
-  const index = optionIndex(want, [...select.options].map(optionOf), values);
-  if (index < 0 || !select.isConnected || !isEmpty(select)) return undefined;
+const isClear = (match: OptionMatch): boolean => match.index >= 0 && match.fits === 1;
+
+function applySelect(select: HTMLSelectElement, want: Want, values: readonly string[], marks: Marks): Filled | undefined {
+  const match = optionMatch(want, [...select.options].map(optionOf), values);
+  if (!select.isConnected || !isEmpty(select)) return undefined;
+  if (match.fits > 1) marks.push(markUnsure(select, select, match.fits));
+  if (!isClear(match)) return undefined;
+  const { index } = match;
   const before = select.selectedIndex;
   setSelect(select, index);
   const clear = tint(select);
-  return () => {
+  const undo = (): void => {
     clear();
     if (select.selectedIndex === index) setSelect(select, before);
   };
+  return { field: select, undo, took: () => select.selectedIndex === index, shown: select.options[index]?.text.trim() };
 }
 
-function applyRadio(inputs: readonly HTMLInputElement[], want: Want, values: readonly string[]): (() => void) | undefined {
-  const options = inputs.map((input) => ({ text: labelText(input), value: input.value }));
-  const radio = inputs[optionIndex(want, options, values)];
-  if (radio === undefined || !radio.isConnected || inputs.some((input) => input.checked)) return undefined;
+const radioOptions = (inputs: readonly HTMLInputElement[]): Option[] =>
+  inputs.map((input) => ({ text: labelText(input), value: input.value }));
+
+function applyRadio(inputs: readonly HTMLInputElement[], want: Want, values: readonly string[], marks: Marks): Filled | undefined {
+  const match = optionMatch(want, radioOptions(inputs), values);
+  const [first] = inputs;
+  if (first === undefined || !first.isConnected || inputs.some((input) => input.checked)) return undefined;
+  if (match.fits > 1) marks.push(markUnsure(first, groupBox(inputs) ?? first, match.fits));
+  const radio = isClear(match) ? inputs[match.index] : undefined;
+  if (radio === undefined) return undefined;
   radio.click();
-  return () => {
-    if (!radio.checked) return;
-    radio.checked = false;
-    radio.dispatchEvent(new Event("change", { bubbles: true }));
-  };
+  return { field: first, undo: () => { uncheck(radio); }, took: () => radio.checked, shown: radioText(radio) };
 }
+
+function uncheck(radio: HTMLInputElement): void {
+  if (!radio.checked) return;
+  radio.checked = false;
+  radio.dispatchEvent(new Event("change", { bubbles: true }));
+}
+
+// A radio button's answer as learning reads it: its first label's text.
+const radioText = (radio: HTMLInputElement): string | undefined => radio.labels?.[0]?.textContent.trim();
 
 // Types the answer to narrow the list, or opens it with the down arrow to decline.
-function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[]): Promise<(() => void) | undefined> {
-  if (want.from !== "decline" && values[0] === undefined) return Promise.resolve(undefined);
+async function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[], marks: Marks): Promise<Filled | undefined> {
+  if (want.from !== "decline" && values[0] === undefined) return undefined;
   const search = want.from === "decline" ? undefined : values[0];
-  return fillCombobox(input, (options) => optionIndex(want, options, values), search);
+  let fits = 0;
+  const undo = await fillCombobox(input, (options) => {
+    const match = optionMatch(want, options, values);
+    fits = match.fits;
+    return isClear(match) ? match.index : -1;
+  }, search);
+  if (fits > 1) marks.push(markUnsure(input, undefined, fits));
+  return undo === undefined ? undefined : { field: input, undo, took: () => !isComboboxEmpty(input) };
 }
 
-// Fills one slot and returns what puts it back, or undefined when nothing fit.
-function apply(slot: Slot, answers: Answers, report: Report): (() => void) | undefined {
+// Fills one slot and says what it did, or undefined when nothing fit.
+function apply(slot: Slot, answers: Answers, report: Report, marks: Marks): Filled | undefined {
   const choices = choicesOf(slot.want, answers, report);
   if (slot.control === "text") return applyText(slot.element, choices);
   const values = valuesOf(choices);
-  if (slot.control === "select") return applySelect(slot.element, slot.want, values);
-  if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values);
+  if (slot.control === "select") return applySelect(slot.element, slot.want, values, marks);
+  if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values, marks);
   return undefined;
 }
 
 // Searchable dropdowns open one at a time, after the rest of the form is filled.
-async function applyComboboxes(slots: readonly Slot[], answers: Answers): Promise<(() => void)[]> {
-  const undos: (() => void)[] = [];
+async function applyComboboxes(slots: readonly Slot[], answers: Answers, marks: Marks): Promise<Filled[]> {
+  const undos: Filled[] = [];
   for (const slot of slots) {
     if (slot.control !== "combobox") continue;
     // The person may have picked one while earlier boxes were filling.
     if (!slot.element.isConnected || !isComboboxEmpty(slot.element)) continue;
     const values = valuesOf(choicesOf(slot.want, answers));
-    const undo = await applyCombobox(slot.element, slot.want, values).catch(() => undefined);
+    const undo = await applyCombobox(slot.element, slot.want, values, marks).catch(() => undefined);
     if (undo !== undefined) undos.push(undo);
   }
   return undos;
 }
 
-// Whether a fill would put something in the slot: a value the field takes, or for a
-// demographic list the option that declines.
+// Whether a fill would put something in the slot: a value the field takes, one option that
+// clearly says it, or for a demographic list the option that declines.
 function hasAnswer(slot: Slot, answers: Answers): boolean {
   if (slot.control === "combobox") return slot.want.from === "decline" || choicesOf(slot.want, answers).length > 0;
   const values = valuesOf(choicesOf(slot.want, answers));
   if (slot.control === "text") return values.length > 0;
-  const options =
-    slot.control === "select"
-      ? [...slot.element.options].map(optionOf)
-      : slot.inputs.map((input) => ({ text: labelText(input), value: input.value }));
-  return optionIndex(slot.want, options, values) >= 0;
+  const options = slot.control === "select" ? [...slot.element.options].map(optionOf) : radioOptions(slot.inputs);
+  return isClear(optionMatch(slot.want, options, values));
 }
 
 // How many empty fields of the form a fill would fill, from the same answers it would use.
@@ -427,21 +543,71 @@ export function slotField(slot: Slot): FieldElement | undefined {
   return slot.control === "radio" ? slot.inputs[0] : slot.element;
 }
 
+// A page's own script can put a field back or change it right after a fill (a controlled
+// React input, a select that resets its neighbour), so a fill reads each field back once the
+// page has had its turn.
+const settle = (): Promise<void> =>
+  new Promise((resolve) => {
+    setTimeout(resolve, 0);
+  });
+
+// The fields that kept their value count as filled; the rest are put back as they were,
+// noted for the pill and counted as "need you".
+function verify(filled: readonly Filled[], slots: readonly Slot[]): Filled[] {
+  const kept = filled.filter((entry) => entry.took());
+  missed = filled.filter((entry) => !kept.includes(entry)).map((entry) => entry.field);
+  for (const entry of filled) {
+    if (!kept.includes(entry)) {
+      entry.undo();
+      forgetAnswer(entry, slots);
+      unsure.set(entry.field, MISSED_NOTE);
+    }
+  }
+  for (const entry of kept) rememberAnswer(entry, slots);
+  return kept;
+}
+
+// The field a slot is, and for a radio group every button, since the person may check another.
+function answerFields(entry: Filled, slots: readonly Slot[]): { slot: Slot | undefined; fields: FieldElement[] } {
+  const slot = slots.find((candidate) => slotField(candidate) === entry.field);
+  return { slot, fields: slot?.control === "radio" ? slot.inputs : [entry.field] };
+}
+
+// A custom answer's field keeps what the fill showed, so a submit can tell it was changed.
+function rememberAnswer(entry: Filled, slots: readonly Slot[]): void {
+  const { slot, fields } = answerFields(entry, slots);
+  if (slot?.want.from !== "custom" || entry.shown === undefined) return;
+  for (const field of fields) filledAnswers.set(field, entry.shown);
+}
+
+// After Undo or a value that didn't take, what the person types there is their own answer.
+function forgetAnswer(entry: Filled, slots: readonly Slot[]): void {
+  for (const field of answerFields(entry, slots).fields) filledAnswers.delete(field);
+}
+
 // Fills every empty field of the form the person is in, in page order, and returns how
-// many it filled and what takes them all back.
+// many it filled and what takes them all back. Only fields that kept the value count.
 export async function fillForm(scope: ParentNode, options: FillOptions): Promise<FillResult> {
+  missed = [];
   const slots = findSlots(scope);
   if (slots.length === 0) return { filled: 0, undo: () => undefined };
   const answers = await gather(slots, options);
   const report = reporter(options);
-  const undos = [
-    ...slots.flatMap((slot) => apply(slot, answers, report) ?? []),
-    ...(await applyComboboxes(slots, answers)),
+  const marks: Marks = [];
+  const filled = [
+    ...slots.flatMap((slot) => apply(slot, answers, report, marks) ?? []),
+    ...(await applyComboboxes(slots, answers, marks)),
   ];
+  await settle();
+  const kept = verify(filled, slots);
   return {
-    filled: undos.length,
+    filled: kept.length,
     undo: () => {
-      [...undos].reverse().forEach((undo) => {
+      const undos = kept.map((entry) => () => {
+        entry.undo();
+        forgetAnswer(entry, slots);
+      });
+      [...undos, ...marks].reverse().forEach((undo) => {
         undo();
       });
     },

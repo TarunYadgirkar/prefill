@@ -162,23 +162,9 @@ final class AppTourTests: XCTestCase {
         swipeUp(until: dismiss, above: tabBarTop)
         dismiss.tap()
         pause(1)
-        let remove = app.buttons.matching(identifier: "inbox-remove").firstMatch
-        swipeUp(until: remove, above: tabBarTop)
-        XCTAssertTrue(remove.waitForExistence(timeout: 5))
-        remove.tap()
-        pause(2)
+        // A saved value leaves the inbox for its history on the You tab.
+        XCTAssertFalse(app.buttons.matching(identifier: "inbox-remove").firstMatch.exists)
         snapAs("inbox-after")
-        // Everything not on the card can go back on it. Counting buttons needs every row on
-        // screen, which only the default text size gives.
-        guard variant != "large" else { return }
-        let putBack = app.buttons.matching(identifier: "inbox-put-back")
-        let removeButtons = app.buttons.matching(identifier: "inbox-remove")
-        XCTAssertEqual(putBack.count, 2)
-        let removable = removeButtons.count
-        swipeUp(until: putBack.firstMatch, above: tabBarTop)
-        putBack.firstMatch.tap()
-        pause(2)
-        XCTAssertEqual(removeButtons.count, removable + 1)
     }
 
     private func walkSettings() {

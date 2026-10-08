@@ -86,26 +86,69 @@ function score(option: Option, answer: string): number {
   return best > 0.5 ? best * 0.8 : 0;
 }
 
-// The index of the option that best says `answer`, or -1 when none says it well enough.
-export function pickOption(options: readonly Option[], answer: string): number {
-  let found = -1;
-  let best = 0;
-  options.forEach((option, index) => {
-    if (isPlaceholder(option)) return;
-    const points = score(option, answer);
-    if (points > best) {
-      best = points;
-      found = index;
-    }
-  });
-  return found;
+// How close two options' scores may be before neither clearly says the answer: "Yes" fits
+// "Yes, I will require sponsorship now" and "Yes, but not now" equally, and a guess between
+// them could tell an employer the wrong thing.
+const AMBIGUOUS_MARGIN = 0.1;
+
+// The option that best says an answer, and how many options say it about as well. More than
+// one means the page asks something the answer alone can't settle.
+export interface OptionMatch {
+  index: number;
+  fits: number;
 }
 
-// The first option that matches any of `answers`, in the order the answers come.
-export function pickFirst(options: readonly Option[], answers: readonly string[]): number {
+const NO_MATCH: OptionMatch = { index: -1, fits: 0 };
+
+export function matchOption(options: readonly Option[], answer: string): OptionMatch {
+  const scores = options.map((option) => (isPlaceholder(option) ? 0 : score(option, answer)));
+  const best = Math.max(0, ...scores);
+  if (best === 0) return datePartMatch(options, answer);
+  const index = scores.indexOf(best);
+  // An option that says the answer exactly wins outright, even beside others that mean the same.
+  if (best === 1) return { index, fits: 1 };
+  return { index, fits: scores.filter((points) => points > 0 && best - points < AMBIGUOUS_MARGIN).length };
+}
+
+const MONTHS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+const MONTH_ABBREVIATION = 3;
+// "May 2027" or "May 15, 2027": a month name, maybe a day, and a year.
+const MONTH_YEAR = /^([a-z]+)\.?\s+(?:\d{1,2},?\s+)?(\d{4})$/u;
+
+// The ways an option may say each part of a dated answer on its own: the year, and the
+// month in full or cut to three letters.
+function dateParts(answer: string): string[] {
+  const [, monthWord = "", year = ""] = MONTH_YEAR.exec(answer.trim().toLowerCase()) ?? [];
+  const month = MONTHS.find((name) => monthWord.length >= MONTH_ABBREVIATION && name.startsWith(monthWord));
+  return month === undefined ? [] : [year, month, month.slice(0, MONTH_ABBREVIATION)];
+}
+
+// Lever asks for a graduation date as a year list and a month list. A saved "May 2027" fills
+// the option that says only its year or only its month, when exactly one option does.
+function datePartMatch(options: readonly Option[], answer: string): OptionMatch {
+  const parts = dateParts(answer);
+  if (parts.length === 0) return NO_MATCH;
+  const says = (option: Option): boolean =>
+    !isPlaceholder(option) && [option.text, option.value].some((text) => parts.includes(normalize(text)));
+  const hits = options.flatMap((option, index) => (says(option) ? [index] : []));
+  return { index: hits[0] ?? -1, fits: hits.length };
+}
+
+// The index of the option that best says `answer`, or -1 when none says it well enough or
+// more than one does.
+export function pickOption(options: readonly Option[], answer: string): number {
+  const { index, fits } = matchOption(options, answer);
+  return fits === 1 ? index : -1;
+}
+
+// The match for the first of `answers` that any option says, in the order the answers come.
+export function chooseOption(options: readonly Option[], answers: readonly string[]): OptionMatch {
   for (const answer of answers) {
-    const index = pickOption(options, answer);
-    if (index >= 0) return index;
+    const match = matchOption(options, answer);
+    if (match.fits > 0) return match;
   }
-  return -1;
+  return NO_MATCH;
 }

@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
+    "score": "vitest run src/heldout.test.ts --silent=false",
     "build:testbed": "NODE_PATH=node_modules esbuild ../testbed/react-select/page.mjs --bundle --minify --define:process.env.NODE_ENV='\"production\"' --log-level=error --outfile=../build/react-select/page.js",
     "build:mac": "rm -rf dist-mac && esbuild src/mac/autofill.ts --bundle --format=iife --target=safari26 --minify --outfile=dist-mac/autofill.js"
   },

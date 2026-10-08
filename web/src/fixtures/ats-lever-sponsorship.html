@@ -1,0 +1,123 @@
+<!--
+Built 2026-10-07 for Prefill's "more than one option fits" check, not saved from one posting.
+Markup: Lever's additional-question card exactly as captured in ats-lever-rover.html (the
+multiple-choice <ul data-qa="multiple-choice"> of radios, with the question in a div beside
+it) and Lever's dropdown card as in ats-lever-kepler.html (a <select> beside the question),
+plus the EEO gender select from ats-lever-rover.html.
+Wording: the three-way sponsorship options ("Yes, I will require sponsorship now" / "in the
+future" / "No") and the "Bachelor's Degree" / "Bachelor's Degree (in progress)" pair follow
+custom questions employers write on Lever and Greenhouse; the authorization and Canada
+questions are worded as on ats-ashby-decagon.html and ats-lever-kepler.html.
+-->
+<form id="application-form" method="POST">
+<div data-qa="additional-cards">
+<h4 data-qa="card-name">Work Eligibility</h4>
+<ul>
+<li>
+<div>
+<div>
+<div>Do you or will you require sponsorship in the future to work in the U.S.?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field0]" value="Yes, I will require sponsorship now" required="required">
+<span>Yes, I will require sponsorship now</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field0]" value="Yes, I will require sponsorship in the future" required="required">
+<span>Yes, I will require sponsorship in the future</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field0]" value="No, I will not require sponsorship" required="required">
+<span>No, I will not require sponsorship</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+<li>
+<div>
+<div>
+<div>Are you legally authorized to work in the United States?<span>✱</span>
+</div>
+</div>
+<div>
+<div>
+<select name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field1]" required="">
+<option value="">Select ...</option>
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+</select>
+</div>
+</div>
+</div>
+</li>
+<li>
+<div>
+<div>
+<div>Are you legally able to work in Canada according to the laws and regulations of the province or territory where you live?<span>✱</span>
+</div>
+</div>
+<div>
+<ul data-qa="multiple-choice">
+<li>
+<label>
+<input type="radio" name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field2]" value="Yes" required="required">
+<span>Yes</span>
+</label>
+</li>
+<li>
+<label>
+<input type="radio" name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field2]" value="No" required="required">
+<span>No</span>
+</label>
+</li>
+</ul>
+</div>
+</div>
+</li>
+<li>
+<div>
+<div>
+<div>What is the highest degree you have completed or are pursuing?<span>✱</span>
+</div>
+</div>
+<div>
+<div>
+<select name="cards[7d1e2f30-5a41-4b8e-9c3d-1f2a3b4c5d6e][field3]" required="">
+<option value="">Select ...</option>
+<option value="Bachelor's Degree">Bachelor's Degree</option>
+<option value="Bachelor's Degree (in progress)">Bachelor's Degree (in progress)</option>
+<option value="Master's Degree">Master's Degree</option>
+</select>
+</div>
+</div>
+</div>
+</li>
+</ul>
+</div>
+<div>
+<label>
+<div>Gender</div>
+<div>
+<div>
+<select name="eeo[gender]">
+<option value="">Select ...</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Decline to self-identify">Decline to self-identify</option>
+</select>
+</div>
+</div>
+</label>
+</div>
+<button type="submit">Submit application</button>
+</form>

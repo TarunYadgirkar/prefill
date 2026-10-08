@@ -1,10 +1,14 @@
 # Prefill
 
-Prefill remembers your emails, phone numbers, addresses, profile links and answers to common form questions, and offers the right one when you click a field.
+Your verified information, ready for the next application.
 
-- **iPhone (Safari):** click a field and Prefill's list shows your values, best first, each saying why it's there. What you pick comes first on that site next time. Fill form fills a whole application when you want it.
-- **iPhone app:** an Inbox of what Prefill learned, and a searchable You tab with everything it knows and where each value was used.
-- **Mac:** a menu bar app that suggests in any app (Chrome, Arc, Safari and others) through Accessibility. There's also an optional Chrome/Arc extension that saves new values you type.
+Prefill is for people who apply to a lot of things: jobs, fellowships, accelerators, events. It keeps your emails, phone numbers, addresses, profile links and the answers you've given before, and puts the right one in the field when you click it, or fills the whole form when you ask.
+
+- **Browser extensions, where Prefill does its work:** Safari on the iPhone, and Chrome and Arc on the Mac. A Safari extension for the Mac isn't built yet; until it is, Safari on the Mac gets the Accessibility panel below. Click a field and Prefill's list shows your values, best first, each saying why it's there. What you pick comes first on that site next time. Fill form fills a whole application, declines demographic questions, and tells you which fields still need you.
+- **iPhone app, to manage and review:** an Inbox of what Prefill learned and what needs a decision, and a searchable You tab with every answer and where it was used.
+- **Fallbacks you use by hand, outside the browser:**
+  - **Mac Accessibility panel:** suggests in other Mac apps once you allow Accessibility. It fills text fields only, doesn't save new values, and some apps don't expose their fields to it.
+  - **iPhone keyboard:** the Prefill keyboard lets you tap a saved value in another app. A keyboard isn't told the field's label, so you choose the value yourself, and some apps block third-party keyboards (password and other secure fields always do).
 - **Sync:** everything lives in iCloud Contacts, so the iPhone and Mac stay in step with no server and no paid developer account.
 
 Read [docs/PRODUCT.md](docs/PRODUCT.md) for the full picture: what it was built to do, how it works, and how it was built. Read [AGENTS.md](AGENTS.md) before changing code.
@@ -43,7 +47,7 @@ zsh scripts/install-mac.sh
 Then open the Prefill menu. Until each item is done it shows a checklist, and each item checks itself:
 1. Allow Contacts.
 2. Turn on Accessibility (System Settings → Privacy & Security → Accessibility). Open takes you there.
-3. Add the browser extension: Copy folder path, then in `chrome://extensions` or `arc://extensions` turn on Developer mode, click Load unpacked, press Command-Shift-G and paste. The folder is `/Applications/Prefill.app/Contents/Resources/ChromeExtension`, and the `Chrome Extension` shortcut in the repo root points there. The item turns green once the extension talks to the app; it's optional, so you can skip it. After each reinstall, click Reload on it in each browser.
+3. Add the browser extension: Copy folder path, then in `chrome://extensions` or `arc://extensions` turn on Developer mode, click Load unpacked, press Command-Shift-G and paste. The folder is `/Applications/Prefill.app/Contents/Resources/ChromeExtension`, and the `Chrome Extension` shortcut in the repo root points there. The item turns green once the extension talks to the app. Without it, Chrome and Arc get only the Accessibility panel, which fills text fields only. After each reinstall, click Reload on it in each browser.
 
 ## Develop
 

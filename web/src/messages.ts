@@ -37,12 +37,13 @@ export const JOB_QUESTIONS = [
   "sponsorship",
   "heard",
 ] as const;
-export const ANSWER_ACTIONS = ["learn", "undo"] as const;
+export const ANSWER_ACTIONS = ["learn", "undo", "update", "keepHere"] as const;
 // What a pick from Prefill's list under a field is of. Mirrored by PickKind in Swift.
 export const PICK_KINDS = ["email", "phone", "address", "link", "custom"] as const;
 // Why a value is in Prefill's list: picked or used on this site before, on the card, learned
-// from a form, the on-device model's guess, or from a resume. Mirrored by SuggestionWhy in Swift.
-export const WHYS = ["pinned", "used", "card", "learned", "guess", "resume"] as const;
+// from a form, the on-device model's guess, from a resume, or a draft the person wrote in the
+// app. Mirrored by SuggestionWhy in Swift.
+export const WHYS = ["pinned", "used", "card", "learned", "guess", "resume", "draft"] as const;
 
 // Mirrored by MessageLimits in Messages.swift.
 export const LIMITS = {
@@ -63,8 +64,12 @@ export const LIMITS = {
   suggestions: 5,
   fieldText: 200,
   customValue: 200,
+  // A draft answer, which may span lines.
+  draftValue: 2_000,
   customOptions: 3,
   answers: 8,
+  // The options an answered select or radio group offered, each cut to `text`.
+  answerOptions: 10,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -203,6 +208,15 @@ const suggestedValue = (max: number) =>
     }),
     (offered) => offered.site === undefined || offered.why === "learned",
   );
+// A draft is offered only in Prefill's list, never filled, and keeps its line breaks.
+const draftValue = refine(
+  object({
+    value: text(LIMITS.draftValue, HIDDEN_EXCEPT_NEWLINE),
+    why,
+    label: optional(text(LIMITS.text)),
+  }),
+  (offered) => offered.why === "draft",
+);
 const suggestedAddress = object({
   address: postalAddress,
   why,
@@ -250,7 +264,14 @@ const pageRequests = {
     type: literal("customSuggestions"),
     host: hostName,
     fields: arrayOf(
-      object({ text: text(LIMITS.fieldText) }),
+      object({
+        text: text(LIMITS.fieldText),
+        // The nearest heading above the field and a list's options, for the on-device model.
+        heading: optional(text(LIMITS.text)),
+        options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+        // Only for the text area the person just focused: the one request that gets drafts.
+        focused: optional(boolean),
+      }),
       LIMITS.pageFields,
     ),
   }),
@@ -259,7 +280,15 @@ const pageRequests = {
     host: hostName,
     action: oneOf(ANSWER_ACTIONS),
     answers: arrayOf(
-      object({ question: oneOf(JOB_QUESTIONS), value: text(LIMITS.customValue) }),
+      object({
+        question: oneOf(JOB_QUESTIONS),
+        value: text(LIMITS.customValue),
+        // The question as the page words it, which can say what the answer applies to.
+        text: optional(text(LIMITS.fieldText)),
+        options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+        // The person changed an answer Prefill filled before submitting.
+        changedFill: optional(boolean),
+      }),
       LIMITS.answers,
     ),
   }),
@@ -346,6 +375,12 @@ const pageResponses = {
         // What the app's on-device model thinks answers the field: offered as a marked option.
         // Their `why` is always "guess".
         guesses: optional(arrayOf(text(LIMITS.customValue), LIMITS.customOptions)),
+        // Answers kept for no scope or another kind of scope: offered, never filled.
+        suggested: optional(arrayOf(suggestedValue(LIMITS.customValue), LIMITS.customOptions)),
+        // The question's scope when every answer to it is for another one: "Canada".
+        noAnswerFor: optional(text(LIMITS.text)),
+        // Drafts whose label matches, only for a request about one field.
+        drafts: optional(arrayOf(draftValue, LIMITS.customOptions)),
       }),
       LIMITS.pageFields,
     ),
@@ -355,6 +390,8 @@ const pageResponses = {
     saved: count,
     // The labels of the learned answers a later one replaced.
     updated: arrayOf(text(LIMITS.text), LIMITS.answers),
+    // Answers the person changed after Prefill filled them, held back to ask about.
+    ask: optional(arrayOf(text(LIMITS.text), LIMITS.answers)),
   }),
   pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),

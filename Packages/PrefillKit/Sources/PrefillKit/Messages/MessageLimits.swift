@@ -24,7 +24,10 @@ public enum MessageLimits {
     static let fieldText = 200
     static let customValue = CustomField.maxValue
     static let customOptions = 3
+    static let draftValue = CustomField.maxDraftValue
     static let answers = JobQuestion.allCases.count
+    // The options an answered select or radio group offered, each cut to `text`.
+    static let answerOptions = 10
 }
 
 extension ExtensionRequest {
@@ -44,14 +47,41 @@ extension ExtensionRequest {
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
         case .customSuggestions(let body):
             body.host.count <= MessageLimits.host && body.fields.count <= MessageLimits.pageFields
-                && body.fields.allSatisfy { $0.text.utf16.count <= MessageLimits.fieldText }
+                && body.fields.allSatisfy(\.isWithinLimits)
         case .answers(let body):
             body.host.count <= MessageLimits.host && body.answers.count <= MessageLimits.answers
-                && body.answers.allSatisfy { $0.value.utf16.count <= MessageLimits.customValue }
+                && body.answers.allSatisfy(\.isWithinLimits)
         case .picked(let body):
             body.host.count <= MessageLimits.host && body.value.utf16.count <= MessageLimits.value
                 && (body.question?.utf16.count ?? 0) <= MessageLimits.fieldText
         }
+    }
+}
+
+private extension CustomSuggestionsRequest.Field {
+    var isWithinLimits: Bool {
+        let options = options ?? []
+        return text.utf16.count <= MessageLimits.fieldText && (heading?.utf16.count ?? 0) <= MessageLimits.text
+            && options.count <= MessageLimits.answerOptions
+            && options.allSatisfy { $0.utf16.count <= MessageLimits.text }
+    }
+
+    var isWellFormed: Bool {
+        ([text, heading ?? ""] + (options ?? [])).allSatisfy { MessageText.isPlain($0) }
+    }
+}
+
+private extension AnswersRequest.Answer {
+    var isWithinLimits: Bool {
+        let options = options ?? []
+        return value.utf16.count <= MessageLimits.customValue
+            && (text?.utf16.count ?? 0) <= MessageLimits.fieldText
+            && options.count <= MessageLimits.answerOptions
+            && options.allSatisfy { $0.utf16.count <= MessageLimits.text }
+    }
+
+    var isWellFormed: Bool {
+        ([value, text ?? ""] + (options ?? [])).allSatisfy { MessageText.isPlain($0) }
     }
 }
 
@@ -84,9 +114,9 @@ extension ExtensionRequest {
         case .popupState, .pin, .unpin, .undoCapture, .muteSite, .linkSuggestions, .contactSuggestions:
             MessageText.isHost(host)
         case .customSuggestions(let body):
-            MessageText.isHost(body.host) && body.fields.allSatisfy { MessageText.isPlain($0.text) }
+            MessageText.isHost(body.host) && body.fields.allSatisfy(\.isWellFormed)
         case .answers(let body):
-            MessageText.isHost(body.host) && body.answers.allSatisfy { MessageText.isPlain($0.value) }
+            MessageText.isHost(body.host) && body.answers.allSatisfy(\.isWellFormed)
         case .picked(let body):
             MessageText.isHost(body.host) && MessageText.isPlain(body.value) && MessageText.isPlain(body.question ?? "")
         }

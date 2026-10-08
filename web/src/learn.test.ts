@@ -34,6 +34,9 @@ describe("learning answers from an application", () => {
   it("knows the questions applications ask and leaves demographic ones alone", () => {
     expect(jobQuestion("Are you legally authorized to work in the United States?")).toBe("authorization");
     expect(jobQuestion("Will you now or in the future require sponsorship?")).toBe("sponsorship");
+    expect(
+      jobQuestion("Are you legally able to work in Canada according to the laws and regulations of the province or territory where you live?"),
+    ).toBe("authorization");
     expect(jobQuestion("Expected graduation date")).toBe("graduation");
     expect(jobQuestion("Veteran Status")).toBeUndefined();
     expect(jobQuestion("Why do you want to work here?")).toBeUndefined();
@@ -53,15 +56,19 @@ describe("learning answers from an application", () => {
     expect(send).not.toHaveBeenCalled();
     document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
     document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
-    await Promise.resolve();
-    await Promise.resolve();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(send).toHaveBeenCalledWith({
       type: "answers",
       host: "boards.example.io",
       action: "learn",
       answers: [
-        { question: "school", value: "University of California, Berkeley" },
-        { question: "authorization", value: "Yes" },
+        { question: "school", value: "University of California, Berkeley", text: expect.stringMatching(/^School /u) as string },
+        {
+          question: "authorization",
+          value: "Yes",
+          text: "Are you legally authorized to work in the United States?",
+          options: ["Yes", "No"],
+        },
       ],
     });
     expect(document.querySelector("prefill-saved")).not.toBeNull();

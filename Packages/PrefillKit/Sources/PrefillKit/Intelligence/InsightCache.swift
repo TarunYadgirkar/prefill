@@ -17,9 +17,12 @@ public enum InsightKey {
         "label|\(variant)|\(value.id.uuidString)|\(Normalizer.registrableDomain(host))"
     }
 
-    // A question's words, sorted, so the same question on two sites shares an answer.
-    public static func answer(_ question: String, variant: String) -> String {
-        "answer|\(variant)|\(CustomFieldMatcher.words(question).sorted().joined(separator: " "))"
+    // A question's words, sorted, so the same question on two sites shares an answer, the
+    // revision of the answers it was judged against, so a changed answer asks again, and a hash
+    // of the heading and options it was shown with (`AnswerQuestion.context`).
+    public static func answer(_ question: String, variant: String, revision: String, context: String = "") -> String {
+        let words = CustomFieldMatcher.words(question).sorted().joined(separator: " ")
+        return "answer|\(variant)|\(revision)|\(context)|\(words)"
     }
 
     public static func siteKind(_ host: String, variant: String) -> String {
@@ -44,10 +47,28 @@ public extension AppState {
         )
     }
 
-    // The saved answer the model picked for a question, if it's still on the card.
-    public func guessedAnswer(for question: String, in fields: [CustomField], variant: String) -> CustomField? {
-        guard let label = insight(InsightKey.answer(question, variant: variant)), label != "none" else { return nil }
-        return fields.first { $0.id == label.lowercased() }
+    // The saved answer the model said to use for a question, judged against the answers as
+    // they are now (`revision`), if it's still among `fields`.
+    func guessedAnswer(key: String, in fields: [CustomField]) -> CustomField? {
+        guard let cached = insight(key), case .use(let label)? = AnswerVerdict(cached: cached) else { return nil }
+        return fields.first { !$0.isDraft && $0.id == label.lowercased() }
+    }
+
+    func guessedAnswer(for question: FormQuestion, in fields: [CustomField], variant: String) -> CustomField? {
+        guessedAnswer(key: Self.answerKey(question, fields: fields, variant: variant), in: fields)
+    }
+
+    // The person said the model's guess doesn't answer the question.
+    func rejectingGuess(for question: FormQuestion, fields: [CustomField], variant: String) -> AppState {
+        let key = Self.answerKey(question, fields: fields, variant: variant)
+        return recording([CachedInsight(key: key, answer: AnswerVerdict.unsure.cached)], siteKinds: [:])
+    }
+
+    static func answerKey(_ question: FormQuestion, fields: [CustomField], variant: String) -> String {
+        InsightKey.answer(
+            question.text, variant: variant, revision: AnswerRevision.of(fields),
+            context: AnswerQuestion(question).context
+        )
     }
 
     // The kind of `host`: what the model said if the rules couldn't tell, else the rules.

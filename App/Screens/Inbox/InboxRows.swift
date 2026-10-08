@@ -2,11 +2,11 @@ import PrefillKit
 import SwiftUI
 
 // The state of an inbox row, in shape and color so it never rests on color alone: a ring
-// waits for the person, a check is on the card, a minus came off it, a pin is first on a
-// site and a sparkle was learned from an application.
+// waits for the person, a check is on the card, a minus came off it, circling arrows mark an
+// answer a form changed and a sparkle the on-device model's guess.
 struct InboxMark: View {
     enum Kind {
-        case waiting, saved, removed, picked, learned
+        case waiting, saved, removed, changed, guess
     }
 
     let kind: Kind
@@ -25,8 +25,8 @@ struct InboxMark: View {
         case .waiting: "circle"
         case .saved: "checkmark.circle.fill"
         case .removed: "minus.circle"
-        case .picked: "pin.fill"
-        case .learned: "sparkle"
+        case .changed: "arrow.triangle.2.circlepath"
+        case .guess: "sparkle"
         }
     }
 
@@ -35,7 +35,7 @@ struct InboxMark: View {
         case .waiting: Palette.attention
         case .saved: Palette.positive
         case .removed: Palette.pending
-        case .picked, .learned: Palette.accent
+        case .changed, .guess: Palette.accent
         }
     }
 }
@@ -75,19 +75,16 @@ extension InboxRowFrame where Actions == EmptyView {
     }
 }
 
-// An answer Prefill saved from a job application. Edit opens the same editor as the You tab.
-struct LearnedRow: View {
+// An answer a form changed. Keep takes it off the inbox; Change back puts the old one back.
+struct ChangedRow: View {
     @Environment(AppModel.self) private var model
     let answer: LearnedAnswer
+    let field: CustomField
     let edit: () -> Void
 
     var body: some View {
-        InboxRowFrame(
-            mark: .learned, line: Text("Learned from \(answer.host.breakableAtPunctuation): \(answer.label)")
-        ) {
-            Text(answer.value)
-                .textRole(.value)
-                .fixedSize(horizontal: false, vertical: true)
+        InboxRowFrame(mark: .changed, line: line) {
+            AnswerText(field: field)
         } actions: {
             // Side by side while they fit; stacked at the largest text sizes.
             ViewThatFits(in: .horizontal) {
@@ -95,32 +92,59 @@ struct LearnedRow: View {
                 VStack(alignment: .leading, spacing: Spacing.small) { buttons }
             }
         }
-        .accessibilityIdentifier("answer-\(answer.label)")
+        .accessibilityIdentifier("changed-\(answer.label)")
+    }
+
+    private var line: Text {
+        let site = answer.host.breakableAtPunctuation
+        return Text("Changed on \(site) from “\(answer.previous ?? "")”")
     }
 
     @ViewBuilder private var buttons: some View {
+        Button("Keep") { model.markSeen(answer) }
+            .prefillButtonStyle(.rowPrimary)
+            .accessibilityIdentifier("inbox-keep")
+        Button("Change back") { Task { await model.changeBack(answer, field: field) } }
+            .prefillButtonStyle(.rowSecondary)
+            .accessibilityIdentifier("inbox-change-back")
         Button("Edit", systemImage: "pencil", action: edit)
             .prefillButtonStyle(.rowSecondary)
             .accessibilityIdentifier("inbox-edit")
-        Button("Remove", systemImage: "minus.circle", role: .destructive) {
-            Task { await model.undo(answer) }
-        }
-        .prefillButtonStyle(.rowSecondary)
-        .accessibilityIdentifier("inbox-remove-answer")
     }
 }
 
-// A value the person picked on a site, which Prefill now offers first there.
-struct PickedRow: View {
-    let pick: FirstPick
+// The on-device model's pick of a saved answer for a question no rule matched. Until the
+// person says Use it, the answer is only offered under the field, never filled.
+struct GuessRow: View {
+    @Environment(AppModel.self) private var model
+    let guess: GuessToConfirm
 
     var body: some View {
-        InboxRowFrame(mark: .picked, line: Text("""
-            Picked on \(pick.site.breakableAtPunctuation) \(pick.date.formatted(.relative(presentation: .named))), \
-            so it’s first there
-            """)) {
-            ValueRow(value: pick.value)
+        InboxRowFrame(mark: .guess, line: line) {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                Text(verbatim: guess.question.text).textRole(.valueCaption)
+                Text(guess.field.value).textRole(.value).fixedSize(horizontal: false, vertical: true)
+            }
+        } actions: {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Spacing.small) { buttons }
+                VStack(alignment: .leading, spacing: Spacing.small) { buttons }
+            }
         }
-        .accessibilityIdentifier("picked-\(pick.value.display)")
+        .accessibilityIdentifier("guess-\(guess.field.label)")
+    }
+
+    private var line: Text {
+        let site = guess.question.host.breakableAtPunctuation
+        return Text("Apple Intelligence suggests your \(guess.field.label) answer here, asked on \(site)")
+    }
+
+    @ViewBuilder private var buttons: some View {
+        Button("Use it") { model.confirm(guess) }
+            .prefillButtonStyle(.rowPrimary)
+            .accessibilityIdentifier("inbox-use-guess")
+        Button("Not this") { model.reject(guess) }
+            .prefillButtonStyle(.rowSecondary)
+            .accessibilityIdentifier("inbox-reject-guess")
     }
 }

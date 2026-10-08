@@ -1,0 +1,235 @@
+{
+  "source": "https://job-boards.greenhouse.io/anthropic/jobs/5186067008",
+  "fields": [
+    {
+      "field": {
+        "id": "first_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "last_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "country"
+      },
+      "want": "fill",
+      "accept": [
+        "United States"
+      ],
+      "options": [
+        "United States",
+        "Canada",
+        "United Kingdom",
+        "India",
+        "Germany"
+      ],
+      "note": "Phone country; options abbreviated"
+    },
+    {
+      "field": {
+        "id": "phone"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678798008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678799008"
+      },
+      "want": "fill",
+      "accept": [
+        "https://alexrivera.example.com",
+        "https://github.com/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678800008"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678801008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678802008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678803008"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678804008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678805008"
+      },
+      "want": "fill",
+      "accept": [
+        "No"
+      ],
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678806008"
+      },
+      "want": "fill",
+      "accept": [
+        "No"
+      ],
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678807008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678808008"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678809008"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_15678810008"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "question_15678811008"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_18372014008"
+      },
+      "want": "leave",
+      "note": "legal agreement",
+      "options": [
+        "I will read the arbitration agreement below."
+      ]
+    },
+    {
+      "field": {
+        "id": "question_18374732008"
+      },
+      "want": "leave",
+      "note": "legal agreement",
+      "options": [
+        "I understand and agree to the terms of the Agreement to Arbitrate set forth above."
+      ]
+    },
+    {
+      "field": {
+        "id": "gender"
+      },
+      "want": "decline",
+      "options": [
+        "Decline To Self Identify",
+        "Female",
+        "Male"
+      ]
+    },
+    {
+      "field": {
+        "id": "hispanic_ethnicity"
+      },
+      "want": "decline",
+      "options": [
+        "Yes",
+        "No",
+        "Decline To Self Identify"
+      ],
+      "note": "Greenhouse's standard options"
+    },
+    {
+      "field": {
+        "id": "veteran_status"
+      },
+      "want": "decline",
+      "options": [
+        "I don't wish to answer",
+        "I identify as one or more of the classifications of a protected veteran",
+        "I am not a protected veteran"
+      ]
+    }
+  ]
+}

@@ -63,7 +63,12 @@ export const GENERIC_LINK = /\burl\b/iu;
 // says "Resume Link" wants a document, whatever its autocomplete token says.
 export const OTHER_LINKS =
   /r[eé]sum[eé]|\bcv\b|project|demo|video|paper|publication|writing.?sample|calendly|schedul/iu;
-const LINK = new RegExp(
+// A link to the person's company or startup, not to them: "What is your company's website?"
+export const ORG_LINK =
+  /compan(?:y|ies)|start.?up|organi[sz]ation|business|employer|venture|\bfirm\b/iu;
+// Where a label starts listing examples: "Website (Examples: LinkedIn, GitHub, portfolio)".
+export const EXAMPLES = /\(?\s*(?:\be\.?\s?g\b\.?|\bexamples?\b|\bfor instance\b|\bsuch as\b)/iu;
+export const LINK = new RegExp(
   [
     ...LINK_WORDS.map(([, pattern]) => pattern.source),
     GENERIC_LINK.source,
@@ -71,18 +76,19 @@ const LINK = new RegExp(
   "iu",
 );
 
+// A question about how to say the name ("Name pronunciation") wants the sound, not the name.
 const nameIgnored =
-  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|用户名|会社/iu;
+  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|how (?:do )?(?:you|we|to) say|用户名|会社/iu;
 const addressNameIgnored =
   /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 
 // Card numbers, security codes, one-time codes, passwords, bank details and government IDs. A field
 // that matches is never classified as contact data, whatever else it matches.
 export const SENSITIVE: readonly RegExp[] = [
-  /(?:card|cc|acct).?(?:number|#|no|num|field(?!s)|pan)|0000 ?0000 ?0000 ?0000|1234 ?1234 ?1234 ?1234/iu,
+  /(?:card|(?<![a-z0-9])cc|acct).?(?:number|#|no|num|field(?!s)|pan)|0000 ?0000 ?0000 ?0000|1234 ?1234 ?1234 ?1234/iu,
   /verification|card.?identification|security.?code|card.?code|security.?value|security.?number|card.?pin|c-v-v|(?:cvn|cvv|cvc|csc|cvd|ccv)|\bcid\b|cccid/iu,
   /\botp\b|one.?time|verification.code|2fa|six.digit/iu,
-  /card.?(?:holder|owner)|name.*on.*card|(?:card|cc).?name|expir|\bexp\b|exp(?:iry|iration)?.?date/iu,
+  /card.?(?:holder|owner)|name[\W_]?on[\W_]?card|\bname\b.{0,30}\bon (?:the |your )?card\b|(?:card|(?<![a-z0-9])cc).?name|expir|\bexp\b|exp(?:iry|iration)?.?date/iu,
   /password|passwort|passcode|passwd|\bpwd\b|contraseña|mot de passe|\bssn\b|social.?security|secret|\bmfa\b/iu,
   /account.?(?:number|no\b|num|#)|routing|\biban\b|\bbic\b|swift.?code|sort.?code|\bpin\b(?!.?code)|token|(?:backup|recovery|access|auth).?code/iu,
   /\bdob\b|date.?of.?birth|birth.?date|national.?id|passport|tax.?id|driver.?s?.?licen[cs]e|\b(?:ein|itin|nin)\b/iu,
@@ -92,9 +98,11 @@ export const SENSITIVE: readonly RegExp[] = [
 ];
 
 // Words that rule a box out as a phone number, whatever its type or tags say: stores and
-// banks use type=tel for card numbers, codes, account numbers and birth dates.
+// banks use type=tel for card numbers, codes, account numbers and birth dates. "cc" counts
+// only as its own word or a card token, since generated ids ("8019a3b2-28cc-...") hold it,
+// and Lever names every question "cards[...]".
 export const NOT_PHONE =
-  /card|(?:^|[^a-z])cc|cvv|\bpan\b|expir|routing|account|acct|iban|ssn|social|\btax|\bdob\b|birth|\bpin\b|otp|code|token|secret|pass|pwd/iu;
+  /card(?!s\b|s\[)|(?<![a-z0-9])cc(?![a-z0-9])|(?<![a-z0-9])cc[-_.]?(?:num|no\b|exp|cvv|csc|cvc)|cvv|\bpan\b|expir|routing|account|acct|iban|ssn|social|\btax|\bdob\b|birth|\bpin\b|otp|code|token|secret|pass|pwd/iu;
 
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.

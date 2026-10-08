@@ -62,6 +62,19 @@ describe("showDropdown", () => {
     hide();
   });
 
+  it("shows a note that can't be picked, even with nothing else to offer", () => {
+    const { input, rows, press, hide } = setUp(undefined, [{ value: "No answer for Canada yet", detail: "", tone: "note" }]);
+    const host = document.querySelector<HTMLElement>("prefill-suggestions");
+    expect(host?.style.getPropertyValue("display")).toBe("block");
+    expect(rows()).toEqual([]);
+    press("ArrowDown");
+    press("Enter");
+    expect(input.value).toBe("");
+    press("Escape");
+    expect(host?.style.getPropertyValue("display")).toBe("none");
+    hide();
+  });
+
   it("fills the chosen value with input and change events, from the keyboard", () => {
     const { input, rows, press, events, hide } = setUp();
     expect(rows()).toEqual(["+1 510 555 0100", "+1 415 555 0199"]);

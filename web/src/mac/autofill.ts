@@ -61,13 +61,16 @@ function customPlan(field: FieldDescription): Plan {
   const isCandidate = field.tag === "textarea" || (field.tag === "input" && field.type.toLowerCase() === "text");
   if (!isCandidate || field.signIn || parseAutocomplete(field.autocomplete) !== undefined) return NONE;
   const text = joinFieldText([field.label, field.placeholder, ...splitNames(field.names)]);
-  return text === "" ? NONE : { kind: "custom", request: { type: "customSuggestions", host: "", fields: [{ text }] } };
+  // The panel is the focused field's own list, so a text area there may get drafts; Fill form
+  // never uses them.
+  const asked = field.tag === "textarea" ? { text, focused: true } : { text };
+  return text === "" ? NONE : { kind: "custom", request: { type: "customSuggestions", host: "", fields: [asked] } };
 }
 
 export function plan(field: FieldDescription): Plan {
   const found = classifyDescription(field);
   if (found.kind === "link") {
-    if (field.tag !== "input") return NONE;
+    if (field.tag === "select") return NONE;
     const linkTypes = [...(found.linkTypes ?? [])];
     return { kind: "link", linkTypes, fullUrl: wantsUrl(field), request: { type: "linkSuggestions", host: "", types: linkTypes } };
   }
@@ -97,7 +100,9 @@ function linkRows(chosen: Extract<Plan, { kind: "link" }>, response: PageRespons
 function customRows(chosen: Extract<Plan, { kind: "custom" }>, response: PageResponse): Row[] {
   if (response.type !== "customSuggestionsResult") return [];
   const question = chosen.request.type === "customSuggestions" ? chosen.request.fields[0]?.text : undefined;
-  return customChoices(response.fields[0], NO_PICK).map(({ onPick, ...choice }) => ({
+  // The panel lists values only; its note line is the extension's.
+  const choices = customChoices(response.fields[0], NO_PICK).filter((choice) => choice.tone !== "note");
+  return choices.map(({ onPick, ...choice }) => ({
     ...choice,
     kind: "custom",
     ...(onPick === undefined ? {} : { pick: picked("custom", choice.value, question) }),

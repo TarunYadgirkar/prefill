@@ -4,8 +4,9 @@ export interface Choice {
   value: string;
   // A few words on what the value is or why it's offered ("Work email", "Used here").
   detail: string;
-  // A guess is drawn apart from the person's own values.
-  tone?: "guess";
+  // A guess or a draft is drawn apart from the person's own values. A note is a line of
+  // text, not a value: it can't be picked and never reaches the field.
+  tone?: "guess" | "draft" | "note";
   // Runs when the person picks this value, after it's in the field.
   onPick?: () => void;
 }
@@ -73,8 +74,9 @@ const STYLE = `
 .row[aria-selected="true"], .row:hover { background: var(--hover); }
 .value, .detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail { font-size: 12px; line-height: 16px; color: var(--text-muted); }
-.guess .value { color: var(--text-muted); }
-.guess .detail { color: var(--accent); }
+.guess .value, .draft .value { color: var(--text-muted); }
+.guess .detail, .draft .detail { color: var(--accent); }
+.note { padding: 6px 16px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
 .footer { margin-top: 4px; padding: 6px 16px 2px; border-top: 1px solid var(--divider); font-size: 12px; line-height: 16px; color: var(--text-muted); }
 `;
 
@@ -155,6 +157,14 @@ function rowFor(doc: Document, choice: Choice, index: number): HTMLElement {
   return row;
 }
 
+function noteFor(doc: Document, note: Choice): HTMLElement {
+  const line = doc.createElement("div");
+  line.className = "note";
+  line.setAttribute("role", "note");
+  line.textContent = note.value;
+  return line;
+}
+
 // Prefill's own suggestion list for Chrome and Arc, under the focused field. It sits in
 // the top layer inside a closed shadow root, so the page can neither cover nor read it,
 // and only the person's own clicks and keys pick a value.
@@ -166,6 +176,9 @@ export function showDropdown(
 ): () => void {
   const doc = element.ownerDocument;
   const win = doc.defaultView ?? window;
+  // Notes are read, not picked, so only the values take part in typing, arrows and Enter.
+  const notes = choices.filter((choice) => choice.tone === "note");
+  const values = choices.filter((choice) => choice.tone !== "note");
   const host = doc.createElement("prefill-suggestions");
   const root = host.attachShadow({ mode: "closed" });
   const style = doc.createElement("style");
@@ -195,6 +208,7 @@ export function showDropdown(
   });
 
   let shown: Choice[] = [];
+  let isOpen = false;
   let selected = -1;
   let hidden = false;
   let shownAt = 0;
@@ -214,21 +228,23 @@ export function showDropdown(
 
   const render = (): void => {
     const wasShown = shown.length > 0;
-    shown = hidden ? [] : matching(choices, typed);
+    shown = hidden ? [] : matching(values, typed);
     if (!wasShown && shown.length > 0) shownAt = Date.now();
     selected = Math.min(selected, shown.length - 1);
+    isOpen = shown.length > 0 || (!hidden && notes.length > 0);
     const footer = doc.createElement("div");
     footer.className = "footer";
     footer.textContent = "Prefill";
     menu.replaceChildren(
       ...shown.map((choice, index) => rowFor(doc, choice, index)),
+      ...notes.map((note) => noteFor(doc, note)),
       footer,
     );
     menu.querySelectorAll(".row").forEach((row, index) => {
       row.setAttribute("aria-selected", String(index === selected));
     });
-    setStyles(host, { display: shown.length === 0 ? "none" : "block" });
-    if (shown.length > 0) place();
+    setStyles(host, { display: isOpen ? "block" : "none" });
+    if (isOpen) place();
   };
 
   const pick = (index: number): void => {
@@ -241,7 +257,7 @@ export function showDropdown(
 
   const move = (step: number): void => {
     hidden = false;
-    const count = matching(choices, typed).length;
+    const count = matching(values, typed).length;
     if (count === 0) selected = -1;
     else if (selected < 0) selected = step < 0 ? count - 1 : 0;
     else selected = (selected + step + count) % count;
@@ -249,7 +265,7 @@ export function showDropdown(
   };
 
   const canMove = (): boolean =>
-    matching(choices, typed).length > 0 &&
+    matching(values, typed).length > 0 &&
     (element.localName !== "textarea" || shown.length > 0);
 
   const close = (): void => {
@@ -277,7 +293,7 @@ export function showDropdown(
       return true;
     },
     Escape: () => {
-      if (shown.length === 0) return false;
+      if (!isOpen) return false;
       close();
       return true;
     },

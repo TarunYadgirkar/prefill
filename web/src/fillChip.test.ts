@@ -35,6 +35,7 @@ describe("the Fill form pill", () => {
       count: () => Promise.resolve(3),
       fill: () => Promise.resolve({ filled: 1, undo: () => undefined }),
       left,
+      note: (target) => (target.id === "c" ? "2 options fit, pick one" : undefined),
       isUserEvent: () => true,
       now,
     });
@@ -63,6 +64,7 @@ describe("the Fill form pill", () => {
     await press("next");
     expect(document.activeElement).toBe(field("c"));
     expect(root?.textContent).toContain("1 needs you");
+    expect(root?.textContent).toContain("2 options fit, pick one");
     expect(list.allows(field("b"))).toBe(false);
     stop();
     gate.stop();

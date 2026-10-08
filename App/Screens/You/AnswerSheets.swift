@@ -56,11 +56,15 @@ struct StudentAnswersSheet: View {
     }
 }
 
-// Adds a field, or edits one when `original` is set.
+// Adds a field, or edits one when `original` is set. A draft (a cover letter, a paragraph on
+// why this company) takes several lines and is only ever offered, never filled.
 struct CustomFieldSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     let original: CustomField?
+    var isDraft = false
+
+    private var draft: Bool { original?.isDraft ?? isDraft }
 
     @State private var label = ""
     @State private var value = ""
@@ -71,22 +75,34 @@ struct CustomFieldSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Label, like School", text: $label)
+                    TextField(draft ? "Label, like Cover letter" : "Label, like School", text: $label)
                         .textInputAutocapitalization(.sentences)
                         .focused($isFocused)
                         .accessibilityLabel("Label")
                         .accessibilityIdentifier("custom-label")
-                    TextField("Answer, like UC Berkeley", text: $value)
-                        .accessibilityLabel("Answer")
-                        .accessibilityIdentifier("custom-value")
+                    if draft {
+                        TextField("Your draft", text: $value, axis: .vertical)
+                            .lineLimit(6...14)
+                            .accessibilityLabel("Draft")
+                            .accessibilityIdentifier("custom-value")
+                    } else {
+                        TextField("Answer, like UC Berkeley", text: $value)
+                            .accessibilityLabel("Answer")
+                            .accessibilityIdentifier("custom-value")
+                    }
                 } footer: {
                     if let error {
                         Label(error, systemImage: "exclamationmark.circle")
                             .foregroundStyle(Palette.destructive)
+                    } else if draft {
+                        Text("""
+                            Prefill offers a draft in its list under a matching field, for you to pick and edit. \
+                            Fill form never uses it.
+                            """)
                     }
                 }
             }
-            .navigationTitle(original == nil ? "Add field" : "Edit field")
+            .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -106,9 +122,19 @@ struct CustomFieldSheet: View {
         .presentationBackground(Palette.canvas)
     }
 
+    private var title: LocalizedStringKey {
+        switch (original == nil, draft) {
+        case (true, true): "Add draft"
+        case (true, false): "Add field"
+        case (false, true): "Edit draft"
+        case (false, false): "Edit field"
+        }
+    }
+
     // Match words are no longer edited, but a field saved with some keeps them.
     private func submit() async {
-        switch CustomField.make(label: label, value: value, alsoMatches: original?.alsoMatches ?? "") {
+        let words = original?.alsoMatches ?? ""
+        switch CustomField.make(label: label, value: value, alsoMatches: words, isDraft: draft) {
         case .failure(let problem):
             report(problem.message)
         case .success(let field):

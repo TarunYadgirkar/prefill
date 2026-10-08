@@ -13,7 +13,10 @@ public struct Memory: Hashable, Sendable {
     // custom fields.
     public let answers: [Answer]
     public let name: Name
+    // The rules Prefill follows whatever the person saved.
+    public let preferences: [Preference] = [.demographics]
     let history: [UUID: [Use]]
+    let changes: [UUID: [AnswerChange]]
 
     public func answers(for question: Answer.Question) -> [Answer] {
         answers.filter { $0.question == question }
@@ -38,7 +41,8 @@ public struct Memory: Hashable, Sendable {
         return Memory(
             answers: answers.filter { seen.insert($0.id).inserted },
             name: Name(given: card.givenName, family: card.familyName),
-            history: history(events: events, fields: card.customFields)
+            history: history(events: events, fields: card.customFields),
+            changes: changes(events: events, fields: card.customFields)
         )
     }
 }

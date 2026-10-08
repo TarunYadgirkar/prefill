@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Choice, TextField } from "./dropdown";
+import type { Attach, Choice, TextField } from "./dropdown";
 import {
   customChoices,
+  fillable,
   installCustom,
   isCustomCandidate,
   type CustomOptions,
@@ -15,6 +16,10 @@ const GREENHOUSE = `
   <input type="search" name="q">
   <input type="password" autocomplete="new-password">
 </form>`;
+
+// Each request's `focused` flag, first field only.
+const focusedFlags = (send: ReturnType<typeof vi.fn<CustomOptions["send"]>>): (boolean | undefined)[] =>
+  send.mock.calls.map(([request]) => (request.type === "customSuggestions" ? request.fields[0]?.focused : undefined));
 
 describe("installCustom", () => {
   afterEach(() => {
@@ -109,6 +114,47 @@ describe("installCustom", () => {
     expect(attach).not.toHaveBeenCalled();
     stop();
   });
+
+  // Lever's cover letter box: the draft comes only with the focused field's own request.
+  it("offers a text area a draft once its own request answers", async () => {
+    document.body.innerHTML = '<form><label for="c">Cover letter</label><textarea id="c" name="comments"></textarea></form>';
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+    const draft = { value: "Dear team,\nI build tools.", why: "draft", label: "Cover letter" };
+    const send = vi.fn<CustomOptions["send"]>()
+      .mockResolvedValueOnce({ type: "customSuggestionsResult", fields: [{ values: [] }] })
+      .mockResolvedValue({ type: "customSuggestionsResult", fields: [{ values: [], drafts: [draft] }] });
+    const attach = vi.fn<Attach>(() => () => undefined);
+    const stop = installCustom(document, { host: () => "jobs.lever.co", send, isUserEvent: () => true, textAreas: true, attach });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const box = document.getElementById("c") as HTMLTextAreaElement;
+    box.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    box.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const choices = attach.mock.calls.at(-1)?.[1];
+    expect(choices?.map(({ value, detail, tone }) => [value, detail, tone])).toEqual([
+      ["Dear team,\nI build tools.", "Draft · Cover letter", "draft"],
+    ]);
+    expect(choices?.[0]?.onPick).toBeUndefined();
+    expect(fillable(choices ?? [])).toEqual([]);
+    // The page-load request never asks for drafts; only the focused text area's does.
+    expect(focusedFlags(send)).toEqual([undefined, true]);
+    stop();
+  });
+
+  it("never asks for drafts for a one-line box", async () => {
+    document.body.innerHTML = '<form><label for="c">Cover letter</label><input id="c" type="text"></form>';
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+    const send = vi.fn<CustomOptions["send"]>().mockResolvedValue({ type: "customSuggestionsResult", fields: [{ values: [] }] });
+    const stop = installCustom(document, { host: () => "jobs.lever.co", send, isUserEvent: () => true, attach: () => () => undefined });
+    const box = document.getElementById("c") as HTMLInputElement;
+    box.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    box.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const fields = send.mock.calls.flatMap(([request]) => (request.type === "customSuggestions" ? request.fields : []));
+    expect(fields.length).toBeGreaterThan(1);
+    expect(fields.every((field) => field.focused === undefined)).toBe(true);
+    stop();
+  });
 });
 
 describe("customChoices", () => {
@@ -131,5 +177,17 @@ describe("customChoices", () => {
       "Suggested",
     ]);
     expect(picked).toEqual(["Berkeley High", "EECS"]);
+  });
+
+  it("offers an answer for another scope without filling it, and says when there is none for this one", () => {
+    const choices = customChoices(
+      { values: [], suggested: [{ value: "Yes", why: "card", label: "Work authorization" }], noAnswerFor: "Canada" },
+      () => undefined,
+    );
+    expect(choices.map(({ value, detail, tone }) => [value, detail, tone])).toEqual([
+      ["Yes", "Work authorization", "guess"],
+      ["No answer for Canada yet", "", "note"],
+    ]);
+    expect(fillable(choices)).toEqual([]);
   });
 });
