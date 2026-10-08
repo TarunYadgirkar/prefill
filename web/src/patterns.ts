@@ -105,6 +105,12 @@ export const SENSITIVE: readonly RegExp[] = [
 export const NOT_PHONE =
   /card(?!s\b|s\[)|(?<![a-z0-9])cc(?![a-z0-9])|(?<![a-z0-9])cc[-_.]?(?:num|no\b|exp|cvv|csc|cvc)|cvv|\bpan\b|expir|routing|account|acct|iban|ssn|social|\btax|\bdob\b|birth|\bpin\b|otp|code|token|secret|pass|pwd/iu;
 
+// Words that make a field someone else's: an emergency contact, a parent or guardian, a
+// spouse, a reference or referrer, a gift's recipient. Their name, email, phone or address
+// is never the person's own.
+export const SOMEONE_ELSE =
+  /emergency|next.?of.?kin|guardian|\bparents?\b|\bmother\b|\bfather\b|spouse|husband|\bwife\b|\breferences?\b|referr(?:er|al|ing)|recipient/iu;
+
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.
 const IGNORED =

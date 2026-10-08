@@ -24,6 +24,7 @@ import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
 import alex from "./fixtures/heldout/alex.json";
 import jotformAdaHack from "./fixtures/jotform-adahack.html?raw";
 import jotformMyHack from "./fixtures/jotform-myhack.html?raw";
+import jotformPocoRunClub from "./fixtures/jotform-pocorunclub.html?raw";
 import metaDataScience from "./fixtures/meta-datascience.html?raw";
 import metaDfx from "./fixtures/meta-dfx.html?raw";
 import tallyExpendite from "./fixtures/tally-expendite.html?raw";
@@ -38,6 +39,7 @@ const FIXTURES = {
   greenhouseFigma,
   jotformAdaHack,
   jotformMyHack,
+  jotformPocoRunClub,
   leverPalantir,
   leverShieldAi,
   leverVeeva,
@@ -288,5 +290,15 @@ describe("a masked phone box", () => {
     expect(valueOf("input_8_full")).toBe("(510) 555-0134");
     const box = document.getElementById("input_8_full") as HTMLInputElement;
     expect(fitPhones(box, [{ value: "+44 20 7946 0958", detail: "" }])).toEqual([]);
+  });
+});
+
+describe("fields about someone else", () => {
+  it("leave an emergency contact's name and phone alone, and give the participant's name", async () => {
+    await fillAsAlex("jotformPocoRunClub");
+    expect(valueOf("input_7")).toBe("");
+    expect(valueOf("input_8")).toBe("");
+    expect(valueOf("input_2")).toBe("Alex Rivera");
+    expect(valueOf("input_20")).toBe("Alex Rivera");
   });
 });

@@ -3,6 +3,7 @@ import { inferredLabel, isRendered, placeholderText, splitNames } from "./dom";
 import {
   IGNORED,
   SENSITIVE,
+  isContact,
   type Classification,
   type ContactField,
   type Control,
@@ -20,6 +21,7 @@ import {
   OTHER_LINKS,
   RULES,
   SENSITIVE as SENSITIVE_PATTERNS,
+  SOMEONE_ELSE,
   type RuleResult,
 } from "./patterns";
 
@@ -367,7 +369,20 @@ export function classify(el: FieldElement): Classification {
   return classifyDescription(describe(el));
 }
 
-export function classifyDescription(field: FieldDescription): Classification {
+// Capture also reads someone else's fields: the app's own filter judges them, and keeps
+// them off the person's card.
+export function classifyForCapture(el: FieldElement): Classification {
+  return classifyDescription(describe(el), false);
+}
+
+// What a field holds; someone else's contact details count as nothing of the person's.
+export function classifyDescription(field: FieldDescription, ownOnly = true): Classification {
+  const found = classifyOwnOrOther(field);
+  if (!ownOnly || !isContact(found)) return found;
+  return sourcesOf(field).flat().some((text) => SOMEONE_ELSE.test(text)) ? IGNORED : found;
+}
+
+function classifyOwnOrOther(field: FieldDescription): Classification {
   const control = controlOf(field);
   if (control === "sensitive" || control === "ignored")
     return { kind: control };

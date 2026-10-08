@@ -4,7 +4,7 @@ import {
   type EditedField,
   type FieldDescription,
 } from "./captureFields";
-import { classify } from "./classify";
+import { classifyForCapture } from "./classify";
 import {
   eventOrigin,
   fieldValue,
@@ -252,7 +252,7 @@ export function installCapture(
       edited.set(target, { ...known, typed: fieldValue(target), settled });
       return;
     }
-    const field = classify(target);
+    const field = classifyForCapture(target);
     // Visibility is judged when the person types: a multi-step form may hide the field
     // again before it submits.
     if (!isContact(field) || !isInView(target)) return;
