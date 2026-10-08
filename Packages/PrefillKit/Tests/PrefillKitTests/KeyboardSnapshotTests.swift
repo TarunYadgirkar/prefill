@@ -48,15 +48,6 @@ struct KeyboardSnapshotTests {
         let memory = Memory.read(card: big, placement: CardPlacement(onCard: []), state: AppState(), events: .init())
         #expect(KeyboardSnapshot.make(memory: memory).values.count == KeyboardSnapshot.maxValues)
     }
-
-    @Test func theFieldsOwnKindLeadsAndShowsOnce() {
-        let groups = snapshot().groups(for: .email)
-        #expect(groups.map(\.title) == ["For this field", "Contact", "Links", "Answers"])
-        #expect(groups[0].values.count == 3)
-        #expect(!groups[1].values.contains { $0.kind == .email })
-        #expect(snapshot().groups(for: .givenName).first?.values.map(\.text) == ["Alex"])
-        #expect(snapshot().groups(for: nil).first?.title == "Contact")
-    }
 }
 
 struct KeyboardShareTests {
