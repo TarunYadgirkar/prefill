@@ -74,22 +74,40 @@ function click(element: HTMLElement): void {
     element.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
 }
 
+// Opens the list, typing `search` first when given, and returns the option `choose` points at.
+async function openAndChoose(
+  input: HTMLInputElement,
+  choose: (options: readonly Option[]) => number,
+  search?: string,
+): Promise<HTMLElement | undefined> {
+  if (search === undefined) press(input, "ArrowDown");
+  else fillField(input, search);
+  const elements = await waitForOptions(input);
+  const options = elements.map((element) => ({ text: element.textContent.trim(), value: element.id }));
+  return elements[choose(options)];
+}
+
+function close(input: HTMLInputElement, typed: boolean): void {
+  if (typed) fillField(input, "");
+  press(input, "Escape");
+}
+
 // Opens the list (typing `search` first when given, which narrows long lists such as
-// schools), picks the option `choose` points at, and returns what clears it again.
+// schools), picks the option `choose` points at, and returns what clears it again. When the
+// typed answer shows nothing that fits ("May 2027" in a month list), the whole list gets a look.
 export async function fillCombobox(
   input: HTMLInputElement,
   choose: (options: readonly Option[]) => number,
   search?: string,
 ): Promise<(() => void) | undefined> {
   input.focus();
-  if (search === undefined) press(input, "ArrowDown");
-  else fillField(input, search);
-  const elements = await waitForOptions(input);
-  const options = elements.map((element) => ({ text: element.textContent.trim(), value: element.id }));
-  const chosen = elements[choose(options)];
+  let chosen = await openAndChoose(input, choose, search);
+  if (chosen === undefined && search !== undefined) {
+    close(input, true);
+    chosen = await openAndChoose(input, choose);
+  }
   if (chosen === undefined) {
-    if (search !== undefined) fillField(input, "");
-    press(input, "Escape");
+    close(input, false);
     input.blur();
     return undefined;
   }

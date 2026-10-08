@@ -1,5 +1,5 @@
 import { parseAutocomplete } from "./autocomplete";
-import { chooseOption, isPlaceholder, type Option, type OptionMatch } from "./choices";
+import { chooseOption, isPlaceholder, stateName, type Option, type OptionMatch } from "./choices";
 import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { askedField, customChoices, fieldText, fillable, joinFieldText } from "./custom";
@@ -518,12 +518,13 @@ function uncheck(radio: HTMLInputElement): void {
 const radioText = (radio: HTMLInputElement): string | undefined => radio.labels?.[0]?.textContent.trim();
 
 // Types the answer to narrow the list, or opens it with the down arrow to decline.
-async function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[], marks: Marks): Promise<Filled | undefined> {
+// `values` are what the box is searched with; `matchOn` what its options are compared with.
+async function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[], marks: Marks, matchOn = values): Promise<Filled | undefined> {
   if (want.from !== "decline" && values[0] === undefined) return undefined;
   const search = want.from === "decline" ? undefined : values[0];
   let fits = 0;
   const undo = await fillCombobox(input, (options) => {
-    const match = optionMatch(want, options, values);
+    const match = optionMatch(want, options, matchOn);
     fits = match.fits;
     return isClear(match) ? match.index : -1;
   }, search);
@@ -543,6 +544,16 @@ function apply(slot: Slot, answers: Answers, report: Report, marks: Marks): Fill
   return undefined;
 }
 
+// A searchable place list ("Berkeley, California, United States") is searched by the city and
+// compared with the whole place, so the city in the person's own state wins.
+function placesOf(want: Want, answers: Answers): string[] | undefined {
+  if (want.from !== "contact" || want.field.kind !== "address" || want.field.part !== "city") return undefined;
+  return (answers.contact?.addresses ?? []).flatMap(({ address }) => [
+    [address.city, stateName(address.state), address.country].filter(Boolean).join(", "),
+    [address.city, address.state].filter(Boolean).join(", "),
+  ]);
+}
+
 // Searchable dropdowns open one at a time, after the rest of the form is filled.
 async function applyComboboxes(slots: readonly Slot[], answers: Answers, marks: Marks): Promise<Filled[]> {
   const undos: Filled[] = [];
@@ -551,7 +562,7 @@ async function applyComboboxes(slots: readonly Slot[], answers: Answers, marks: 
     // The person may have picked one while earlier boxes were filling.
     if (!slot.element.isConnected || !isComboboxEmpty(slot.element)) continue;
     const values = valuesOf(choicesOf(slot.want, answers));
-    const undo = await applyCombobox(slot.element, slot.want, values, marks).catch(() => undefined);
+    const undo = await applyCombobox(slot.element, slot.want, values, marks, placesOf(slot.want, answers) ?? values).catch(() => undefined);
     if (undo !== undefined) undos.push(undo);
   }
   return undos;

@@ -21,6 +21,10 @@ const US_STATES: readonly (readonly [string, string])[] = [
   ["VA", "Virginia"], ["WA", "Washington"], ["WV", "West Virginia"], ["WI", "Wisconsin"], ["WY", "Wyoming"],
 ];
 
+// A US state's name for its code ("CA" is California); anything else as given.
+export const stateName = (state: string): string =>
+  US_STATES.find(([code]) => code === state.trim().toUpperCase())?.[1] ?? state;
+
 // Names that mean the same place or answer. The first of each group is only a key.
 const SAME: readonly (readonly string[])[] = [
   ["united states", "united states of america", "usa", "us", "u.s.", "u.s.a.", "america"],
@@ -66,11 +70,23 @@ export function isPlaceholder(option: Option): boolean {
   return option.value.trim() === "" || PLACEHOLDER.test(option.text);
 }
 
+// A degree list that names only the level ("Bachelor's Degree") takes any degree of that
+// level ("Bachelor of Science"); one that names the field too ("Bachelor of Arts") doesn't.
+const DEGREE_LEVEL = /^(bachelor|master|associate|doctor)/u;
+const LEVEL_ONLY = /^(bachelor|master|associate|doctor(?:ate)?)s?(?: degree)?$/u;
+const LEVEL_FIT = 0.85;
+
+function levelFits(texts: readonly string[], answer: string): boolean {
+  const level = DEGREE_LEVEL.exec(normalize(answer))?.[1];
+  return level !== undefined && texts.some((text) => LEVEL_ONLY.exec(text)?.[1]?.startsWith(level) === true);
+}
+
 // How well an option says the answer, from 0 (not at all) to 1 (exactly).
 function score(option: Option, answer: string): number {
   const said = synonyms(answer);
   const texts = [option.text, option.value].map(normalize).filter(Boolean);
   if (texts.some((text) => said.includes(text))) return 1;
+  if (levelFits(texts, answer)) return LEVEL_FIT;
   // "Yes, I am authorized" starts with the answer "Yes".
   if (texts.some((text) => said.some((name) => text.startsWith(`${name} `)))) return 0.9;
   const wanted = new Set(words(answer));

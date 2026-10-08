@@ -10,6 +10,9 @@ import { fillForm, takesSavedAnswer } from "./fill";
 import { fitPhones } from "./fillFit";
 import type { FieldElement } from "./fieldTypes";
 import { customValues, reply, type Person } from "./heldoutHost";
+import { scoreForm, type Expectation } from "./heldoutScore";
+import greenhouseDatadog from "./fixtures/ats-greenhouse-datadog.html?raw";
+import greenhouseRoblox from "./fixtures/ats-greenhouse-roblox.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
@@ -247,7 +250,7 @@ describe("every fixture's demographic questions", () => {
   const dir = join(process.cwd(), "src/fixtures");
   const pages = readdirSync(dir).filter((file) => file.endsWith(".html"));
   // Searchable dropdowns without a list wait for one before giving up.
-  const SLOW_MS = 30_000;
+  const SLOW_MS = 90_000;
 
   function demographicAnswers(): string[] {
     const lists = [...document.querySelectorAll("select")].filter((select) => isDemographic(fieldText(select)));
@@ -301,4 +304,31 @@ describe("fields about someone else", () => {
     expect(valueOf("input_2")).toBe("Alex Rivera");
     expect(valueOf("input_20")).toBe("Alex Rivera");
   });
+});
+
+describe("Greenhouse's searchable education and location lists", () => {
+  const DEGREES = ["High School", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctor of Philosophy (Ph.D.)", "Other"];
+  const PLACES = [
+    "Berkeley, California, United States",
+    "Berkeley Heights, New Jersey, United States",
+    "Berkeley, Missouri, United States",
+    "San Francisco, California, United States",
+  ];
+  const fields: Expectation[] = [
+    { field: { id: "degree--0" }, want: "fill", accept: ["Bachelor's Degree"], options: DEGREES },
+    { field: { id: "candidate-location" }, want: "fill", accept: ["Berkeley, California, United States"], options: PLACES },
+  ];
+
+  it("pick a bachelor's degree for a Bachelor of Science, and the city in Alex's state", async () => {
+    const results = await scoreForm(greenhouseRoblox, { source: "https://job-boards.greenhouse.io/roblox", fields }, alex as Person);
+    expect(results.slice(0, 2).map(({ got }) => got)).toEqual(["Bachelor's Degree", "Berkeley, California, United States"]);
+  }, 30_000);
+
+  it("pick the month from a saved \"May 2027\" when typing it shows nothing", async () => {
+    const months = ["January", "February", "March", "April", "May", "June"];
+    const month: Expectation[] = [{ field: { id: "end-month--0" }, want: "fill", accept: ["May"], options: months }];
+    const send = { source: "https://job-boards.greenhouse.io/datadog", fields: month };
+    const results = await scoreForm(greenhouseDatadog, send, { ...(alex as Person), custom: [{ label: "End date month", value: "May 2027" }] });
+    expect(results[0]?.got).toBe("May");
+  }, 30_000);
 });
