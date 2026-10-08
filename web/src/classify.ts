@@ -11,9 +11,12 @@ import {
 } from "./fieldTypes";
 import type { FieldKind, LinkType, SectionHint } from "./messages";
 import {
+  EXAMPLES,
   GENERIC_LINK,
+  LINK,
   LINK_WORDS,
   NOT_PHONE,
+  ORG_LINK,
   OTHER_LINKS,
   RULES,
   SENSITIVE as SENSITIVE_PATTERNS,
@@ -126,9 +129,33 @@ function linkTypesIn(texts: readonly string[]): LinkType[] {
     .map(({ type }) => type);
 }
 
-// Words that name no link type ask for a website, unless they name something else.
+// A box that lists examples takes any one of them. linkOptions joins two links in one option
+// only when exactly two kinds are wanted ("GitHub/Portfolio"), so a box whose examples name
+// two or more kinds asks for the person's main links too, best first, and gets one link.
+const MAIN_LINKS: readonly LinkType[] = ["website", "linkedin", "github"];
+
+function headAndExamples(text: string): [string, string] {
+  const at = text.search(EXAMPLES);
+  return at < 0 ? [text, ""] : [text.slice(0, at), text.slice(at)];
+}
+
+function namedLinkTypes(texts: readonly string[]): LinkType[] {
+  const parts = texts.map(headAndExamples);
+  if (parts.every(([, examples]) => examples === "")) return linkTypesIn(texts);
+  const named = [
+    ...new Set([
+      ...linkTypesIn(parts.map(([head]) => head)),
+      ...linkTypesIn(parts.map(([, examples]) => examples)),
+    ]),
+  ];
+  return named.length < 2 ? named : [...new Set([...named, ...MAIN_LINKS])];
+}
+
+// Words that name no link type ask for a website, unless they name something else. A link
+// to a company or startup is never one of the person's own.
 function link(texts: readonly string[]): Classification {
-  const named = linkTypesIn(texts);
+  if (texts.some((text) => ORG_LINK.test(text))) return IGNORED;
+  const named = namedLinkTypes(texts);
   if (named.length > 0) return { kind: "link", group: "", linkTypes: named };
   const isDocument = texts.some(
     (text) =>
@@ -232,6 +259,17 @@ function fromPatterns(
   return undefined;
 }
 
+// Workable asks for a GitHub profile in a text area. One whose short label asks for a link
+// wants just the link; a longer one is a question that may mention a link.
+const LINK_LABEL_WORDS = 6;
+
+function textAreaLink(field: FieldDescription): Classification | undefined {
+  const label = field.label.trim();
+  if (label.split(/\s+/u).length > LINK_LABEL_WORDS || !LINK.test(label))
+    return undefined;
+  return link([label]);
+}
+
 function positive(
   field: FieldDescription,
   control: Control,
@@ -240,9 +278,10 @@ function positive(
   const detail = parseAutocomplete(field.autocomplete);
   if (detail !== undefined) return fromAutocomplete(detail, control, sources);
   if (control === "email") return contact({ kind: "email" });
-  return (
-    fromPatterns(sources, control) ?? (control === "url" ? link([]) : IGNORED)
-  );
+  const found = fromPatterns(sources, control);
+  if (found !== undefined) return found;
+  if (control === "textarea") return textAreaLink(field) ?? IGNORED;
+  return control === "url" ? link([]) : IGNORED;
 }
 
 // Sensitive words first, whatever the tags say, then autocomplete tokens (WHATWG grammar),

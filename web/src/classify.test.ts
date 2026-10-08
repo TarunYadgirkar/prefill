@@ -210,6 +210,18 @@ describe("classify single fields", () => {
     ['<input name="userEmail">', "email"],
     ['<label>Card number <input name="x"></label>', "sensitive"],
     ['<label>CVV <input name="x"></label>', "sensitive"],
+    ['<label>Name on card <input name="x"></label>', "sensitive"],
+    ['<input name="nameOnCard">', "sensitive"],
+    ['<label>Name as it appears on your card <input name="x"></label>', "sensitive"],
+    ['<label>Phone <input type="tel" name="cc"></label>', "sensitive"],
+    ['<label>Phone <input type="tel" name="ccexp"></label>', "sensitive"],
+    ['<label>Phone <input type="tel" name="f-28cc-436d"></label>', "phone"],
+    ['<label>Preferred name <input name="cards[0][field0]"></label>', "name full"],
+    ["<label>Name pronunciation <input></label>", "ignored"],
+    ["<label>How do you say your name? <input></label>", "ignored"],
+    ['<label>Company website <input type="url"></label>', "ignored"],
+    ['<label>What is your startup\'s website? <input autocomplete="url"></label>', "ignored"],
+    ["<label>Organization LinkedIn <input></label>", "ignored"],
     ['<label>Business email <input name="x"></label>', "email"],
     ['<label>Search <input name="q"></label>', "ignored"],
     ['<label>Recipient name <input name="x"></label>', "name full"],
@@ -248,6 +260,19 @@ describe("classify link fields", () => {
   ])("reads %s as %j", (label, types) => {
     page(`<label>${label} <input type="text"></label>`);
     const found = classify(field("input"));
+    expect(found.kind === "link" ? found.linkTypes : found.kind).toEqual(types);
+  });
+
+  it.each([
+    ['<label>GitHub <textarea name="x"></textarea></label>', ["github"]],
+    ['<label>LinkedIn profile URL <textarea name="x"></textarea></label>', ["linkedin"]],
+    ['<label>Tell us about a project you built, with a link to its GitHub repository <textarea name="x"></textarea></label>', "ignored"],
+    ["<label>Website (e.g. LinkedIn) <input></label>", ["website", "linkedin", "github"]],
+    ["<label>Links (such as GitHub or LinkedIn) <input></label>", ["github", "linkedin", "website"]],
+    ["<label>GitHub/Portfolio <input></label>", ["github", "website"]],
+  ])("reads %s as %j", (html, types) => {
+    page(html);
+    const found = classify(field("input, textarea"));
     expect(found.kind === "link" ? found.linkTypes : found.kind).toEqual(types);
   });
 

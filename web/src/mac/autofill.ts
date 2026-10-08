@@ -67,7 +67,7 @@ function customPlan(field: FieldDescription): Plan {
 export function plan(field: FieldDescription): Plan {
   const found = classifyDescription(field);
   if (found.kind === "link") {
-    if (field.tag !== "input") return NONE;
+    if (field.tag === "select") return NONE;
     const linkTypes = [...(found.linkTypes ?? [])];
     return { kind: "link", linkTypes, fullUrl: wantsUrl(field), request: { type: "linkSuggestions", host: "", types: linkTypes } };
   }
