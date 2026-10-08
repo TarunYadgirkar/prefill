@@ -7,8 +7,9 @@ import { fieldText } from "./custom";
 import { fieldElements, labelText } from "./dom";
 import { declineOption, isDecline, isDemographic } from "./demographics";
 import { fillForm, takesSavedAnswer } from "./fill";
+import { fitPhones } from "./fillFit";
 import type { FieldElement } from "./fieldTypes";
-import { reply, type Person } from "./heldoutHost";
+import { customValues, reply, type Person } from "./heldoutHost";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
@@ -16,10 +17,12 @@ import airtableIbmStartups from "./fixtures/airtable-ibmstartups.html?raw";
 import greenhouseFigma from "./fixtures/ats-greenhouse-figma.html?raw";
 import leverPalantir from "./fixtures/ats-lever-palantir.html?raw";
 import leverShieldAi from "./fixtures/ats-lever-shieldai.html?raw";
+import leverVeeva from "./fixtures/ats-lever-veeva.html?raw";
 import leverZoox from "./fixtures/ats-lever-zoox.html?raw";
 import workableBlueground from "./fixtures/ats-workable-blueground.html?raw";
 import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
 import alex from "./fixtures/heldout/alex.json";
+import jotformAdaHack from "./fixtures/jotform-adahack.html?raw";
 import jotformMyHack from "./fixtures/jotform-myhack.html?raw";
 import metaDataScience from "./fixtures/meta-datascience.html?raw";
 import metaDfx from "./fixtures/meta-dfx.html?raw";
@@ -33,9 +36,11 @@ const FIXTURES = {
   airtableDormRoomFund,
   airtableIbmStartups,
   greenhouseFigma,
+  jotformAdaHack,
   jotformMyHack,
   leverPalantir,
   leverShieldAi,
+  leverVeeva,
   leverZoox,
   metaDataScience,
   metaDfx,
@@ -260,4 +265,28 @@ describe("every fixture's demographic questions", () => {
     await fillForm(document, { host: () => "example.com", send });
     expect(demographicAnswers().filter((text) => !isDecline(text))).toEqual([]);
   }, SLOW_MS);
+});
+
+describe("sponsorship and work authorization", () => {
+  it("answers a sponsorship question with the sponsorship answer, even when it says \"work authorization\"", async () => {
+    await fillAsAlex("leverVeeva");
+    expect(checkedIn("cards[88ad61a3-4d5a-4a0b-bf60-ad9f98709476][field0]")).toBe("No");
+  });
+
+  it("keeps each answer to its own question, and leaves a question that asks both", () => {
+    const labels = (text: string): string[] =>
+      customValues(alex as Person, text).map(({ label }) => label);
+    expect(labels("Will you now or in the future require sponsorship for work authorization?")).toEqual(["Sponsorship"]);
+    expect(labels("Are you legally authorized to work in the United States?")).toEqual(["Work authorization"]);
+    expect(labels("Are you authorized to work in the US and will you not require sponsorship?")).toEqual([]);
+  });
+});
+
+describe("a masked phone box", () => {
+  it("gets the national number, or nothing when the number has another country code", async () => {
+    await fillAsAlex("jotformAdaHack");
+    expect(valueOf("input_8_full")).toBe("(510) 555-0134");
+    const box = document.getElementById("input_8_full") as HTMLInputElement;
+    expect(fitPhones(box, [{ value: "+44 20 7946 0958", detail: "" }])).toEqual([]);
+  });
 });
