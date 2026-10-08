@@ -13,7 +13,7 @@ import {
 import type { FieldElement } from "./fieldTypes";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
-import { GUESS_DETAIL, noAnswerFor, whyDetail } from "./why";
+import { DRAFT_DETAIL, GUESS_DETAIL, noAnswerFor, whyDetail } from "./why";
 import {
   HIDDEN_CHARACTERS,
   LIMITS,
@@ -49,9 +49,13 @@ function offeredOnly(value: string, detail: string, onPick: (value: string) => v
   return { value, detail, tone: "guess", onPick: () => { onPick(value); } };
 }
 
+// "Draft · Cover letter": which draft, when the person keeps more than one.
+const draftDetail = (label: string | undefined): string => (label === undefined ? DRAFT_DETAIL : `${DRAFT_DETAIL} · ${label}`);
+
 // The field's answers, then answers kept for another scope and the model's guesses, which
-// are only offered, then a note when the person has no answer for the question's scope. A
-// pick of an answer that wasn't first, or of anything only offered, is worth remembering.
+// are only offered, then drafts, then a note when the person has no answer for the question's
+// scope. A pick of an answer that wasn't first, or of a suggestion or guess, is worth
+// remembering; a draft is the person's to edit each time, so its pick isn't.
 export function customChoices(
   field: CustomField | undefined,
   onPick: (value: string) => void,
@@ -65,8 +69,9 @@ export function customChoices(
   // The label says which scope the answer is for: "Work authorization (US)".
   const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, offered.label ?? CUSTOM_DETAIL, onPick));
   const guesses = (field.guesses ?? []).map((value) => offeredOnly(value, GUESS_DETAIL, onPick));
+  const drafts = (field.drafts ?? []).map((offered): Choice => ({ value: offered.value, detail: draftDetail(offered.label), tone: "draft" }));
   const note: Choice[] = field.noAnswerFor === undefined ? [] : [{ value: noAnswerFor(field.noAnswerFor), detail: "", tone: "note" }];
-  return [...answers, ...suggested, ...guesses, ...note];
+  return [...answers, ...suggested, ...guesses, ...drafts, ...note];
 }
 
 // What a one-tap fill or a filled field's list may use: the person's own answers for the question.
@@ -143,8 +148,12 @@ export function installCustom(
     detach?.();
     detach = undefined;
     focused = undefined;
+    shown = 0;
   };
 
+  // How many rows the open list shows, so a reply that brings more (drafts come only with
+  // the focused field's own request) redraws it.
+  let shown = 0;
   const offer = (): void => {
     const values = focused === undefined ? undefined : offeredFor(focused.element, known.get(focused.text));
     if (
@@ -154,7 +163,16 @@ export function installCustom(
       values.length === 0
     )
       return;
+    shown = values.length;
     detach = attach(focused.element, [...values]);
+  };
+
+  const redraw = (texts: readonly string[]): void => {
+    const now = focused === undefined ? undefined : offeredFor(focused.element, known.get(focused.text));
+    if (focused === undefined || !texts.includes(focused.text) || (now?.length ?? 0) <= shown) return;
+    detach?.();
+    detach = undefined;
+    offer();
   };
 
   const fetchValues = (texts: readonly string[]): void => {
@@ -177,7 +195,8 @@ export function installCustom(
             picked(text, value);
           }));
         });
-        offer();
+        if (detach === undefined) offer();
+        else redraw(texts);
       })
       .catch(() => undefined);
   };

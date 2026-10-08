@@ -5,12 +5,14 @@ import SwiftUI
 enum AddChoice: Identifiable, Hashable {
     case value(ContactKind)
     case answer
+    case draft
     case studentAnswers
 
     var id: String {
         switch self {
         case .value(let kind): kind.rawValue
         case .answer: "answer"
+        case .draft: "draft"
         case .studentAnswers: "student"
         }
     }
@@ -19,6 +21,7 @@ enum AddChoice: Identifiable, Hashable {
         switch self {
         case .value(let kind): AddValueSheet(kind: kind)
         case .answer: CustomFieldSheet(original: nil)
+        case .draft: CustomFieldSheet(original: nil, isDraft: true)
         case .studentAnswers: StudentAnswersSheet(missing: missingStudentAnswers) {}
         }
     }
@@ -38,6 +41,8 @@ struct AddMenu: View {
             }
             Button("Answer", systemImage: "text.bubble") { choose(.answer) }
                 .accessibilityIdentifier("add-custom-field")
+            Button("Draft answer…", systemImage: "doc.text") { choose(.draft) }
+                .accessibilityIdentifier("add-draft")
             if !StudentStarter.missing(from: model.customFields).isEmpty {
                 Divider()
                 Button("Common student answers…", systemImage: "graduationcap") { choose(.studentAnswers) }

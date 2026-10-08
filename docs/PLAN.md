@@ -119,7 +119,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
   - [x] 13.1 Abstain when more than one option fits
   - [x] 13.2 Scoped learning: keep the question and what it applies to
-  - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
+  - [x] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
   - [ ] 13.4 The model sees the question, the options and the candidate answers
   - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
   - [ ] 13.6 Held-out real forms and an accuracy score
@@ -631,6 +631,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 ### 13.3 Memory kinds
 - `Answer` gains `kind`: fact, contextual fact, preference, draft. Drafts allow line breaks and long text (lift the 200-character cap for drafts only, stored on the Prefill contact as before), are only ever suggested, never filled.
 - The You tab shows the kind, scope, source and history on an answer's page. The inbox shows only exceptions: changed answers, guesses, answers to confirm before reuse.
+- Built: `Answer.kind` comes from how an answer is stored: a draft custom field is `draft`, a label with a scope in brackets is `contextualFact` (with `scope`), everything else `fact`; `Memory.preferences` holds the demographic rule, shown read-only under Rules in the You tab. A draft (Add › Draft answer…) takes line breaks and up to 2,000 characters and is stored on Prefill's contact as a related name labelled `<Label> · Prefill draft`; older builds don't read that marker as Prefill's, so they skip the draft and keep it on rewrites (`DraftTests`). `customSuggestionsResult` carries `drafts` (why `draft`, caption "Draft · Cover letter") only for a one-field request; Fill form, the Mac's Fill form and picks never use them. An answer's page shows Kind, Applies to, Source and History (saves and replacements from this device's events). The inbox keeps waiting captures, answers a form changed (Keep, Change back, Edit) and the model's guesses (Use it records a pick; Not this caches none); saved captures, new learned answers and picks left it.
 
 ### 13.4 A model that sees the question
 - The Mac panel and the iPhone app's background pass give the on-device model the question, nearby headings, a select's options, and the candidate answers with their scopes; it returns use-this / needs-a-new-answer / unsure. Only use-this shows as "Suggested", never filled.

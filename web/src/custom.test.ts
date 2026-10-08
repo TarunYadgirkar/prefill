@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Choice, TextField } from "./dropdown";
+import type { Attach, Choice, TextField } from "./dropdown";
 import {
   customChoices,
   fillable,
@@ -108,6 +108,30 @@ describe("installCustom", () => {
     box.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
     expect(send).toHaveBeenCalled();
     expect(attach).not.toHaveBeenCalled();
+    stop();
+  });
+
+  // Lever's cover letter box: the draft comes only with the focused field's own request.
+  it("offers a text area a draft once its own request answers", async () => {
+    document.body.innerHTML = '<form><label for="c">Cover letter</label><textarea id="c" name="comments"></textarea></form>';
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+    const draft = { value: "Dear team,\nI build tools.", why: "draft", label: "Cover letter" };
+    const send = vi.fn<CustomOptions["send"]>()
+      .mockResolvedValueOnce({ type: "customSuggestionsResult", fields: [{ values: [] }] })
+      .mockResolvedValue({ type: "customSuggestionsResult", fields: [{ values: [], drafts: [draft] }] });
+    const attach = vi.fn<Attach>(() => () => undefined);
+    const stop = installCustom(document, { host: () => "jobs.lever.co", send, isUserEvent: () => true, textAreas: true, attach });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const box = document.getElementById("c") as HTMLTextAreaElement;
+    box.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    box.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const choices = attach.mock.calls.at(-1)?.[1];
+    expect(choices?.map(({ value, detail, tone }) => [value, detail, tone])).toEqual([
+      ["Dear team,\nI build tools.", "Draft · Cover letter", "draft"],
+    ]);
+    expect(choices?.[0]?.onPick).toBeUndefined();
+    expect(fillable(choices ?? [])).toEqual([]);
     stop();
   });
 });

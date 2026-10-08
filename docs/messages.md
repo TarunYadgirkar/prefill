@@ -31,7 +31,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | `linkSuggestionsResult` links | 10, at most 3 of a type |
 | `contactSuggestionsResult` | 5 emails, 5 phone numbers, 5 addresses |
 | `customSuggestions` fields | 40, each `text` 200 characters |
-| `customSuggestionsResult` | one entry per field asked about, each with at most 3 values, 3 guesses and 3 suggested values of 200 characters, and a `noAnswerFor` of 100 |
+| `customSuggestionsResult` | one entry per field asked about, each with at most 3 values, 3 guesses and 3 suggested values of 200 characters, a `noAnswerFor` of 100, and at most 3 `drafts` of 2,000 characters that may hold plain newlines |
 | `answers` | 8 answers, each `value` 200 characters, `text` 200 characters, at most 10 `options` of 100 characters |
 | `picked` | `value` 256 characters, `question` 200 characters |
 
@@ -45,7 +45,7 @@ Both sides enforce the same size limits (`LIMITS` in `messages.ts`, `MessageLimi
 | Sync status | `unchanged`, `saved`, `failed`, `off`, `notSetUp` |
 | Sheet status | `ready`, `off`, `notSetUp`, `failed` |
 | Recent state | `saved`, `waiting`, `removed` |
-| Why | `pinned`, `used`, `card`, `learned`, `guess`, `resume` |
+| Why | `pinned`, `used`, `card`, `learned`, `guess`, `resume`, `draft` |
 
 The `enums` block in `docs/message-examples.json` lists these values. The Swift suite checks it against `FieldKind`, `LinkType`, `SectionHint` and `SyncStatus`, and the Vitest suite checks it against the arrays the TypeScript types and validators are built from.
 
@@ -59,6 +59,7 @@ Every value a suggestion reply carries back says why it is offered, so Prefill's
 | `learned` | Prefill saved it from a form the person submitted. `site` is the registrable domain it was saved from, left out when it isn't a plain host name. Only a `learned` value carries `site`. |
 | `guess` | The on-device model's pick. Only `customSuggestionsResult`'s `guesses` are guesses, so they carry no `why` of their own. |
 | `resume` | From a resume import (not yet sent). |
+| `draft` | A draft the person wrote in the app (a cover letter, a paragraph on why this company). Only `customSuggestionsResult`'s `drafts` carry it, and only `drafts` may hold line breaks. |
 
 `pinned` and `used` need Match each site on. A `label` is at most 100 characters, on one line with hidden characters turned into spaces, and left out when nothing is left.
 
@@ -192,7 +193,9 @@ A field no rule matched may carry a `guesses` entry: the saved answer Apple's on
 }
 ```
 
-The focused field gets Prefill's list of its values, in Safari as in Chrome and Arc: its `values`, then its `suggested` values and guesses in the muted style (a suggested value captioned with its label, such as "Work authorization (US)"), then the "No answer for Canada yet" line, which can't be picked. One-tap fill uses only `values`. The Mac panel shows the same rows without that line.
+The focused field gets Prefill's list of its values, in Safari as in Chrome and Arc: its `values`, then its `suggested` values and guesses in the muted style (a suggested value captioned with its label, such as "Work authorization (US)"), then its drafts (captioned "Draft · Cover letter"), then the "No answer for Canada yet" line, which can't be picked. One-tap fill uses only `values`; neither Fill form nor the Mac's Fill form ever uses a suggested value, a guess or a draft. The Mac panel shows the same rows without that line.
+
+A draft is an answer the person marks as one in the app: its value may span lines and run to 2,000 characters. It sits on Prefill's contact like any custom field, as a related name labelled `<Label> · Prefill draft` (with any match words after another ` · `). Builds from before drafts read only `Prefill` as their marker, so they take a draft for one of the person's own related names: they neither offer nor fill it, and keep it as it is when they rewrite the card. A draft matches a field by its label and match words, whatever the question's scope, and only a request about one field (the one the person focused) gets `drafts`, so a page-load request about every field never carries long text. A pick of a draft isn't sent as `picked`, so it never becomes the question's answer.
 
 In Chrome and Arc the messages travel through a native messaging host (`com.tarunyadgirkar.prefill`, inside Prefill.app on the Mac) rather than Safari's handler. Each message is a 32-bit little-endian length followed by that many bytes of JSON. The host checks a request against every rule here, rebuilds it from its known fields and passes it to the running Mac app over a Unix socket only Prefill's own signed host may use, so the host never touches Contacts.
 

@@ -134,7 +134,7 @@ extension MessageRouter {
                 if changes.added.count < room, hasScopeRoom(for: field, in: fields) { changes.added.append(field) }
                 return
             }
-            guard existing.value != field.value, !limits.replacedToday.contains(existing.id),
+            guard !existing.isDraft, existing.value != field.value, !limits.replacedToday.contains(existing.id),
                   learned.contains(where: { $0.matches(existing) }),
                   !changes.replaced.contains(where: { $0.before == existing }) else { return }
             let after = CustomField(label: existing.label, value: field.value, matchWords: existing.matchWords)

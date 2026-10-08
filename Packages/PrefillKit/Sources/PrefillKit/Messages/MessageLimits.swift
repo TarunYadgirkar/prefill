@@ -24,6 +24,7 @@ public enum MessageLimits {
     static let fieldText = 200
     static let customValue = CustomField.maxValue
     static let customOptions = 3
+    static let draftValue = CustomField.maxDraftValue
     static let answers = JobQuestion.allCases.count
     // The options an answered select or radio group offered, each cut to `text`.
     static let answerOptions = 10

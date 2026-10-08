@@ -1,34 +1,32 @@
 import Foundation
 import PrefillKit
 
-// One thing Prefill added or wants to add: a value typed on a form, an answer learned from
-// an application, or a value the person picked on a site, which Prefill now offers first there.
+// What needs the person: a value Prefill wasn't sure about, an answer a form changed, or the
+// on-device model's guess at a question, to confirm before Fill form uses it. Routine saves
+// and picks aren't here; they're in each answer's history on the You tab.
 enum InboxEntry: Identifiable, Hashable {
-    case capture(RecentItem)
-    case learned(LearnedAnswer, CustomField)
-    case picked(FirstPick)
+    case changed(LearnedAnswer, CustomField)
+    case guess(GuessToConfirm)
 
     var id: String {
         switch self {
-        case .capture(let item): "capture-\(item.id)"
-        case .learned(let answer, _): "learned-\(answer.id)"
-        case .picked(let pick): "picked-\(pick.value.id)-\(pick.site)"
+        case .changed(let answer, _): "changed-\(answer.id)"
+        case .guess(let guess): "guess-\(guess.question.text)"
         }
     }
 
     var date: Date {
         switch self {
-        case .capture(let item): item.date
-        case .learned(let answer, _): answer.date
-        case .picked(let pick): pick.date
+        case .changed(let answer, _): answer.date
+        case .guess(let guess): guess.question.date
         }
     }
 }
 
-struct FirstPick: Hashable {
-    let value: ContactValue
-    let site: String
-    let date: Date
+// A question no rule matched and the saved answer the model picked for it.
+struct GuessToConfirm: Hashable {
+    let question: FormQuestion
+    let field: CustomField
 }
 
 extension AppModel {
@@ -43,25 +41,54 @@ extension AppModel {
         recent.filter { $0.state == .waiting }
     }
 
-    // Everything else Prefill did lately, newest first.
-    var recently: [InboxEntry] {
-        let captures = recent.filter { $0.state != .waiting }.map(InboxEntry.capture)
-        let learned = learnedAnswers.compactMap { answer in
-            customFields.first(where: answer.matches).map { InboxEntry.learned(answer, $0) }
+    // Answers a form changed and guesses to confirm, newest first.
+    var exceptions: [InboxEntry] {
+        let changed = learnedAnswers.compactMap { answer -> InboxEntry? in
+            guard answer.previous != nil, !seenChanges.contains(answer.id.uuidString) else { return nil }
+            return customFields.first(where: answer.matches).map { InboxEntry.changed(answer, $0) }
         }
-        return (captures + learned + firstPicks.map(InboxEntry.picked)).sorted { $0.date > $1.date }
+        return (changed + guessesToConfirm.map(InboxEntry.guess)).sorted { $0.date > $1.date }
     }
 
-    // Picks from Prefill's list or Safari's sheet that still decide a site's first value,
-    // each site and kind once at its latest pick.
-    var firstPicks: [FirstPick] {
-        let byID = Dictionary(ContactKind.allCases.flatMap(values).map { ($0.id, $0) }) { first, _ in first }
+    // Each question once, while its guess stands and the person hasn't picked an answer for it.
+    var guessesToConfirm: [GuessToConfirm] {
+        let variant = Intelligence.modelVariant
+        let picked = Set(events.answerPicks.map(\.words))
         var seen = Set<String>()
-        return events.pins.reversed().compactMap { pin in
-            let site = Normalizer.registrableDomain(pin.host)
-            guard seen.insert("\(pin.kind.rawValue) \(site)").inserted, let id = pin.valueID,
-                  state.pinnedValue(pin.kind, on: site) == id, let value = byID[id] else { return nil }
-            return FirstPick(value: value, site: site, date: pin.date)
+        return events.questions.reversed().compactMap { question in
+            let words = CustomFieldMatcher.key(question.text)
+            guard seen.insert(words).inserted, !picked.contains(words),
+                  let field = state.guessedAnswer(for: question.text, in: customFields, variant: variant) else {
+                return nil
+            }
+            return GuessToConfirm(question: question, field: field)
         }
+    }
+
+    // The question gets the answer from now on, as if the person had picked it from the list.
+    func confirm(_ guess: GuessToConfirm) {
+        let pick = AnswerPick(
+            words: CustomFieldMatcher.key(guess.question.text), label: guess.field.label, date: .now,
+            host: guess.question.host
+        )
+        try? store.appendEvents(ExtensionEvents(answerPicks: [pick]))
+        readStore()
+    }
+
+    // The model is not asked about the question again until the answers change.
+    func reject(_ guess: GuessToConfirm) {
+        commit(state.rejectingGuess(for: guess.question.text, fields: customFields, variant: Intelligence.modelVariant))
+    }
+
+    // Puts back the answer a form replaced.
+    func changeBack(_ change: LearnedAnswer, field: CustomField) async {
+        guard let previous = change.previous else { return }
+        let restored = CustomField.make(label: field.label, value: previous, alsoMatches: field.alsoMatches)
+        guard case .success(let original) = restored else { return }
+        if let problem = await saveCustomField(original, replacing: field) {
+            self.problem = Problem(title: String(localized: "Prefill couldn’t change it back"), message: problem)
+            return
+        }
+        markSeen(change)
     }
 }

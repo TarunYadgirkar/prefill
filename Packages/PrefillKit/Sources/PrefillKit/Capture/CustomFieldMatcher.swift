@@ -51,7 +51,7 @@ public enum CustomFieldMatcher {
     }
 
     // A question's words in one string, the same however the question orders them.
-    static func key(_ text: String) -> String {
+    public static func key(_ text: String) -> String {
         words(text).sorted().joined(separator: " ")
     }
 

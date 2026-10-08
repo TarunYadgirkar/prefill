@@ -133,6 +133,11 @@ const customSuggestionsResult: CustomSuggestionsResult = {
       suggested: [{ value: "Yes", why: "card", label: "Work authorization" }],
       noAnswerFor: "Canada",
     },
+    {
+      values: [],
+      guesses: [],
+      drafts: [{ value: "Dear hiring team,\nI build tools people use every day.", why: "draft", label: "Cover letter" }],
+    },
   ],
 };
 
@@ -532,5 +537,19 @@ describe("sheet messages", () => {
     expect(isExtensionResponse({ ...popupStateResult, kinds: [kind] })).toBe(
       false,
     );
+  });
+});
+
+describe("drafts", () => {
+  const reply = (draft: Record<string, unknown>): unknown => ({
+    type: "customSuggestionsResult",
+    fields: [{ values: [], drafts: [draft] }],
+  });
+
+  it("keep their line breaks and their length, and are only ever drafts", () => {
+    expect(isExtensionResponse(reply({ value: `Dear team,\n${"a".repeat(1_900)}`, why: "draft", label: "Cover letter" }))).toBe(true);
+    expect(isExtensionResponse(reply({ value: "Yes", why: "card" }))).toBe(false);
+    expect(isExtensionResponse(reply({ value: "a".repeat(LIMITS.draftValue + 1), why: "draft" }))).toBe(false);
+    expect(isExtensionResponse(reply({ value: "a‮b", why: "draft" }))).toBe(false);
   });
 });

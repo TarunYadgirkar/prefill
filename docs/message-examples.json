@@ -6,7 +6,7 @@
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
     "recentState": ["saved", "waiting", "removed"],
     "pickKind": ["email", "phone", "address", "link", "custom"],
-    "why": ["pinned", "used", "card", "learned", "guess", "resume"]
+    "why": ["pinned", "used", "card", "learned", "guess", "resume", "draft"]
   },
   "requests": {
     "ping": { "type": "ping" },
@@ -123,6 +123,11 @@
           "guesses": [],
           "suggested": [{ "value": "Yes", "why": "card", "label": "Work authorization" }],
           "noAnswerFor": "Canada"
+        },
+        {
+          "values": [],
+          "guesses": [],
+          "drafts": [{ "value": "Dear hiring team,\nI build tools people use every day.", "why": "draft", "label": "Cover letter" }]
         }
       ]
     },

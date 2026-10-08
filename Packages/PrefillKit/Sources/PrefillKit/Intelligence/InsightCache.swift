@@ -50,6 +50,11 @@ public extension AppState {
         return fields.first { $0.id == label.lowercased() }
     }
 
+    // The person said the model's guess doesn't answer the question.
+    func rejectingGuess(for question: String, fields: [CustomField], variant: String) -> AppState {
+        recording([CachedInsight(key: InsightKey.answer(question, variant: variant), answer: "none")], siteKinds: [:])
+    }
+
     // The kind of `host`: what the model said if the rules couldn't tell, else the rules.
     func siteKind(_ host: String) -> SiteKind {
         let site = Normalizer.registrableDomain(host)

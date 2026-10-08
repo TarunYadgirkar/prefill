@@ -34,15 +34,23 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
         // The question's scope when every answer to it is for another scope of the same kind,
         // so the list can say "No answer for Canada yet".
         public let noAnswerFor: String?
+        // Drafts whose label matches, `why` draft: offered, never filled. Only a request about
+        // one field (the one the person is in) gets them, which keeps long text off the rest.
+        public let drafts: [SuggestedValue]
 
         public init(
             values: [SuggestedValue], guesses: [String] = [], suggested: [SuggestedValue] = [],
-            noAnswerFor: String? = nil
+            noAnswerFor: String? = nil, drafts: [SuggestedValue] = []
         ) {
             self.values = values
             self.guesses = guesses
             self.suggested = suggested
             self.noAnswerFor = noAnswerFor
+            self.drafts = drafts
+        }
+
+        func adding(drafts: [SuggestedValue]) -> Field {
+            Field(values: values, guesses: guesses, suggested: suggested, noAnswerFor: noAnswerFor, drafts: drafts)
         }
 
         public init(from decoder: any Decoder) throws {
@@ -51,6 +59,7 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
             guesses = try container.decodeIfPresent([String].self, forKey: .guesses) ?? []
             suggested = try container.decodeIfPresent([SuggestedValue].self, forKey: .suggested) ?? []
             noAnswerFor = try container.decodeIfPresent(String.self, forKey: .noAnswerFor)
+            drafts = try container.decodeIfPresent([SuggestedValue].self, forKey: .drafts) ?? []
         }
 
         // Most fields have neither, so the reply leaves them out.
@@ -60,6 +69,7 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
             try container.encode(guesses, forKey: .guesses)
             if !suggested.isEmpty { try container.encode(suggested, forKey: .suggested) }
             try container.encodeIfPresent(noAnswerFor, forKey: .noAnswerFor)
+            if !drafts.isEmpty { try container.encode(drafts, forKey: .drafts) }
         }
     }
 
@@ -72,7 +82,7 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
 }
 
 private enum CustomFieldKeys: String, CodingKey {
-    case values, guesses, suggested, noAnswerFor
+    case values, guesses, suggested, noAnswerFor, drafts
 }
 
 private typealias Answered = (field: CustomSuggestionsResponse.Field, unanswered: String?)
@@ -95,12 +105,27 @@ extension MessageRouter {
             return CustomSuggestionsResponse(fields: request.fields.map { _ in .init(values: []) })
         }
         let context = CustomContext(
-            custom: card.customFields.filter { Self.fits($0.value, max: MessageLimits.customValue) },
+            custom: card.customFields.filter { !$0.isDraft && Self.fits($0.value, max: MessageLimits.customValue) },
             recorded: events(), state: state, variant: Intelligence.modelVariant
         )
         let answered = request.fields.map { answer($0.text, context) }
         if !context.custom.isEmpty { noteQuestions(answered.compactMap(\.unanswered), host: request.host) }
-        return CustomSuggestionsResponse(fields: answered.map(\.field))
+        guard request.fields.count == 1, let only = request.fields.first, let first = answered.first else {
+            return CustomSuggestionsResponse(fields: answered.map(\.field))
+        }
+        return CustomSuggestionsResponse(fields: [first.field.adding(drafts: Self.drafts(for: only.text, in: card))])
+    }
+
+    // A draft matches by its label and match words, whatever the question's scope.
+    static func drafts(for text: String, in card: CardRecord) -> [SuggestedValue] {
+        let drafts = card.customFields.filter { field in
+            field.isDraft && field.value.utf16.count <= MessageLimits.draftValue
+                && MessageText.isPlain(field.value, allowingNewlines: true)
+        }
+        return CustomFieldMatcher.offered(CustomFieldMatcher.candidates(for: text, in: drafts)).map { field in
+            let label = MessageText.oneLine(field.label, max: MessageLimits.text)
+            return SuggestedValue(value: field.value, why: .draft, label: label)
+        }
     }
 
     // A pick only reorders what the question already matches, or stands in for a guess where
