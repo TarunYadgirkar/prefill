@@ -10,11 +10,20 @@ public struct CustomSuggestionsRequest: Codable, Sendable, Hashable {
         // reads with the question when no rule matched it.
         public let heading: String?
         public let options: [String]?
+        // Set only by the focus handler, for the text area the person just focused: the one
+        // request that may carry drafts back.
+        public let focused: Bool?
 
-        public init(text: String, heading: String? = nil, options: [String]? = nil) {
+        public init(text: String, heading: String? = nil, options: [String]? = nil, focused: Bool? = nil) {
             self.text = text
             self.heading = heading
             self.options = options
+            self.focused = focused
+        }
+
+        // The heading and options, which the cached verdict for the question depends on.
+        var context: String {
+            AnswerQuestion.contextKey(heading: heading, options: options ?? [])
         }
     }
 
@@ -41,7 +50,8 @@ public struct CustomSuggestionsResponse: Codable, Sendable, Hashable {
         // so the list can say "No answer for Canada yet".
         public let noAnswerFor: String?
         // Drafts whose label matches, `why` draft: offered, never filled. Only a request about
-        // one field (the one the person is in) gets them, which keeps long text off the rest.
+        // one field marked `focused` (the text area the person is in) gets them, which keeps long
+        // text off every page-load request.
         public let drafts: [SuggestedValue]
 
         public init(
@@ -120,12 +130,13 @@ extension MessageRouter {
             state: state,
             variant: Intelligence.modelVariant
         )
-        let answered = request.fields.map { answer($0.text, context) }
+        let answered = request.fields.map { answer($0, context) }
         let unanswered = zip(request.fields, answered).compactMap { field, answer in
             answer.unanswered.map { _ in field }
         }
         if !context.custom.isEmpty { noteQuestions(unanswered, host: request.host) }
-        guard request.fields.count == 1, let only = request.fields.first, let first = answered.first else {
+        guard request.fields.count == 1, let only = request.fields.first, only.focused == true,
+              let first = answered.first else {
             return CustomSuggestionsResponse(fields: answered.map(\.field))
         }
         return CustomSuggestionsResponse(fields: [first.field.adding(drafts: Self.drafts(for: only.text, in: card))])
@@ -146,7 +157,8 @@ extension MessageRouter {
     // A pick only reorders what the question already matches, or stands in for a guess where
     // nothing matched, so copying a question's words reaches no other answer, and an answer
     // withheld for its scope stays withheld.
-    private func answer(_ text: String, _ context: CustomContext) -> Answered {
+    private func answer(_ asked: CustomSuggestionsRequest.Field, _ context: CustomContext) -> Answered {
+        let text = asked.text
         let scoped = CustomFieldMatcher.scopedMatches(for: text, in: context.custom)
         let source = { (values: [String], fields: [CustomField]) in
             Self.sourced(values, from: fields + context.custom, learned: context.recorded.answers)
@@ -164,15 +176,17 @@ extension MessageRouter {
             noAnswerFor: fill.isEmpty ? scoped.missing?.name : nil
         )
         guard fill.isEmpty, scoped.isEmpty, !CustomFieldMatcher.words(text).isEmpty else { return (field, nil) }
-        return guess(text, context)
+        return guess(asked, context)
     }
 
-    private func guess(_ text: String, _ context: CustomContext) -> Answered {
-        let (state, revision, variant) = (context.state, context.revision, context.variant)
-        if let guess = state.guessedAnswer(for: text, in: context.custom, revision: revision, variant: variant) {
+    private func guess(_ asked: CustomSuggestionsRequest.Field, _ context: CustomContext) -> Answered {
+        let (state, variant) = (context.state, context.variant)
+        let key = InsightKey.answer(asked.text, variant: variant, revision: context.revision, context: asked.context)
+        if let guess = state.guessedAnswer(key: key, in: context.custom) {
             return (.init(values: [], guesses: [guess.value]), nil)
         }
-        let known = state.insight(InsightKey.answer(text, variant: variant, revision: revision)) != nil
+        let known = state.insight(key) != nil
+        let text = asked.text
         return (.init(values: []), known ? nil : text)
     }
 
@@ -225,8 +239,8 @@ extension MessageRouter {
         guard !fields.isEmpty else { return }
         Self.eventLock.withLock { _ in
             let site = Normalizer.registrableDomain(host)
-            var known = Set(events().questions.map(\.text))
-            let fresh = fields.filter { known.insert($0.text).inserted }.map { field in
+            var known = Set(events().questions.map { "\($0.text)\u{1F}\(AnswerQuestion($0).context)" })
+            let fresh = fields.filter { known.insert("\($0.text)\u{1F}\($0.context)").inserted }.map { field in
                 FormQuestion(host: site, text: field.text, date: now(), heading: field.heading, options: field.options)
             }
             if !fresh.isEmpty { _ = append(ExtensionEvents(questions: fresh)) }

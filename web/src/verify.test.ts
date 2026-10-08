@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import application from "../../testbed/sites/application.html?raw";
-import { fillForm, noteFor, MISSED_NOTE } from "./fill";
+import { filledAnswer, fillForm, noteFor, MISSED_NOTE } from "./fill";
 import { fieldsLeft } from "./fillLeft";
 import { installLearn } from "./learn";
 import type { ExtensionRequest } from "./messages";
@@ -63,6 +63,19 @@ describe("Fill form reads each field back", () => {
     expect(field("school").value).toBe("Berkeley");
     expect(fieldsLeft(document)).toContain(field("school"));
     expect(noteFor(field("school"))).toBe(MISSED_NOTE);
+  });
+});
+
+describe("a value the page reformats", () => {
+  it("still took, and after Undo what the person types is their own answer", async () => {
+    field("school").addEventListener("input", () => {
+      setTimeout(() => { field("school").value = "  uc berkeley "; }, 0);
+    });
+    const result = await fillForm(document.querySelector("form") ?? document, { host: () => "boards.example.io", send: reply });
+    expect(fieldsLeft(document)).not.toContain(field("school"));
+    expect(filledAnswer(field("school"))).toBe("UC Berkeley");
+    result.undo();
+    expect(filledAnswer(field("school"))).toBeUndefined();
   });
 });
 

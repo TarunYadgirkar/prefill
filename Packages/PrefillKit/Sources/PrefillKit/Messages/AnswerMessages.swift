@@ -174,7 +174,7 @@ extension MessageRouter {
     private static func changes(
         _ answers: [AnswersRequest.Answer], card: CardRecord, learned: [LearnedAnswer], limits: LearnLimits
     ) -> AnswerChanges {
-        let room = CustomField.maxCount - card.customFields.count
+        let room = CustomField.maxCount - card.customFields.answerCount
         return answers.reduce(into: AnswerChanges()) { changes, answer in
             guard let field = answer.field, changes.count < limits.budget else { return }
             let fields = card.customFields + changes.added

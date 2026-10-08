@@ -405,6 +405,15 @@ function markUnsure(field: FieldElement, box: HTMLElement | undefined, fits: num
 // Undo takes off these marks as well as the values.
 type Marks = (() => void)[];
 
+// A page may reformat what it's given ("5105550134" as "(510) 555-0134", trimmed, upper-cased),
+// which still took. A phone-like value compares by its digits.
+const PHONE_LIKE = /^[\d\s()+.-]{7,}$/u;
+function sameValue(shown: string, filled: string): boolean {
+  const plain = (text: string): string => text.trim().replace(/\s+/gu, " ").toLowerCase();
+  if (PHONE_LIKE.test(filled.trim()) && PHONE_LIKE.test(shown.trim())) return shown.replace(/\D/gu, "") === filled.replace(/\D/gu, "");
+  return plain(shown) === plain(filled);
+}
+
 function applyText(element: TextField, choices: readonly Choice[]): Filled | undefined {
   const value = choices[0]?.value;
   if (value === undefined || !element.isConnected || !isEmpty(element)) return undefined;
@@ -421,7 +430,7 @@ function applyText(element: TextField, choices: readonly Choice[]): Filled | und
     if (element.value === value) fillField(element, "");
     filledChoices.delete(element);
   };
-  return { field: element, undo, took: () => element.value === value, shown: value.trim() };
+  return { field: element, undo, took: () => sameValue(element.value, value), shown: value.trim() };
 }
 
 // Which option to choose. A demographic question has one answer, the decline, so only a saved
@@ -550,6 +559,7 @@ function verify(filled: readonly Filled[], slots: readonly Slot[]): Filled[] {
   for (const entry of filled) {
     if (!kept.includes(entry)) {
       entry.undo();
+      forgetAnswer(entry, slots);
       unsure.set(entry.field, MISSED_NOTE);
     }
   }
@@ -557,12 +567,22 @@ function verify(filled: readonly Filled[], slots: readonly Slot[]): Filled[] {
   return kept;
 }
 
+// The field a slot is, and for a radio group every button, since the person may check another.
+function answerFields(entry: Filled, slots: readonly Slot[]): { slot: Slot | undefined; fields: FieldElement[] } {
+  const slot = slots.find((candidate) => slotField(candidate) === entry.field);
+  return { slot, fields: slot?.control === "radio" ? slot.inputs : [entry.field] };
+}
+
 // A custom answer's field keeps what the fill showed, so a submit can tell it was changed.
 function rememberAnswer(entry: Filled, slots: readonly Slot[]): void {
-  const slot = slots.find((candidate) => slotField(candidate) === entry.field);
+  const { slot, fields } = answerFields(entry, slots);
   if (slot?.want.from !== "custom" || entry.shown === undefined) return;
-  const fields = slot.control === "radio" ? slot.inputs : [entry.field];
   for (const field of fields) filledAnswers.set(field, entry.shown);
+}
+
+// After Undo or a value that didn't take, what the person types there is their own answer.
+function forgetAnswer(entry: Filled, slots: readonly Slot[]): void {
+  for (const field of answerFields(entry, slots).fields) filledAnswers.delete(field);
 }
 
 // Fills every empty field of the form the person is in, in page order, and returns how
@@ -583,7 +603,11 @@ export async function fillForm(scope: ParentNode, options: FillOptions): Promise
   return {
     filled: kept.length,
     undo: () => {
-      [...kept.map((entry) => entry.undo), ...marks].reverse().forEach((undo) => {
+      const undos = kept.map((entry) => () => {
+        entry.undo();
+        forgetAnswer(entry, slots);
+      });
+      [...undos, ...marks].reverse().forEach((undo) => {
         undo();
       });
     },

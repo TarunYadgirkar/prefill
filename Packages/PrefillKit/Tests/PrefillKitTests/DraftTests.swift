@@ -60,21 +60,38 @@ struct DraftTests {
         )
         let store = MemoryStore(AppState(values: Alex.allValues, cardLink: link))
         let router = MessageRouter(store: store, gateway: FakeGateway(card: card), now: { .testNow })
-        let ask = { (texts: [String]) in
+        let ask = { (texts: [String], focused: Bool) in
             router.route([
-                "type": "customSuggestions", "host": "jobs.lever.co", "fields": texts.map { ["text": $0] }
+                "type": "customSuggestions", "host": "jobs.lever.co",
+                "fields": texts.map { focused ? ["text": $0, "focused": true] : ["text": $0] }
             ])
         }
         let offered = SuggestedValue(value: letter, why: .draft, label: "Cover letter")
-        #expect(ask(["Cover letter"])
+        #expect(ask(["Cover letter"], true)
             == .customSuggestions(CustomSuggestionsResponse(fields: [.init(values: [], drafts: [offered])])))
-        #expect(ask(["Cover letter", "School"]) == .customSuggestions(CustomSuggestionsResponse(fields: [
+        // A page-load request, even about the one field, never gets a draft.
+        #expect(ask(["Cover letter"], false)
+            == .customSuggestions(CustomSuggestionsResponse(fields: [.init(values: [])])))
+        #expect(ask(["Cover letter", "School"], true) == .customSuggestions(CustomSuggestionsResponse(fields: [
             .init(values: []), .init(values: [SuggestedValue(value: "UC Berkeley", label: "School")])
         ])))
         _ = router.route([
             "type": "picked", "host": "jobs.lever.co", "kind": "custom", "value": "Hi", "question": "Cover letter"
         ])
         #expect(try store.readEvents().answerPicks.isEmpty)
+    }
+
+    // Drafts have their own limit, so they never take the room a learned answer needs.
+    @Test func draftsAreCountedApartFromAnswers() {
+        let answers = (1...CustomField.maxCount).map { CustomField(label: "Q\($0)", value: "A", matchWords: []) }
+        let drafts = (1...CustomField.maxDrafts).map {
+            CustomField(label: "D\($0)", value: "Text", matchWords: [], isDraft: true)
+        }
+        let full = answers + drafts
+        let extraDraft = CustomField(label: "D9", value: "Text", matchWords: [], isDraft: true)
+        #expect((try? full.saving(extraDraft, replacing: nil).get()) == nil)
+        #expect((try? (answers.dropLast() + drafts).saving(school, replacing: nil).get())?.count == full.count)
+        #expect(full.answerCount == CustomField.maxCount)
     }
 
     @Test func memoryNamesEachAnswersKind() {

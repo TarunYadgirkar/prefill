@@ -203,13 +203,16 @@ export function installCustom(
     offer();
   };
 
-  const fetchValues = (texts: readonly string[]): void => {
+  // `focused` marks the request for the text area the person just focused, the only one
+  // the app answers with drafts.
+  const fetchValues = (texts: readonly string[], focused = false): void => {
     if (texts.length === 0) return;
+    const fields = texts.map((text) => asked.get(text) ?? { text });
     options
       .send({
         type: "customSuggestions",
         host: options.host(),
-        fields: texts.map((text) => asked.get(text) ?? { text }),
+        fields: focused ? fields.map((field) => ({ ...field, focused: true })) : fields,
       })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
@@ -260,7 +263,8 @@ export function installCustom(
     clear();
     focused = { element: target, text };
     offer();
-    fetchValues([text]);
+    // Drafts are long text, which belongs in a text area, never a one-line box.
+    fetchValues([text], target.localName === "textarea");
   };
 
   // The field the person tapped or tabbed into, even one Prefill filled, so emptying it

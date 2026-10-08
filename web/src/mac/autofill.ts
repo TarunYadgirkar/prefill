@@ -61,7 +61,10 @@ function customPlan(field: FieldDescription): Plan {
   const isCandidate = field.tag === "textarea" || (field.tag === "input" && field.type.toLowerCase() === "text");
   if (!isCandidate || field.signIn || parseAutocomplete(field.autocomplete) !== undefined) return NONE;
   const text = joinFieldText([field.label, field.placeholder, ...splitNames(field.names)]);
-  return text === "" ? NONE : { kind: "custom", request: { type: "customSuggestions", host: "", fields: [{ text }] } };
+  // The panel is the focused field's own list, so a text area there may get drafts; Fill form
+  // never uses them.
+  const asked = field.tag === "textarea" ? { text, focused: true } : { text };
+  return text === "" ? NONE : { kind: "custom", request: { type: "customSuggestions", host: "", fields: [asked] } };
 }
 
 export function plan(field: FieldDescription): Plan {

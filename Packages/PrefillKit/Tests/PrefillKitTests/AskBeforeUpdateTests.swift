@@ -57,8 +57,10 @@ struct AskBeforeUpdateTests {
         #expect(elsewhere.fields.first?.suggested.isEmpty == true)
     }
 
-    @Test func justHereNeedsAnAnswerTheCardHolds() {
+    @Test func justHereNeedsALearnedAnswerThePersonChangedAfterAFill() {
         let (router, _) = router()
         #expect(router.answers(request(.keepHere, "Berkeley")) == AnswersResponse(saved: 0))
+        _ = router.answers(request(.learn, "UC Berkeley", changed: false))
+        #expect(router.answers(request(.keepHere, "Berkeley", changed: false)) == AnswersResponse(saved: 0))
     }
 }

@@ -92,7 +92,7 @@ const customSuggestions: CustomSuggestionsRequest = {
   host: "boards.example.io",
   fields: [
     { text: "School job_application[educations][0][school_name_id]" },
-    { text: "Cover letter" },
+    { text: "Cover letter", focused: true },
     { text: "Will you relocate for this role?", heading: "Logistics", options: ["Yes", "No", "Open to discussion"] },
   ],
 };

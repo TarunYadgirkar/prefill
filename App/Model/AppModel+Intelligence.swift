@@ -55,10 +55,9 @@ extension AppModel {
     // the answers, so a changed answer asks again.
     private var unansweredQuestions: [FormQuestion] {
         let variant = Intelligence.modelVariant
-        let revision = AnswerRevision.of(customFields)
         var seen = Set<String>()
         return events.questions.filter { question in
-            let key = InsightKey.answer(question.text, variant: variant, revision: revision)
+            let key = AppState.answerKey(question, fields: customFields, variant: variant)
             return seen.insert(key).inserted && state.insight(key) == nil
         }
     }

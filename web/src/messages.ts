@@ -269,6 +269,8 @@ const pageRequests = {
         // The nearest heading above the field and a list's options, for the on-device model.
         heading: optional(text(LIMITS.text)),
         options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+        // Only for the text area the person just focused: the one request that gets drafts.
+        focused: optional(boolean),
       }),
       LIMITS.pageFields,
     ),

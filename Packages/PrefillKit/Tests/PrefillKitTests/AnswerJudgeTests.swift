@@ -52,11 +52,14 @@ struct AnswerJudgeTests {
         #expect(seen.first?.1.map(\.label) == ["School", "Work authorization (US)"])
 
         let state = AppState().recording(cached, siteKinds: [:])
-        #expect(state.guessedAnswer(for: "Alma mater", in: fields, variant: "v") == school)
-        #expect(state.guessedAnswer(for: "Favourite colour", in: fields, variant: "v") == nil)
+        #expect(state.guessedAnswer(for: questions[1], in: fields, variant: "v") == nil)
         let edited = [CustomField(label: "School", value: "Stanford", matchWords: []), usAuthorization, letter]
-        #expect(state.guessedAnswer(for: "Alma mater", in: edited, variant: "v") == nil)
+        #expect(state.guessedAnswer(for: questions[0], in: edited, variant: "v") == nil)
         #expect(AnswerRevision.of(fields) == AnswerRevision.of(fields.reversed()))
+        // A verdict made for a question under one heading doesn't answer it under another.
+        let elsewhere = FormQuestion(host: "other.example", text: "Alma mater", date: .testNow, heading: "Sponsor")
+        #expect(state.guessedAnswer(for: questions[0], in: fields, variant: "v") == school)
+        #expect(state.guessedAnswer(for: elsewhere, in: fields, variant: "v") == nil)
     }
 
     @Test func theHandlerKeepsTheHeadingAndOptionsWithAQuestionForTheApp() throws {

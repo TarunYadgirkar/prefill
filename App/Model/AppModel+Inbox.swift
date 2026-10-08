@@ -58,7 +58,7 @@ extension AppModel {
         return events.questions.reversed().compactMap { question in
             let words = CustomFieldMatcher.key(question.text)
             guard seen.insert(words).inserted, !picked.contains(words),
-                  let field = state.guessedAnswer(for: question.text, in: customFields, variant: variant) else {
+                  let field = state.guessedAnswer(for: question, in: customFields, variant: variant) else {
                 return nil
             }
             return GuessToConfirm(question: question, field: field)
@@ -77,7 +77,7 @@ extension AppModel {
 
     // The model is not asked about the question again until the answers change.
     func reject(_ guess: GuessToConfirm) {
-        commit(state.rejectingGuess(for: guess.question.text, fields: customFields, variant: Intelligence.modelVariant))
+        commit(state.rejectingGuess(for: guess.question, fields: customFields, variant: Intelligence.modelVariant))
     }
 
     // Puts back the answer a form replaced.

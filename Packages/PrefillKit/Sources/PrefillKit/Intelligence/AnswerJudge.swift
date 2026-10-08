@@ -16,6 +16,18 @@ public struct AnswerQuestion: Hashable, Sendable {
     init(_ question: FormQuestion) {
         self.init(text: question.text, heading: question.heading, options: question.options ?? [])
     }
+
+    // What the cached verdict depends on besides the words, so a page that shows a question
+    // under its own heading or options can't settle the verdict for that question elsewhere.
+    // Empty for a question shown with neither.
+    public var context: String {
+        Self.contextKey(heading: heading, options: options)
+    }
+
+    static func contextKey(heading: String?, options: [String]) -> String {
+        guard heading != nil || !options.isEmpty else { return "" }
+        return AnswerRevision.hash(([heading ?? ""] + options).joined(separator: "\u{1E}"))
+    }
 }
 
 // A saved answer the model may pick, with what it applies to.
@@ -88,8 +100,12 @@ public protocol AnswerJudging: Sendable {
 public enum AnswerRevision {
     public static func of(_ fields: [CustomField]) -> String {
         let lines = AnswerCandidate.from(fields).map { "\($0.label.lowercased())\u{1F}\($0.value)" }.sorted()
-        // FNV-1a, which gives the same number on every launch, unlike Hasher.
-        let hash = lines.joined(separator: "\u{1E}").utf8.reduce(UInt64(0xcbf2_9ce4_8422_2325)) { hash, byte in
+        return hash(lines.joined(separator: "\u{1E}"))
+    }
+
+    // FNV-1a, which gives the same number on every launch, unlike Hasher.
+    static func hash(_ text: String) -> String {
+        let hash = text.utf8.reduce(UInt64(0xcbf2_9ce4_8422_2325)) { hash, byte in
             (hash ^ UInt64(byte)) &* 0x100_0000_01b3
         }
         return String(hash, radix: 16)
@@ -108,7 +124,9 @@ public enum AnswerGuessing {
         var answers: [CachedInsight] = []
         for question in questions {
             let verdict = await judge.judge(AnswerQuestion(question), candidates: candidates)
-            let key = InsightKey.answer(question.text, variant: variant, revision: revision)
+            let key = InsightKey.answer(
+                question.text, variant: variant, revision: revision, context: AnswerQuestion(question).context
+            )
             answers.append(CachedInsight(key: key, answer: verdict.cached))
         }
         return answers

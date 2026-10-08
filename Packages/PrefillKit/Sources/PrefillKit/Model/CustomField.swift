@@ -4,7 +4,9 @@ import Foundation
 // "UC Berkeley". Prefill offers the value on a page field whose label, name or placeholder
 // names the field's label or one of its extra match words.
 public struct CustomField: Codable, Sendable, Hashable, Identifiable {
+    // Answers and drafts are counted apart, so drafts never take the room learned answers need.
     public static let maxCount = 20
+    public static let maxDrafts = 5
     public static let maxLabel = 40
     public static let maxValue = 200
     // A draft (a cover letter, a "why this company" paragraph) may run to several lines.
@@ -95,6 +97,9 @@ public struct CustomField: Codable, Sendable, Hashable, Identifiable {
 }
 
 extension [CustomField] {
+    // Answers only: drafts have their own limit.
+    public var answerCount: Int { count { !$0.isDraft } }
+
     // The list with `field` in place of `replacing` (or added at the end), or why it can't be.
     public func saving(
         _ field: CustomField, replacing old: CustomField?
@@ -103,13 +108,14 @@ extension [CustomField] {
         if others.contains(where: { $0.id == field.id }) {
             return .failure(.init(message: String(localized: "You already have a field called \(field.label).")))
         }
-        guard let old, let index = firstIndex(where: { $0.id == old.id }) else {
-            guard count < CustomField.maxCount else {
-                let limit = CustomField.maxCount
-                return .failure(.init(message: String(localized: "Prefill keeps up to \(limit) fields.")))
-            }
-            return .success(self + [field])
+        let sameKind = others.count { $0.isDraft == field.isDraft }
+        let limit = field.isDraft ? CustomField.maxDrafts : CustomField.maxCount
+        guard sameKind < limit || old?.isDraft == field.isDraft else {
+            return .failure(.init(message: field.isDraft
+                ? String(localized: "Prefill keeps up to \(limit) drafts.")
+                : String(localized: "Prefill keeps up to \(limit) fields.")))
         }
+        guard let old, let index = firstIndex(where: { $0.id == old.id }) else { return .success(self + [field]) }
         var saved = self
         saved[index] = field
         return .success(saved)
