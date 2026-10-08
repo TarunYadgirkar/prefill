@@ -1,6 +1,6 @@
 import { parseAutocomplete } from "./autocomplete";
 import { classify } from "./classify";
-import type { Attach, Choice } from "./dropdown";
+import type { Attach, Choice, TextField } from "./dropdown";
 import { trackGestures } from "./gesture";
 import { reportPick } from "./picks";
 import { whyDetail } from "./why";
@@ -28,6 +28,7 @@ export interface LinkOptions {
 // A short list: the combined option, then the best of each type.
 const MAX_OPTIONS = 3;
 const MAX_INSPECTED = 200;
+const PAIR = 2;
 
 const TYPE_LABELS: Readonly<Record<LinkType, string>> = {
   github: "GitHub",
@@ -42,9 +43,10 @@ export function shown(url: string): string {
   return url.replace(/^https?:\/\//iu, "").replace(/\/+$/u, "");
 }
 
-// What the bar offers a field that wants `wanted`, best first. A field that names two
-// kinds ("GitHub/Portfolio") gets both in one option first, then each alone. A url field
-// gets whole addresses, which a combined option is not, so it gets none.
+// What the bar offers a field that wants `wanted`, best first. A field that names exactly two
+// kinds ("GitHub/Portfolio") gets both in one option first, then each alone; one that wants
+// more is a box that lists examples and takes one link. A url field gets whole addresses,
+// which a combined option is not, so it gets none.
 export function linkOptions(
   wanted: readonly LinkType[],
   links: readonly SuggestedLink[],
@@ -57,7 +59,7 @@ export function linkOptions(
   );
   const [first, second] = firsts;
   const combined =
-    !fullUrl && first !== undefined && second !== undefined
+    !fullUrl && wanted.length === PAIR && first !== undefined && second !== undefined
       ? [`${text(first)} - ${text(second)}`]
       : [];
   const rest = wanted.flatMap((type) =>
@@ -92,7 +94,7 @@ export function linkChoices(
 }
 
 function linkTypesOf(element: FieldElement): readonly LinkType[] {
-  if (element.localName !== "input") return [];
+  if (element.localName === "select") return [];
   const field = classify(element);
   return field.kind === "link" ? (field.linkTypes ?? []) : [];
 }
@@ -154,7 +156,7 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
       .catch(() => undefined);
 
   const offer = (
-    element: HTMLInputElement,
+    element: TextField,
     wanted: readonly LinkType[],
     links: readonly SuggestedLink[] | undefined,
   ): void => {
@@ -181,11 +183,11 @@ export function installLinks(doc: Document, options: LinkOptions): () => void {
     if (wanted.length === 0 || !gestures.allows(target)) return;
     clear();
     focused = target;
-    suggest(target as HTMLInputElement, wanted);
+    suggest(target as TextField, wanted);
   };
 
   const suggest = (
-    element: HTMLInputElement,
+    element: TextField,
     wanted: readonly LinkType[],
   ): void => {
     const cached = known;
