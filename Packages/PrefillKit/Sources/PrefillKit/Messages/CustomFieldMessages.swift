@@ -6,9 +6,15 @@ import Foundation
 public struct CustomSuggestionsRequest: Codable, Sendable, Hashable {
     public struct Field: Codable, Sendable, Hashable {
         public let text: String
+        // The nearest heading above the field and a list's options, which the on-device model
+        // reads with the question when no rule matched it.
+        public let heading: String?
+        public let options: [String]?
 
-        public init(text: String) {
+        public init(text: String, heading: String? = nil, options: [String]? = nil) {
             self.text = text
+            self.heading = heading
+            self.options = options
         }
     }
 
@@ -90,6 +96,8 @@ private typealias Answered = (field: CustomSuggestionsResponse.Field, unanswered
 // What answering one question needs from the card and the events.
 private struct CustomContext {
     let custom: [CustomField]
+    // Of every answer on the card, which the app's cached verdicts were made against.
+    let revision: String
     let recorded: ExtensionEvents
     let state: AppState
     let variant: String
@@ -106,10 +114,14 @@ extension MessageRouter {
         }
         let context = CustomContext(
             custom: card.customFields.filter { !$0.isDraft && Self.fits($0.value, max: MessageLimits.customValue) },
-            recorded: events(), state: state, variant: Intelligence.modelVariant
+            revision: AnswerRevision.of(card.customFields), recorded: events(), state: state,
+            variant: Intelligence.modelVariant
         )
         let answered = request.fields.map { answer($0.text, context) }
-        if !context.custom.isEmpty { noteQuestions(answered.compactMap(\.unanswered), host: request.host) }
+        let unanswered = zip(request.fields, answered).compactMap { field, answer in
+            answer.unanswered.map { _ in field }
+        }
+        if !context.custom.isEmpty { noteQuestions(unanswered, host: request.host) }
         guard request.fields.count == 1, let only = request.fields.first, let first = answered.first else {
             return CustomSuggestionsResponse(fields: answered.map(\.field))
         }
@@ -152,10 +164,11 @@ extension MessageRouter {
     }
 
     private func guess(_ text: String, _ context: CustomContext) -> Answered {
-        if let guess = context.state.guessedAnswer(for: text, in: context.custom, variant: context.variant) {
+        let (state, revision, variant) = (context.state, context.revision, context.variant)
+        if let guess = state.guessedAnswer(for: text, in: context.custom, revision: revision, variant: variant) {
             return (.init(values: [], guesses: [guess.value]), nil)
         }
-        let known = context.state.insight(InsightKey.answer(text, variant: context.variant)) != nil
+        let known = state.insight(InsightKey.answer(text, variant: variant, revision: revision)) != nil
         return (.init(values: []), known ? nil : text)
     }
 
@@ -188,12 +201,15 @@ extension MessageRouter {
         return card.customFields
     }
 
-    private func noteQuestions(_ texts: [String], host: String) {
-        guard !texts.isEmpty else { return }
+    // A question is kept once, with the heading and options the page showed with it.
+    private func noteQuestions(_ fields: [CustomSuggestionsRequest.Field], host: String) {
+        guard !fields.isEmpty else { return }
         Self.eventLock.withLock { _ in
             let site = Normalizer.registrableDomain(host)
-            let known = Set(events().questions.map(\.text))
-            let fresh = texts.filter { !known.contains($0) }.map { FormQuestion(host: site, text: $0, date: now()) }
+            var known = Set(events().questions.map(\.text))
+            let fresh = fields.filter { known.insert($0.text).inserted }.map { field in
+                FormQuestion(host: site, text: field.text, date: now(), heading: field.heading, options: field.options)
+            }
             if !fresh.isEmpty { _ = append(ExtensionEvents(questions: fresh)) }
         }
     }

@@ -123,6 +123,32 @@ export function joinFieldText(parts: readonly string[], max: number = LIMITS.fie
   return text.slice(0, max).replace(/[\uD800-\uDBFF]$/u, "");
 }
 
+const HEADINGS = "h1, h2, h3, h4, h5, h6, [role=heading], legend";
+
+// The last heading before the field in page order ("Education", "Work eligibility"), which
+// tells the on-device model what a short question is about.
+export function headingOf(element: Element): string | undefined {
+  let found: Element | undefined;
+  for (const heading of element.ownerDocument.querySelectorAll(HEADINGS)) {
+    if ((heading.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING) === 0) break;
+    found = heading;
+  }
+  const text = joinFieldText([found?.textContent ?? ""], LIMITS.text);
+  return text === "" ? undefined : text;
+}
+
+type AskedField = CustomSuggestionsRequest["fields"][number];
+
+// A question as the app's request carries it: its words, and its heading when it has one.
+export function askedField(text: string, element: Element, options: readonly string[] = []): AskedField {
+  const heading = headingOf(element);
+  return {
+    text,
+    ...(heading === undefined ? {} : { heading }),
+    ...(options.length === 0 ? {} : { options: options.slice(0, LIMITS.answerOptions) }),
+  };
+}
+
 // Offers the person's custom field values ("School" = "UC Berkeley") on fields whose words
 // match, in Prefill's own list under the field. The matches are fetched when the page loads,
 // so the list is ready as the field takes focus, and again on each focus, which covers
@@ -141,6 +167,7 @@ export function installCustom(
     isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);
   const known = new Map<string, readonly Choice[]>();
+  const asked = new Map<string, AskedField>();
   let detach: (() => void) | undefined;
   let focused: { element: TextField; text: string } | undefined;
 
@@ -181,7 +208,7 @@ export function installCustom(
       .send({
         type: "customSuggestions",
         host: options.host(),
-        fields: texts.map((text) => ({ text })),
+        fields: texts.map((text) => asked.get(text) ?? { text }),
       })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
@@ -214,7 +241,11 @@ export function installCustom(
   const prefetch = (): void => {
     const texts = fieldElements(doc, MAX_INSPECTED)
       .filter(isCandidate)
-      .map(fieldText);
+      .map((element) => {
+        const text = fieldText(element);
+        if (!asked.has(text)) asked.set(text, askedField(text, element));
+        return text;
+      });
     fetchValues(
       [...new Set(texts)].filter(Boolean).slice(0, LIMITS.pageFields),
     );
@@ -224,6 +255,7 @@ export function installCustom(
     if (detach !== undefined || isTaken(target) || !isCandidate(target)) return;
     const text = fieldText(target);
     if (text === "") return;
+    if (!asked.has(text)) asked.set(text, askedField(text, target));
     clear();
     focused = { element: target, text };
     offer();

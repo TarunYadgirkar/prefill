@@ -93,6 +93,7 @@ const customSuggestions: CustomSuggestionsRequest = {
   fields: [
     { text: "School job_application[educations][0][school_name_id]" },
     { text: "Cover letter" },
+    { text: "Will you relocate for this role?", heading: "Logistics", options: ["Yes", "No", "Open to discussion"] },
   ],
 };
 

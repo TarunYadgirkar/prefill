@@ -264,7 +264,12 @@ const pageRequests = {
     type: literal("customSuggestions"),
     host: hostName,
     fields: arrayOf(
-      object({ text: text(LIMITS.fieldText) }),
+      object({
+        text: text(LIMITS.fieldText),
+        // The nearest heading above the field and a list's options, for the on-device model.
+        heading: optional(text(LIMITS.text)),
+        options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+      }),
       LIMITS.pageFields,
     ),
   }),

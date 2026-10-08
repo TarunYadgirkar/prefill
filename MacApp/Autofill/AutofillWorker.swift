@@ -16,16 +16,17 @@ actor AutofillWorker {
 
     private let intelligence = Intelligence()
 
-    // A custom field with no matching answer gets the on-device model's guess, marked as one.
-    // Only a labelled one-line field asks a question; a chat box or other text area doesn't.
+    // A custom field with no matching answer gets the on-device model's guess, marked as one,
+    // when the model says one saved answer is what the question asks for. Only a labelled
+    // one-line field asks a question; a chat box or other text area doesn't.
     func rows(for field: FieldDescription, host: String) async -> [AutofillRow] {
         let rows = script.rows(for: field, host: host, router: router)
         guard rows.isEmpty, field.tag == .input, !field.label.isEmpty,
               let question = script.customQuestion(field) else { return rows }
-        let saved = router.savedAnswers()
-        guard !saved.isEmpty else { return rows }
-        guard let label = await intelligence.answerLabel(question: question, labels: saved.map(\.label)),
-              let answer = saved.first(where: { $0.label == label }) else { return rows }
+        let asked = AnswerQuestion(text: question)
+        guard let answer = await AnswerGuessing.suggestion(
+            for: asked, fields: router.savedAnswers(), judge: intelligence
+        ) else { return rows }
         let pick = PickedRequest(host: "", kind: .custom, value: answer.value, question: question)
         return [AutofillRow(value: answer.value, detail: "Suggested", kind: "custom", pick: pick)]
     }

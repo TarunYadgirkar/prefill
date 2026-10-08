@@ -80,11 +80,17 @@ public struct FormQuestion: Codable, Sendable, Hashable {
     public let host: String
     public let text: String
     public let date: Date
+    // The nearest heading and a list's options, for the model; questions noted before they
+    // were sent have neither.
+    public let heading: String?
+    public let options: [String]?
 
-    public init(host: String, text: String, date: Date) {
+    public init(host: String, text: String, date: Date, heading: String? = nil, options: [String]? = nil) {
         self.host = host
         self.text = text
         self.date = date
+        self.heading = heading
+        self.options = options
     }
 }
 

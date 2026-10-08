@@ -2,7 +2,7 @@ import { parseAutocomplete } from "./autocomplete";
 import { chooseOption, isPlaceholder, type Option, type OptionMatch } from "./choices";
 import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
-import { customChoices, fieldText, fillable, joinFieldText } from "./custom";
+import { askedField, customChoices, fieldText, fillable, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
@@ -13,6 +13,7 @@ import {
   LIMITS,
   parseExtensionResponse,
   type ContactSuggestionsResult,
+  type CustomSuggestionsRequest,
   type CustomSuggestionsResult,
   type ExtensionRequest,
   type ExtensionResponse,
@@ -263,6 +264,24 @@ const customTexts = (slots: readonly Slot[]): string[] =>
     LIMITS.pageFields,
   );
 
+// What a list offers, as the app's request carries it: each option's text, without the placeholder.
+function optionTexts(slot: Slot): string[] {
+  const options =
+    slot.control === "select" ? [...slot.element.options].map(optionOf).filter((option) => !isPlaceholder(option))
+    : slot.control === "radio" ? radioOptions(slot.inputs)
+    : [];
+  return options.map((option) => joinFieldText([option.text], LIMITS.text)).filter(Boolean);
+}
+
+// Each question once, with the heading above its first field and a list's options.
+function customFields(slots: readonly Slot[], texts: readonly string[]): CustomSuggestionsRequest["fields"] {
+  return texts.map((text) => {
+    const slot = slots.find((candidate) => candidate.want.from === "custom" && candidate.want.text === text);
+    const element = slot === undefined ? undefined : slotField(slot);
+    return slot === undefined || element === undefined ? { text } : askedField(text, element, optionTexts(slot));
+  });
+}
+
 // The three questions to the app, each only when some field needs it.
 function requests(slots: readonly Slot[], host: string): (ExtensionRequest | undefined)[] {
   const fields = contactRequest(slots);
@@ -271,7 +290,7 @@ function requests(slots: readonly Slot[], host: string): (ExtensionRequest | und
   return [
     fields.length > 0 ? { type: "contactSuggestions", host, fields } : undefined,
     types.length > 0 ? { type: "linkSuggestions", host, types } : undefined,
-    texts.length > 0 ? { type: "customSuggestions", host, fields: texts.map((text) => ({ text })) } : undefined,
+    texts.length > 0 ? { type: "customSuggestions", host, fields: customFields(slots, texts) } : undefined,
   ];
 }
 

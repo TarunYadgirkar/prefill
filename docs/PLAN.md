@@ -120,7 +120,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 13.1 Abstain when more than one option fits
   - [x] 13.2 Scoped learning: keep the question and what it applies to
   - [x] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
-  - [ ] 13.4 The model sees the question, the options and the candidate answers
+  - [x] 13.4 The model sees the question, the options and the candidate answers
   - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
   - [ ] 13.6 Held-out real forms and an accuracy score
   - [ ] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
@@ -636,6 +636,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 ### 13.4 A model that sees the question
 - The Mac panel and the iPhone app's background pass give the on-device model the question, nearby headings, a select's options, and the candidate answers with their scopes; it returns use-this / needs-a-new-answer / unsure. Only use-this shows as "Suggested", never filled.
 - Cached guesses carry a revision of the answer store and are dropped when answers change.
+- Built: `customSuggestions` fields may carry `heading` (the last heading before the field) and, from Fill form, `options`; the handler keeps both on the `FormQuestion`. `AnswerJudging` (`Intelligence/AnswerJudge.swift`) takes an `AnswerQuestion` and `AnswerCandidate`s (label with its scope, value; drafts left out) and returns `AnswerVerdict` use / needsNew / unsure; `checked` turns a label that isn't a candidate into unsure and a scope clash into needsNew. `Intelligence` implements it with FoundationModels; `AnswerGuessing.ask` (iPhone background pass) and `.suggestion` (Mac panel, live) drive it. The cache key holds `AnswerRevision.of` (FNV-1a over sorted labels and values), so verdicts made against other answers are ignored and the question is asked again. Tests use a fake judge (`AnswerJudgeTests`); the web side is checked on the Lever fixture (`question.test.ts`).
 
 ### 13.5 Fill, verify, ask
 - After filling, read each field back and count only values that took; the pill reports the rest as "need you".
