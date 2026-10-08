@@ -95,5 +95,7 @@ Write the expectations from the person's side, before you run the scorer on the 
 
 - It scores Fill form, not the list under a clicked field. A person who clicks and picks sees the same values, but chooses for themselves.
 - The test DOM (happy-dom) does no layout, so every field counts as on screen unless the page hid it. Like browsers, it doesn't enforce `maxlength` on a value set by script.
-- Searchable dropdowns run against the stand-in list, not the page's own script.
+- Searchable dropdowns run against the stand-in list, not the page's own script. A box that calls itself a combobox but has no `options` in the expectations (a phone box with a country picker) is read by its typed value.
+- A list that starts on a real option (no placeholder) counts as empty until Prefill changes it.
+- The stand-in app has no answer scopes, so a question about another country's work rules still gets the saved answer here.
 - Not in the set yet: a Google Form (the two public ones found needed sign-in or had closed) and a Google Calendar booking page (its form appears only after picking a time slot).
