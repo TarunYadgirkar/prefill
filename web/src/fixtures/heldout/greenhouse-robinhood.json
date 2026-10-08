@@ -1,0 +1,321 @@
+{
+  "source": "https://job-boards.greenhouse.io/embed/job_app?for=robinhood&token=8123225",
+  "fields": [
+    {
+      "field": {
+        "id": "first_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "last_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "country"
+      },
+      "want": "fill",
+      "accept": [
+        "United States"
+      ],
+      "options": [
+        "United States",
+        "Canada",
+        "United Kingdom",
+        "India",
+        "Germany"
+      ],
+      "note": "Phone country; options abbreviated"
+    },
+    {
+      "field": {
+        "id": "phone"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "candidate-location"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley, California, United States",
+        "Berkeley, CA",
+        "Berkeley"
+      ],
+      "options": [
+        "Berkeley, California, United States",
+        "Berkeley Heights, New Jersey, United States",
+        "Berkeley, Missouri, United States",
+        "San Francisco, California, United States"
+      ],
+      "note": "Location (City), required; Greenhouse looks places up as you type, options are a stand-in"
+    },
+    {
+      "field": {
+        "id": "school--0"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California, Berkeley"
+      ],
+      "options": [
+        "University of California, Berkeley",
+        "University of California, Los Angeles",
+        "University of California, Davis",
+        "Berkeley College",
+        "Other"
+      ],
+      "note": "Education section; school list abbreviated"
+    },
+    {
+      "field": {
+        "id": "degree--0"
+      },
+      "want": "fill",
+      "accept": [
+        "Bachelor's Degree"
+      ],
+      "options": [
+        "High School",
+        "Associate's Degree",
+        "Bachelor's Degree",
+        "Master's Degree",
+        "Master of Business Administration (M.B.A.)",
+        "Doctor of Philosophy (Ph.D.)",
+        "Engineer's Degree",
+        "Other"
+      ],
+      "note": "Greenhouse's degree list; Alex's saved degree is Bachelor of Science"
+    },
+    {
+      "field": {
+        "id": "end-month--0"
+      },
+      "want": "fill",
+      "accept": [
+        "May"
+      ],
+      "options": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "note": "Graduation May 2027"
+    },
+    {
+      "field": {
+        "id": "end-year--0"
+      },
+      "want": "fill",
+      "accept": [
+        "2027"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_68545069"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "LinkedIn Profile"
+    },
+    {
+      "field": {
+        "id": "question_68545075"
+      },
+      "want": "needYou",
+      "options": [
+        "I currently work at Robinhood as a full-time employee or intern",
+        "I have previously worked at Robinhood as a full-time employee or intern (Hoodie Alumni)",
+        "I currently work at Robinhood in a contractor role",
+        "I have previously worked at Robinhood in a contractor role",
+        "I have never worked at Robinhood"
+      ],
+      "note": "Worked for Robinhood before; no saved answer"
+    },
+    {
+      "field": {
+        "id": "question_68545077"
+      },
+      "want": "fill",
+      "accept": [
+        "Yes"
+      ],
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "note": "Authorized to work in the US"
+    },
+    {
+      "field": {
+        "id": "question_68545078"
+      },
+      "want": "fill",
+      "accept": [
+        "No"
+      ],
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "note": "Sponsorship"
+    },
+    {
+      "field": {
+        "id": "question_68545079"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "note": "Personal or family relationships with employees or vendors"
+    },
+    {
+      "field": {
+        "id": "question_68545080"
+      },
+      "want": "needYou",
+      "note": "Details, only if Yes above"
+    },
+    {
+      "field": {
+        "id": "question_68545081"
+      },
+      "want": "needYou",
+      "options": [
+        "Yes",
+        "No"
+      ],
+      "note": "Relationship to government officials"
+    },
+    {
+      "field": {
+        "id": "question_68545082"
+      },
+      "want": "needYou",
+      "note": "Details, only if Yes above"
+    },
+    {
+      "field": {
+        "id": "1255"
+      },
+      "want": "decline",
+      "options": [
+        "Cisgender woman",
+        "Cisgender man",
+        "Transgender woman",
+        "Transgender man",
+        "Non-binary",
+        "Two-spirit",
+        "My gender identity is not listed",
+        "I don't wish to answer"
+      ],
+      "note": "Gender identity"
+    },
+    {
+      "field": {
+        "id": "1258"
+      },
+      "want": "decline",
+      "options": [
+        "American Indian or Alaskan Native",
+        "Black or African American",
+        "East Asian",
+        "Hispanic or Latino",
+        "Middle Eastern or North African",
+        "Native Hawaiian or Other Pacific Islander",
+        "South Asian",
+        "Southeast Asian",
+        "White",
+        "Two or More Races",
+        "I don't wish to answer"
+      ],
+      "note": "Race or ethnicity"
+    },
+    {
+      "field": {
+        "id": "1259"
+      },
+      "want": "decline",
+      "options": [
+        "I am on active duty",
+        "I am part of the national guard or on reserve",
+        "I have never served in the military",
+        "I identify as a protected veteran",
+        "I identify as a non-protected veteran",
+        "I identify in multiple military status categories",
+        "I don't wish to answer"
+      ],
+      "note": "Military status"
+    },
+    {
+      "field": {
+        "id": "1261"
+      },
+      "want": "decline",
+      "options": [
+        "Yes, I have a disability",
+        "No, I don't have a disability",
+        "I don't wish to answer"
+      ],
+      "note": "Disability status"
+    },
+    {
+      "field": {
+        "id": "1465"
+      },
+      "want": "decline",
+      "options": [
+        "Yes",
+        "No",
+        "Questioning",
+        "I don't wish to answer"
+      ],
+      "note": "LGBTQ+, optional"
+    },
+    {
+      "field": {
+        "id": "gdpr_demographic_data_consent_given_1"
+      },
+      "want": "leave",
+      "note": "Consent to process demographic answers"
+    }
+  ]
+}

@@ -1,0 +1,244 @@
+{
+  "source": "https://jobs.ashbyhq.com/notion/3fba1c39-c5cb-47d7-9ad2-1cec4d7e9d0c/application",
+  "fields": [
+    {
+      "field": {
+        "id": "_systemfield_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "_systemfield_email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "d58506bf-393d-4769-a6ec-bdebe07843ed"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "0d099a21-e3a6-4b7b-8c5f-94feefa0e5c0"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "LinkedIn Profile"
+    },
+    {
+      "field": {
+        "label": "Current Location"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley, California, United States"
+      ],
+      "options": [
+        "Berkeley, California, United States",
+        "Berkeley Heights, New Jersey, United States",
+        "San Francisco, California, United States"
+      ],
+      "note": "Place search; options are a stand-in"
+    },
+    {
+      "field": {
+        "name": "88f71cda-cfee-47db-94bd-df3dc662502d_a05e892e-4a9f-4431-b491-013d6a3f804a"
+      },
+      "want": "fill",
+      "accept": [
+        "They/Them"
+      ],
+      "note": "Pronouns radio; saved they/them"
+    },
+    {
+      "field": {
+        "name": "30fcdc85-13b8-43a4-9fb4-0ea387642215"
+      },
+      "want": "needYou",
+      "note": "In office on Anchor Days; Yes/No buttons over a hidden checkbox"
+    },
+    {
+      "field": {
+        "name": "67a1260d-35c7-443b-b143-7f0c00ada15e"
+      },
+      "want": "needYou",
+      "note": "Willing to relocate to NY or SF; Yes/No buttons over a hidden checkbox"
+    },
+    {
+      "field": {
+        "radios": [
+          "New York, NY",
+          "San Francisco, CA"
+        ]
+      },
+      "want": "needYou",
+      "note": "Relocation offices, checkboxes (checkbox group, located by its boxes)"
+    },
+    {
+      "field": {
+        "name": "f86ea170-ae22-4fdd-b53f-eaa42f13fbb3"
+      },
+      "want": "fill",
+      "accept": [
+        "Yes"
+      ],
+      "note": "Authorized to work in the US; Yes/No buttons over a hidden checkbox"
+    },
+    {
+      "field": {
+        "name": "88f71cda-cfee-47db-94bd-df3dc662502d_2dd78cc0-401a-4ea3-a148-5f1f5b9478b3"
+      },
+      "want": "fill",
+      "accept": [
+        "None"
+      ],
+      "note": "Sponsorship for this internship (J1/F1/None/Other); Alex needs none"
+    },
+    {
+      "field": {
+        "name": "88f71cda-cfee-47db-94bd-df3dc662502d_8c5fe320-bbac-4094-b92f-c67fe0636176"
+      },
+      "want": "fill",
+      "accept": [
+        "None"
+      ],
+      "note": "Future sponsorship (OPT/H1B/TN/None/Other); Alex needs none"
+    },
+    {
+      "field": {
+        "radios": [
+          "LinkedIn",
+          "Glassdoor",
+          "Notion Blog",
+          "Notion Employee",
+          "Notion Website",
+          "Billboard/Outdoor Ads",
+          "Conference or Meetup"
+        ]
+      },
+      "want": "needYou",
+      "note": "Checkboxes (checkbox group, located by its boxes)"
+    },
+    {
+      "field": {
+        "name": "88f71cda-cfee-47db-94bd-df3dc662502d_a9e25c22-b51b-4103-b18e-4dc24d1ce19a"
+      },
+      "want": "needYou",
+      "note": "Number of prior internships"
+    },
+    {
+      "field": {
+        "radios": [
+          "Product",
+          "Growth",
+          "Infra",
+          "Security",
+          "Data",
+          "AI",
+          "Android",
+          "iOS"
+        ]
+      },
+      "want": "needYou",
+      "note": "Checkboxes (checkbox group, located by its boxes)"
+    },
+    {
+      "field": {
+        "id": "72cc748d-485c-4924-8e9c-5ef163d6c254"
+      },
+      "want": "needYou",
+      "note": "AI technologies"
+    },
+    {
+      "field": {
+        "id": "1c25bf6e-4a26-4d56-a5d0-89cd3b75d28a"
+      },
+      "want": "needYou",
+      "note": "Why Notion"
+    },
+    {
+      "field": {
+        "id": "3fcd7a80-e8bd-49a9-8b3e-778b17d963e6"
+      },
+      "want": "fill",
+      "accept": [
+        "https://github.com/alex-rivera-example"
+      ],
+      "note": "Github Link"
+    },
+    {
+      "field": {
+        "id": "26fc2946-7292-4ab9-929b-18ec794fd3da"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California, Berkeley"
+      ],
+      "note": "School, free text"
+    },
+    {
+      "field": {
+        "label": "Graduation Date"
+      },
+      "want": "fill",
+      "accept": [
+        "May 2027",
+        "05/2027",
+        "5/2027",
+        "2027-05"
+      ],
+      "note": "Date picker text box with no id or name; Alex saved May 2027 without a day, the page's own format is unknown"
+    },
+    {
+      "field": {
+        "radios": [
+          "Undergraduate/Bachelors",
+          "Master's",
+          "PhD",
+          "MBA"
+        ]
+      },
+      "want": "fill",
+      "accept": [
+        "Undergraduate/Bachelors"
+      ],
+      "note": "Checkboxes; Alex's degree is a Bachelor of Science (checkbox group, located by its boxes)"
+    },
+    {
+      "field": {
+        "name": "f6c138c8-e50c-4339-8163-1a03ee61b6c8__systemfield_eeoc_gender"
+      },
+      "want": "decline",
+      "note": "Options: Male, Female, Decline to self-identify"
+    },
+    {
+      "field": {
+        "name": "f6c138c8-e50c-4339-8163-1a03ee61b6c8__systemfield_eeoc_race"
+      },
+      "want": "decline",
+      "note": "Decline to self-identify"
+    },
+    {
+      "field": {
+        "name": "f6c138c8-e50c-4339-8163-1a03ee61b6c8__systemfield_eeoc_veteran_status"
+      },
+      "want": "decline",
+      "note": "I decline to self-identify for protected veteran status"
+    }
+  ]
+}
