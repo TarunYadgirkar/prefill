@@ -1,0 +1,259 @@
+{
+  "source": "https://job-boards.greenhouse.io/verkada/jobs/5210813007",
+  "fields": [
+    {
+      "field": {
+        "id": "first_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "last_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "preferred_name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ],
+      "note": "Preferred First Name, optional"
+    },
+    {
+      "field": {
+        "id": "country"
+      },
+      "want": "fill",
+      "accept": [
+        "United States"
+      ],
+      "options": [
+        "United States",
+        "Canada",
+        "United Kingdom",
+        "India",
+        "Germany"
+      ],
+      "note": "Phone country; options abbreviated"
+    },
+    {
+      "field": {
+        "id": "phone"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "candidate-location"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley, California, United States",
+        "Berkeley, CA",
+        "Berkeley"
+      ],
+      "options": [
+        "Berkeley, California, United States",
+        "Berkeley Heights, New Jersey, United States",
+        "Berkeley, Missouri, United States",
+        "San Francisco, California, United States"
+      ],
+      "note": "Location (City), required; Greenhouse looks places up as you type, options are a stand-in"
+    },
+    {
+      "field": {
+        "id": "school--0"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California, Berkeley"
+      ],
+      "options": [
+        "University of California, Berkeley",
+        "University of California, Los Angeles",
+        "University of California, Davis",
+        "Berkeley College",
+        "Other"
+      ],
+      "note": "Education section; school list abbreviated"
+    },
+    {
+      "field": {
+        "id": "degree--0"
+      },
+      "want": "fill",
+      "accept": [
+        "Bachelor's Degree"
+      ],
+      "options": [
+        "High School",
+        "Associate's Degree",
+        "Bachelor's Degree",
+        "Master's Degree",
+        "Master of Business Administration (M.B.A.)",
+        "Doctor of Philosophy (Ph.D.)",
+        "Engineer's Degree",
+        "Other"
+      ],
+      "note": "Greenhouse's degree list; Alex's saved degree is Bachelor of Science"
+    },
+    {
+      "field": {
+        "id": "discipline--0"
+      },
+      "want": "fill",
+      "accept": [
+        "Computer Science"
+      ],
+      "options": [
+        "Computer Science",
+        "Computer Engineering",
+        "Electrical Engineering",
+        "Mathematics",
+        "Statistics",
+        "Economics",
+        "Other"
+      ],
+      "note": "Greenhouse's discipline list, abbreviated"
+    },
+    {
+      "field": {
+        "id": "end-month--0"
+      },
+      "want": "fill",
+      "accept": [
+        "May"
+      ],
+      "options": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "note": "Education end date month; Alex graduates May 2027"
+    },
+    {
+      "field": {
+        "id": "end-year--0"
+      },
+      "want": "fill",
+      "accept": [
+        "2027"
+      ],
+      "note": "Education end date year"
+    },
+    {
+      "field": {
+        "id": "question_12672616007"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "LinkedIn Profile, required"
+    },
+    {
+      "field": {
+        "id": "question_12672619007"
+      },
+      "want": "needYou",
+      "options": [
+        "Sept - Dec 2027",
+        "Jan - April 2028",
+        "May - Aug 2028",
+        "Sept - Dec 2028",
+        "Other"
+      ],
+      "note": "When do you graduate? No choice matches May 2027; picking Other is the person's call"
+    },
+    {
+      "field": {
+        "id": "question_12672620007"
+      },
+      "want": "needYou",
+      "options": [
+        "3.7 - 4.0",
+        "3.1 - 3.6",
+        "3.0 or under"
+      ],
+      "note": "GPA range, none saved"
+    },
+    {
+      "field": {
+        "id": "question_12672621007"
+      },
+      "want": "needYou",
+      "options": [
+        "Winter 2027",
+        "Summer 2027"
+      ],
+      "note": "Winter or summer internship"
+    },
+    {
+      "field": {
+        "id": "gender"
+      },
+      "want": "decline",
+      "options": [
+        "Male",
+        "Female",
+        "Decline To Self Identify"
+      ]
+    },
+    {
+      "field": {
+        "id": "hispanic_ethnicity"
+      },
+      "want": "decline",
+      "options": [
+        "Yes",
+        "No",
+        "Decline To Self Identify"
+      ],
+      "note": "Greenhouse's standard options"
+    },
+    {
+      "field": {
+        "id": "veteran_status"
+      },
+      "want": "decline",
+      "options": [
+        "I don't wish to answer",
+        "I identify as one or more of the classifications of a protected veteran",
+        "I am not a protected veteran"
+      ]
+    }
+  ]
+}

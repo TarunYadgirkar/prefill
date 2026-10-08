@@ -1,0 +1,12 @@
+{
+  "source": "https://form.jotform.com/82194658284165",
+  "fields": [
+    { "field": { "id": "lite_mode_5" }, "want": "needYou", "note": "Date the release is executed on (mm-dd-yyyy box, inline in the opening sentence); nothing saved" },
+    { "field": { "id": "first_22" }, "want": "fill", "accept": ["Alex"], "note": "Name (\"Volunteer\"), first: the participant's own name" },
+    { "field": { "id": "last_22" }, "want": "fill", "accept": ["Rivera"], "note": "Name (\"Volunteer\"), last" },
+    { "field": { "id": "first_7" }, "want": "leave", "note": "Typed signature, first name ('Signature (Or parent/guardian if under 18)'); a Full Name widget with given-name autocomplete" },
+    { "field": { "id": "last_7" }, "want": "leave", "note": "Typed signature, last name; family-name autocomplete" },
+    { "field": { "id": "lite_mode_8" }, "want": "needYou", "note": "Date beside the signature (mm-dd-yyyy box); nothing saved" },
+    { "field": { "name": "website" }, "want": "leave", "note": "spam trap (hidden)" }
+  ]
+}
