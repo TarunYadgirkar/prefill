@@ -1,0 +1,174 @@
+{
+  "source": "https://jobs.lever.co/veeva/01f50775-b6c7-421a-a58e-98fcafea0969/apply",
+  "fields": [
+    {
+      "field": {
+        "name": "name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ]
+    },
+    {
+      "field": {
+        "name": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "name": "phone"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "name": "location"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley",
+        "Berkeley, CA",
+        "Berkeley, California",
+        "Berkeley, CA, United States"
+      ]
+    },
+    {
+      "field": {
+        "name": "org"
+      },
+      "want": "fill",
+      "accept": [
+        "Prefill Test Co"
+      ]
+    },
+    {
+      "field": {
+        "name": "urls[LinkedIn]"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[88ad61a3-4d5a-4a0b-bf60-ad9f98709476][field0]"
+      },
+      "want": "fill",
+      "accept": [
+        "No"
+      ],
+      "note": "Sponsorship"
+    },
+    {
+      "field": {
+        "name": "cards[5e2e3a3f-25fd-4d1f-99bf-2c97baf9187c][field0]"
+      },
+      "want": "needYou",
+      "note": "Essay"
+    },
+    {
+      "field": {
+        "name": "cards[5e2e3a3f-25fd-4d1f-99bf-2c97baf9187c][field1]"
+      },
+      "want": "needYou",
+      "note": "Essay"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field0]"
+      },
+      "want": "needYou",
+      "note": "How did you hear"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field1]"
+      },
+      "want": "needYou",
+      "note": "Follow-up"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field2]"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California - Berkeley"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field3]"
+      },
+      "want": "fill",
+      "accept": [
+        "Engineering – Computer Science & Technology"
+      ],
+      "note": "Major: Computer Science"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field4]"
+      },
+      "want": "needYou",
+      "note": "Follow-up"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field5]"
+      },
+      "want": "needYou",
+      "note": "Years of work experience"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field6]"
+      },
+      "want": "needYou",
+      "note": "GPA, none saved"
+    },
+    {
+      "field": {
+        "name": "cards[78b39f2d-b22a-4fcb-8edc-f1f7ec290dbd][field7]"
+      },
+      "want": "leave",
+      "note": "acknowledgement"
+    },
+    {
+      "field": {
+        "name": "eeo[gender]"
+      },
+      "want": "decline"
+    },
+    {
+      "field": {
+        "name": "eeo[race]"
+      },
+      "want": "decline"
+    },
+    {
+      "field": {
+        "name": "eeo[veteran]"
+      },
+      "want": "decline"
+    },
+    {
+      "field": {
+        "name": "consent[marketing]"
+      },
+      "want": "leave",
+      "note": "marketing consent"
+    }
+  ]
+}
