@@ -123,7 +123,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 13.4 The model sees the question, the options and the candidate answers
   - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
   - [x] 13.6 Held-out real forms and an accuracy score
-  - [ ] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
+  - [x] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
 - **Phase 14: Storage off Contacts** (Gate: the paid Apple Developer account; Tarun is getting it)
   - [ ] 14.1 CloudKit for answers, picks, usage and the inbox; Contacts stays as optional import/export
   - [ ] 14.2 Normal signing and distribution (no weekly reinstall), and retry the long-press AutoFill route
@@ -647,6 +647,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 
 ### 13.7 Docs
 - README and PRODUCT.md lead with the browser extensions; the app manages and reviews; the Mac panel and the keyboard are manual fallbacks; no "every app" promise.
+- Built: README and PRODUCT.md open with "Your verified information, ready for the next application." and who it's for (people applying to many jobs, fellowships, accelerators and events), then the extensions (Safari on the iPhone, Chrome and Arc on the Mac), the app for managing and reviewing, and the Mac panel and keyboard as fallbacks with their limits. There is no Safari extension for the Mac, so the docs say Safari on the Mac gets the panel for now. Still to change outside the docs: the Mac setting is labeled "Suggest in every app".
 
 ## Risks and what to do about them
 
