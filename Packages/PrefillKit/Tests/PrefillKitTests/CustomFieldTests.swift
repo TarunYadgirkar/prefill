@@ -38,6 +38,9 @@ struct CustomFieldTests {
         #expect(CustomFieldMatcher.values(for: promote, in: all) == [])
         #expect(CustomFieldMatcher.values(for: "University Name Enter your university", in: all) == ["UC Berkeley"])
         #expect(CustomFieldMatcher.values(for: "Name of the college you attend", in: all) == ["UC Berkeley"])
+        let unlisted = "If you did not see your University listed in the previous question, "
+            + "please let us know your school name here."
+        #expect(CustomFieldMatcher.values(for: unlisted, in: all) == [])
         #expect(CustomFieldMatcher.values(
             for: "Do you currently receive any active funding (e.g., grants, sponsorships)?", in: all
         ) == [])
