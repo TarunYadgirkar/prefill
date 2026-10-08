@@ -10,6 +10,11 @@ import { fillForm, takesSavedAnswer } from "./fill";
 import { fitPhones } from "./fillFit";
 import type { FieldElement } from "./fieldTypes";
 import { customValues, reply, type Person } from "./heldoutHost";
+import { scoreForm, type Expectation } from "./heldoutScore";
+import greenhouseDatadog from "./fixtures/ats-greenhouse-datadog.html?raw";
+import greenhouseRoblox from "./fixtures/ats-greenhouse-roblox.html?raw";
+import ashbyOpenAi from "./fixtures/ats-ashby-openai.html?raw";
+import tallySfHacks from "./fixtures/tally-sfhacks.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
@@ -24,6 +29,7 @@ import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
 import alex from "./fixtures/heldout/alex.json";
 import jotformAdaHack from "./fixtures/jotform-adahack.html?raw";
 import jotformMyHack from "./fixtures/jotform-myhack.html?raw";
+import jotformPocoRunClub from "./fixtures/jotform-pocorunclub.html?raw";
 import metaDataScience from "./fixtures/meta-datascience.html?raw";
 import metaDfx from "./fixtures/meta-dfx.html?raw";
 import tallyExpendite from "./fixtures/tally-expendite.html?raw";
@@ -38,6 +44,7 @@ const FIXTURES = {
   greenhouseFigma,
   jotformAdaHack,
   jotformMyHack,
+  jotformPocoRunClub,
   leverPalantir,
   leverShieldAi,
   leverVeeva,
@@ -245,7 +252,7 @@ describe("every fixture's demographic questions", () => {
   const dir = join(process.cwd(), "src/fixtures");
   const pages = readdirSync(dir).filter((file) => file.endsWith(".html"));
   // Searchable dropdowns without a list wait for one before giving up.
-  const SLOW_MS = 30_000;
+  const SLOW_MS = 90_000;
 
   function demographicAnswers(): string[] {
     const lists = [...document.querySelectorAll("select")].filter((select) => isDemographic(fieldText(select)));
@@ -289,4 +296,61 @@ describe("a masked phone box", () => {
     const box = document.getElementById("input_8_full") as HTMLInputElement;
     expect(fitPhones(box, [{ value: "+44 20 7946 0958", detail: "" }])).toEqual([]);
   });
+});
+
+describe("fields about someone else", () => {
+  it("leave an emergency contact's name and phone alone, and give the participant's name", async () => {
+    await fillAsAlex("jotformPocoRunClub");
+    expect(valueOf("input_7")).toBe("");
+    expect(valueOf("input_8")).toBe("");
+    expect(valueOf("input_2")).toBe("Alex Rivera");
+    expect(valueOf("input_20")).toBe("Alex Rivera");
+  });
+});
+
+describe("Greenhouse's searchable education and location lists", () => {
+  const DEGREES = ["High School", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctor of Philosophy (Ph.D.)", "Other"];
+  const PLACES = [
+    "Berkeley, California, United States",
+    "Berkeley Heights, New Jersey, United States",
+    "Berkeley, Missouri, United States",
+    "San Francisco, California, United States",
+  ];
+  const fields: Expectation[] = [
+    { field: { id: "degree--0" }, want: "fill", accept: ["Bachelor's Degree"], options: DEGREES },
+    { field: { id: "candidate-location" }, want: "fill", accept: ["Berkeley, California, United States"], options: PLACES },
+  ];
+
+  it("pick a bachelor's degree for a Bachelor of Science, and the city in Alex's state", async () => {
+    const results = await scoreForm(greenhouseRoblox, { source: "https://job-boards.greenhouse.io/roblox", fields }, alex as Person);
+    expect(results.slice(0, 2).map(({ got }) => got)).toEqual(["Bachelor's Degree", "Berkeley, California, United States"]);
+  }, 30_000);
+
+  it("pick the month from a saved \"May 2027\" when typing it shows nothing", async () => {
+    const months = ["January", "February", "March", "April", "May", "June"];
+    const month: Expectation[] = [{ field: { id: "end-month--0" }, want: "fill", accept: ["May"], options: months }];
+    const send = { source: "https://job-boards.greenhouse.io/datadog", fields: month };
+    const results = await scoreForm(greenhouseDatadog, send, { ...(alex as Person), custom: [{ label: "End date month", value: "May 2027" }] });
+    expect(results[0]?.got).toBe("May");
+  }, 30_000);
+});
+
+describe("lists outside React-Select", () => {
+  const PLACES = ["Berkeley, California, United States", "Berkeley Heights, New Jersey, United States", "San Francisco, California, United States"];
+
+  it("fill Tally's school box and its country buttons", async () => {
+    const schools = ["San Francisco State University", "University of California, Berkeley", "Stanford University", "Other"];
+    const fields: Expectation[] = [
+      { field: { id: "dacf19c1-31c1-42ee-90dd-fa93349f23c7" }, want: "fill", accept: ["University of California, Berkeley"], options: schools },
+      { field: { name: "multiple_choice_b6d20b7a-1840-43b2-aa85-9c206dc14f5f" }, want: "fill", accept: ["United States"] },
+    ];
+    const results = await scoreForm(tallySfHacks, { source: "https://tally.so/r/RG2rP4", fields }, alex as Person);
+    expect(results.slice(0, 2).map(({ got }) => got.trim())).toEqual(["University of California, Berkeley", "United States"]);
+  }, 30_000);
+
+  it("fill Ashby's \"Where are you currently located?\" box", async () => {
+    const fields: Expectation[] = [{ field: { label: "Where are you currently located?" }, want: "fill", accept: [PLACES[0] ?? ""], options: PLACES }];
+    const results = await scoreForm(ashbyOpenAi, { source: "https://jobs.ashbyhq.com/openai", fields }, alex as Person);
+    expect(results[0]?.got).toBe(PLACES[0]);
+  }, 30_000);
 });

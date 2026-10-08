@@ -1,0 +1,235 @@
+{
+  "source": "https://form.jotform.com/260674968069171",
+  "fields": [
+    {
+      "field": {
+        "id": "first_19"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ],
+      "note": "Volunteer Name, first"
+    },
+    {
+      "field": {
+        "id": "last_19"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ],
+      "note": "Volunteer Name, last"
+    },
+    {
+      "field": {
+        "id": "input_20"
+      },
+      "want": "needYou",
+      "note": "Age, no saved birthday"
+    },
+    {
+      "field": {
+        "id": "lite_mode_21"
+      },
+      "want": "needYou",
+      "note": "Date of birth, none saved (MM-DD-YYYY box)"
+    },
+    {
+      "field": {
+        "id": "input_124"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "input_116_full"
+      },
+      "want": "fill",
+      "accept": [
+        "(510) 555-0134",
+        "510-555-0134",
+        "5105550134"
+      ],
+      "note": "Cell phone, masked (000) 000-0000"
+    },
+    {
+      "field": {
+        "id": "input_25_addr_line1"
+      },
+      "want": "fill",
+      "accept": [
+        "2400 Durant Ave",
+        "2400 Durant Avenue"
+      ],
+      "note": "Home address, street"
+    },
+    {
+      "field": {
+        "id": "input_25_addr_line2"
+      },
+      "want": "needYou",
+      "note": "Street Address Line 2; Alex's home address has none, so it stays empty"
+    },
+    {
+      "field": {
+        "id": "input_25_city"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley"
+      ]
+    },
+    {
+      "field": {
+        "id": "input_25_state"
+      },
+      "want": "fill",
+      "accept": [
+        "CA",
+        "California"
+      ]
+    },
+    {
+      "field": {
+        "id": "input_25_postal"
+      },
+      "want": "fill",
+      "accept": [
+        "94704"
+      ]
+    },
+    {
+      "field": {
+        "name": "q22_gender"
+      },
+      "want": "leave",
+      "note": "Gender with only Male and Female: no way to decline, so Prefill leaves it"
+    },
+    {
+      "field": {
+        "id": "input_126"
+      },
+      "want": "needYou",
+      "note": "T-shirt size select"
+    },
+    {
+      "field": {
+        "id": "input_49"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Allergies"
+    },
+    {
+      "field": {
+        "id": "input_50"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Medical concerns and medications"
+    },
+    {
+      "field": {
+        "name": "q119_availability[]"
+      },
+      "want": "needYou",
+      "note": "Availability days checkboxes"
+    },
+    {
+      "field": {
+        "id": "other_119"
+      },
+      "want": "needYou",
+      "note": "Availability 'Other (please explain)' checkbox"
+    },
+    {
+      "field": {
+        "name": "q120_interests[]"
+      },
+      "want": "needYou",
+      "note": "Volunteer position interests checkboxes"
+    },
+    {
+      "field": {
+        "id": "input_52"
+      },
+      "want": "needYou",
+      "note": "Additional notes"
+    },
+    {
+      "field": {
+        "id": "first_53"
+      },
+      "want": "needYou",
+      "note": "Emergency contact first name; someone else's"
+    },
+    {
+      "field": {
+        "id": "last_53"
+      },
+      "want": "needYou",
+      "note": "Emergency contact last name; must not be Rivera from Alex's own name"
+    },
+    {
+      "field": {
+        "id": "input_54"
+      },
+      "want": "needYou",
+      "note": "Emergency contact relationship"
+    },
+    {
+      "field": {
+        "id": "input_55_full"
+      },
+      "want": "needYou",
+      "note": "Emergency contact cell phone; must not be Alex's own number"
+    },
+    {
+      "field": {
+        "id": "input_35"
+      },
+      "want": "needYou",
+      "note": "Home church"
+    },
+    {
+      "field": {
+        "name": "q46_doYou"
+      },
+      "want": "leave",
+      "note": "Photo and social media consent (Yes / No / Other)"
+    },
+    {
+      "field": {
+        "id": "first_121"
+      },
+      "want": "leave",
+      "note": "Volunteer Signature, first name typed as an electronic signature"
+    },
+    {
+      "field": {
+        "id": "last_121"
+      },
+      "want": "leave",
+      "note": "Volunteer Signature, last name"
+    },
+    {
+      "field": {
+        "id": "lite_mode_41"
+      },
+      "want": "leave",
+      "note": "Date Signed, part of the signature block"
+    },
+    {
+      "field": {
+        "name": "website"
+      },
+      "want": "leave",
+      "note": "spam trap (hidden)"
+    }
+  ]
+}

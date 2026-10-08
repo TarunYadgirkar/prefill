@@ -52,7 +52,7 @@ Each form is two files with the same name: the saved page (`greenhouse-figma.htm
 }
 ```
 
-- `field` finds the field by `id`, by `name` (a radio or checkbox group shares one), by the start of its question (`label`), or, for radio buttons without a name, by the buttons' own labels in order (`radios`).
+- `field` finds the field by `id`, by `name` (a radio or checkbox group shares one), by the start of its question (`label`), or, for radio buttons or checkboxes without a shared name, by the buttons' own labels in order (`radios`).
 - `want` is `fill` (one of `accept` belongs there), `decline` (a demographic question, answered with the option that declines, or "No"), `leave` (Prefill must not touch it) or `needYou` (the person has no saved answer, so it should stay empty for them).
 - `accept` lists every answer the person would be happy with. A link may be compared without its `https://`; a phone matches on its digits.
 - `options` gives a searchable dropdown's choices. Greenhouse and Ashby load them only when the box opens, so the saved page has none; the scorer opens a stand-in list with these options (`web/src/heldoutCombobox.ts`).

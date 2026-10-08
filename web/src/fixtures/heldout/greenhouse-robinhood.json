@@ -1,5 +1,5 @@
 {
-  "source": "https://job-boards.greenhouse.io/embed/job_app?for=roblox&token=8072244",
+  "source": "https://job-boards.greenhouse.io/embed/job_app?for=robinhood&token=8123225",
   "fields": [
     {
       "field": {
@@ -17,15 +17,6 @@
       "want": "fill",
       "accept": [
         "Rivera"
-      ]
-    },
-    {
-      "field": {
-        "id": "preferred_name"
-      },
-      "want": "fill",
-      "accept": [
-        "Alex"
       ]
     },
     {
@@ -81,7 +72,7 @@
         "Berkeley, Missouri, United States",
         "San Francisco, California, United States"
       ],
-      "note": "Location (City), optional; Greenhouse looks places up as you type, options are a stand-in"
+      "note": "Location (City), required; Greenhouse looks places up as you type, options are a stand-in"
     },
     {
       "field": {
@@ -122,86 +113,64 @@
     },
     {
       "field": {
-        "id": "question_68141192"
+        "id": "end-month--0"
       },
       "want": "fill",
       "accept": [
-        "Alex Rivera"
+        "May"
       ],
-      "note": "Legal Name"
+      "options": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      "note": "Graduation May 2027"
     },
     {
       "field": {
-        "id": "question_68141193"
+        "id": "end-year--0"
+      },
+      "want": "fill",
+      "accept": [
+        "2027"
+      ]
+    },
+    {
+      "field": {
+        "id": "question_68545069"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "LinkedIn Profile"
+    },
+    {
+      "field": {
+        "id": "question_68545075"
       },
       "want": "needYou",
       "options": [
-        "Yes",
-        "No"
+        "I currently work at Robinhood as a full-time employee or intern",
+        "I have previously worked at Robinhood as a full-time employee or intern (Hoodie Alumni)",
+        "I currently work at Robinhood in a contractor role",
+        "I have previously worked at Robinhood in a contractor role",
+        "I have never worked at Robinhood"
       ],
-      "note": "18 or older; no saved age"
+      "note": "Worked for Robinhood before; no saved answer"
     },
     {
       "field": {
-        "id": "question_68141194"
-      },
-      "want": "needYou",
-      "options": [
-        "Available to Start Immediately",
-        "Fall 2026",
-        "Winter 2026",
-        "Spring 2027",
-        "Summer 2027",
-        "Fall 2027",
-        "Winter 2027",
-        "Spring 2028",
-        "Summer 2028",
-        "Fall 2028",
-        "Winter 2028",
-        "Spring 2029",
-        "Summer 2029",
-        "Fall 2029",
-        "Winter 2029",
-        "Spring 2030",
-        "Summer 2030",
-        "Fall 2030",
-        "Winter 2030"
-      ],
-      "note": "Full-time start term; Alex graduates May 2027 but has no saved start date"
-    },
-    {
-      "field": {
-        "id": "question_68747690"
-      },
-      "want": "needYou",
-      "note": "Cumulative GPA, none saved"
-    },
-    {
-      "field": {
-        "id": "question_68141199"
-      },
-      "want": "needYou",
-      "note": "Roblox Username, optional"
-    },
-    {
-      "field": {
-        "id": "question_68141195"
-      },
-      "want": "needYou",
-      "options": [
-        "Python 3",
-        "Python 2",
-        "Java",
-        "C++",
-        "C#",
-        "Javascript",
-        "Typescript"
-      ],
-      "note": "Preferred interview coding language"
-    },
-    {
-      "field": {
-        "id": "question_68141197"
+        "id": "question_68545077"
       },
       "want": "fill",
       "accept": [
@@ -215,7 +184,7 @@
     },
     {
       "field": {
-        "id": "question_68141198"
+        "id": "question_68545078"
       },
       "want": "fill",
       "accept": [
@@ -229,111 +198,124 @@
     },
     {
       "field": {
-        "name": "question_68141202[]"
-      },
-      "want": "needYou",
-      "note": "Membership in WICS/SWE/SHPE/NSBE checkboxes, optional; none saved"
-    },
-    {
-      "field": {
-        "id": "question_68141200"
+        "id": "question_68545079"
       },
       "want": "needYou",
       "options": [
-        "Roblox Careers Site",
-        "Roblox Early Career Newsletter",
-        "Campus Ambassador",
-        "Conference",
-        "On Campus Event",
-        "Virtual Event",
-        "LinkedIn",
-        "Handshake",
-        "Piazza",
-        "Word of Mouth",
-        "Referred by Roblox Employee",
-        "Other"
+        "Yes",
+        "No"
       ],
-      "note": "How did you hear"
+      "note": "Personal or family relationships with employees or vendors"
     },
     {
       "field": {
-        "id": "question_68141201"
+        "id": "question_68545080"
       },
-      "want": "leave",
-      "options": [
-        "I acknowledge that I have read and understood Roblox's Job Applicant Privacy Notice."
-      ],
-      "note": "Privacy notice acknowledgement"
+      "want": "needYou",
+      "note": "Details, only if Yes above"
     },
     {
       "field": {
-        "id": "question_68627570"
+        "id": "question_68545081"
       },
-      "want": "leave",
+      "want": "needYou",
       "options": [
-        "I acknowledge that I received and had the opportunity to review Roblox's Candidate Arbitration Agreement, and I agree to be bound by its terms."
+        "Yes",
+        "No"
       ],
-      "note": "Arbitration agreement acknowledgement"
+      "note": "Relationship to government officials"
     },
     {
       "field": {
-        "id": "29520"
+        "id": "question_68545082"
+      },
+      "want": "needYou",
+      "note": "Details, only if Yes above"
+    },
+    {
+      "field": {
+        "id": "1255"
       },
       "want": "decline",
       "options": [
-        "Man",
+        "Cisgender woman",
+        "Cisgender man",
+        "Transgender woman",
+        "Transgender man",
         "Non-binary",
-        "Woman",
-        "I prefer to self-describe",
+        "Two-spirit",
+        "My gender identity is not listed",
         "I don't wish to answer"
       ],
       "note": "Gender identity"
     },
     {
       "field": {
-        "id": "29521"
+        "id": "1258"
       },
       "want": "decline",
       "options": [
-        "Black or of African descent",
+        "American Indian or Alaskan Native",
+        "Black or African American",
         "East Asian",
-        "Hispanic, Latinx or of Spanish Origin",
-        "Indigenous, American Indian or Alaska Native",
+        "Hispanic or Latino",
         "Middle Eastern or North African",
-        "Native Hawaiian or Pacific Islander",
+        "Native Hawaiian or Other Pacific Islander",
         "South Asian",
         "Southeast Asian",
-        "White or European",
-        "I prefer to self-describe",
+        "White",
+        "Two or More Races",
         "I don't wish to answer"
       ],
-      "note": "Race/ethnicity, multi-select"
+      "note": "Race or ethnicity"
     },
     {
       "field": {
-        "id": "29522"
+        "id": "1259"
+      },
+      "want": "decline",
+      "options": [
+        "I am on active duty",
+        "I am part of the national guard or on reserve",
+        "I have never served in the military",
+        "I identify as a protected veteran",
+        "I identify as a non-protected veteran",
+        "I identify in multiple military status categories",
+        "I don't wish to answer"
+      ],
+      "note": "Military status"
+    },
+    {
+      "field": {
+        "id": "1261"
+      },
+      "want": "decline",
+      "options": [
+        "Yes, I have a disability",
+        "No, I don't have a disability",
+        "I don't wish to answer"
+      ],
+      "note": "Disability status"
+    },
+    {
+      "field": {
+        "id": "1465"
       },
       "want": "decline",
       "options": [
         "Yes",
         "No",
-        "I prefer to self-describe",
+        "Questioning",
         "I don't wish to answer"
       ],
-      "note": "Disability"
+      "note": "LGBTQ+, optional"
     },
     {
       "field": {
-        "id": "29523"
+        "id": "gdpr_demographic_data_consent_given_1"
       },
-      "want": "decline",
-      "options": [
-        "Yes, I am a veteran, active member or reservist",
-        "No, I am not a veteran, active member or reservist",
-        "I prefer to self-describe",
-        "I don't wish to answer"
-      ],
-      "note": "Veteran status"
+      "want": "leave",
+      "note": "Consent to process demographic answers"
     }
   ]
 }
