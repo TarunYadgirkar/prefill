@@ -24,15 +24,22 @@ This document has three parts:
 | Oct 3 | The extension did nothing on the Pear Airtable form. | Fixed: Prefill now runs in tabs that were open before the extension loaded, and Chromium uses its own dropdown, which works on textareas |
 | Oct 3 | Sharing my contact must send only name and number, not all this info. A clone contact is fine. | Proved Safari's card and the shared card are one and the same. Built the Prefill contact plus minimal mode. |
 | Oct 3 | Don't count on the $99 developer account. | No CloudKit and no App Groups; everything syncs through iCloud Contacts |
-| Oct 3 | Why can't the extension read Contacts? Make it an app then. | Mac Accessibility engine that suggests in any app; the extension is now optional |
+| Oct 3 | Why can't the extension read Contacts? Make it an app then. | Mac Accessibility engine that suggests outside the browser (since Oct 7 a manual fallback; the Chrome/Arc extension is the main way in) |
 | Oct 3 | Finish everything, then write docs for future sessions. | This document, `README.md` and `AGENTS.md` |
 | Oct 4 | "Not seamless enough, like AirDrop." Only name and phone may go out when sharing by tapping phones. Research how Apple does it and what other job-application fillers do. | Verified NameDrop sends only the name, one chosen number or email, and the poster. Web audit fixes. Research on Apple's patterns and on Simplify, Jobright and others. |
 | Oct 5 | One-tap fill is fine, but tapping a field must still let me pick another value. Demographic questions: always decline or "No". | One-tap fill: a pill beside the field and a Fill button in Safari's sheet fill the whole form, including selects and yes/no radios, decline demographics, tint what they filled, undo in one tap, and a filled field still lists the other values. |
 | Oct 6 | Look at Prefill like a YC startup: how clean it is to use and how it's layered, and whether there's a smarter way. Then: clicking a field and picking a value stays the default, with Fill form as an option. | The v2 plan in `docs/PLAN.md`. Done so far: picks are remembered per site and per question (Phase 1), every row says why it's there and Fill form says what's left (Phase 2), one read model for every answer with where it was used (Phase 3), and the app became Inbox, You and Settings (Phase 5). Phase 6 removed Siri, Shortcuts, the Focus filter, the Sites screen and the match-words field. Found and fixed on the way: Safari's own suggestion bubble swallowed taps on the first rows of Prefill's list on the iPhone. |
+| Oct 7 | Product review: Prefill remembers strings better than it knows when they apply. Make answers right, not just remembered, measure it, and stop promising "every app". | Phase 13 in `docs/PLAN.md`: abstain when two options fit, answers scoped by country or term, a held-out set of real forms with an accuracy score (`docs/ACCURACY.md`), a guide for watching people apply (`docs/USER-STUDY.md`), and docs that lead with the browser extensions. |
 
 ## 2. The product
 
+**Your verified information, ready for the next application.**
+
+**Who it's for:** people who apply to many things: jobs, fellowships, accelerators and events. They type the same details and answer the same questions over and over, and a wrong answer on an application costs more than a slow one.
+
 **The problem:** Safari on iPhone suggests contact info from one card. It shows the first two values, never learns which email you use where, never saves a new email you type, and knows nothing about the questions job applications ask.
+
+**Where it works:** in the browser, through Prefill's extensions: Safari on the iPhone, and Chrome and Arc on the Mac. That's where applications are, and where Prefill can read each field's label and question. The iPhone app manages and reviews what Prefill knows. Outside the browser there are two fallbacks you use by hand, each with limits (below). Prefill doesn't promise to work in every app.
 
 **The idea:** Click a field, pick a value. Prefill shows its own list under (or over) every field it recognizes, with the best answer first and a line saying why it's there, and it remembers what you pick. Fill form, which fills a whole application at once, stays one tap away but is never the default.
 
@@ -43,22 +50,26 @@ Underneath, Prefill keeps your contact card as the thing you share, because Safa
 
 ### What a person gets
 
-**In Safari on the iPhone, and in Chrome and Arc on the Mac:**
+**In the browser: Safari on the iPhone, Chrome and Arc on the Mac.** This is the product.
 - Prefill's list on each recognized field. Each row says why it's there: "Used here", "From greenhouse.io", "Suggested" (the on-device model's guess), or what it is ("Work email", "School").
 - A value you pick comes first on that site from then on. An answer you pick, including a guess, comes first for that question on every site.
 - New values are saved when you submit a form; answers to job application questions are learned the same way, and a newer answer updates one Prefill learned, with Undo.
 - Fill form fills every empty field it has an answer for, declines demographic questions, and then says how many still need you and jumps to them.
 - On contact fields in Safari the list sits above the field, because Safari's own suggestion bubble takes every tap in a band under it.
 
-**The iPhone app:**
+**The iPhone app, to manage and review:**
 - **Setup:** two steps. Choose your contact card and see what's on it (with the optional offer to keep it to name and phone), then turn on the Safari extension, with checks that turn green on their own. It ends on "Tap any field in Safari and pick a value."
 - **Inbox:** what needs a decision first (values Prefill wasn't sure are yours), then what Prefill did recently, each with a mark you can read at a glance.
 - **You:** everything Prefill knows, searchable, grouped into Contact, Links and Answers. A value's page shows where it's stored, which sites it was used on, and which sites it's first on.
 - **Settings:** the two switches, Sharing your card, the Apple Intelligence status, Safari's switches, and Advanced (sites Prefill doesn't save on, card, restore, delete).
 
 **Mac:**
-- A menu bar app that opens on the same inbox and suggests in any app through Accessibility. Until setup is done, the menu starts with a checklist (Contacts, Accessibility, the browser extension) whose items check themselves.
-- An optional Chrome/Arc extension saves new values you type and shows Prefill's list when the Accessibility mode is off.
+- A menu bar app that opens on the same inbox and connects the Chrome/Arc extension to your saved values. Until setup is done, the menu starts with a checklist (Contacts, Accessibility, the browser extension) whose items check themselves.
+- The Chrome/Arc extension shows Prefill's list, runs Fill form and saves new values you type.
+
+**Fallbacks, used by hand:**
+- **The Mac Accessibility panel** suggests values in other Mac apps, and in Safari on the Mac, which has no Prefill extension yet. Limits: it needs the Accessibility permission; it fills text fields only, never selects, radio buttons or searchable lists; it doesn't save new values; Chromium shows a page's fields to it only a few seconds after asking; and an app that doesn't expose its fields to Accessibility gets nothing. Arc, Safari, Electron apps and Firefox are untested.
+- **The Prefill keyboard** on the iPhone types a saved value in another app. Limits: iOS doesn't tell a keyboard the field's label, so it can't know which value a field wants and you pick it yourself; it needs Full Access to read your values; and apps can refuse third-party keyboards, which iOS always does for password and other secure fields.
 
 **Sharing your card:**
 - **NameDrop** sends only your name, one number you pick, and your poster.
@@ -73,11 +84,12 @@ iPhone Safari page
        ├─ picks ─────────────► remembered per site / per question (no card write)
        └─ saves typed values and learned answers ─► Extension handler ─► PrefillKit ─► Contacts (iCloud)
 
-Mac, any app
-  └─ Prefill.app Accessibility engine ─► panel under the field ─► types the value in
-
-Mac, Chrome/Arc (optional)
+Mac, Chrome/Arc
   └─ Prefill extension ─► prefill-host ─► Unix socket ─► Prefill.app ─► Contacts (iCloud)
+
+Fallbacks, by hand
+  ├─ Mac, other apps: Prefill.app Accessibility engine ─► panel under the field ─► types the value in
+  └─ iPhone, other apps: Prefill keyboard ─► reads the app's snapshot ─► types the tapped value
 
 iCloud Contacts
   ├─ Me card: name, phone (plus emails and addresses unless minimal)
@@ -114,7 +126,8 @@ for the app's Inbox and You screens.
 - **iCloud Contacts as the sync layer.** It's free, needs no server, and works with the free Apple ID.
 - **A separate Prefill contact** keeps the shared card short. Safari's card and the shared card can't be separated (spike in REPORT.md).
 - **Chromium's own dropdown instead of a datalist.** Airtable-style forms use textareas, and a datalist leaves values in the page.
-- **Accessibility on the Mac.** It works in every app with no extension, and uses the same TypeScript field rules run in JavaScriptCore, so the Mac and the extensions can't disagree.
+- **The browser first, fallbacks second.** Only an extension sees a field's label, its options and the form around it, which right answers depend on. The Mac Accessibility panel (the same TypeScript field rules, run in JavaScriptCore) and the iPhone keyboard reach other apps, but see less, so they suggest and leave the choice to the person.
+- **Accuracy is measured on forms nobody tuned for.** `docs/ACCURACY.md` explains the held-out set and the score; `docs/USER-STUDY.md` is how to watch real people use it.
 
 ### How to add a feature
 

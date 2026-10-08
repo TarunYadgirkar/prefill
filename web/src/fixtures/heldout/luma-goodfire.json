@@ -1,0 +1,54 @@
+{
+  "source": "https://luma.com/timy2nh8",
+  "fields": [
+    {
+      "field": {
+        "name": "name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ]
+    },
+    {
+      "field": {
+        "name": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "name": "registration_answers.0.value"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "name": "registration_answers.1.value"
+      },
+      "want": "fill",
+      "accept": [
+        "https://alexrivera.example.com"
+      ]
+    },
+    {
+      "field": {
+        "name": "registration_answers.2.value"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "name": "registration_answers.3.value"
+      },
+      "want": "needYou"
+    }
+  ]
+}

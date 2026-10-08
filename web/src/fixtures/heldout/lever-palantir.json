@@ -1,0 +1,181 @@
+{
+  "source": "https://jobs.lever.co/palantir/774cf5c9-bf6a-4d77-bf60-d50ef1beb1a0/apply",
+  "fields": [
+    {
+      "field": {
+        "name": "name"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ]
+    },
+    {
+      "field": {
+        "name": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "name": "phone"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "name": "location"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley",
+        "Berkeley, CA",
+        "Berkeley, California",
+        "Berkeley, CA, United States",
+        "Berkeley, California, United States"
+      ]
+    },
+    {
+      "field": {
+        "name": "org"
+      },
+      "want": "fill",
+      "accept": [
+        "Prefill Test Co"
+      ]
+    },
+    {
+      "field": {
+        "name": "urls[LinkedIn]"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "name": "urls[GitHub]"
+      },
+      "want": "fill",
+      "accept": [
+        "https://github.com/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "name": "urls[Portfolio]"
+      },
+      "want": "fill",
+      "accept": [
+        "https://alexrivera.example.com"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[a69a985a-eae9-4c14-90fb-b5a4b891523e][field0]"
+      },
+      "want": "needYou",
+      "note": "Language skills"
+    },
+    {
+      "field": {
+        "name": "cards[a69a985a-eae9-4c14-90fb-b5a4b891523e][field1]"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ],
+      "note": "Preferred name"
+    },
+    {
+      "field": {
+        "name": "cards[a69a985a-eae9-4c14-90fb-b5a4b891523e][field2]"
+      },
+      "want": "needYou",
+      "note": "Name pronunciation"
+    },
+    {
+      "field": {
+        "name": "cards[1c719ca9-5069-4afe-9e82-39ca420e0edb][field0]"
+      },
+      "want": "fill",
+      "accept": [
+        "Yes"
+      ],
+      "note": "Authorized to work"
+    },
+    {
+      "field": {
+        "name": "cards[1c719ca9-5069-4afe-9e82-39ca420e0edb][field1]"
+      },
+      "want": "fill",
+      "accept": [
+        "No"
+      ],
+      "note": "Sponsorship"
+    },
+    {
+      "field": {
+        "name": "cards[3da58b41-acf5-40a1-945e-c7f047ef8050][field0]"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California - Berkeley"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[037683ac-0e2a-4adf-82d9-49bd682697cc][field0]"
+      },
+      "want": "needYou",
+      "note": "How did you hear"
+    },
+    {
+      "field": {
+        "name": "cards[026d7ce7-7ca4-44ed-9db6-1c7857707f0e][field0]"
+      },
+      "want": "fill",
+      "accept": [
+        "2027"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[c58728ca-3a96-40b6-9622-d70019b01176][field0]"
+      },
+      "want": "fill",
+      "accept": [
+        "May"
+      ]
+    },
+    {
+      "field": {
+        "name": "cards[73796cde-fc01-4758-9002-c85155f3503d][field0]"
+      },
+      "want": "leave",
+      "note": "consent to AI notetakers"
+    },
+    {
+      "field": {
+        "name": "comments"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "name": "consent[marketing]"
+      },
+      "want": "leave",
+      "note": "marketing consent"
+    }
+  ]
+}
