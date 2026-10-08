@@ -2,7 +2,7 @@ import { isPlaceholder, normalize } from "./choices";
 import { classify } from "./classify";
 import { isCombobox } from "./combobox";
 import { fieldText } from "./custom";
-import { declineOption } from "./demographics";
+import { isDecline, isDemographic } from "./demographics";
 import { fieldElements, labelText } from "./dom";
 import { fillForm } from "./fill";
 import type { FieldElement } from "./fieldTypes";
@@ -45,6 +45,8 @@ export interface FieldResult {
   got: string;
   outcome: Outcome;
   sensitive: boolean;
+  // A self-identification question: the only answers it may get decline or say "No".
+  demographic: boolean;
 }
 
 type Target = { control: FieldElement } | { group: HTMLInputElement[] };
@@ -127,7 +129,7 @@ function judge(expectation: Expectation, got: string): Outcome {
 
 function judgeAnswer(expectation: Expectation, got: string): Outcome {
   const { want } = expectation;
-  if (want === "decline") return declineOption([{ text: got, value: got }]) === 0 ? "right" : "wrong";
+  if (want === "decline") return isDecline(got) ? "right" : "wrong";
   return (expectation.accept ?? []).some((accepted) => same(accepted, got)) ? "right" : "wrong";
 }
 
@@ -149,6 +151,13 @@ function resolve(fields: readonly FieldElement[], expectations: readonly Expecta
   });
 }
 
+// A list or a button that asks a self-identification question.
+const asksDemographic = (element: FieldElement): boolean =>
+  (element.localName === "select" || isButton(element as HTMLInputElement) || isCombobox(element)) && isDemographic(fieldText(element));
+
+// A demographic question that got a real answer: the score fails on it like a sensitive field.
+export const answersDemographic = (result: FieldResult): boolean => result.demographic && result.got !== "" && !isDecline(result.got);
+
 const isSensitive = (element: FieldElement): boolean =>
   classify(element).kind === "sensitive" || (element as HTMLInputElement).type === "password";
 
@@ -163,6 +172,7 @@ function unlisted(fields: readonly FieldElement[], listed: ReadonlySet<FieldElem
       got: read(element),
       outcome: "wrong" as const,
       sensitive: isSensitive(element),
+      demographic: asksDemographic(element),
     }));
 }
 
@@ -187,6 +197,7 @@ export async function scoreForm(html: string, form: FormExpectations, person: Pe
       got,
       outcome: judge(expectation, got),
       sensitive: expectation.sensitive === true || elements.some(isSensitive),
+      demographic: expectation.want === "decline" || elements.some(asksDemographic),
     };
   });
   return [...results, ...unlisted(fields, new Set(targets.flatMap(elementsOf)), before, read)];
