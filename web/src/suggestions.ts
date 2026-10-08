@@ -64,6 +64,11 @@ const ADDRESS_PARTS: Partial<
   state: (address) => address.state,
   postalCode: (address) => address.postalCode,
   country: (address) => address.country,
+  // One box for the whole address: "2400 Durant Ave, Berkeley, CA 94704".
+  full: (address) =>
+    [address.street.split("\n")[0] ?? "", address.city, `${address.state} ${address.postalCode}`.trim()]
+      .filter((part) => part.trim() !== "")
+      .join(", "),
 };
 
 const NAME_PARTS: Partial<Record<FieldPart, (name: Name) => string>> = {

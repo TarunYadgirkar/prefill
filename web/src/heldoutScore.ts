@@ -92,10 +92,12 @@ function buttonState(input: HTMLInputElement): string {
   return label === "" ? input.value : label;
 }
 
-function stateOf(element: FieldElement, picked: ReadonlyMap<HTMLInputElement, string>): string {
+// A searchable dropdown the scorer stands in for holds what was chosen from its list; any
+// other box, a phone box that calls itself a combobox among them, holds what was typed.
+function stateOf(element: FieldElement, picked: ReadonlyMap<HTMLInputElement, string>, faked: ReadonlySet<FieldElement>): string {
   const input = element as HTMLInputElement;
   if (isButton(input)) return buttonState(input);
-  if (isCombobox(element)) return picked.get(input) ?? "";
+  if (isCombobox(element) && faked.has(element)) return picked.get(input) ?? "";
   if (element.localName !== "select") return element.value;
   return selectState(element as HTMLSelectElement);
 }
@@ -168,8 +170,10 @@ export async function scoreForm(html: string, form: FormExpectations, person: Pe
   document.body.innerHTML = html;
   const fields = fieldElements(document, Infinity).filter((element) => (element as HTMLInputElement).type !== "hidden");
   const targets = resolve(fields, form.fields);
-  const combos = fakeComboboxes(document, comboOptions(targets, form.fields));
-  const read = (element: FieldElement): string => stateOf(element, combos.picked);
+  const options = comboOptions(targets, form.fields);
+  const combos = fakeComboboxes(document, options);
+  const faked = new Set<FieldElement>(options.keys());
+  const read = (element: FieldElement): string => stateOf(element, combos.picked, faked);
   const before = new Map(fields.map((element) => [element, read(element)]));
   await fillForm(document, { host: () => new URL(form.source).hostname, send: (request) => Promise.resolve(reply(person, request)) });
   combos.stop();

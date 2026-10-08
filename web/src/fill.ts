@@ -7,6 +7,7 @@ import { declineOption, isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
+import { fitPhones, isHelper, isOneBoxAddress, isPhoneBox } from "./fillFit";
 import type { GestureGate } from "./gesture";
 import { linkChoices } from "./links";
 import {
@@ -140,8 +141,10 @@ const optionOf = (option: HTMLOptionElement): Option => ({ text: option.text, va
 
 // Where a field's words come from when nothing else claims it: a custom answer, unless
 // the field asks a demographic question, which is declined.
-// "If other, please specify" follows another answer, so it's left for the person.
-const FOLLOW_UP = /^\W*if\b/iu;
+// "If other, please specify" and "If you answered yes, explain" follow another answer, so
+// they're left for the person. "If you are enrolled, when do you graduate?" stands alone.
+const FOLLOW_UP =
+  /^\W*if\W+(?:(?:yes|no|other|so|not|applicable|any|none|unsure|selected|checked)\b|you\s+(?:answered|selected|chose|checked|said|responded|marked|picked)\b|(?:the|your)\s+answer\b)/iu;
 
 // Whether a one-tap fill may put a saved answer in a text box that asks this: not a
 // follow-up, and not a demographic question, which only a list of choices can decline.
@@ -155,7 +158,7 @@ function freeWant(text: string): Want | undefined {
 }
 
 function linkWant(element: FieldElement, types: readonly LinkType[] | undefined): Want | undefined {
-  if (element.localName !== "input") return undefined;
+  if (element.localName === "select") return undefined;
   return { from: "link", types: types ?? ["website"], fullUrl: (element as HTMLInputElement).type === "url" };
 }
 
@@ -188,10 +191,11 @@ function comboboxSlot(element: HTMLInputElement): Slot | undefined {
 }
 
 const isOpen = (element: FieldElement): boolean =>
-  isEditable(element) && isEmpty(element) && isRendered(element) && !hasOwnList(element) && isFillableControl(element);
+  isEditable(element) && isEmpty(element) && isRendered(element) && (isPhoneBox(element) || !hasOwnList(element)) && isFillableControl(element);
 
 function slotOf(element: FieldElement): Slot | undefined {
-  if (isCombobox(element)) return comboboxSlot(element as HTMLInputElement);
+  if (isHelper(element)) return undefined;
+  if (isCombobox(element) && !isPhoneBox(element)) return comboboxSlot(element as HTMLInputElement);
   if (!isOpen(element)) return undefined;
   const want = wantOf(element);
   if (want === undefined) return undefined;
@@ -236,19 +240,30 @@ function labelledBy(element: Element): string {
   return ids.map((id) => element.ownerDocument.getElementById(id)?.textContent ?? "").join(" ");
 }
 
-function radioSlots(elements: readonly FieldElement[]): Slot[] {
-  const groups = new Map<string, HTMLInputElement[]>();
-  // Same-named radios in two forms are two questions.
+const isRadio = (element: FieldElement): element is HTMLInputElement =>
+  element.localName === "input" && (element as HTMLInputElement).type === "radio";
+
+// The question a radio button belongs to: its name within its form, since same-named radios
+// in two forms are two questions, or for a button without a name (Meta's) the radiogroup or
+// fieldset around it.
+function radioKey(radio: HTMLInputElement, forms: Map<HTMLFormElement | null, number>): string | Element | undefined {
+  if (radio.name === "") return radio.parentElement?.closest("[role=radiogroup], fieldset") ?? undefined;
+  if (!forms.has(radio.form)) forms.set(radio.form, forms.size);
+  return `${String(forms.get(radio.form))} ${radio.name}`;
+}
+
+function radioGroups(elements: readonly FieldElement[]): HTMLInputElement[][] {
+  const groups = new Map<string | Element, HTMLInputElement[]>();
   const forms = new Map<HTMLFormElement | null, number>();
-  for (const element of elements) {
-    if (element.localName !== "input" || (element as HTMLInputElement).type !== "radio") continue;
-    const radio = element as HTMLInputElement;
-    if (radio.name === "") continue;
-    if (!forms.has(radio.form)) forms.set(radio.form, forms.size);
-    const key = `${String(forms.get(radio.form))} ${radio.name}`;
-    groups.set(key, [...(groups.get(key) ?? []), radio]);
+  for (const radio of elements.filter(isRadio)) {
+    const key = radioKey(radio, forms);
+    if (key !== undefined) groups.set(key, [...(groups.get(key) ?? []), radio]);
   }
-  return [...groups.values()].flatMap((inputs) => {
+  return [...groups.values()];
+}
+
+function radioSlots(elements: readonly FieldElement[]): Slot[] {
+  return radioGroups(elements).flatMap((inputs) => {
     if (inputs.length < 2 || inputs.some((input) => input.checked || !isEditable(input))) return [];
     // Pages often draw their own circles and hide the real buttons, so the labels show it's there.
     if (!inputs.some((input) => isRendered(input) || [...(input.labels ?? [])].some(isRendered))) return [];
@@ -267,7 +282,15 @@ export function fillScope(doc: Document, anchor?: Element | null): ParentNode {
 export function findSlots(scope: ParentNode): Slot[] {
   const elements = fieldElements(scope, MAX_INSPECTED);
   const fields = elements.filter((element) => !isSignIn(element)).flatMap((element) => slotOf(element) ?? []);
-  return [...fields, ...radioSlots(elements)];
+  return [...(isOneBoxAddress(elements) ? fields.map(wholeAddress) : fields), ...radioSlots(elements)];
+}
+
+// The street box of a form with no other address boxes takes the address on one line.
+function wholeAddress(slot: Slot): Slot {
+  if (slot.control !== "text" || slot.want.from !== "contact") return slot;
+  const { field } = slot.want;
+  if (field.kind !== "address" || (field.part ?? "street") !== "street") return slot;
+  return { ...slot, want: { from: "contact", field: { ...field, part: "full" } } };
 }
 
 function contactRequest(slots: readonly Slot[]): PageField[] {
@@ -496,10 +519,12 @@ async function applyCombobox(input: HTMLInputElement, want: Want, values: readon
   return undo === undefined ? undefined : { field: input, undo, took: () => !isComboboxEmpty(input) };
 }
 
+const isPhoneWant = (want: Want): boolean => want.from === "contact" && want.field.kind === "phone";
+
 // Fills one slot and says what it did, or undefined when nothing fit.
 function apply(slot: Slot, answers: Answers, report: Report, marks: Marks): Filled | undefined {
   const choices = choicesOf(slot.want, answers, report);
-  if (slot.control === "text") return applyText(slot.element, choices);
+  if (slot.control === "text") return applyText(slot.element, isPhoneWant(slot.want) ? fitPhones(slot.element, choices) : choices);
   const values = valuesOf(choices);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values, marks);
   if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values, marks);

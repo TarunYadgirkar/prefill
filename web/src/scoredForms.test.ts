@@ -3,20 +3,43 @@ import { pickOption } from "./choices";
 import { classify, isSensitiveText } from "./classify";
 import { fieldText } from "./custom";
 import { fieldElements } from "./dom";
-import { fillForm } from "./fill";
+import { declineOption } from "./demographics";
+import { fillForm, takesSavedAnswer } from "./fill";
 import type { FieldElement } from "./fieldTypes";
+import { reply, type Person } from "./heldoutHost";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
+import airtableIbmStartups from "./fixtures/airtable-ibmstartups.html?raw";
+import greenhouseFigma from "./fixtures/ats-greenhouse-figma.html?raw";
 import leverPalantir from "./fixtures/ats-lever-palantir.html?raw";
+import leverZoox from "./fixtures/ats-lever-zoox.html?raw";
+import workableBlueground from "./fixtures/ats-workable-blueground.html?raw";
 import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
+import alex from "./fixtures/heldout/alex.json";
+import jotformMyHack from "./fixtures/jotform-myhack.html?raw";
 import metaDataScience from "./fixtures/meta-datascience.html?raw";
+import metaDfx from "./fixtures/meta-dfx.html?raw";
 import tallyExpendite from "./fixtures/tally-expendite.html?raw";
+import tallyHackHub from "./fixtures/tally-hackhub.html?raw";
 
 // Forms the held-out accuracy score (docs/ACCURACY.md) caught Prefill getting wrong. Each
 // left the held-out set for this one, where its bug stays fixed.
 
-const FIXTURES = { airtableDormRoomFund, leverPalantir, workableHuggingFace, metaDataScience, tallyExpendite };
+const FIXTURES = {
+  airtableDormRoomFund,
+  airtableIbmStartups,
+  greenhouseFigma,
+  jotformMyHack,
+  leverPalantir,
+  leverZoox,
+  metaDataScience,
+  metaDfx,
+  tallyExpendite,
+  tallyHackHub,
+  workableBlueground,
+  workableHuggingFace,
+};
 type Fixture = keyof typeof FIXTURES;
 
 function load(fixture: Fixture): void {
@@ -127,5 +150,76 @@ describe("a saved date against year and month lists", () => {
       document.querySelector<HTMLSelectElement>(`select[name="${name}"]`)?.selectedOptions[0]?.text ?? "";
     expect(chosen("cards[026d7ce7-7ca4-44ed-9db6-1c7857707f0e][field0]")).toBe("2027");
     expect(chosen("cards[c58728ca-3a96-40b6-9622-d70019b01176][field0]")).toBe("May");
+  });
+});
+
+// Fill form on a whole fixture, answered by the held-out score's stand-in app as Alex Rivera.
+async function fillAsAlex(fixture: Fixture): Promise<void> {
+  load(fixture);
+  const send = (request: ExtensionRequest): Promise<unknown> => Promise.resolve(reply(alex as Person, request));
+  await fillForm(document, { host: () => "example.com", send });
+}
+
+const valueOf = (id: string): string => document.querySelector<HTMLInputElement>(`[id="${id}"]`)?.value ?? "";
+const checkedIn = (name: string): string =>
+  document.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value ?? "";
+
+describe("questions that open with \"If\"", () => {
+  it("stand alone unless they follow an earlier answer", () => {
+    expect(takesSavedAnswer(fieldText(fieldIn("greenhouseFigma", "question_19835366004")))).toBe(true);
+    expect(takesSavedAnswer(fieldText(fieldIn("leverZoox", "cards[18631c8a-d2a4-41d9-ba8a-8fccf4193494][field5]")))).toBe(false);
+    expect(takesSavedAnswer("If other, please specify")).toBe(false);
+    expect(takesSavedAnswer("If you answered yes, explain")).toBe(false);
+  });
+});
+
+describe("Jotform's phone box with maxlength 10", () => {
+  it("gets the national digits", async () => {
+    await fillAsAlex("jotformMyHack");
+    expect(valueOf("input_16")).toBe("5105550134");
+  });
+});
+
+describe("Meta's radio buttons without a name", () => {
+  it("are grouped by their radiogroup and declined", async () => {
+    await fillAsAlex("metaDfx");
+    const groups = [...document.querySelectorAll("[role=radiogroup]")].filter((group) => group.querySelector("input") !== null);
+    expect(groups.length).toBe(3);
+    for (const group of groups) {
+      const checked = group.querySelector<HTMLInputElement>("input:checked");
+      expect(checked === null ? -1 : declineOption([{ text: checked.closest("label")?.textContent ?? "", value: checked.value }])).toBe(0);
+    }
+  });
+});
+
+describe("Workable's application", () => {
+  it("fills the LinkedIn text area and the one address box, and leaves the hidden helpers", async () => {
+    await fillAsAlex("workableBlueground");
+    expect(valueOf("QA_12102922")).toBe("www.linkedin.com/in/alex-rivera-example");
+    expect(valueOf("address")).toBe("2400 Durant Ave, Berkeley, CA 94704");
+    expect(["city", "postcode", "country"].map(valueOf)).toEqual(["", "", ""]);
+  });
+});
+
+describe("words a question gives only as examples", () => {
+  it("don't match a saved answer: \"(e.g., grants, sponsorships)\" isn't a sponsorship question", async () => {
+    await fillAsAlex("leverZoox");
+    expect(checkedIn("cards[18631c8a-d2a4-41d9-ba8a-8fccf4193494][field6]")).toBe("");
+    expect(document.querySelector<HTMLInputElement>('[name="cards[18631c8a-d2a4-41d9-ba8a-8fccf4193494][field2]"]')?.value).toBe("No");
+  });
+});
+
+describe("names that aren't the person's", () => {
+  it("leaves a startup's name alone", () => {
+    expect(summary(fieldIn("airtableIbmStartups", "18b55139e215383643e4cb6730abe5e7"))).toBe("ignored");
+  });
+});
+
+describe("Tally's application", () => {
+  it("puts the school only where it's asked for, and fills the phone box that is a combobox", async () => {
+    await fillAsAlex("tallyHackHub");
+    expect(valueOf("32a51279-3f96-4761-9437-202edaac6f4a")).toBe("University of California, Berkeley");
+    expect(valueOf("5ec403ec-b904-487f-b3e4-c1004021762b")).toBe("");
+    expect(valueOf("8a04327a-cff6-4e83-8b68-ad54b2a3d259")).toBe("+1 (510) 555-0134");
   });
 });
