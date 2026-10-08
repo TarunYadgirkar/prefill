@@ -52,6 +52,10 @@ public enum CustomFieldMatcher {
         /(?i)\b(?:school|university|college)\s+(?:name|attended)\b/,
         /(?i)\b(?:attend|attending|enrolled|study at|studying at)\b/
     ]
+    nonisolated(unsafe) private static let unlisted: [Regex<Substring>] = [
+        /(?i)not (?:see|find)\b.{0,40}\blisted|(?:not|isn.?t|wasn.?t) listed|unlisted/,
+        /(?i)other school|school not (?:listed|found)/
+    ]
     static let schoolLead = 4
 
     // Whether a question asks for the field at all. A long question may only mention a
@@ -61,6 +65,9 @@ public enum CustomFieldMatcher {
     static func asks(_ fieldText: String, for field: CustomField) -> Bool {
         guard let question = JobQuestion(label: AnswerScope.split(field.label).base) else { return true }
         guard question == .school else { return WorkQuestion.fits(question, fieldText) }
+        // "If you did not see your University listed, tell us your school": a box for a school
+        // the list above didn't have, which the person's listed school never needs.
+        if unlisted.contains(where: { fieldText.contains($0) }) { return false }
         let lead = fieldText.lowercased().split { !$0.isLetter }.prefix(schoolLead).map { singular(String($0)) }
         let schoolWords: Set<String> = ["school", "university", "college"]
         return lead.contains { schoolWords.contains($0) } || asksForSchool.contains { fieldText.contains($0) }

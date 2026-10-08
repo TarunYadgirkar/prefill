@@ -1,0 +1,80 @@
+{
+  "source": "https://tally.so/r/5BVxNM",
+  "fields": [
+    {
+      "field": {
+        "id": "4b189265-d11b-409e-a6d0-2d04d5a3a4de"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ],
+      "note": "Your Name, one box for the full name"
+    },
+    {
+      "field": {
+        "id": "6edcb39e-1880-4be6-a62b-0f76a99a98f1"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "7d98bed4-d665-4d08-8273-6caea6f9de76"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "+1 510 555 0134",
+        "+15105550134"
+      ],
+      "note": "Tally phone input (type=tel with role=combobox for its country list); default country India, so the number must carry +1"
+    },
+    {
+      "field": {
+        "id": "c64b7699-c238-43d9-9969-d509f7a81ac3"
+      },
+      "want": "fill",
+      "accept": [
+        "University of California, Berkeley",
+        "UC Berkeley"
+      ],
+      "note": "College Name"
+    },
+    {
+      "field": {
+        "id": "3d93a625-1a8a-4639-8aa0-dc5d552a6767"
+      },
+      "want": "needYou",
+      "options": [
+        "College Student",
+        "Fresher",
+        "Working Professional"
+      ],
+      "note": "Student, fresher or working professional; no saved answer"
+    },
+    {
+      "field": {
+        "id": "043e6556-55fd-4ff5-bb29-fed0c0358acc"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "LinkedIn Profile"
+    },
+    {
+      "field": {
+        "id": "dd01bdb8-de0f-40f1-9735-a516a9d16939"
+      },
+      "want": "fill",
+      "accept": [
+        "https://github.com/alex-rivera-example"
+      ],
+      "note": "Github Profile, required"
+    }
+  ]
+}

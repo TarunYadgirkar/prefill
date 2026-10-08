@@ -6,7 +6,9 @@ export type AddressPart =
   | "city"
   | "state"
   | "postalCode"
-  | "country";
+  | "country"
+  // One box for "what city and state do you live in".
+  | "cityState";
 export type NamePart = "full" | "given" | "middle" | "family";
 export type FieldPart = AddressPart | NamePart | "partial";
 

@@ -60,8 +60,12 @@ const ASKS_FOR_SCHOOL =
 const SCHOOL_LEAD = 4;
 const SCHOOL_WORDS: ReadonlySet<string> = new Set(["school", "university", "college"]);
 
+// CustomFieldMatcher.unlisted: a box for a school the list above didn't have.
+const UNLISTED = /not (?:see|find)\b.{0,40}\blisted|(?:not|isn.?t|wasn.?t) listed|unlisted|other school|school not (?:listed|found)/iu;
+
 function asks(text: string, answer: CustomAnswer): boolean {
   if (answer.label !== "School") return true;
+  if (UNLISTED.test(text)) return false;
   const lead = text.toLowerCase().split(/[^\p{L}]+/u).filter(Boolean).slice(0, SCHOOL_LEAD).map(singular);
   return lead.some((word) => SCHOOL_WORDS.has(word)) || ASKS_FOR_SCHOOL.test(text);
 }
