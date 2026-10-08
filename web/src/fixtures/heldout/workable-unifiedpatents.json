@@ -1,0 +1,16 @@
+{
+  "source": "https://apply.workable.com/unifiedpatents/j/0916F075B8/apply/",
+  "fields": [
+    { "field": { "id": "firstname" }, "want": "fill", "accept": ["Alex"] },
+    { "field": { "id": "lastname" }, "want": "fill", "accept": ["Rivera"] },
+    { "field": { "id": "email" }, "want": "fill", "accept": ["alex.rivera@example.com", "alex.school@example.edu"] },
+    { "field": { "id": "input_phone" }, "want": "fill", "accept": ["+1 (510) 555-0134", "(510) 555-0134"] },
+    { "field": { "id": "address" }, "want": "fill", "accept": ["Berkeley, CA, United States", "Berkeley, California, United States", "Berkeley, CA", "Berkeley, United States", "2400 Durant Ave, Berkeley, CA 94704", "2400 Durant Ave, Berkeley, CA 94704, United States"], "note": "Asks for city, region and country; the page's own network guess was removed" },
+    { "field": { "id": "cover_letter" }, "want": "needYou", "note": "Required cover letter text" },
+    { "field": { "id": "QA_2312855" }, "want": "needYou", "note": "Why Unified Patents" },
+    { "field": { "id": "QA_2312856" }, "want": "needYou", "note": "PTAB and patent litigation knowledge" },
+    { "field": { "id": "QA_2312857" }, "want": "needYou", "note": "Programming languages; no saved answer" },
+    { "field": { "id": "QA_2312858" }, "want": "needYou", "note": "What Unified Patents does" },
+    { "field": { "name": "QA_2509916" }, "want": "needYou", "note": "Completed a law school IP course, YES/NO radios" }
+  ]
+}
