@@ -88,7 +88,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 ## Workflow
 
-- **Testing:** the user wants it lean. Add a few unit tests plus one real end-to-end check per feature. Don't build big test suites, and never tune field rules on generated data; use real page markup as fixtures.
+- **Testing:** the user wants it lean. Add a few unit tests plus one real end-to-end check per feature. Don't build big test suites, and never tune field rules on generated data; use real page markup as fixtures. Measure on the held-out forms in `web/src/fixtures/heldout/` (`pnpm --dir web run score`) and never tune rules on them (`docs/ACCURACY.md`).
 - **Before pushing:** run `pnpm --dir web test`, `pnpm --dir web lint`, `pnpm --dir web typecheck`, `swift test` in `Packages/PrefillKit`, `swiftlint --strict`, `scripts/build.sh` and the Mac build.
 - **Commits:** conventional, short subjects, no Co-Authored-By. Merge with `--no-ff` into `main` and push. The repo is public.
 - **Parallel agents:** work in your own worktree under `.claude/worktrees/`. Never switch the branch of the main checkout.
@@ -135,9 +135,11 @@ Working from [docs/PLAN.md](docs/PLAN.md), the v2 plan; its Progress list is the
 
 Phase 4 (freeze the card to name and phone) is built on `feat/phase4-freeze-card` except 4.3's onboarding wording (Phase 9's setup is merged; its card step doesn't offer the short card yet) and the device check 4.6. Phase 7 (resume import) was dropped. Phase 3.2 was narrowed: the routers keep reading `CardRecord` (reason in PLAN 3.2).
 
-Phase 11 (Oct 7, merged): the Prefill keyboard (`Keyboard/`, `KeyboardUI/`, PrefillKit `Keyboard/`) brings saved values to every app on the iPhone. The app writes a capped snapshot to the shared keychain group; the keyboard reads it with Full Access, types the tapped value and returns to the person's keyboard. The long-press AutoFill route is out: Apple refuses the credential-provider entitlement for the free team. Signing profiles were renewed through Oct 14 now that Xcode is signed in; the daily reinstall job can renew from here. Not yet checked by a person: the keyboard on the phone itself (installed Oct 7, needs adding in Settings with Full Access).
+Phase 11 (Oct 7, merged): the Prefill keyboard (`Keyboard/`, `KeyboardUI/`, PrefillKit `Keyboard/`) brings saved values to other iPhone apps as a manual fallback: it gets no field label, and apps can block third-party keyboards. The app writes a capped snapshot to the shared keychain group; the keyboard reads it with Full Access, types the tapped value and returns to the person's keyboard. The long-press AutoFill route is out: Apple refuses the credential-provider entitlement for the free team. Signing profiles were renewed through Oct 14 now that Xcode is signed in; the daily reinstall job can renew from here. Not yet checked by a person: the keyboard on the phone itself (installed Oct 7, needs adding in Settings with Full Access).
 
 Known failing on main (Oct 7): `MinimalCardE2ETests` stops at "no offer to keep the card short" (the Inbox offer from Phase 4, commits `ecd3cef`/`4bb3b84`); it fails the same on main without the Phase 13 changes. Phase 13.1 and 13.2 are merged (abstain when two options fit; scoped answers). Keyboard v2 (`feat/keyboard-v2`) is built and waits for the device check.
+
+Accuracy (Oct 7, PLAN 13.6): the held-out set (`web/src/fixtures/heldout/`, 11 real forms, rules never tuned on them; see `docs/ACCURACY.md`) scores 64 right, 4 wrong, 14 missing, 58 correctly left of 140 fields with `pnpm --dir web run score`. Update these numbers whenever a change moves them. A user-study guide is in `docs/USER-STUDY.md`; no sessions run yet.
 
 Simulator runs: one at a time. Before `scripts/test.sh e2e`, check that `lsof -nP -iTCP:8846 -sTCP:LISTEN` is empty and `pgrep -x xcodebuild` finds nothing (not `pgrep -f`, which matches its own shell). Run classes one by one with `PREFILL_E2E_ONLY`; the whole suite takes longer than the script's 15-minute limit. Revert the screenshots a run rewrites unless they're the point of the change.
 

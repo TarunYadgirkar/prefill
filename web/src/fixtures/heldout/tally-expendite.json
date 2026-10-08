@@ -1,0 +1,73 @@
+{
+  "source": "https://tally.so/r/ZjOMp0",
+  "fields": [
+    {
+      "field": {
+        "id": "a00187e6-a7d8-47be-aff4-e26eab14b363"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "113a8199-b0b0-45c5-a7fb-ed9f95f40758"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "bd08c41f-53ac-46c5-8a31-e1495962c37e"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "8019a3b2-28cc-436d-a330-d086b9a50647"
+      },
+      "want": "fill",
+      "accept": [
+        "+1 (510) 555-0134",
+        "(510) 555-0134"
+      ]
+    },
+    {
+      "field": {
+        "id": "d192d3c3-c3e5-4139-9f1f-a600569c3129"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "e1d8d3fe-2d0d-47da-a48a-29b6123ff850"
+      },
+      "want": "needYou",
+      "note": "Highest level of education completed"
+    },
+    {
+      "field": {
+        "name": "multiple_choice_e9c9effe-286d-46d0-a064-4a5858e29f9b"
+      },
+      "want": "needYou",
+      "note": "Entrepreneurial level"
+    },
+    {
+      "field": {
+        "id": "34768341-ec26-4d38-93a7-da01e6f57e19"
+      },
+      "want": "needYou",
+      "note": "Position in venture"
+    }
+  ]
+}
