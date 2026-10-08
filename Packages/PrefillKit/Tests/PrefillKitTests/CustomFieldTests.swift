@@ -30,6 +30,22 @@ struct CustomFieldTests {
         #expect(CustomFieldMatcher.values(for: text, in: fields) == expected)
     }
 
+    // Questions from web/src/fixtures: tally-hackhub.html and ats-lever-zoox.html.
+    @Test func aQuestionThatOnlyMentionsAWordDoesntGetTheAnswer() {
+        let sponsorship = field("Sponsorship", "No", also: "sponsor, visa")
+        let all = fields + [sponsorship]
+        let promote = "How do you plan to promote hackathons at your university?"
+        #expect(CustomFieldMatcher.values(for: promote, in: all) == [])
+        #expect(CustomFieldMatcher.values(for: "University Name Enter your university", in: all) == ["UC Berkeley"])
+        #expect(CustomFieldMatcher.values(for: "Name of the college you attend", in: all) == ["UC Berkeley"])
+        #expect(CustomFieldMatcher.values(
+            for: "Do you currently receive any active funding (e.g., grants, sponsorships)?", in: all
+        ) == [])
+        #expect(CustomFieldMatcher.values(
+            for: "Will you now or in the future require sponsorship for employment visa status (e.g., H-1B)?", in: all
+        ) == ["No"])
+    }
+
     @Test func offersEveryFieldThatTiesInTheCardsOrder() {
         let college = field("College", "Diablo Valley College")
         #expect(CustomFieldMatcher.values(for: "College or university", in: [school, college]) == [
