@@ -54,10 +54,13 @@ public enum CustomFieldMatcher {
     ]
     static let schoolLead = 4
 
-    // A long question may only mention a university ("How will you promote hackathons at your
-    // university?"), so the school fills one that names it in its first few words or asks for it.
+    // Whether a question asks for the field at all. A long question may only mention a
+    // university ("How will you promote hackathons at your university?"), so the school fills
+    // one that names it in its first few words or asks for it; sponsorship and authorization
+    // answers go only to their own questions (`WorkQuestion`).
     static func asks(_ fieldText: String, for field: CustomField) -> Bool {
-        guard JobQuestion(label: AnswerScope.split(field.label).base) == .school else { return true }
+        guard let question = JobQuestion(label: AnswerScope.split(field.label).base) else { return true }
+        guard question == .school else { return WorkQuestion.fits(question, fieldText) }
         let lead = fieldText.lowercased().split { !$0.isLetter }.prefix(schoolLead).map { singular(String($0)) }
         let schoolWords: Set<String> = ["school", "university", "college"]
         return lead.contains { schoolWords.contains($0) } || asksForSchool.contains { fieldText.contains($0) }

@@ -46,6 +46,23 @@ struct CustomFieldTests {
         ) == ["No"])
     }
 
+    // Questions from web/src/fixtures/ats-lever-veeva.html and the Lever and Greenhouse fixtures.
+    @Test func sponsorshipAndAuthorizationAnswersStayWithTheirOwnQuestions() {
+        let authorization = field(
+            "Work authorization", "Yes", also: "authorized to work, legally authorized, eligible to work"
+        )
+        let sponsorship = field("Sponsorship", "No", also: "sponsor, visa")
+        let both = [authorization, sponsorship]
+        #expect(CustomFieldMatcher.values(
+            for: "Will you now or in the future require sponsorship for work authorization?", in: both
+        ) == ["No"])
+        let authorized = "Are you legally authorized to work in the United States?"
+        #expect(CustomFieldMatcher.values(for: authorized, in: both) == ["Yes"])
+        #expect(CustomFieldMatcher.values(
+            for: "Are you authorized to work in the US without the need for visa sponsorship?", in: both
+        ) == [])
+    }
+
     @Test func offersEveryFieldThatTiesInTheCardsOrder() {
         let college = field("College", "Diablo Valley College")
         #expect(CustomFieldMatcher.values(for: "College or university", in: [school, college]) == [

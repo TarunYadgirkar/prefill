@@ -34,6 +34,8 @@ describe("learning answers from an application", () => {
   it("knows the questions applications ask and leaves demographic ones alone", () => {
     expect(jobQuestion("Are you legally authorized to work in the United States?")).toBe("authorization");
     expect(jobQuestion("Will you now or in the future require sponsorship?")).toBe("sponsorship");
+    expect(jobQuestion("Will you now or in the future require sponsorship for work authorization?")).toBe("sponsorship");
+    expect(jobQuestion("Are you authorized to work in the US without visa sponsorship?")).toBeUndefined();
     expect(
       jobQuestion("Are you legally able to work in Canada according to the laws and regulations of the province or territory where you live?"),
     ).toBe("authorization");

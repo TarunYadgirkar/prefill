@@ -1,4 +1,5 @@
 import type { ExtensionRequest, LinkType } from "./messages";
+import { fitsWorkQuestion } from "./workQuestion";
 
 // A stand-in for the app that answers the page's three questions with one person's saved
 // values, the way the message routers do: every email, phone and address in the card's
@@ -67,7 +68,7 @@ function asks(text: string, answer: CustomAnswer): boolean {
 
 export function customValues(person: Person, text: string): CustomAnswer[] {
   const page = words(text.replace(EXAMPLES, " "));
-  const scored = person.custom.filter((answer) => asks(text, answer)).map((answer) => ({ answer, score: score(answer, page) }));
+  const scored = person.custom.filter((answer) => asks(text, answer) && fitsWorkQuestion(answer.label, text)).map((answer) => ({ answer, score: score(answer, page) }));
   const best = Math.max(0, ...scored.map((entry) => entry.score));
   if (best === 0) return [];
   const seen = new Set<string>();
