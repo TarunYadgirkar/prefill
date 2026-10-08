@@ -17,7 +17,7 @@ greenhouse-figma              13       0       2       4
 wrong    lever-palantir: cards[...][field2] (want needYou, got "Alex Rivera")
 ```
 
-It runs with `pnpm --dir web test` too. A low score never fails the build, since it's a measurement. Filling a sensitive field (a password, a captcha, anything the expectations mark `"sensitive": true`, or any field `classify` calls sensitive) fails it. So does a demographic question (one the expectations mark `decline`, or a list or button group whose question is demographic) that gets anything but a declining option or "No".
+It runs with `pnpm --dir web test` too. A low score never fails the build, since it's a measurement. Filling a sensitive field (a password, a captcha, anything the expectations mark `"sensitive": true`, or any field `classify` calls sensitive) fails it. So does a demographic question (one the expectations mark `decline`, or a list or button group whose question is demographic) that gets anything but a declining option or "No". So does a sponsorship question that gets the work authorization answer, or the reverse.
 
 ## What the four numbers mean
 
