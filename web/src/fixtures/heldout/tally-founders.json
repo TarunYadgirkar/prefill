@@ -1,0 +1,68 @@
+{
+  "source": "https://tally.so/r/nGXGKe",
+  "fields": [
+    {
+      "field": {
+        "id": "1311b47e-3a5a-4b7e-9333-ff253a4039e5"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "14222644-3005-4a5d-b0f3-836011ea90ce"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "6a23a087-73ce-4018-abbd-2930cf23db50"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "ca489944-c49f-4efd-a8ce-3f2258e9eb35"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "d7d64be4-363b-43ae-84d4-ed694aab85df"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "efdd477c-3048-44b9-bef7-83653886525c"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "e3ae1b8d-b1cf-4b3d-9389-e7b0b50a5729"
+      },
+      "want": "needYou",
+      "note": "How did you hear"
+    },
+    {
+      "field": {
+        "name": "multiple_choice_b75cd25e-70cb-46fa-9b6d-9e6b87e33504"
+      },
+      "want": "leave",
+      "note": "marketing consent"
+    }
+  ]
+}

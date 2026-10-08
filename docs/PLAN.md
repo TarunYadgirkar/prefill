@@ -122,7 +122,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
   - [ ] 13.4 The model sees the question, the options and the candidate answers
   - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
-  - [ ] 13.6 Held-out real forms and an accuracy score
+  - [x] 13.6 Held-out real forms and an accuracy score
   - [ ] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
 - **Phase 14: Storage off Contacts** (Gate: the paid Apple Developer account; Tarun is getting it)
   - [ ] 14.1 CloudKit for answers, picks, usage and the inbox; Contacts stays as optional import/export
@@ -643,6 +643,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 ### 13.6 Accuracy you can measure
 - `web/src/fixtures/heldout/`: real forms never used to tune rules, each with the expected answer per field. A script scores right / wrong / missing separately and the number goes in AGENTS.md. Add forms Tarun meets (Meta, Partiful's web form, Google booking forms, Dorm Room Fund).
 - A short guide in `docs/` for watching 5 to 10 people apply with Prefill: time including review and correction, wrong vs missing answers, second-application reuse, setup without help.
+- Built: 11 forms saved on Oct 7 in `web/src/fixtures/heldout/` (Greenhouse: Figma, Anthropic; Lever: Palantir; Ashby: OpenAI; Workable: Hugging Face; Meta; Jotform; Tally x2; Airtable: Dorm Room Fund; Luma), each with an expectations file for Alex Rivera (`alex.json`). `pnpm --dir web run score` (`heldout.test.ts`, `heldoutScore.ts`, `heldoutHost.ts`, `heldoutCombobox.ts`) runs Fill form with a stand-in app and counts right / wrong / missing / left; it fails only if a sensitive field is filled. First score, 140 fields: 64 right, 4 wrong, 14 missing, 58 correctly left. Wrong: a company-website question got Alex's own site (Dorm Room Fund); a phone box with `maxlength=10` got "+1 (510) 555-0134" (Jotform); Lever's "Name pronunciation" got "Alex Rivera"; Meta's single "Website (LinkedIn, GitHub, portfolio)" box got the combined "site - LinkedIn" text. Missing, with causes: hex ids with a digit before "cc" make a phone sensitive (`NOT_PHONE`'s `[^a-z]cc`, Tally; the first Airtable capture too); `name.*on.*card` matches any Lever question with "name", "on" and the `cards[...]` field name (Lever "Preferred name"); a question that starts with "If" is taken for a follow-up (Figma's "If you are currently enrolled..., expected graduation"); "May 2027" doesn't match "2027" or "May" (Lever year and month selects); Meta's radios have no `name`, so its demographic groups aren't declined; Workable asks for GitHub and LinkedIn in text areas, which aren't links; Ashby's Yes/No buttons and location box aren't filled. Not yet in the set: a Google Form (the public ones found needed sign-in or had closed) and a Google Calendar booking page. Guides: `docs/ACCURACY.md`, `docs/USER-STUDY.md`.
 
 ### 13.7 Docs
 - README and PRODUCT.md lead with the browser extensions; the app manages and reviews; the Mac panel and the keyboard are manual fallbacks; no "every app" promise.

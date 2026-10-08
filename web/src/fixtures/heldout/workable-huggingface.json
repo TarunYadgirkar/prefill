@@ -1,0 +1,125 @@
+{
+  "source": "https://apply.workable.com/huggingface/j/F88446C814/apply/",
+  "fields": [
+    {
+      "field": {
+        "id": "firstname"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex"
+      ]
+    },
+    {
+      "field": {
+        "id": "lastname"
+      },
+      "want": "fill",
+      "accept": [
+        "Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "email"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "summary"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "CA_47143"
+      },
+      "want": "fill",
+      "accept": [
+        "https://github.com/alex-rivera-example"
+      ],
+      "note": "A text area asking for a GitHub profile"
+    },
+    {
+      "field": {
+        "id": "CA_47383"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ],
+      "note": "A text area asking for LinkedIn"
+    },
+    {
+      "field": {
+        "id": "cover_letter"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "CA_10626"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "input_CA_10627_input"
+      },
+      "want": "needYou",
+      "note": "Notice period"
+    },
+    {
+      "field": {
+        "name": "CA_10628"
+      },
+      "want": "fill",
+      "accept": [
+        "YES"
+      ],
+      "note": "Eligible to work"
+    },
+    {
+      "field": {
+        "id": "CA_10629"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "name": "QA_12487827"
+      },
+      "want": "leave",
+      "note": "attestation"
+    },
+    {
+      "field": {
+        "name": "QA_12487828"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "name": "QA_12487829"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "QA_12487830"
+      },
+      "want": "needYou"
+    },
+    {
+      "field": {
+        "id": "QA_12487831"
+      },
+      "want": "needYou"
+    }
+  ]
+}

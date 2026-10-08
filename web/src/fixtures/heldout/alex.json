@@ -1,0 +1,26 @@
+{
+  "about": "Alex Rivera, the test person (testbed/alex-rivera.vcf and PrefillKit's Fixtures.swift), plus the links and job answers a student who has applied before would have saved. Made-up values only.",
+  "name": { "given": "Alex", "family": "Rivera" },
+  "emails": ["alex.rivera@example.com", "alex@work.example.org", "alex.school@example.edu"],
+  "phones": ["+1 (510) 555-0134", "+1 (415) 555-0199"],
+  "addresses": [
+    { "street": "2400 Durant Ave", "city": "Berkeley", "state": "CA", "postalCode": "94704", "country": "United States" },
+    { "street": "1 Market St Suite 300", "city": "San Francisco", "state": "CA", "postalCode": "94105", "country": "United States" }
+  ],
+  "links": [
+    { "type": "linkedin", "url": "https://www.linkedin.com/in/alex-rivera-example" },
+    { "type": "github", "url": "https://github.com/alex-rivera-example" },
+    { "type": "website", "url": "https://alexrivera.example.com" }
+  ],
+  "custom": [
+    { "label": "School", "value": "University of California, Berkeley", "matchWords": ["university", "college"] },
+    { "label": "Degree", "value": "Bachelor of Science" },
+    { "label": "Major", "value": "Computer Science", "matchWords": ["field of study", "discipline"] },
+    { "label": "Graduation date", "value": "May 2027", "matchWords": ["graduation"] },
+    { "label": "Work authorization", "value": "Yes", "matchWords": ["authorized to work", "eligible to work"] },
+    { "label": "Sponsorship", "value": "No", "matchWords": ["sponsor"] },
+    { "label": "Pronouns", "value": "they/them" },
+    { "label": "Preferred name", "value": "Alex" },
+    { "label": "Current company", "value": "Prefill Test Co" }
+  ]
+}
