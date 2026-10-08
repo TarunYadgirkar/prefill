@@ -9,6 +9,7 @@ import type { FieldElement } from "./fieldTypes";
 import { fakeComboboxes } from "./heldoutCombobox";
 import { reply, type Person } from "./heldoutHost";
 import type { ExtensionRequest } from "./messages";
+import { SIGNATURE } from "./patterns";
 import { fitsWorkQuestion } from "./workQuestion";
 
 // Scores one-tap fill on a held-out form: fills the saved page with a stand-in app that
@@ -162,8 +163,10 @@ const asksDemographic = (element: FieldElement): boolean =>
 // A demographic question that got a real answer: the score fails on it like a sensitive field.
 export const answersDemographic = (result: FieldResult): boolean => result.demographic && result.got !== "" && !isDecline(result.got);
 
+// A typed signature counts too, by its own words, so the score fails if a rule change ever
+// lets one be filled.
 const isSensitive = (element: FieldElement): boolean =>
-  classify(element).kind === "sensitive" || (element as HTMLInputElement).type === "password";
+  classify(element).kind === "sensitive" || (element as HTMLInputElement).type === "password" || SIGNATURE.test(fieldText(element));
 
 // Fields Prefill changed that no expectation lists count as wrong: nothing should be filled
 // that a person wouldn't have put there.
