@@ -492,8 +492,20 @@ function applyRadio(inputs: readonly HTMLInputElement[], want: Want, values: rea
   if (match.fits > 1) marks.push(markUnsure(first, groupBox(inputs) ?? first, match.fits));
   const radio = isClear(match) ? inputs[match.index] : undefined;
   if (radio === undefined) return undefined;
-  radio.click();
+  clickOnly(radio, inputs);
   return { field: first, undo: () => { uncheck(radio); }, took: () => radio.checked, shown: radioText(radio) };
+}
+
+// Lever wraps a question's buttons in the question's own label, so a click on one can bubble
+// to that label and check its first button. The fill keeps only the button it chose: a
+// demographic question must never end up on a real answer.
+function clickOnly(radio: HTMLInputElement, inputs: readonly HTMLInputElement[]): void {
+  radio.click();
+  if (radio.checked) return;
+  for (const other of inputs) uncheck(other);
+  radio.checked = true;
+  radio.dispatchEvent(new Event("input", { bubbles: true }));
+  radio.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
 function uncheck(radio: HTMLInputElement): void {

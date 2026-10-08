@@ -117,6 +117,8 @@ describe("demographic questions", () => {
     [["Yes, I have a disability", "No, I do not have a disability", "I do not want to answer"], 2],
     [["Yes", "No"], 1],
     [["Male", "Female"], -1],
+    [["Asian", "White", "None of the above"], -1],
+    [["I am not a protected veteran", "I identify as a protected veteran"], 0],
   ])("%j declines with %i", (texts, index) => {
     expect(declineOption(options(...texts))).toBe(index);
   });

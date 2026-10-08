@@ -1,9 +1,11 @@
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { pickOption } from "./choices";
 import { classify, isSensitiveText } from "./classify";
 import { fieldText } from "./custom";
-import { fieldElements } from "./dom";
-import { declineOption } from "./demographics";
+import { fieldElements, labelText } from "./dom";
+import { declineOption, isDecline, isDemographic } from "./demographics";
 import { fillForm, takesSavedAnswer } from "./fill";
 import type { FieldElement } from "./fieldTypes";
 import { reply, type Person } from "./heldoutHost";
@@ -13,6 +15,7 @@ import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
 import airtableIbmStartups from "./fixtures/airtable-ibmstartups.html?raw";
 import greenhouseFigma from "./fixtures/ats-greenhouse-figma.html?raw";
 import leverPalantir from "./fixtures/ats-lever-palantir.html?raw";
+import leverShieldAi from "./fixtures/ats-lever-shieldai.html?raw";
 import leverZoox from "./fixtures/ats-lever-zoox.html?raw";
 import workableBlueground from "./fixtures/ats-workable-blueground.html?raw";
 import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
@@ -32,6 +35,7 @@ const FIXTURES = {
   greenhouseFigma,
   jotformMyHack,
   leverPalantir,
+  leverShieldAi,
   leverZoox,
   metaDataScience,
   metaDfx,
@@ -222,4 +226,38 @@ describe("Tally's application", () => {
     expect(valueOf("5ec403ec-b904-487f-b3e4-c1004021762b")).toBe("");
     expect(valueOf("8a04327a-cff6-4e83-8b68-ad54b2a3d259")).toBe("+1 (510) 555-0134");
   });
+});
+
+describe("Lever's race radios inside the question's own label", () => {
+  it("are declined, never answered", async () => {
+    await fillAsAlex("leverShieldAi");
+    expect(checkedIn("eeo[race]")).toBe("Decline to self-identify");
+  });
+});
+
+describe("every fixture's demographic questions", () => {
+  // Vitest runs from web/.
+  const dir = join(process.cwd(), "src/fixtures");
+  const pages = readdirSync(dir).filter((file) => file.endsWith(".html"));
+  // Searchable dropdowns without a list wait for one before giving up.
+  const SLOW_MS = 30_000;
+
+  function demographicAnswers(): string[] {
+    const lists = [...document.querySelectorAll("select")].filter((select) => isDemographic(fieldText(select)));
+    const chosen = lists.flatMap((select) => (select.selectedIndex > 0 ? [select.selectedOptions[0]?.text ?? ""] : []));
+    const radios = [...document.querySelectorAll<HTMLInputElement>("input[type=radio]:checked")];
+    const groups = new Set(radios.map((radio) => radio.closest("[role=radiogroup], fieldset, ul") ?? radio));
+    const asked = radios.filter((radio) => isDemographic(groupText(radio, groups)));
+    return [...chosen, ...asked.map((radio) => labelText(radio))];
+  }
+
+  const groupText = (radio: HTMLInputElement, groups: ReadonlySet<Element>): string =>
+    [...groups].find((group) => group.contains(radio))?.parentElement?.textContent.slice(0, 200) ?? "";
+
+  it.each(pages)("%s gets only declines or No", async (page) => {
+    document.body.innerHTML = readFileSync(join(dir, page), "utf8");
+    const send = (request: ExtensionRequest): Promise<unknown> => Promise.resolve(reply(alex as Person, request));
+    await fillForm(document, { host: () => "example.com", send });
+    expect(demographicAnswers().filter((text) => !isDecline(text))).toEqual([]);
+  }, SLOW_MS);
 });
