@@ -76,9 +76,10 @@ export const LINK = new RegExp(
   "iu",
 );
 
-// A question about how to say the name ("Name pronunciation") wants the sound, not the name.
+// A question about how to say the name ("Name pronunciation") wants the sound, not the name,
+// and a startup, company, team or project name isn't the person's.
 const nameIgnored =
-  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|how (?:do )?(?:you|we|to) say|用户名|会社/iu;
+  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|how (?:do )?(?:you|we|to) say|start.?up|compan(?:y|ies)|organi[sz]ation|\bteam\b|project|venture|用户名|会社/iu;
 const addressNameIgnored =
   /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 

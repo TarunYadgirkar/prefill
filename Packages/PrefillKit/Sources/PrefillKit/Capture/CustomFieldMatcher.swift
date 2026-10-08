@@ -25,11 +25,14 @@ public enum CustomFieldMatcher {
         offered(candidates(for: fieldText, in: fields))
     }
 
-    // Every field whose phrase matches with the most words, before scopes sort them.
+    // Every field whose phrase matches with the most words, before scopes sort them. Words the
+    // question gives only as examples ("active funding (e.g., grants, sponsorships)") aren't
+    // what it asks for.
     static func candidates(for fieldText: String, in fields: [CustomField]) -> [CustomField] {
-        let page = words(fieldText)
+        let page = words(fieldText.replacing(examples, with: " "))
         guard !page.isEmpty else { return [] }
-        let scored = fields.compactMap { field in score(field, page: page).map { (field, $0) } }
+        let asked = fields.filter { asks(fieldText, for: $0) }
+        let scored = asked.compactMap { field in score(field, page: page).map { (field, $0) } }
         guard let best = scored.map(\.1).max() else { return [] }
         return scored.filter { $0.1 == best }.map(\.0)
     }
@@ -38,6 +41,29 @@ public enum CustomFieldMatcher {
     static func offered(_ fields: [CustomField]) -> [CustomField] {
         var seen = Set<String>()
         return Array(fields.filter { seen.insert($0.value).inserted }.prefix(maxOffered))
+    }
+
+    // "(e.g., grants, sponsorships)", "(for example LinkedIn)", "(such as ...)".
+    nonisolated(unsafe) private static let examples =
+        /(?i)\(\s*(?:e\.?\s?g\b\.?|for example|for instance|such as|examples?\b)[^)]*\)/
+    // A question that asks which school, or names one it was attended at.
+    nonisolated(unsafe) private static let asksForSchool: [Regex<Substring>] = [
+        /(?i)\b(?:which|what|name of(?: your| the)?)\s+(?:school|university|college)/,
+        /(?i)\b(?:school|university|college)\s+(?:name|attended)\b/,
+        /(?i)\b(?:attend|attending|enrolled|study at|studying at)\b/
+    ]
+    static let schoolLead = 4
+
+    // Whether a question asks for the field at all. A long question may only mention a
+    // university ("How will you promote hackathons at your university?"), so the school fills
+    // one that names it in its first few words or asks for it; sponsorship and authorization
+    // answers go only to their own questions (`WorkQuestion`).
+    static func asks(_ fieldText: String, for field: CustomField) -> Bool {
+        guard let question = JobQuestion(label: AnswerScope.split(field.label).base) else { return true }
+        guard question == .school else { return WorkQuestion.fits(question, fieldText) }
+        let lead = fieldText.lowercased().split { !$0.isLetter }.prefix(schoolLead).map { singular(String($0)) }
+        let schoolWords: Set<String> = ["school", "university", "college"]
+        return lead.contains { schoolWords.contains($0) } || asksForSchool.contains { fieldText.contains($0) }
     }
 
     // A scope in the label ("Work authorization (Canada)") doesn't have to be in the question:

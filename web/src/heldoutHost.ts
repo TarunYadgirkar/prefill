@@ -1,4 +1,5 @@
 import type { ExtensionRequest, LinkType } from "./messages";
+import { fitsWorkQuestion } from "./workQuestion";
 
 // A stand-in for the app that answers the page's three questions with one person's saved
 // values, the way the message routers do: every email, phone and address in the card's
@@ -52,9 +53,22 @@ function score(answer: CustomAnswer, page: ReadonlySet<string>): number {
   return Math.max(0, ...fits.map((phrase) => phrase.size));
 }
 
+// CustomFieldMatcher.examples, .asksForSchool and .asks.
+const EXAMPLES = /\(\s*(?:e\.?\s?g\b\.?|for example|for instance|such as|examples?\b)[^)]*\)/giu;
+const ASKS_FOR_SCHOOL =
+  /\b(?:which|what|name of(?: your| the)?)\s+(?:school|university|college)|\b(?:school|university|college)\s+(?:name|attended)\b|\b(?:attend|attending|enrolled|study at|studying at)\b/iu;
+const SCHOOL_LEAD = 4;
+const SCHOOL_WORDS: ReadonlySet<string> = new Set(["school", "university", "college"]);
+
+function asks(text: string, answer: CustomAnswer): boolean {
+  if (answer.label !== "School") return true;
+  const lead = text.toLowerCase().split(/[^\p{L}]+/u).filter(Boolean).slice(0, SCHOOL_LEAD).map(singular);
+  return lead.some((word) => SCHOOL_WORDS.has(word)) || ASKS_FOR_SCHOOL.test(text);
+}
+
 export function customValues(person: Person, text: string): CustomAnswer[] {
-  const page = words(text);
-  const scored = person.custom.map((answer) => ({ answer, score: score(answer, page) }));
+  const page = words(text.replace(EXAMPLES, " "));
+  const scored = person.custom.filter((answer) => asks(text, answer) && fitsWorkQuestion(answer.label, text)).map((answer) => ({ answer, score: score(answer, page) }));
   const best = Math.max(0, ...scored.map((entry) => entry.score));
   if (best === 0) return [];
   const seen = new Set<string>();

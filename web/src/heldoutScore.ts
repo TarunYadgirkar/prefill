@@ -2,12 +2,14 @@ import { isPlaceholder, normalize } from "./choices";
 import { classify } from "./classify";
 import { isCombobox } from "./combobox";
 import { fieldText } from "./custom";
-import { declineOption } from "./demographics";
+import { isDecline, isDemographic } from "./demographics";
 import { fieldElements, labelText } from "./dom";
-import { fillForm } from "./fill";
+import { fillForm, questionOf } from "./fill";
 import type { FieldElement } from "./fieldTypes";
 import { fakeComboboxes } from "./heldoutCombobox";
 import { reply, type Person } from "./heldoutHost";
+import type { ExtensionRequest } from "./messages";
+import { fitsWorkQuestion } from "./workQuestion";
 
 // Scores one-tap fill on a held-out form: fills the saved page with a stand-in app that
 // answers with the test person's values, then compares each field with what a careful
@@ -45,6 +47,10 @@ export interface FieldResult {
   got: string;
   outcome: Outcome;
   sensitive: boolean;
+  // A self-identification question: the only answers it may get decline or say "No".
+  demographic: boolean;
+  // A sponsorship question filled from the work authorization answer, or the other way round.
+  crossedWork: boolean;
 }
 
 type Target = { control: FieldElement } | { group: HTMLInputElement[] };
@@ -92,10 +98,12 @@ function buttonState(input: HTMLInputElement): string {
   return label === "" ? input.value : label;
 }
 
-function stateOf(element: FieldElement, picked: ReadonlyMap<HTMLInputElement, string>): string {
+// A searchable dropdown the scorer stands in for holds what was chosen from its list; any
+// other box, a phone box that calls itself a combobox among them, holds what was typed.
+function stateOf(element: FieldElement, picked: ReadonlyMap<HTMLInputElement, string>, faked: ReadonlySet<FieldElement>): string {
   const input = element as HTMLInputElement;
   if (isButton(input)) return buttonState(input);
-  if (isCombobox(element)) return picked.get(input) ?? "";
+  if (isCombobox(element) && faked.has(element)) return picked.get(input) ?? "";
   if (element.localName !== "select") return element.value;
   return selectState(element as HTMLSelectElement);
 }
@@ -125,7 +133,7 @@ function judge(expectation: Expectation, got: string): Outcome {
 
 function judgeAnswer(expectation: Expectation, got: string): Outcome {
   const { want } = expectation;
-  if (want === "decline") return declineOption([{ text: got, value: got }]) === 0 ? "right" : "wrong";
+  if (want === "decline") return isDecline(got) ? "right" : "wrong";
   return (expectation.accept ?? []).some((accepted) => same(accepted, got)) ? "right" : "wrong";
 }
 
@@ -147,6 +155,13 @@ function resolve(fields: readonly FieldElement[], expectations: readonly Expecta
   });
 }
 
+// A list or a button that asks a self-identification question.
+const asksDemographic = (element: FieldElement): boolean =>
+  (element.localName === "select" || isButton(element as HTMLInputElement) || isCombobox(element)) && isDemographic(fieldText(element));
+
+// A demographic question that got a real answer: the score fails on it like a sensitive field.
+export const answersDemographic = (result: FieldResult): boolean => result.demographic && result.got !== "" && !isDecline(result.got);
+
 const isSensitive = (element: FieldElement): boolean =>
   classify(element).kind === "sensitive" || (element as HTMLInputElement).type === "password";
 
@@ -161,27 +176,58 @@ function unlisted(fields: readonly FieldElement[], listed: ReadonlySet<FieldElem
       got: read(element),
       outcome: "wrong" as const,
       sensitive: isSensitive(element),
+      demographic: asksDemographic(element),
+      crossedWork: false,
     }));
 }
+
+// The stand-in app's reply, noting the label of the saved answer it offered first for each question.
+function answer(person: Person, request: ExtensionRequest, offered: Map<string, string>): unknown {
+  const result = reply(person, request);
+  if (request.type !== "customSuggestions") return result;
+  const fields = (result as { fields: { values: { label?: string }[] }[] }).fields;
+  request.fields.forEach(({ text }, index) => {
+    const label = fields[index]?.values[0]?.label;
+    if (label !== undefined) offered.set(text, label);
+  });
+  return result;
+}
+
+// The words Fill form asks the app about for a field: a box's own, or a button group's question.
+const questionsOf = (elements: readonly FieldElement[]): string[] => {
+  const buttons = elements.filter((element): element is HTMLInputElement => isButton(element as HTMLInputElement));
+  return [...elements.map(fieldText), ...(buttons.length > 0 ? [questionOf(buttons)] : [])];
+};
+
+// A sponsorship question that got the work authorization answer, or the other way round:
+// the two are usually opposite, so the score fails on it.
+export const crossesWork = (result: FieldResult): boolean => result.crossedWork;
 
 export async function scoreForm(html: string, form: FormExpectations, person: Person): Promise<FieldResult[]> {
   document.body.innerHTML = html;
   const fields = fieldElements(document, Infinity).filter((element) => (element as HTMLInputElement).type !== "hidden");
   const targets = resolve(fields, form.fields);
-  const combos = fakeComboboxes(document, comboOptions(targets, form.fields));
-  const read = (element: FieldElement): string => stateOf(element, combos.picked);
+  const options = comboOptions(targets, form.fields);
+  const combos = fakeComboboxes(document, options);
+  const faked = new Set<FieldElement>(options.keys());
+  const read = (element: FieldElement): string => stateOf(element, combos.picked, faked);
   const before = new Map(fields.map((element) => [element, read(element)]));
-  await fillForm(document, { host: () => new URL(form.source).hostname, send: (request) => Promise.resolve(reply(person, request)) });
+  const offered = new Map<string, string>();
+  const send = (request: ExtensionRequest): Promise<unknown> => Promise.resolve(answer(person, request, offered));
+  await fillForm(document, { host: () => new URL(form.source).hostname, send });
   combos.stop();
   const results = form.fields.map((expectation, index): FieldResult => {
     const elements = elementsOf(targets[index] as Target);
-    const got = elements.map(read).filter((text) => text !== "").join(", ").trim();
+    // What the page chose before the fill (a list with no placeholder) isn't Prefill's answer.
+    const got = elements.map((element) => (read(element) === before.get(element) ? "" : read(element))).filter((text) => text !== "").join(", ").trim();
     return {
       field: describe(expectation.field),
       want: expectation.want,
       got,
       outcome: judge(expectation, got),
       sensitive: expectation.sensitive === true || elements.some(isSensitive),
+      demographic: expectation.want === "decline" || elements.some(asksDemographic),
+      crossedWork: got !== "" && questionsOf(elements).some((text) => !fitsWorkQuestion(offered.get(text) ?? "", text)),
     };
   });
   return [...results, ...unlisted(fields, new Set(targets.flatMap(elementsOf)), before, read)];

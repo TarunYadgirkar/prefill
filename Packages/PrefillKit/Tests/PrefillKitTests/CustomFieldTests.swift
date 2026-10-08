@@ -30,6 +30,39 @@ struct CustomFieldTests {
         #expect(CustomFieldMatcher.values(for: text, in: fields) == expected)
     }
 
+    // Questions from web/src/fixtures: tally-hackhub.html and ats-lever-zoox.html.
+    @Test func aQuestionThatOnlyMentionsAWordDoesntGetTheAnswer() {
+        let sponsorship = field("Sponsorship", "No", also: "sponsor, visa")
+        let all = fields + [sponsorship]
+        let promote = "How do you plan to promote hackathons at your university?"
+        #expect(CustomFieldMatcher.values(for: promote, in: all) == [])
+        #expect(CustomFieldMatcher.values(for: "University Name Enter your university", in: all) == ["UC Berkeley"])
+        #expect(CustomFieldMatcher.values(for: "Name of the college you attend", in: all) == ["UC Berkeley"])
+        #expect(CustomFieldMatcher.values(
+            for: "Do you currently receive any active funding (e.g., grants, sponsorships)?", in: all
+        ) == [])
+        #expect(CustomFieldMatcher.values(
+            for: "Will you now or in the future require sponsorship for employment visa status (e.g., H-1B)?", in: all
+        ) == ["No"])
+    }
+
+    // Questions from web/src/fixtures/ats-lever-veeva.html and the Lever and Greenhouse fixtures.
+    @Test func sponsorshipAndAuthorizationAnswersStayWithTheirOwnQuestions() {
+        let authorization = field(
+            "Work authorization", "Yes", also: "authorized to work, legally authorized, eligible to work"
+        )
+        let sponsorship = field("Sponsorship", "No", also: "sponsor, visa")
+        let both = [authorization, sponsorship]
+        #expect(CustomFieldMatcher.values(
+            for: "Will you now or in the future require sponsorship for work authorization?", in: both
+        ) == ["No"])
+        let authorized = "Are you legally authorized to work in the United States?"
+        #expect(CustomFieldMatcher.values(for: authorized, in: both) == ["Yes"])
+        #expect(CustomFieldMatcher.values(
+            for: "Are you authorized to work in the US without the need for visa sponsorship?", in: both
+        ) == [])
+    }
+
     @Test func offersEveryFieldThatTiesInTheCardsOrder() {
         let college = field("College", "Diablo Valley College")
         #expect(CustomFieldMatcher.values(for: "College or university", in: [school, college]) == [

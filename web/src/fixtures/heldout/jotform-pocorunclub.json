@@ -1,0 +1,176 @@
+{
+  "source": "https://form.jotform.com/253337362933258",
+  "fields": [
+    {
+      "field": {
+        "id": "input_2"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ],
+      "note": "Name, one box"
+    },
+    {
+      "field": {
+        "id": "lite_mode_3"
+      },
+      "want": "needYou",
+      "note": "Date of birth, none saved"
+    },
+    {
+      "field": {
+        "id": "input_4"
+      },
+      "want": "fill",
+      "accept": [
+        "Berkeley",
+        "Berkeley, CA",
+        "Berkeley, California"
+      ],
+      "note": "City of residence"
+    },
+    {
+      "field": {
+        "id": "input_5"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu"
+      ]
+    },
+    {
+      "field": {
+        "id": "input_6_full"
+      },
+      "want": "fill",
+      "accept": [
+        "(510) 555-0134",
+        "510-555-0134",
+        "5105550134"
+      ],
+      "note": "masked (000) 000-0000"
+    },
+    {
+      "field": {
+        "id": "input_7"
+      },
+      "want": "needYou",
+      "note": "Emergency contact name; someone else's"
+    },
+    {
+      "field": {
+        "id": "input_8"
+      },
+      "want": "needYou",
+      "note": "Emergency phone; must not be Alex's own number"
+    },
+    {
+      "field": {
+        "name": "q41_whichProgram[]"
+      },
+      "want": "needYou",
+      "note": "Program interest checkboxes"
+    },
+    {
+      "field": {
+        "id": "input_53"
+      },
+      "want": "needYou",
+      "note": "How did you hear"
+    },
+    {
+      "field": {
+        "name": "q42_doYou42[]"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Health screening conditions"
+    },
+    {
+      "field": {
+        "id": "other_42"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Health screening 'Other' checkbox"
+    },
+    {
+      "field": {
+        "name": "q36_haveYou"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Injured within a year"
+    },
+    {
+      "field": {
+        "id": "input_11"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Injury explanation"
+    },
+    {
+      "field": {
+        "name": "q39_areYou"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Receiving treatment for an injury"
+    },
+    {
+      "field": {
+        "id": "input_13"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Treatment explanation"
+    },
+    {
+      "field": {
+        "name": "q40_doYou"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Other medical condition"
+    },
+    {
+      "field": {
+        "id": "input_15"
+      },
+      "want": "needYou",
+      "sensitive": true,
+      "note": "Medical condition explanation"
+    },
+    {
+      "field": {
+        "name": "q44_iamAware"
+      },
+      "want": "leave",
+      "note": "Acknowledgement to consult a physician"
+    },
+    {
+      "field": {
+        "id": "input_20"
+      },
+      "want": "leave",
+      "note": "Name of Participant, part of the waiver signature block"
+    },
+    {
+      "field": {
+        "id": "lite_mode_50"
+      },
+      "want": "leave",
+      "note": "Waiver signing date"
+    },
+    {
+      "field": {
+        "name": "website"
+      },
+      "want": "leave",
+      "note": "spam trap"
+    }
+  ]
+}

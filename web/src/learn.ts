@@ -16,6 +16,7 @@ import {
   type AnswersResult,
   type JobQuestion,
 } from "./messages";
+import { workQuestion } from "./workQuestion";
 
 // Learn as the person applies: when they submit a job application, their answers to the
 // questions every application asks (school, major, sponsorship and the like) go to the app,
@@ -39,8 +40,8 @@ type Touched = WeakMap<Element, Snapshot>;
 
 type Answer = AnswersRequest["answers"][number];
 
-// The first pattern that matches wins, so "authorized to work without sponsorship" is the
-// authorization question.
+// The first pattern that matches wins. Sponsorship and authorization are told apart first
+// (`workQuestion`).
 const QUESTIONS: readonly (readonly [JobQuestion, RegExp])[] = [
   ["authorization", /authori[sz]ed to work|work authori[sz]ation|legally (?:authori[sz]ed|eligible|permitted|able to work)|eligible to work/iu],
   ["sponsorship", /sponsor/iu],
@@ -83,7 +84,10 @@ export function askText(saved: number, ask: readonly string[]): string {
 
 export function jobQuestion(text: string): JobQuestion | undefined {
   if (isDemographic(text) || NOT_ASKED.test(text)) return undefined;
-  return QUESTIONS.find(([, pattern]) => pattern.test(text))?.[0];
+  const work = workQuestion(text);
+  // One answer can't say both, so a question that asks both isn't learned.
+  if (work === "both") return undefined;
+  return work ?? QUESTIONS.find(([, pattern]) => pattern.test(text))?.[0];
 }
 
 function shownValue(element: FieldElement): string {

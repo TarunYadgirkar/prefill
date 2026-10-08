@@ -13,13 +13,25 @@ const DECLINE =
 // "No", "I am not a protected veteran", "No, I do not have a disability".
 const NO = /^(?:no\b|none\b|i am not\b|im not\b|i do not have\b|i dont have\b|not a\b)/iu;
 
+// "Yes", "I am a protected veteran", "I identify as...": the other half of a yes/no question.
+const YES = /^(?:yes\b|i am\b|im\b|i have\b|i identify\b)/iu;
+
 export function isDemographic(question: string): boolean {
   return DEMOGRAPHIC.test(question);
 }
 
-// The option to pick for a demographic question, or -1 to leave it.
+// Whether an answer to a demographic question says nothing about the person: it declines,
+// or it's the "No" of a yes/no question.
+export function isDecline(text: string): boolean {
+  const said = normalize(text);
+  return DECLINE.test(said) || NO.test(said);
+}
+
+// The option to pick for a demographic question, or -1 to leave it. "No" only answers a
+// yes/no question: a race or gender list without a way to decline is left.
 export function declineOption(options: readonly Option[]): number {
   const texts = options.map((option) => normalize(option.text || option.value));
   const decline = texts.findIndex((text) => DECLINE.test(text));
-  return decline >= 0 ? decline : texts.findIndex((text) => NO.test(text));
+  if (decline >= 0 || !texts.some((text) => YES.test(text))) return decline;
+  return texts.findIndex((text) => NO.test(text));
 }
