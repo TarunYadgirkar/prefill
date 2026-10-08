@@ -1,9 +1,9 @@
 import { isInView } from "./dom";
 import type { FieldElement } from "./fieldTypes";
-import { findSlots, slotField } from "./fill";
+import { findSlots, missedFields, slotField } from "./fill";
 
 // What a fill leaves for the person: the fields of the form Prefill knows how to fill that
-// are still empty, because it had no answer for them.
+// are still empty, because it had no answer for them, and the fields whose value didn't take.
 
 const byPageOrder = (a: Node, b: Node): number => {
   if (a === b) return 0;
@@ -11,9 +11,8 @@ const byPageOrder = (a: Node, b: Node): number => {
 };
 
 export function fieldsLeft(scope: ParentNode): FieldElement[] {
-  return findSlots(scope)
-    .flatMap((slot) => slotField(slot) ?? [])
-    .sort(byPageOrder);
+  const empty = findSlots(scope).flatMap((slot) => slotField(slot) ?? []);
+  return [...new Set([...empty, ...missedFields(scope)])].sort(byPageOrder);
 }
 
 // Whether the person can see the field: drawn, not hidden by style or clipping, in the

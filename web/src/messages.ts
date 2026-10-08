@@ -37,7 +37,7 @@ export const JOB_QUESTIONS = [
   "sponsorship",
   "heard",
 ] as const;
-export const ANSWER_ACTIONS = ["learn", "undo"] as const;
+export const ANSWER_ACTIONS = ["learn", "undo", "update", "keepHere"] as const;
 // What a pick from Prefill's list under a field is of. Mirrored by PickKind in Swift.
 export const PICK_KINDS = ["email", "phone", "address", "link", "custom"] as const;
 // Why a value is in Prefill's list: picked or used on this site before, on the card, learned
@@ -284,6 +284,8 @@ const pageRequests = {
         // The question as the page words it, which can say what the answer applies to.
         text: optional(text(LIMITS.fieldText)),
         options: optional(arrayOf(text(LIMITS.text), LIMITS.answerOptions)),
+        // The person changed an answer Prefill filled before submitting.
+        changedFill: optional(boolean),
       }),
       LIMITS.answers,
     ),
@@ -386,6 +388,8 @@ const pageResponses = {
     saved: count,
     // The labels of the learned answers a later one replaced.
     updated: arrayOf(text(LIMITS.text), LIMITS.answers),
+    // Answers the person changed after Prefill filled them, held back to ask about.
+    ask: optional(arrayOf(text(LIMITS.text), LIMITS.answers)),
   }),
   pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),

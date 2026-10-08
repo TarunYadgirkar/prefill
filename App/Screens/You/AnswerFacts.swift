@@ -82,6 +82,7 @@ private extension AnswerChange.What {
         switch self {
         case .saved: "Saved from \(site)"
         case .replaced(let previous): "Changed on \(site) from “\(previous)”"
+        case .keptHere(let value): "Kept “\(value)” on \(site) only"
         }
     }
 }

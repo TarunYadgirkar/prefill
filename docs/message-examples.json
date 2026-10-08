@@ -62,7 +62,8 @@
           "question": "sponsorship",
           "value": "No",
           "text": "Do you or will you require sponsorship in the future to work in the U.S.?",
-          "options": ["Yes", "No"]
+          "options": ["Yes", "No"],
+          "changedFill": true
         }
       ]
     },
@@ -135,7 +136,7 @@
         }
       ]
     },
-    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"] },
+    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"], "ask": ["Sponsorship"] },
     "pickedResult": { "type": "pickedResult", "remembered": true },
     "error": { "type": "error", "reason": "unknown message" }
   }

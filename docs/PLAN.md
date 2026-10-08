@@ -121,7 +121,7 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
   - [x] 13.2 Scoped learning: keep the question and what it applies to
   - [x] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
   - [x] 13.4 The model sees the question, the options and the candidate answers
-  - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
+  - [x] 13.5 Fill, verify, and ask before changing an answer everywhere
   - [ ] 13.6 Held-out real forms and an accuracy score
   - [ ] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
 - **Phase 14: Storage off Contacts** (Gate: the paid Apple Developer account; Tarun is getting it)
@@ -641,6 +641,7 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 ### 13.5 Fill, verify, ask
 - After filling, read each field back and count only values that took; the pill reports the rest as "need you".
 - When the person changes a filled answer and submits, the pill asks "Update everywhere" or "Just here" instead of replacing silently.
+- Built: `fillForm` waits one turn after filling and reads every field back (`Filled.took`); only fields that kept the value count, the rest are undone, noted ("This one didn't take, check it") and returned by `fieldsLeft`. Fill form remembers the shown answer it put in a custom field (`filledAnswer`); `learn.ts` marks an answer `changedFill` when the person submitted something else. The app holds back a replacement for such an answer and replies `ask`; the pill offers "Update everywhere" (`action: update`, the existing replace path with its guards and Undo) and "Just here" (`action: keepHere`, an `AnswerOverride` event per site; no card write). A kept value is offered on that site only as a suggestion ("Used here"), never filled, because the page supplied it, and the same change there isn't asked about again. History on the answer's page shows it.
 
 ### 13.6 Accuracy you can measure
 - `web/src/fixtures/heldout/`: real forms never used to tune rules, each with the expected answer per field. A script scores right / wrong / missing separately and the number goes in AGENTS.md. Add forms Tarun meets (Meta, Partiful's web form, Google booking forms, Dorm Room Fund).

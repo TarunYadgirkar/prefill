@@ -132,7 +132,7 @@ struct MessageContractTests {
                 )
             ])
         ]))),
-        ("answersResult", .answers(AnswersResponse(saved: 2, updated: ["Work authorization"]))),
+        ("answersResult", .answers(AnswersResponse(saved: 2, updated: ["Work authorization"], ask: ["Sponsorship"]))),
         ("pickedResult", .picked(PickedResponse(remembered: true))),
         ("error", .error(reason: "unknown message"))
     ])

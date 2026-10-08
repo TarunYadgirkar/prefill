@@ -5,7 +5,7 @@ import { fieldText, joinFieldText } from "./custom";
 import { isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, isFieldElement, isRendered, placeFixed } from "./dom";
 import type { FieldElement } from "./fieldTypes";
-import { questionOf } from "./fill";
+import { filledAnswer, questionOf } from "./fill";
 import { labelText } from "./dom";
 import { PILL_STYLE, setStyles } from "./fillChip";
 import {
@@ -72,6 +72,15 @@ export function savedText({ saved, updated }: Pick<AnswersResult, "saved" | "upd
   return updated.length === 0 ? added : `${added} and updated ${String(updated.length)}`;
 }
 
+// What the pill asks after a submit that changed answers Prefill filled: "Saved 1 answer ·
+// Changed your answer to School", then "Update everywhere" or "Just here".
+export function askText(saved: number, ask: readonly string[]): string {
+  const [only] = ask;
+  const changed = ask.length === 1 && only !== undefined ? `your answer to ${only}` : `${String(ask.length)} answers`;
+  const prefix = saved === 0 ? "" : `Saved ${String(saved)} ${answersNoun(saved)} · `;
+  return `${prefix}You changed ${changed}`;
+}
+
 export function jobQuestion(text: string): JobQuestion | undefined {
   if (isDemographic(text) || NOT_ASKED.test(text)) return undefined;
   return QUESTIONS.find(([, pattern]) => pattern.test(text))?.[0];
@@ -133,13 +142,19 @@ function optionTexts(element: FieldElement, elements: readonly FieldElement[]): 
 
 const optionOf = (option: HTMLOptionElement) => ({ text: option.text, value: option.value });
 
+// Whether the person changed an answer Prefill filled in this field before submitting.
+function fillChange(element: FieldElement, value: string): { changedFill?: true } {
+  const filled = filledAnswer(element);
+  return filled !== undefined && filled !== value ? { changedFill: true } : {};
+}
+
 // What the person answered in a field and still left there, with the question and options.
 function answerIn(element: FieldElement, elements: readonly FieldElement[], touched: Touched): Answer | undefined {
   const kept = unchanged(element, elements, touched);
   const question = kept === undefined ? undefined : jobQuestion(kept.text);
   if (kept === undefined || question === undefined || !fits(kept.value)) return undefined;
   const options = optionTexts(element, elements);
-  return { question, value: kept.value, text: kept.text, ...(options.length === 0 ? {} : { options }) };
+  return { question, value: kept.value, text: kept.text, ...(options.length === 0 ? {} : { options }), ...fillChange(element, kept.value) };
 }
 
 // The answers in a form the person set themselves and that still read as they left them,
@@ -157,14 +172,19 @@ export function collectAnswers(scope: ParentNode, touched: Touched): Answer[] {
 }
 
 // "Saved 3 answers" with Undo, at the bottom of the page, in a closed shadow root like the
-// fill pill so the page can't press it.
+// fill pill so the page can't press it. Each button acts only on the person's own click.
 interface PillAction {
   label: string;
   run: () => void;
-  isUserEvent: (event: Event) => boolean;
 }
 
-function showPill(doc: Document, win: Window, text: string, action?: PillAction): void {
+function showPill(
+  doc: Document,
+  win: Window,
+  text: string,
+  actions: readonly PillAction[] = [],
+  isUserEvent: (event: Event) => boolean = (event) => event.isTrusted,
+): void {
   const host = doc.createElement("prefill-saved");
   const root = host.attachShadow({ mode: "closed" });
   const style = doc.createElement("style");
@@ -191,17 +211,18 @@ function showPill(doc: Document, win: Window, text: string, action?: PillAction)
   const timer = setTimeout(() => {
     host.remove();
   }, TOAST_MS);
-  if (action === undefined) return;
-  const button = doc.createElement("button");
-  button.className = "main";
-  button.textContent = action.label;
-  pill.append(button);
-  button.addEventListener("click", (event) => {
-    if (!action.isUserEvent(event)) return;
-    clearTimeout(timer);
-    host.remove();
-    action.run();
-  });
+  for (const action of actions) {
+    const button = doc.createElement("button");
+    button.className = "main";
+    button.textContent = action.label;
+    pill.append(button);
+    button.addEventListener("click", (event) => {
+      if (!isUserEvent(event)) return;
+      clearTimeout(timer);
+      host.remove();
+      action.run();
+    });
+  }
 }
 
 // Enter submits from a field, but starts a new line in a text area.
@@ -251,7 +272,7 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
   // The answers are already on the card, so a failed undo must say so rather than vanish.
   const undo = (): void => {
     const failed = (): void => {
-      showPill(doc, win, "Couldn’t undo. Remove the answers in Contacts.");
+      showPill(doc, win, "Couldn’t undo. Remove the answers in Contacts.", [], isUserEvent);
     };
     options
       .send({ type: "answers", host: options.host(), action: "undo", answers: [] })
@@ -262,20 +283,56 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
       .catch(failed);
   };
 
+  const send = (action: AnswersRequest["action"], answers: readonly Answer[]): Promise<AnswersResult | undefined> =>
+    options
+      .send({ type: "answers", host: options.host(), action, answers: [...answers] })
+      .then((raw) => {
+        const reply = parseExtensionResponse(raw);
+        return reply?.type === "answersResult" ? reply : undefined;
+      })
+      .catch(() => undefined);
+
+  const pill = (text: string, actions: readonly PillAction[] = []): void => {
+    showPill(doc, win, text, actions, isUserEvent);
+  };
+  const undoAction: PillAction = { label: "Undo", run: undo };
+
+  // "Update everywhere" replaces the saved answers through the app's usual guards, with Undo;
+  // "Just here" keeps the saved ones and notes what the person used on this site.
+  const ask = (first: AnswersResult, changed: readonly Answer[]): void => {
+    const earlier = first.saved > 0 ? [undoAction] : [];
+    const everywhere = (): void => {
+      void send("update", changed).then((reply) => {
+        if (reply === undefined || reply.updated.length === 0) pill("Couldn’t update it. Edit the answer in Prefill.", earlier);
+        else pill(savedText({ saved: first.saved, updated: reply.updated }), [undoAction]);
+      });
+    };
+    const justHere = (): void => {
+      void send("keepHere", changed).then((reply) => {
+        pill(reply === undefined || reply.saved === 0 ? "Couldn’t keep it for this site." : "Kept for this site only", earlier);
+      });
+    };
+    pill(askText(first.saved, first.ask ?? []), [
+      { label: "Update everywhere", run: everywhere },
+      { label: "Just here", run: justHere },
+    ]);
+  };
+
+  const onLearned = (reply: AnswersResult | undefined, answers: readonly Answer[]): void => {
+    if (reply === undefined) return;
+    if ((reply.ask ?? []).length > 0) ask(reply, answers.filter((answer) => answer.changedFill === true));
+    else if (reply.saved + reply.updated.length > 0) pill(savedText(reply), [undoAction]);
+  };
+
   const onSubmit = (event: Event): void => {
     const isPressed = pressed !== undefined && pressed.form === event.target && now() - pressed.at < SUBMIT_MS;
     pressed = undefined;
     if (!isUserEvent(event) || !isPressed || !(event.target instanceof HTMLFormElement)) return;
     const answers = collectAnswers(event.target, touched);
     if (answers.length === 0) return;
-    void options
-      .send({ type: "answers", host: options.host(), action: "learn", answers })
-      .then((raw) => {
-        const reply = parseExtensionResponse(raw);
-        if (reply?.type !== "answersResult" || reply.saved + reply.updated.length === 0) return;
-        showPill(doc, win, savedText(reply), { label: "Undo", run: undo, isUserEvent });
-      })
-      .catch(() => undefined);
+    void send("learn", answers).then((reply) => {
+      onLearned(reply, answers);
+    });
   };
 
   for (const type of TOUCH_EVENTS) doc.addEventListener(type, handle, true);

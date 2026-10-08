@@ -67,7 +67,8 @@ export function customChoices(
     ...(index === 0 ? {} : { onPick: () => { onPick(offered.value); } }),
   }));
   // The label says which scope the answer is for: "Work authorization (US)".
-  const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, offered.label ?? CUSTOM_DETAIL, onPick));
+  // "Used here" for the answer the person kept on this site in place of the saved one.
+  const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, whyDetail(offered, offered.label ?? CUSTOM_DETAIL), onPick));
   const guesses = (field.guesses ?? []).map((value) => offeredOnly(value, GUESS_DETAIL, onPick));
   const drafts = (field.drafts ?? []).map((offered): Choice => ({ value: offered.value, detail: draftDetail(offered.label), tone: "draft" }));
   const note: Choice[] = field.noAnswerFor === undefined ? [] : [{ value: noAnswerFor(field.noAnswerFor), detail: "", tone: "note" }];

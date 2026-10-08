@@ -108,10 +108,11 @@ const answers: AnswersRequest = {
       value: "No",
       text: "Do you or will you require sponsorship in the future to work in the U.S.?",
       options: ["Yes", "No"],
+      changedFill: true,
     },
   ],
 };
-const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"] };
+const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"], ask: ["Sponsorship"] };
 const picked: PickedRequest = {
   type: "picked",
   host: "boards.example.io",

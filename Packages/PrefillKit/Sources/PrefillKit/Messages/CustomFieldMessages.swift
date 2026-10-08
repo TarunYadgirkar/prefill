@@ -99,6 +99,8 @@ private struct CustomContext {
     // Of every answer on the card, which the app's cached verdicts were made against.
     let revision: String
     let recorded: ExtensionEvents
+    // What the person kept on this site for an answer's label ("Just here").
+    let kept: [String: String]
     let state: AppState
     let variant: String
 }
@@ -114,7 +116,8 @@ extension MessageRouter {
         }
         let context = CustomContext(
             custom: card.customFields.filter { !$0.isDraft && Self.fits($0.value, max: MessageLimits.customValue) },
-            revision: AnswerRevision.of(card.customFields), recorded: events(), state: state,
+            revision: AnswerRevision.of(card.customFields), recorded: events(), kept: keptHere(host: request.host),
+            state: state,
             variant: Intelligence.modelVariant
         )
         let answered = request.fields.map { answer($0.text, context) }
@@ -155,8 +158,9 @@ extension MessageRouter {
             fill = Array(([picked] + fill.filter { $0 != picked }).prefix(MessageLimits.customOptions))
             suggest.removeAll { $0 == picked }
         }
+        let suggested = Self.kept(scoped.fill, context.kept) + source(suggest, scoped.suggest)
         let field = CustomSuggestionsResponse.Field(
-            values: source(fill, scoped.fill), suggested: source(suggest, scoped.suggest),
+            values: source(fill, scoped.fill), suggested: Array(suggested.prefix(MessageLimits.customOptions)),
             noAnswerFor: fill.isEmpty ? scoped.missing?.name : nil
         )
         guard fill.isEmpty, scoped.isEmpty, !CustomFieldMatcher.words(text).isEmpty else { return (field, nil) }
@@ -170,6 +174,21 @@ extension MessageRouter {
         }
         let known = state.insight(InsightKey.answer(text, variant: variant, revision: revision)) != nil
         return (.init(values: []), known ? nil : text)
+    }
+
+    // An answer the person kept on this site in place of the saved one, offered first among the
+    // suggestions there and never filled: the site's page sent it.
+    private static func kept(_ fields: [CustomField], _ kept: [String: String]) -> [SuggestedValue] {
+        let values = fields.compactMap { field in
+            kept[field.id].flatMap { value in
+                fits(value, max: MessageLimits.customValue) && value != field.value
+                    ? SuggestedValue(
+                        value: value, why: .used, label: MessageText.oneLine(field.label, max: MessageLimits.text)
+                    )
+                    : nil
+            }
+        }
+        return Array(values.prefix(1))
     }
 
     // A value Prefill learned from a form and that still reads as learned says where from;

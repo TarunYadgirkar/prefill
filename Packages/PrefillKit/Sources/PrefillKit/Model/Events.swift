@@ -110,3 +110,19 @@ public struct AnswerPick: Codable, Sendable, Hashable {
         self.host = host
     }
 }
+
+// "Just here": on `host` (a registrable domain) the person submitted `value` for the answer
+// under `label` and chose to keep the saved answer everywhere else.
+public struct AnswerOverride: Codable, Sendable, Hashable {
+    public let host: String
+    public let label: String
+    public let value: String
+    public let date: Date
+
+    public init(host: String, label: String, value: String, date: Date) {
+        self.host = host
+        self.label = label
+        self.value = value
+        self.date = date
+    }
+}
