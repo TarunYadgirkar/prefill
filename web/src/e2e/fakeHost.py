@@ -47,7 +47,14 @@ CUSTOM = [("school", "University of California, Berkeley"), ("authorized", "Yes"
 GUESS = ("work here", "Building tools people use every day")
 
 
+# The work answer is for the US, so a question about Canada gets none, as the app's scope
+# rules decide.
+OTHER_SCOPE = ("canada", "Canada")
+
+
 def custom_field(text):
+    if OTHER_SCOPE[0] in text:
+        return {"values": [], "guesses": [], "noAnswerFor": OTHER_SCOPE[1]}
     values = [card(value) for word, value in CUSTOM if word in text][:1]
     return {"values": values, "guesses": [GUESS[1]] if GUESS[0] in text else []}
 

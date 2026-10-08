@@ -102,7 +102,12 @@ const answers: AnswersRequest = {
   action: "learn",
   answers: [
     { question: "school", value: "UC Berkeley" },
-    { question: "sponsorship", value: "No" },
+    {
+      question: "sponsorship",
+      value: "No",
+      text: "Do you or will you require sponsorship in the future to work in the U.S.?",
+      options: ["Yes", "No"],
+    },
   ],
 };
 const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"] };
@@ -122,6 +127,12 @@ const customSuggestionsResult: CustomSuggestionsResult = {
       guesses: [],
     },
     { values: [], guesses: ["EECS"] },
+    {
+      values: [],
+      guesses: [],
+      suggested: [{ value: "Yes", why: "card", label: "Work authorization" }],
+      noAnswerFor: "Canada",
+    },
   ],
 };
 
@@ -348,6 +359,15 @@ describe("message contract", () => {
       host: "example.net",
       fields: [{ text: "School\u200b" }],
     },
+    { type: "answers", host: "example.net", action: "learn", answers: [{ question: "gpa", value: "4", text: "q".repeat(201) }] },
+    { type: "answers", host: "example.net", action: "learn", answers: [{ question: "gpa", value: "4", text: "In\u202e Canada" }] },
+    {
+      type: "answers",
+      host: "example.net",
+      action: "learn",
+      answers: [{ question: "gpa", value: "4", options: Array<string>(11).fill("Yes") }],
+    },
+    { type: "answers", host: "example.net", action: "learn", answers: [{ question: "gpa", value: "4", options: ["o".repeat(101)] }] },
   ])("rejects the request %j", (message) => {
     expect(isExtensionRequest(message)).toBe(false);
   });

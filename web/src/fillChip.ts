@@ -16,6 +16,9 @@ export interface FillChipOptions {
   fill: (anchor: FieldElement) => Promise<FillResult>;
   // The fields of the anchor's form a fill left empty, in page order.
   left: (anchor: FieldElement) => readonly FieldElement[];
+  // Why a fill left this field for the person, when it wasn't for want of an answer
+  // ("2 options fit, pick one"); the pill says it once "need you" brings them there.
+  note?: (field: FieldElement) => string | undefined;
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
 }
@@ -142,12 +145,17 @@ export function installFillChip(doc: Document, win: Window, options: FillChipOpt
     place();
   };
 
+  const statusText = (filled: number): string => {
+    const note = anchor === undefined ? undefined : options.note?.(anchor);
+    return note ?? (filled === 0 ? "Nothing to fill" : `Filled ${String(filled)}`);
+  };
+
   // "Filled 9 · 4 need you" and Undo: the count jumps to the next field left empty.
   const doneParts = (filled: number): HTMLElement[] => {
     const status = doc.createElement("span");
     status.className = "status";
     status.setAttribute("role", "status");
-    status.textContent = filled === 0 ? "Nothing to fill" : `Filled ${String(filled)}`;
+    status.textContent = statusText(filled);
     const left = anchor === undefined ? 0 : options.left(anchor).length;
     const undo = filled === 0 ? [] : [button("main", "Undo", "undo")];
     if (left === 0) return [status, ...undo];

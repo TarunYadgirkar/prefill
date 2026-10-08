@@ -11,10 +11,22 @@ public struct AnswersRequest: Codable, Sendable, Hashable {
     public struct Answer: Codable, Sendable, Hashable {
         public let question: JobQuestion
         public let value: String
+        // The question as the page words it, which can say what the answer applies to
+        // ("...to work in Canada?"), and a select's or radio group's option texts.
+        public let text: String?
+        public let options: [String]?
 
-        public init(question: JobQuestion, value: String) {
+        public init(question: JobQuestion, value: String, text: String? = nil, options: [String]? = nil) {
             self.question = question
             self.value = value
+            self.text = text
+            self.options = options
+        }
+
+        // The custom field this answer becomes: under a scoped label when the question names
+        // what it applies to, "Work authorization (Canada)", else under the question's label.
+        var field: CustomField? {
+            question.field(answer: value, scope: AnswerScope.find(in: text ?? "", kinds: question.scopeKinds))
         }
     }
 
@@ -61,6 +73,10 @@ extension MessageRouter {
     static let maxAnswersPerWindow = JobQuestion.allCases.count
     // A page can ask any question, so it can replace a learned answer, but each one only once a day.
     static let answerWindow: TimeInterval = 86_400
+    // A page words its own questions, so it could name a new country on each one; a question
+    // keeps answers for at most this many scopes, which leaves room for the person's own fields.
+    static let maxScopesPerQuestion = 3
+    static let maxScopedAnswers = 6
 
     func answers(_ request: AnswersRequest) -> AnswersResponse {
         Self.eventLock.withLock { _ in
@@ -79,7 +95,8 @@ extension MessageRouter {
     }
 
     // A new question gets a field. One Prefill learned before, still reading as learned, takes
-    // the newer answer; one the person wrote or edited themselves keeps theirs.
+    // the newer answer; one the person wrote or edited themselves keeps theirs. A scope is part
+    // of the label, so an answer only ever replaces one for the same scope.
     private func learn(_ request: AnswersRequest, card: CardRecord) -> AnswersResponse {
         let date = now()
         let learned = events().answers
@@ -111,9 +128,10 @@ extension MessageRouter {
     ) -> AnswerChanges {
         let room = CustomField.maxCount - card.customFields.count
         return answers.reduce(into: AnswerChanges()) { changes, answer in
-            guard let field = answer.question.field(answer: answer.value), changes.count < limits.budget else { return }
-            guard let existing = (card.customFields + changes.added).first(where: { $0.id == field.id }) else {
-                if changes.added.count < room { changes.added.append(field) }
+            guard let field = answer.field, changes.count < limits.budget else { return }
+            let fields = card.customFields + changes.added
+            guard let existing = fields.first(where: { $0.id == field.id }) else {
+                if changes.added.count < room, hasScopeRoom(for: field, in: fields) { changes.added.append(field) }
                 return
             }
             guard existing.value != field.value, !limits.replacedToday.contains(existing.id),
@@ -122,6 +140,14 @@ extension MessageRouter {
             let after = CustomField(label: existing.label, value: field.value, matchWords: existing.matchWords)
             changes.replaced.append((existing, after))
         }
+    }
+
+    private static func hasScopeRoom(for field: CustomField, in fields: [CustomField]) -> Bool {
+        let base = AnswerScope.split(field.label)
+        guard base.scope != nil else { return true }
+        let scoped = fields.map { AnswerScope.split($0.label) }.filter { $0.scope != nil }
+        let sameQuestion = scoped.count { $0.base.lowercased() == base.base.lowercased() }
+        return sameQuestion < maxScopesPerQuestion && scoped.count < maxScopedAnswers
     }
 
     // Only answers still exactly as they were saved change back: a new one comes off, and

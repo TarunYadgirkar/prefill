@@ -7,6 +7,10 @@ export const GUESS_DETAIL = "Suggested";
 export const USED_DETAIL = "Used here";
 export const RESUME_DETAIL = "From your resume";
 
+// Where the person's answers to a question are all for another country or term than the
+// one it asks about, so none is offered.
+export const noAnswerFor = (scope: string): string => `No answer for ${scope} yet`;
+
 const DETAILS: Readonly<Record<Why, (site: string | undefined) => string | undefined>> = {
   pinned: () => USED_DETAIL,
   used: () => USED_DETAIL,

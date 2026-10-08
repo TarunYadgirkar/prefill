@@ -70,6 +70,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Demographic questions (gender, race, ethnicity, veteran, disability, orientation) always get the declining option, or "No" when there is none, and a text box asking one is left alone.
   - Searchable dropdowns (React-Select) are opened the way a person would: type the answer, or press the down arrow to decline, then click the option.
   - Follow-up questions ("If other, please specify") are left alone.
+  - A list where more than one option fits the saved answer about equally ("Yes" against "Yes, now" and "Yes, in the future") is left, outlined, and counted as "need you" (`choices.ts` `matchOption`).
   - Undo puts every field back, and a tap on a filled field offers the other values.
 - **Capture:** only values the person typed, on a trusted submit, never in private tabs, within the size caps.
 - **The card sends only name and phone (Tarun's rule):** when he AirDrops, NameDrops or Share Contacts his card, it carries only his name and phone number.
@@ -123,6 +124,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 - **Learned answers:**
   - Only native text inputs, selects and radios, on a real form submit. React-Select dropdowns and forms that post without a submit event aren't read.
   - A later answer replaces a learned one that still reads as learned, with Undo; an answer the person wrote or edited in the app is never replaced.
+  - Answers can be scoped by the question's words: "Work authorization (US)" and "(Canada)" are separate fields (`AnswerScope`). A US answer is never offered for a Canada question (the list says "No answer for Canada yet"); an unscoped answer for a scoped question, or the reverse, is offered but never filled.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
 - **Prefill keyboard:** built in `feat/keyboard`, checked only in the simulator. Needs Full Access to read the keychain item; not yet run on the iPhone.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.

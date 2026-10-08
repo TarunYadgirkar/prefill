@@ -1,11 +1,12 @@
 import { isPlaceholder } from "./choices";
 import { submitControl, TOUCH_EVENTS, touchedField } from "./capture";
 import { classify, isSignIn } from "./classify";
-import { fieldText } from "./custom";
+import { fieldText, joinFieldText } from "./custom";
 import { isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, isFieldElement, isRendered, placeFixed } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { questionOf } from "./fill";
+import { labelText } from "./dom";
 import { PILL_STYLE, setStyles } from "./fillChip";
 import {
   HIDDEN_CHARACTERS,
@@ -41,7 +42,7 @@ type Answer = AnswersRequest["answers"][number];
 // The first pattern that matches wins, so "authorized to work without sponsorship" is the
 // authorization question.
 const QUESTIONS: readonly (readonly [JobQuestion, RegExp])[] = [
-  ["authorization", /authori[sz]ed to work|work authori[sz]ation|legally (?:authori[sz]ed|eligible|permitted)|eligible to work/iu],
+  ["authorization", /authori[sz]ed to work|work authori[sz]ation|legally (?:authori[sz]ed|eligible|permitted|able to work)|eligible to work/iu],
   ["sponsorship", /sponsor/iu],
   ["heard", /how did you (?:hear|find)|hear about/iu],
   ["gpa", /\bgpa\b|grade point/iu],
@@ -119,18 +120,40 @@ function unchanged(element: FieldElement, elements: readonly FieldElement[], tou
   return now?.text === then.text && now.value === then.value ? now : undefined;
 }
 
+// The texts of a select's or radio group's options, which tell the app what the answer was
+// chosen from. A text box has none.
+function optionTexts(element: FieldElement, elements: readonly FieldElement[]): string[] {
+  const radio = element.localName === "input" && (element as HTMLInputElement).type === "radio";
+  const texts =
+    element.localName === "select"
+      ? [...(element as HTMLSelectElement).options].filter((option) => !isPlaceholder(optionOf(option))).map((option) => option.text)
+      : radio ? radioGroup(elements, element as HTMLInputElement).map(labelText) : [];
+  return texts.map((text) => joinFieldText([text], LIMITS.text)).filter(Boolean).slice(0, LIMITS.answerOptions);
+}
+
+const optionOf = (option: HTMLOptionElement) => ({ text: option.text, value: option.value });
+
+// What the person answered in a field and still left there, with the question and options.
+function answerIn(element: FieldElement, elements: readonly FieldElement[], touched: Touched): Answer | undefined {
+  const kept = unchanged(element, elements, touched);
+  const question = kept === undefined ? undefined : jobQuestion(kept.text);
+  if (kept === undefined || question === undefined || !fits(kept.value)) return undefined;
+  const options = optionTexts(element, elements);
+  return { question, value: kept.value, text: kept.text, ...(options.length === 0 ? {} : { options }) };
+}
+
 // The answers in a form the person set themselves and that still read as they left them,
-// one per question, first one first.
+// one per question as the page words it, first one first. The app reads what each applies
+// to ("...in Canada?") from those words.
 export function collectAnswers(scope: ParentNode, touched: Touched): Answer[] {
   const elements = fieldElements(scope, MAX_INSPECTED);
-  const answers = new Map<JobQuestion, string>();
+  const answers = new Map<string, Answer>();
   for (const element of elements) {
-    const kept = unchanged(element, elements, touched);
-    const question = kept === undefined ? undefined : jobQuestion(kept.text);
-    if (kept === undefined || question === undefined || !fits(kept.value) || answers.has(question)) continue;
-    answers.set(question, kept.value);
+    const answer = answerIn(element, elements, touched);
+    const key = `${answer?.question ?? ""} ${answer?.text ?? ""}`;
+    if (answer !== undefined && !answers.has(key)) answers.set(key, answer);
   }
-  return [...answers].slice(0, LIMITS.answers).map(([question, value]) => ({ question, value }));
+  return [...answers.values()].slice(0, LIMITS.answers);
 }
 
 // "Saved 3 answers" with Undo, at the bottom of the page, in a closed shadow root like the

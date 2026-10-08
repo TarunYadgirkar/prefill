@@ -13,7 +13,7 @@ import {
 import type { FieldElement } from "./fieldTypes";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
-import { GUESS_DETAIL, whyDetail } from "./why";
+import { GUESS_DETAIL, noAnswerFor, whyDetail } from "./why";
 import {
   HIDDEN_CHARACTERS,
   LIMITS,
@@ -44,25 +44,33 @@ const ALL_HIDDEN = new RegExp(HIDDEN_CHARACTERS.source, "gu");
 
 type CustomField = CustomSuggestionsResult["fields"][number];
 
-// The field's answers, then the model's guesses. A pick of an answer that wasn't first, or
-// of a guess, is worth remembering for the question.
+// A value only offered, never filled: picking it is worth remembering for the question.
+function offeredOnly(value: string, detail: string, onPick: (value: string) => void): Choice {
+  return { value, detail, tone: "guess", onPick: () => { onPick(value); } };
+}
+
+// The field's answers, then answers kept for another scope and the model's guesses, which
+// are only offered, then a note when the person has no answer for the question's scope. A
+// pick of an answer that wasn't first, or of anything only offered, is worth remembering.
 export function customChoices(
   field: CustomField | undefined,
   onPick: (value: string) => void,
 ): Choice[] {
-  const answers = (field?.values ?? []).map((offered, index) => ({
+  if (field === undefined) return [];
+  const answers = field.values.map((offered, index) => ({
     value: offered.value,
     detail: whyDetail(offered, offered.label ?? CUSTOM_DETAIL),
     ...(index === 0 ? {} : { onPick: () => { onPick(offered.value); } }),
   }));
-  const guesses = (field?.guesses ?? []).map((value) => ({
-    value,
-    detail: GUESS_DETAIL,
-    tone: "guess" as const,
-    onPick: () => { onPick(value); },
-  }));
-  return [...answers, ...guesses];
+  // The label says which scope the answer is for: "Work authorization (US)".
+  const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, offered.label ?? CUSTOM_DETAIL, onPick));
+  const guesses = (field.guesses ?? []).map((value) => offeredOnly(value, GUESS_DETAIL, onPick));
+  const note: Choice[] = field.noAnswerFor === undefined ? [] : [{ value: noAnswerFor(field.noAnswerFor), detail: "", tone: "note" }];
+  return [...answers, ...suggested, ...guesses, ...note];
 }
+
+// What a one-tap fill or a filled field's list may use: the person's own answers for the question.
+export const fillable = (choices: readonly Choice[]): Choice[] => choices.filter((choice) => choice.tone === undefined);
 
 // A text area is a message or an essay, not a short question, so it gets no guess.
 function offeredFor(element: TextField, choices: readonly Choice[] | undefined): readonly Choice[] | undefined {
@@ -100,14 +108,14 @@ export function fieldText(element: FieldElement): string {
   ]);
 }
 
-export function joinFieldText(parts: readonly string[]): string {
+export function joinFieldText(parts: readonly string[], max: number = LIMITS.fieldText): string {
   const text = parts
     .join(" ")
     .replace(ALL_HIDDEN, " ")
     .replace(/\p{Cs}/gu, " ")
     .replace(/\s+/gu, " ")
     .trim();
-  return text.slice(0, LIMITS.fieldText).replace(/[\uD800-\uDBFF]$/u, "");
+  return text.slice(0, max).replace(/[\uD800-\uDBFF]$/u, "");
 }
 
 // Offers the person's custom field values ("School" = "UC Berkeley") on fields whose words

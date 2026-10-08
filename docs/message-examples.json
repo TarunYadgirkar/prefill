@@ -52,7 +52,15 @@
       "type": "answers",
       "host": "boards.example.io",
       "action": "learn",
-      "answers": [{ "question": "school", "value": "UC Berkeley" }, { "question": "sponsorship", "value": "No" }]
+      "answers": [
+        { "question": "school", "value": "UC Berkeley" },
+        {
+          "question": "sponsorship",
+          "value": "No",
+          "text": "Do you or will you require sponsorship in the future to work in the U.S.?",
+          "options": ["Yes", "No"]
+        }
+      ]
     },
     "picked": { "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" }
   },
@@ -109,7 +117,13 @@
       "fields": [
         { "values": [{ "value": "UC Berkeley", "why": "card", "label": "School" }], "guesses": [] },
         { "values": [{ "value": "Yes", "why": "learned", "label": "Work authorization", "site": "example.io" }], "guesses": [] },
-        { "values": [], "guesses": ["EECS"] }
+        { "values": [], "guesses": ["EECS"] },
+        {
+          "values": [],
+          "guesses": [],
+          "suggested": [{ "value": "Yes", "why": "card", "label": "Work authorization" }],
+          "noAnswerFor": "Canada"
+        }
       ]
     },
     "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"] },

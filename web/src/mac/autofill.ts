@@ -97,7 +97,9 @@ function linkRows(chosen: Extract<Plan, { kind: "link" }>, response: PageRespons
 function customRows(chosen: Extract<Plan, { kind: "custom" }>, response: PageResponse): Row[] {
   if (response.type !== "customSuggestionsResult") return [];
   const question = chosen.request.type === "customSuggestions" ? chosen.request.fields[0]?.text : undefined;
-  return customChoices(response.fields[0], NO_PICK).map(({ onPick, ...choice }) => ({
+  // The panel lists values only; its note line is the extension's.
+  const choices = customChoices(response.fields[0], NO_PICK).filter((choice) => choice.tone !== "note");
+  return choices.map(({ onPick, ...choice }) => ({
     ...choice,
     kind: "custom",
     ...(onPick === undefined ? {} : { pick: picked("custom", choice.value, question) }),

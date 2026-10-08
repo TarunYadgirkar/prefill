@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apply for Data Engineering Intern</title>
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<!-- Questions a saved answer alone can't settle, worded as on real Lever and Greenhouse
+     postings (see web/src/fixtures/ats-lever-sponsorship.html): a "Yes" that fits two
+     options, a sponsorship question one option clearly answers, and a work question for
+     another country than the one the saved answer is for. -->
+<h1>Data Engineering Intern</h1>
+<form id="questions_form" action="thanks.html" method="post">
+  <div class="field"><label for="first_name">First Name *</label><input type="text" id="first_name" name="first_name"></div>
+  <div class="field"><label for="last_name">Last Name *</label><input type="text" id="last_name" name="last_name"></div>
+  <div class="field"><label for="email">Email *</label><input type="text" id="email" name="email"></div>
+  <div class="field"><label for="work_us">Are you legally authorized to work in the U.S.?</label>
+    <select id="work_us" name="work_us"><option value="">Select ...</option><option>Yes, I am a U.S. citizen or permanent resident</option><option>Yes, I hold a work visa</option><option>No</option></select></div>
+  <div class="field"><label for="sponsorship">Will you now or in the future require sponsorship?</label>
+    <select id="sponsorship" name="sponsorship"><option value="">Select ...</option><option>Yes, I will require sponsorship now</option><option>Yes, I will require sponsorship in the future</option><option>No, I will not require sponsorship</option></select></div>
+  <div class="field"><label for="canada">Are you legally able to work in Canada?</label><input type="text" id="canada" name="canada"></div>
+  <button type="submit">Submit application</button>
+</form>
+</body>
+</html>

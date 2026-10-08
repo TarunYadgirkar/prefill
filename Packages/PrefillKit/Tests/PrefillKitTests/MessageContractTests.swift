@@ -121,7 +121,11 @@ struct MessageContractTests {
             .init(values: [
                 SuggestedValue(value: "Yes", why: .learned, label: "Work authorization", site: "example.io")
             ]),
-            .init(values: [], guesses: ["EECS"])
+            .init(values: [], guesses: ["EECS"]),
+            .init(
+                values: [], suggested: [SuggestedValue(value: "Yes", label: "Work authorization")],
+                noAnswerFor: "Canada"
+            )
         ]))),
         ("answersResult", .answers(AnswersResponse(saved: 2, updated: ["Work authorization"]))),
         ("pickedResult", .picked(PickedResponse(remembered: true))),

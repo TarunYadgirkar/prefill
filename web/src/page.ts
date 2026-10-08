@@ -4,7 +4,7 @@ import { classify } from "./classify";
 import { installCustom } from "./custom";
 import { SAFARI_CONTACT, showDropdown, type Attach } from "./dropdown";
 import { isContact, type FieldElement } from "./fieldTypes";
-import { fillableCount, fillForm, fillScope, findSlots, installFilledPicker, isFilled, type FillResult } from "./fill";
+import { fillableCount, fillForm, fillScope, findSlots, installFilledPicker, isFilled, noteFor, type FillResult } from "./fill";
 import { installFillChip, MIN_FIELDS } from "./fillChip";
 import { fieldsLeft } from "./fillLeft";
 import { trackGestures } from "./gesture";
@@ -136,6 +136,7 @@ function startFill(env: PageEnvironment, host: () => string, attachFor: (element
       count,
       fill: run,
       left: (anchor) => fieldsLeft(fillScope(env.doc, anchor)),
+      note: noteFor,
     }),
     installFilledPicker(env.doc, gate, undefined, attachFor),
   ];
