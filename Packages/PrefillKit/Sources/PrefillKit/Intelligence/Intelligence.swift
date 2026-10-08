@@ -12,7 +12,7 @@ public enum IntelligenceState: Sendable, Hashable {
 // iPhone. Every call falls back to the rules: Apple Intelligence off, still downloading,
 // an older iPhone, a guardrail or any other model error all end in the rules' answer.
 // v1 calls it from the app only, never from the Safari handler. Prompts are never logged.
-public actor Intelligence {
+public actor Intelligence: AnswerJudging {
     // An actor-free answer to which model produced a cached result, so a new model asks again.
     public nonisolated static var modelVariant: String {
         #if canImport(FoundationModels)
@@ -63,18 +63,19 @@ public actor Intelligence {
         return Insight(answer, source: .model)
     }
 
-    // Which of the person's saved answers, by label, answers a form question none of the
-    // rules matched. Nil when the model has no answer or names a label that isn't there.
-    public func answerLabel(question: String, labels: [String]) async -> String? {
+    // Whether one of the person's saved answers answers a form question none of the rules
+    // matched, reading the question with its heading and options and each answer with what it
+    // applies to. Unsure when the model can't run or names an answer that isn't there.
+    public func judge(_ question: AnswerQuestion, candidates: [AnswerCandidate]) async -> AnswerVerdict {
         #if canImport(FoundationModels)
-        guard !labels.isEmpty else { return nil }
-        let prompt = "Question: \(question)\nNames: \(labels.joined(separator: ", ")), none"
-        guard let answer = await ask(AnswerName.self, instructions: Prompts.answerInstructions, prompt: prompt) else {
-            return nil
+        guard !candidates.isEmpty else { return .unsure }
+        let prompt = Prompts.answerPrompt(question, candidates: candidates)
+        guard let reply = await ask(AnswerChoice.self, instructions: Prompts.answerInstructions, prompt: prompt) else {
+            return .unsure
         }
-        return labels.first { $0.caseInsensitiveCompare(answer.name) == .orderedSame }
+        return .checked(verdict: reply.verdict, name: reply.name, question: question, candidates: candidates)
         #else
-        return nil
+        return .unsure
         #endif
     }
 
@@ -127,14 +128,27 @@ private enum Prompts {
 
     // Without the examples the model names a saved answer for nearly any question.
     static let answerInstructions = """
-        A questionnaire asks a question. You have the names of a person's saved answers. \
-        Reply with the one name whose answer the question asks for. \
-        Reply none unless a saved answer is exactly what is asked: a question about a company, \
-        a favourite thing, a date of birth or anything the names don't cover is none.
-        Examples: "Which university did you attend?" with School, Major is School. \
-        "What is your favourite colour?" with School, Major is none. \
-        "Employer name" with School, Major is none.
+        A questionnaire asks a question. You have a person's saved answers, each with a name, \
+        the answer and, in brackets, the place or term it applies to. \
+        Reply use with the one name whose answer is exactly what the question asks for. \
+        Reply needsNew when the question asks for something none of them answer, or asks about \
+        another place or term than the saved answer's. Reply unsure when you can't tell.
+        Examples: "Which university did you attend?" with School is use School. \
+        "What is your favourite colour?" with School, Major is needsNew. \
+        "Can you work in Canada?" with Work authorization (US) is needsNew.
         """
+
+    static func answerPrompt(_ question: AnswerQuestion, candidates: [AnswerCandidate]) -> String {
+        var lines = ["Question: \(question.text)"]
+        if let heading = question.heading { lines.append("Section: \(heading)") }
+        if !question.options.isEmpty { lines.append("Choices: \(question.options.joined(separator: " | "))") }
+        lines.append("Saved answers:")
+        lines += candidates.map { candidate in
+            let value = String(candidate.value.prefix(100))
+            return "- \(candidate.label): \(value)"
+        }
+        return lines.joined(separator: "\n")
+    }
 
     static let siteInstructions = """
         Sort a website into the category that best describes it. \
@@ -159,8 +173,10 @@ private struct ValueContext {
 }
 
 @Generable
-private struct AnswerName {
-    @Guide(description: "The name whose answer the question asks for, or none")
+private struct AnswerChoice {
+    @Guide(.anyOf(["use", "needsNew", "unsure"]))
+    let verdict: String
+    @Guide(description: "With use, the name of the saved answer; otherwise none")
     let name: String
 }
 

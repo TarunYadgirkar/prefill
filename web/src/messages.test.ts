@@ -92,7 +92,8 @@ const customSuggestions: CustomSuggestionsRequest = {
   host: "boards.example.io",
   fields: [
     { text: "School job_application[educations][0][school_name_id]" },
-    { text: "Cover letter" },
+    { text: "Cover letter", focused: true },
+    { text: "Will you relocate for this role?", heading: "Logistics", options: ["Yes", "No", "Open to discussion"] },
   ],
 };
 
@@ -107,10 +108,11 @@ const answers: AnswersRequest = {
       value: "No",
       text: "Do you or will you require sponsorship in the future to work in the U.S.?",
       options: ["Yes", "No"],
+      changedFill: true,
     },
   ],
 };
-const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"] };
+const answersResult: AnswersResult = { type: "answersResult", saved: 2, updated: ["Work authorization"], ask: ["Sponsorship"] };
 const picked: PickedRequest = {
   type: "picked",
   host: "boards.example.io",
@@ -132,6 +134,11 @@ const customSuggestionsResult: CustomSuggestionsResult = {
       guesses: [],
       suggested: [{ value: "Yes", why: "card", label: "Work authorization" }],
       noAnswerFor: "Canada",
+    },
+    {
+      values: [],
+      guesses: [],
+      drafts: [{ value: "Dear hiring team,\nI build tools people use every day.", why: "draft", label: "Cover letter" }],
     },
   ],
 };
@@ -532,5 +539,19 @@ describe("sheet messages", () => {
     expect(isExtensionResponse({ ...popupStateResult, kinds: [kind] })).toBe(
       false,
     );
+  });
+});
+
+describe("drafts", () => {
+  const reply = (draft: Record<string, unknown>): unknown => ({
+    type: "customSuggestionsResult",
+    fields: [{ values: [], drafts: [draft] }],
+  });
+
+  it("keep their line breaks and their length, and are only ever drafts", () => {
+    expect(isExtensionResponse(reply({ value: `Dear team,\n${"a".repeat(1_900)}`, why: "draft", label: "Cover letter" }))).toBe(true);
+    expect(isExtensionResponse(reply({ value: "Yes", why: "card" }))).toBe(false);
+    expect(isExtensionResponse(reply({ value: "a".repeat(LIMITS.draftValue + 1), why: "draft" }))).toBe(false);
+    expect(isExtensionResponse(reply({ value: "a‮b", why: "draft" }))).toBe(false);
   });
 });

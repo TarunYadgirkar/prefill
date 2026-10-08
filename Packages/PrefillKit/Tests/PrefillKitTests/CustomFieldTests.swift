@@ -100,9 +100,11 @@ struct CustomFieldTests {
             contactIdentifier: card.identifier, containerIdentifier: nil, linkedIdentifiers: [],
             original: card, snapshotAt: .daysAgo(30)
         )
-        let key = InsightKey.answer("Which program are you studying?", variant: Intelligence.modelVariant)
+        let key = InsightKey.answer(
+            "Which program are you studying?", variant: Intelligence.modelVariant, revision: AnswerRevision.of(fields)
+        )
         let state = AppState(values: Alex.allValues, cardLink: link)
-            .recording([CachedInsight(key: key, answer: "Major")], siteKinds: [:])
+            .recording([CachedInsight(key: key, answer: "use:Major")], siteKinds: [:])
         let store = MemoryStore(state)
         let router = MessageRouter(store: store, gateway: FakeGateway(card: card), now: { .testNow })
         let ask = { (text: String) in

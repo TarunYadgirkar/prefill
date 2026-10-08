@@ -15,6 +15,8 @@ public enum SuggestionWhy: String, Codable, Sendable, CaseIterable {
     case guess
     // From a resume import.
     case resume
+    // A draft the person wrote in the app: offered, never filled.
+    case draft
 
     init(_ tier: Ranker.Tier) {
         switch tier {

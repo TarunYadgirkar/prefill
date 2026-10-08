@@ -43,6 +43,8 @@ struct AnswerDetail: View {
                 if let answer { Text(answer.place.footer).textRole(.footnote) }
             }
             if let answer, let memory = model.memory {
+                AnswerFactsSection(answer: answer)
+                ChangesSection(changes: memory.changes(of: answer))
                 UsedOnSection(uses: memory.uses(of: answer))
             }
             if case .value(let value) = current {
@@ -74,7 +76,7 @@ struct AnswerDetail: View {
             }
             .padding(.vertical, Spacing.xxSmall)
         case .field(let field):
-            AnswerText(field: field)
+            AnswerText(field: field, isFull: true)
         }
     }
 

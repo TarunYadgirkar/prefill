@@ -43,7 +43,8 @@ extension MessageRouter {
 
     private func rememberAnswer(_ request: PickedRequest, card: CardRecord) -> Bool {
         let key = CustomFieldMatcher.key(request.question ?? "")
-        guard !key.isEmpty, let field = card.customFields.first(where: { $0.value == request.value }) else {
+        let field = card.customFields.first { !$0.isDraft && $0.value == request.value }
+        guard !key.isEmpty, let field else {
             return false
         }
         if events().answerPicks.last(where: { $0.words == key })?.label == field.label { return true }
@@ -63,7 +64,7 @@ extension MessageRouter {
     static func pickedAnswer(for text: String, in fields: [CustomField], picks: [AnswerPick]) -> String? {
         let key = CustomFieldMatcher.key(text)
         guard !key.isEmpty, let pick = picks.last(where: { $0.words == key }) else { return nil }
-        return fields.first { $0.label == pick.label }?.value
+        return fields.first { !$0.isDraft && $0.label == pick.label }?.value
     }
 }
 

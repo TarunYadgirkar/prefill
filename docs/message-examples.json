@@ -6,7 +6,7 @@
     "popupStatus": ["ready", "off", "notSetUp", "failed"],
     "recentState": ["saved", "waiting", "removed"],
     "pickKind": ["email", "phone", "address", "link", "custom"],
-    "why": ["pinned", "used", "card", "learned", "guess", "resume"]
+    "why": ["pinned", "used", "card", "learned", "guess", "resume", "draft"]
   },
   "requests": {
     "ping": { "type": "ping" },
@@ -46,7 +46,11 @@
     "customSuggestions": {
       "type": "customSuggestions",
       "host": "boards.example.io",
-      "fields": [{ "text": "School job_application[educations][0][school_name_id]" }, { "text": "Cover letter" }]
+      "fields": [
+        { "text": "School job_application[educations][0][school_name_id]" },
+        { "text": "Cover letter", "focused": true },
+        { "text": "Will you relocate for this role?", "heading": "Logistics", "options": ["Yes", "No", "Open to discussion"] }
+      ]
     },
     "answers": {
       "type": "answers",
@@ -58,7 +62,8 @@
           "question": "sponsorship",
           "value": "No",
           "text": "Do you or will you require sponsorship in the future to work in the U.S.?",
-          "options": ["Yes", "No"]
+          "options": ["Yes", "No"],
+          "changedFill": true
         }
       ]
     },
@@ -123,10 +128,15 @@
           "guesses": [],
           "suggested": [{ "value": "Yes", "why": "card", "label": "Work authorization" }],
           "noAnswerFor": "Canada"
+        },
+        {
+          "values": [],
+          "guesses": [],
+          "drafts": [{ "value": "Dear hiring team,\nI build tools people use every day.", "why": "draft", "label": "Cover letter" }]
         }
       ]
     },
-    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"] },
+    "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"], "ask": ["Sponsorship"] },
     "pickedResult": { "type": "pickedResult", "remembered": true },
     "error": { "type": "error", "reason": "unknown message" }
   }

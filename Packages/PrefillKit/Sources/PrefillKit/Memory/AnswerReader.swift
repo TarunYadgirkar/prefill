@@ -30,10 +30,11 @@ struct AnswerReader {
 
     func answer(for field: CustomField) -> Answer {
         let source = learned.first { $0.matches(field) }
+        let (kind, scope) = Answer.kind(of: field)
         return Answer(
             id: Answer.customID(field), question: .custom(label: field.label), text: field.value, label: nil,
             origin: source.map { .learned(host: $0.host) } ?? .typedInApp,
-            place: place(of: .customField(field)), createdAt: source?.date
+            place: place(of: .customField(field)), createdAt: source?.date, kind: kind, scope: scope
         )
     }
 

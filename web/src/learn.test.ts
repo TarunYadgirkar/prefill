@@ -56,8 +56,7 @@ describe("learning answers from an application", () => {
     expect(send).not.toHaveBeenCalled();
     document.querySelector("form button, form input[type=submit]")?.dispatchEvent(new Event("click", { bubbles: true }));
     document.querySelector("form")?.dispatchEvent(new Event("submit", { bubbles: true }));
-    await Promise.resolve();
-    await Promise.resolve();
+    await new Promise((resolve) => setTimeout(resolve, 0));
     expect(send).toHaveBeenCalledWith({
       type: "answers",
       host: "boards.example.io",

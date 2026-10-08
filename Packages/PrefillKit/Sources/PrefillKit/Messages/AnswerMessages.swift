@@ -2,10 +2,12 @@ import Foundation
 
 // Learn as the person applies: after they submit a job application, the content script
 // sends their answers to the questions in JobQuestion. New ones become custom fields, so
-// the next application fills them in. `undo` takes back what this site just added.
+// the next application fills them in. `undo` takes back what this site just added. When the
+// person changed an answer Prefill filled, `learn` holds it back and asks: `update` replaces
+// the saved answer everywhere, through the same guards, and `keepHere` keeps it on this site only.
 public struct AnswersRequest: Codable, Sendable, Hashable {
     public enum Action: String, Codable, Sendable {
-        case learn, undo
+        case learn, undo, update, keepHere
     }
 
     public struct Answer: Codable, Sendable, Hashable {
@@ -15,12 +17,18 @@ public struct AnswersRequest: Codable, Sendable, Hashable {
         // ("...to work in Canada?"), and a select's or radio group's option texts.
         public let text: String?
         public let options: [String]?
+        // The field held an answer Prefill filled, and the person changed it before submitting.
+        public let changedFill: Bool?
 
-        public init(question: JobQuestion, value: String, text: String? = nil, options: [String]? = nil) {
+        public init(
+            question: JobQuestion, value: String, text: String? = nil, options: [String]? = nil,
+            changedFill: Bool? = nil
+        ) {
             self.question = question
             self.value = value
             self.text = text
             self.options = options
+            self.changedFill = changedFill
         }
 
         // The custom field this answer becomes: under a scoped label when the question names
@@ -46,10 +54,33 @@ public struct AnswersResponse: Codable, Sendable, Hashable {
     public let saved: Int
     // The labels of the learned answers a later one replaced.
     public let updated: [String]
+    // The labels of the answers the person changed after Prefill filled them, held back until
+    // they choose "Update everywhere" or "Just here".
+    public let ask: [String]
 
-    public init(saved: Int, updated: [String] = []) {
+    public init(saved: Int, updated: [String] = [], ask: [String] = []) {
         self.saved = saved
         self.updated = updated
+        self.ask = ask
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case saved, updated, ask
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        saved = try container.decode(Int.self, forKey: .saved)
+        updated = try container.decode([String].self, forKey: .updated)
+        ask = try container.decodeIfPresent([String].self, forKey: .ask) ?? []
+    }
+
+    // Most replies ask nothing, so they leave it out.
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(saved, forKey: .saved)
+        try container.encode(updated, forKey: .updated)
+        if !ask.isEmpty { try container.encode(ask, forKey: .ask) }
     }
 }
 
@@ -58,11 +89,26 @@ public struct AnswersResponse: Codable, Sendable, Hashable {
 private struct AnswerChanges {
     var added: [CustomField] = []
     var replaced: [(before: CustomField, after: CustomField)] = []
+    // Labels of answers held back to ask about.
+    var held: [String] = []
 
     var count: Int { added.count + replaced.count }
 
     func applied(to fields: [CustomField]) -> [CustomField] {
         fields.map { field in replaced.first { $0.before == field }?.after ?? field } + added
+    }
+}
+
+struct LearnLimits {
+    let budget: Int
+    let replacedToday: Set<String>
+    // Whether a changed fill is held back to ask about; `update` is the person's answer.
+    let asks: Bool
+    // Answers the person kept on this site, by `key`.
+    let kept: Set<String>
+
+    static func key(_ label: String, _ value: String) -> String {
+        "\(label.lowercased())\u{1F}\(value)"
     }
 }
 
@@ -84,13 +130,10 @@ extension MessageRouter {
                   let card = try? gateway.fetchCard(identifier: link.contactIdentifier) else {
                 return AnswersResponse(saved: 0)
             }
-            switch request.action {
-            case .learn:
-                guard state.settings.saveNewInfo, !state.isMuted(request.host) else { return AnswersResponse(saved: 0) }
-                return learn(request, card: card)
-            case .undo:
-                return AnswersResponse(saved: undoAnswers(host: request.host, card: card))
-            }
+            if request.action == .undo { return AnswersResponse(saved: undoAnswers(host: request.host, card: card)) }
+            guard state.settings.saveNewInfo, !state.isMuted(request.host) else { return AnswersResponse(saved: 0) }
+            if request.action == .keepHere { return AnswersResponse(saved: keepHere(request, card: card).count) }
+            return learn(request, card: card)
         }
     }
 
@@ -104,29 +147,34 @@ extension MessageRouter {
         let replacedToday = Set(learned.filter {
             $0.previous != nil && date.timeIntervalSince($0.date) < Self.answerWindow
         }.map { $0.label.lowercased() })
-        let changes = Self.changes(
-            request.answers, card: card, learned: learned,
-            limits: (budget: Self.maxAnswersPerWindow - recent, replacedToday: replacedToday)
+        let site = Normalizer.registrableDomain(request.host)
+        let limits = LearnLimits(
+            budget: Self.maxAnswersPerWindow - recent, replacedToday: replacedToday, asks: request.action == .learn,
+            kept: Set(events().overrides.filter { $0.host == site }.map { LearnLimits.key($0.label, $0.value) })
         )
+        let changes = Self.changes(request.answers, card: card, learned: learned, limits: limits)
         let scope: CardSaveScope = changes.replaced.isEmpty
             ? .addAnswers : .replaceAnswers(Set(changes.replaced.map(\.before.id)))
         let target = card.replacingCustomFields(with: changes.applied(to: card.customFields))
-        guard changes.count > 0, save(target, over: card, scope: scope) else { return AnswersResponse(saved: 0) }
-        let site = Normalizer.registrableDomain(request.host)
+        let held = changes.held.map { MessageText.oneLine($0, max: MessageLimits.text) }
+        guard changes.count > 0, save(target, over: card, scope: scope) else {
+            return AnswersResponse(saved: 0, ask: held)
+        }
         let added = changes.added.map { LearnedAnswer(host: site, label: $0.label, value: $0.value, date: date) }
         let replaced = changes.replaced.map { before, after in
             LearnedAnswer(host: site, label: after.label, value: after.value, date: date, previous: before.value)
         }
         append(ExtensionEvents(answers: added + replaced))
         let labels = changes.replaced.map { MessageText.oneLine($0.after.label, max: MessageLimits.text) }
-        return AnswersResponse(saved: changes.added.count, updated: labels)
+        return AnswersResponse(saved: changes.added.count, updated: labels, ask: held)
     }
 
+    // A learned answer the person changed after Prefill filled it is held back to ask about,
+    // unless they already chose to keep that value on this site.
     private static func changes(
-        _ answers: [AnswersRequest.Answer], card: CardRecord, learned: [LearnedAnswer],
-        limits: (budget: Int, replacedToday: Set<String>)
+        _ answers: [AnswersRequest.Answer], card: CardRecord, learned: [LearnedAnswer], limits: LearnLimits
     ) -> AnswerChanges {
-        let room = CustomField.maxCount - card.customFields.count
+        let room = CustomField.maxCount - card.customFields.answerCount
         return answers.reduce(into: AnswerChanges()) { changes, answer in
             guard let field = answer.field, changes.count < limits.budget else { return }
             let fields = card.customFields + changes.added
@@ -134,9 +182,14 @@ extension MessageRouter {
                 if changes.added.count < room, hasScopeRoom(for: field, in: fields) { changes.added.append(field) }
                 return
             }
-            guard existing.value != field.value, !limits.replacedToday.contains(existing.id),
+            guard !existing.isDraft, existing.value != field.value, !limits.replacedToday.contains(existing.id),
                   learned.contains(where: { $0.matches(existing) }),
                   !changes.replaced.contains(where: { $0.before == existing }) else { return }
+            guard answer.changedFill != true || !limits.asks else {
+                let isKept = limits.kept.contains(LearnLimits.key(existing.label, field.value))
+                if !isKept { changes.held.append(existing.label) }
+                return
+            }
             let after = CustomField(label: existing.label, value: field.value, matchWords: existing.matchWords)
             changes.replaced.append((existing, after))
         }

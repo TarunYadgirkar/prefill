@@ -13,7 +13,7 @@ import {
 import type { FieldElement } from "./fieldTypes";
 import { onEmptied, trackGestures } from "./gesture";
 import { reportPick } from "./picks";
-import { GUESS_DETAIL, noAnswerFor, whyDetail } from "./why";
+import { DRAFT_DETAIL, GUESS_DETAIL, noAnswerFor, whyDetail } from "./why";
 import {
   HIDDEN_CHARACTERS,
   LIMITS,
@@ -49,9 +49,13 @@ function offeredOnly(value: string, detail: string, onPick: (value: string) => v
   return { value, detail, tone: "guess", onPick: () => { onPick(value); } };
 }
 
+// "Draft · Cover letter": which draft, when the person keeps more than one.
+const draftDetail = (label: string | undefined): string => (label === undefined ? DRAFT_DETAIL : `${DRAFT_DETAIL} · ${label}`);
+
 // The field's answers, then answers kept for another scope and the model's guesses, which
-// are only offered, then a note when the person has no answer for the question's scope. A
-// pick of an answer that wasn't first, or of anything only offered, is worth remembering.
+// are only offered, then drafts, then a note when the person has no answer for the question's
+// scope. A pick of an answer that wasn't first, or of a suggestion or guess, is worth
+// remembering; a draft is the person's to edit each time, so its pick isn't.
 export function customChoices(
   field: CustomField | undefined,
   onPick: (value: string) => void,
@@ -63,10 +67,12 @@ export function customChoices(
     ...(index === 0 ? {} : { onPick: () => { onPick(offered.value); } }),
   }));
   // The label says which scope the answer is for: "Work authorization (US)".
-  const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, offered.label ?? CUSTOM_DETAIL, onPick));
+  // "Used here" for the answer the person kept on this site in place of the saved one.
+  const suggested = (field.suggested ?? []).map((offered) => offeredOnly(offered.value, whyDetail(offered, offered.label ?? CUSTOM_DETAIL), onPick));
   const guesses = (field.guesses ?? []).map((value) => offeredOnly(value, GUESS_DETAIL, onPick));
+  const drafts = (field.drafts ?? []).map((offered): Choice => ({ value: offered.value, detail: draftDetail(offered.label), tone: "draft" }));
   const note: Choice[] = field.noAnswerFor === undefined ? [] : [{ value: noAnswerFor(field.noAnswerFor), detail: "", tone: "note" }];
-  return [...answers, ...suggested, ...guesses, ...note];
+  return [...answers, ...suggested, ...guesses, ...drafts, ...note];
 }
 
 // What a one-tap fill or a filled field's list may use: the person's own answers for the question.
@@ -118,6 +124,32 @@ export function joinFieldText(parts: readonly string[], max: number = LIMITS.fie
   return text.slice(0, max).replace(/[\uD800-\uDBFF]$/u, "");
 }
 
+const HEADINGS = "h1, h2, h3, h4, h5, h6, [role=heading], legend";
+
+// The last heading before the field in page order ("Education", "Work eligibility"), which
+// tells the on-device model what a short question is about.
+export function headingOf(element: Element): string | undefined {
+  let found: Element | undefined;
+  for (const heading of element.ownerDocument.querySelectorAll(HEADINGS)) {
+    if ((heading.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING) === 0) break;
+    found = heading;
+  }
+  const text = joinFieldText([found?.textContent ?? ""], LIMITS.text);
+  return text === "" ? undefined : text;
+}
+
+type AskedField = CustomSuggestionsRequest["fields"][number];
+
+// A question as the app's request carries it: its words, and its heading when it has one.
+export function askedField(text: string, element: Element, options: readonly string[] = []): AskedField {
+  const heading = headingOf(element);
+  return {
+    text,
+    ...(heading === undefined ? {} : { heading }),
+    ...(options.length === 0 ? {} : { options: options.slice(0, LIMITS.answerOptions) }),
+  };
+}
+
 // Offers the person's custom field values ("School" = "UC Berkeley") on fields whose words
 // match, in Prefill's own list under the field. The matches are fetched when the page loads,
 // so the list is ready as the field takes focus, and again on each focus, which covers
@@ -136,6 +168,7 @@ export function installCustom(
     isCustomCandidate(element, options.textAreas);
   const gestures = trackGestures(doc, isUserEvent);
   const known = new Map<string, readonly Choice[]>();
+  const asked = new Map<string, AskedField>();
   let detach: (() => void) | undefined;
   let focused: { element: TextField; text: string } | undefined;
 
@@ -143,8 +176,12 @@ export function installCustom(
     detach?.();
     detach = undefined;
     focused = undefined;
+    shown = 0;
   };
 
+  // How many rows the open list shows, so a reply that brings more (drafts come only with
+  // the focused field's own request) redraws it.
+  let shown = 0;
   const offer = (): void => {
     const values = focused === undefined ? undefined : offeredFor(focused.element, known.get(focused.text));
     if (
@@ -154,16 +191,28 @@ export function installCustom(
       values.length === 0
     )
       return;
+    shown = values.length;
     detach = attach(focused.element, [...values]);
   };
 
-  const fetchValues = (texts: readonly string[]): void => {
+  const redraw = (texts: readonly string[]): void => {
+    const now = focused === undefined ? undefined : offeredFor(focused.element, known.get(focused.text));
+    if (focused === undefined || !texts.includes(focused.text) || (now?.length ?? 0) <= shown) return;
+    detach?.();
+    detach = undefined;
+    offer();
+  };
+
+  // `focused` marks the request for the text area the person just focused, the only one
+  // the app answers with drafts.
+  const fetchValues = (texts: readonly string[], focused = false): void => {
     if (texts.length === 0) return;
+    const fields = texts.map((text) => asked.get(text) ?? { text });
     options
       .send({
         type: "customSuggestions",
         host: options.host(),
-        fields: texts.map((text) => ({ text })),
+        fields: focused ? fields.map((field) => ({ ...field, focused: true })) : fields,
       })
       .then((reply) => {
         const response = parseExtensionResponse(reply);
@@ -177,7 +226,8 @@ export function installCustom(
             picked(text, value);
           }));
         });
-        offer();
+        if (detach === undefined) offer();
+        else redraw(texts);
       })
       .catch(() => undefined);
   };
@@ -195,7 +245,11 @@ export function installCustom(
   const prefetch = (): void => {
     const texts = fieldElements(doc, MAX_INSPECTED)
       .filter(isCandidate)
-      .map(fieldText);
+      .map((element) => {
+        const text = fieldText(element);
+        if (!asked.has(text)) asked.set(text, askedField(text, element));
+        return text;
+      });
     fetchValues(
       [...new Set(texts)].filter(Boolean).slice(0, LIMITS.pageFields),
     );
@@ -205,10 +259,12 @@ export function installCustom(
     if (detach !== undefined || isTaken(target) || !isCandidate(target)) return;
     const text = fieldText(target);
     if (text === "") return;
+    if (!asked.has(text)) asked.set(text, askedField(text, target));
     clear();
     focused = { element: target, text };
     offer();
-    fetchValues([text]);
+    // Drafts are long text, which belongs in a text area, never a one-line box.
+    fetchValues([text], target.localName === "textarea");
   };
 
   // The field the person tapped or tabbed into, even one Prefill filled, so emptying it

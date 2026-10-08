@@ -6,6 +6,7 @@ import type { Why } from "./messages";
 export const GUESS_DETAIL = "Suggested";
 export const USED_DETAIL = "Used here";
 export const RESUME_DETAIL = "From your resume";
+export const DRAFT_DETAIL = "Draft";
 
 // Where the person's answers to a question are all for another country or term than the
 // one it asks about, so none is offered.
@@ -18,6 +19,7 @@ const DETAILS: Readonly<Record<Why, (site: string | undefined) => string | undef
   learned: (site) => (site === undefined ? undefined : `From ${site}`),
   guess: () => GUESS_DETAIL,
   resume: () => RESUME_DETAIL,
+  draft: () => DRAFT_DETAIL,
 };
 
 // `plain` says what the value is ("Work email", "LinkedIn", "School"), for a value that's

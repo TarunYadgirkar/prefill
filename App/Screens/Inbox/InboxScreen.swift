@@ -1,19 +1,22 @@
 import PrefillKit
 import SwiftUI
 
-// What Prefill added or wants to add, for the person to confirm or fix. Values it wasn't
-// sure about wait at the top; below, newest first, what it saved, learned and put first on a
-// site. Nothing leaves the list: a value removed or dismissed can still go on the card.
+// Only what needs the person: values Prefill wasn't sure about, then, newest first, answers a
+// form changed and the on-device model's guesses to confirm. Routine saves and picks go to
+// each answer's history on the You tab.
 struct InboxScreen: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
         NavigationStack {
             Group {
-                if model.needsYou.isEmpty && model.recently.isEmpty && !model.offersShortCard {
+                if model.needsYou.isEmpty && model.exceptions.isEmpty && !model.offersShortCard {
                     EmptyStateView(
                         title: "Nothing new", systemImage: "tray",
-                        message: Text("Prefill adds what you type into forms, and it shows up here.")
+                        message: Text("""
+                            Prefill saves what you type into forms. Anything it isn’t sure about, \
+                            or an answer a form changed, shows up here.
+                            """)
                     )
                 } else {
                     InboxList()
@@ -50,18 +53,18 @@ private struct InboxList: View {
                         .textRole(.footnote)
                 }
             }
-            if !model.recently.isEmpty {
+            if !model.exceptions.isEmpty {
                 Section {
-                    ForEach(model.recently) { entry in
+                    ForEach(model.exceptions) { entry in
                         row(entry)
                     }
                 } header: {
-                    Text("Recently").textRole(.groupHeader)
+                    Text("To check").textRole(.groupHeader)
                 }
             }
         }
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.needsYou)
-        .animation(Motion.state(reduceMotion: reduceMotion), value: model.recently)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: model.exceptions)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.offersShortCard)
         .sheet(item: $editing) { field in
             CustomFieldSheet(original: field)
@@ -70,9 +73,8 @@ private struct InboxList: View {
 
     @ViewBuilder private func row(_ entry: InboxEntry) -> some View {
         switch entry {
-        case .capture(let item): CaptureRow(item: item)
-        case .learned(let answer, let field): LearnedRow(answer: answer) { editing = field }
-        case .picked(let pick): PickedRow(pick: pick)
+        case .changed(let answer, let field): ChangedRow(answer: answer, field: field) { editing = field }
+        case .guess(let guess): GuessRow(guess: guess)
         }
     }
 }

@@ -27,10 +27,10 @@ public final class AutofillScript {
         rows(planned: plan(field), host: host, router: router)
     }
 
-    // What "Fill form" puts in the field: the first value it would offer, or nil for a field
-    // a one-tap fill leaves alone.
+    // What "Fill form" puts in the field: the first of the person's own values it would offer,
+    // or nil for a field a one-tap fill leaves alone. Guesses, suggestions and drafts are only offered.
     public func fillValue(for field: FieldDescription, host: String, router: MessageRouter) -> AutofillRow? {
-        rows(planned: plan(field, rule: "fillPlan"), host: host, router: router).first
+        rows(planned: plan(field, rule: "fillPlan"), host: host, router: router).first { $0.tone == nil }
     }
 
     // Tells the router the person picked `row` on `host`, so it comes first there next time.

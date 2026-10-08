@@ -31,6 +31,9 @@ struct YouList: View {
             }
             group("Links", links, memory: memory)
             group("Answers", answers, memory: memory)
+            if !isSearching, let memory {
+                PreferencesSection(preferences: memory.preferences)
+            }
         }
         .listStyle(.insetGrouped)
         .overlay { emptyState(isEmpty: contact.isEmpty && links.isEmpty && answers.isEmpty) }
@@ -108,21 +111,52 @@ struct YouRow: View {
     }
 }
 
-// A custom field's answer under its question, as the You tab and its detail show it.
+// A custom field's answer under its question, as the You tab and its detail show it. A
+// draft shows its first lines in the list and all of it on its page.
 struct AnswerText: View {
     let field: CustomField
+    var isFull = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.hairline) {
-            Text(field.label)
+            Text(field.isDraft ? "\(field.label) · Draft" : field.label)
                 .textRole(.valueCaption)
             Text(field.value)
                 .textRole(.value)
+                .lineLimit(field.isDraft && !isFull ? 3 : nil)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, Spacing.xxSmall)
         .accessibilityElement(children: .combine)
+    }
+}
+
+// Rules Prefill follows on every form. They aren't answers the person keeps, so they can't
+// be edited, only read.
+private struct PreferencesSection: View {
+    let preferences: [Preference]
+
+    var body: some View {
+        Section {
+            ForEach(preferences, id: \.title) { preference in
+                VStack(alignment: .leading, spacing: Spacing.hairline) {
+                    Text(preference.title).textRole(.valueCaption)
+                    Text(preference.rule).textRole(.value)
+                }
+                .padding(.vertical, Spacing.xxSmall)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("preference-\(preference.title)")
+            }
+        } header: {
+            Text("Rules").textRole(.groupHeader)
+        } footer: {
+            Text("""
+                Prefill follows these on every form. Fill form leaves a text box that asks one of these \
+                questions for you.
+                """)
+                .textRole(.footnote)
+        }
     }
 }
 

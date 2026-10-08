@@ -4,9 +4,9 @@ export interface Choice {
   value: string;
   // A few words on what the value is or why it's offered ("Work email", "Used here").
   detail: string;
-  // A guess is drawn apart from the person's own values. A note is a line of text, not a
-  // value: it can't be picked and never reaches the field.
-  tone?: "guess" | "note";
+  // A guess or a draft is drawn apart from the person's own values. A note is a line of
+  // text, not a value: it can't be picked and never reaches the field.
+  tone?: "guess" | "draft" | "note";
   // Runs when the person picks this value, after it's in the field.
   onPick?: () => void;
 }
@@ -74,8 +74,8 @@ const STYLE = `
 .row[aria-selected="true"], .row:hover { background: var(--hover); }
 .value, .detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .detail { font-size: 12px; line-height: 16px; color: var(--text-muted); }
-.guess .value { color: var(--text-muted); }
-.guess .detail { color: var(--accent); }
+.guess .value, .draft .value { color: var(--text-muted); }
+.guess .detail, .draft .detail { color: var(--accent); }
 .note { padding: 6px 16px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
 .footer { margin-top: 4px; padding: 6px 16px 2px; border-top: 1px solid var(--divider); font-size: 12px; line-height: 16px; color: var(--text-muted); }
 `;

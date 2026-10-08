@@ -21,6 +21,9 @@ final class AppModel {
     static let finishedOnboardingKey = "finishedOnboarding"
     // Set by "Not now" on the offer to keep only name and phone on the card, so it shows once.
     static let declinedShortCardKey = "declinedShortCard"
+    // Changed answers the person has looked at in the inbox, so they leave it.
+    static let seenChangesKey = "seenChanges"
+    static let maxSeenChanges = 100
 
     private(set) var state = AppState()
     private(set) var events = ExtensionEvents()
@@ -32,6 +35,7 @@ final class AppModel {
     private(set) var extensionEnabled: Bool?
     private(set) var hasFinishedOnboarding: Bool
     private(set) var hasDeclinedShortCard: Bool
+    private(set) var seenChanges: [String]
     private(set) var isLoaded = false
     private(set) var intelligenceState = IntelligenceState.unsupported
     // When the Prefill keyboard was last shown, which says it's turned on.
@@ -61,6 +65,7 @@ final class AppModel {
         self.access = contacts.access
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
         self.hasDeclinedShortCard = defaults.bool(forKey: Self.declinedShortCardKey)
+        self.seenChanges = defaults.stringArray(forKey: Self.seenChangesKey) ?? []
     }
 
     // The one model of the running app, shared by its screens.
@@ -166,6 +171,11 @@ final class AppModel {
         defaults.set(true, forKey: Self.declinedShortCardKey)
     }
 
+    func markSeen(_ change: LearnedAnswer) {
+        seenChanges = Array((seenChanges + [change.id.uuidString]).suffix(Self.maxSeenChanges))
+        defaults.set(seenChanges, forKey: Self.seenChangesKey)
+    }
+
     // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
     func deleteAllData() async {
         do {
@@ -179,8 +189,10 @@ final class AppModel {
         }
         defaults.removeObject(forKey: Self.finishedOnboardingKey)
         defaults.removeObject(forKey: Self.declinedShortCardKey)
+        defaults.removeObject(forKey: Self.seenChangesKey)
         hasFinishedOnboarding = false
         hasDeclinedShortCard = false
+        seenChanges = []
         state = AppState()
         events = ExtensionEvents()
         keyboardValues = []

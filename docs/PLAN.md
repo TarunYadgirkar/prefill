@@ -119,9 +119,9 @@ Plus the Mac build (`scripts/install-mac.sh` builds and installs it). End-to-end
 - **Phase 13: Answers that are right, not just remembered** (from the Oct 7 product review)
   - [x] 13.1 Abstain when more than one option fits
   - [x] 13.2 Scoped learning: keep the question and what it applies to
-  - [ ] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
-  - [ ] 13.4 The model sees the question, the options and the candidate answers
-  - [ ] 13.5 Fill, verify, and ask before changing an answer everywhere
+  - [x] 13.3 Memory kinds: facts, contextual facts, preferences, drafts
+  - [x] 13.4 The model sees the question, the options and the candidate answers
+  - [x] 13.5 Fill, verify, and ask before changing an answer everywhere
   - [x] 13.6 Held-out real forms and an accuracy score
   - [x] 13.7 Docs: browser first, keyboard and Mac panel as fallbacks
   - [x] 13.8 Fix rules the held-out score exposed
@@ -632,14 +632,17 @@ Install on Tarun's iPhone, check in Partiful and Messages, screenshots light and
 ### 13.3 Memory kinds
 - `Answer` gains `kind`: fact, contextual fact, preference, draft. Drafts allow line breaks and long text (lift the 200-character cap for drafts only, stored on the Prefill contact as before), are only ever suggested, never filled.
 - The You tab shows the kind, scope, source and history on an answer's page. The inbox shows only exceptions: changed answers, guesses, answers to confirm before reuse.
+- Built: `Answer.kind` comes from how an answer is stored: a draft custom field is `draft`, a label with a scope in brackets is `contextualFact` (with `scope`), everything else `fact`; `Memory.preferences` holds the demographic rule, shown read-only under Rules in the You tab. A draft (Add › Draft answer…) takes line breaks and up to 2,000 characters and is stored on Prefill's contact as a related name labelled `<Label> · Prefill draft`; older builds don't read that marker as Prefill's, so they skip the draft and keep it on rewrites (`DraftTests`). `customSuggestionsResult` carries `drafts` (why `draft`, caption "Draft · Cover letter") only for a one-field request; Fill form, the Mac's Fill form and picks never use them. An answer's page shows Kind, Applies to, Source and History (saves and replacements from this device's events). The inbox keeps waiting captures, answers a form changed (Keep, Change back, Edit) and the model's guesses (Use it records a pick; Not this caches none); saved captures, new learned answers and picks left it.
 
 ### 13.4 A model that sees the question
 - The Mac panel and the iPhone app's background pass give the on-device model the question, nearby headings, a select's options, and the candidate answers with their scopes; it returns use-this / needs-a-new-answer / unsure. Only use-this shows as "Suggested", never filled.
 - Cached guesses carry a revision of the answer store and are dropped when answers change.
+- Built: `customSuggestions` fields may carry `heading` (the last heading before the field) and, from Fill form, `options`; the handler keeps both on the `FormQuestion`. `AnswerJudging` (`Intelligence/AnswerJudge.swift`) takes an `AnswerQuestion` and `AnswerCandidate`s (label with its scope, value; drafts left out) and returns `AnswerVerdict` use / needsNew / unsure; `checked` turns a label that isn't a candidate into unsure and a scope clash into needsNew. `Intelligence` implements it with FoundationModels; `AnswerGuessing.ask` (iPhone background pass) and `.suggestion` (Mac panel, live) drive it. The cache key holds `AnswerRevision.of` (FNV-1a over sorted labels and values), so verdicts made against other answers are ignored and the question is asked again. Tests use a fake judge (`AnswerJudgeTests`); the web side is checked on the Lever fixture (`question.test.ts`).
 
 ### 13.5 Fill, verify, ask
 - After filling, read each field back and count only values that took; the pill reports the rest as "need you".
 - When the person changes a filled answer and submits, the pill asks "Update everywhere" or "Just here" instead of replacing silently.
+- Built: `fillForm` waits one turn after filling and reads every field back (`Filled.took`); only fields that kept the value count, the rest are undone, noted ("This one didn't take, check it") and returned by `fieldsLeft`. Fill form remembers the shown answer it put in a custom field (`filledAnswer`); `learn.ts` marks an answer `changedFill` when the person submitted something else. The app holds back a replacement for such an answer and replies `ask`; the pill offers "Update everywhere" (`action: update`, the existing replace path with its guards and Undo) and "Just here" (`action: keepHere`, an `AnswerOverride` event per site; no card write). A kept value is offered on that site only as a suggestion ("Used here"), never filled, because the page supplied it, and the same change there isn't asked about again. History on the answer's page shows it. After the security review: drafts come only with a `focused` request for a text area, keepHere needs `changedFill` and a learned answer, cached verdicts also key on the question's heading and options, drafts have their own limit of 5, a reformatted value still counts as taken, and Undo forgets what Fill form put in a field.
 
 ### 13.6 Accuracy you can measure
 - `web/src/fixtures/heldout/`: real forms never used to tune rules, each with the expected answer per field. A script scores right / wrong / missing separately and the number goes in AGENTS.md. Add forms Tarun meets (Meta, Partiful's web form, Google booking forms, Dorm Room Fund).

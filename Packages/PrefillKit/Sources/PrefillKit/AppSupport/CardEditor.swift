@@ -82,8 +82,8 @@ public struct CardEditor: Sendable {
         case .removeCustomField(let id):
             return fields.filter { $0.id != id }
         case .addCustomFields(let added):
-            let new = added.filter { field in !fields.contains { $0.id == field.id } }
-            return Array((fields + new).prefix(CustomField.maxCount))
+            let new = added.filter { field in !fields.contains { $0.id == field.id } && !field.isDraft }
+            return fields + new.prefix(Swift.max(0, CustomField.maxCount - fields.answerCount))
         case .orderCustomFields(let ids):
             let named = ids.compactMap { id in fields.first { $0.id == id } }
             return named + fields.filter { !ids.contains($0.id) }
