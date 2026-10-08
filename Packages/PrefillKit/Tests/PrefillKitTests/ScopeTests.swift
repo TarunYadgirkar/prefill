@@ -20,6 +20,9 @@ struct ScopeTests {
                 + "or territory where you live?", "Canada"
         ),
         ("Are you authorized to work in the UK?", "UK"),
+        ("Are you authorized to work in the E.U.?", "EU"),
+        ("Do you have the right to work in the EEA?", "EU"),
+        ("Are you authorized to work in the European Union?", "EU"),
         ("Will you require sponsorship for a Summer 2026 internship?", "Summer 2026"),
         ("Are you presently authorized to work for Braeburn in the position for which you are applying?", nil),
         (

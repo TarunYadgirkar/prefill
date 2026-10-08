@@ -20,7 +20,7 @@ public struct AnswerScope: Hashable, Sendable {
         ("US", /\b(?:USA?|U\.S\.?(?:A\.?)?)(?![A-Za-z])|(?i:\bunited states\b|\bH-?1B\b|\bgreen card\b)/),
         ("Canada", /(?i)\bcanad(?:a|ian)\b/),
         ("UK", /\bU\.?K\.?(?![A-Za-z])|(?i:\bunited kingdom\b|\bgreat britain\b|\bbritain\b)/),
-        ("EU", /\bEU\b|(?i:\beuropean union\b)/),
+        ("EU", /\bE\.?U\.?(?![A-Za-z])|\bEEA\b|(?i:\beuropean (?:union|economic area)\b)/),
         ("India", /(?i)\bindia\b/),
         ("Australia", /(?i)\baustralia\b/),
         ("New Zealand", /(?i)\bnew zealand\b/),
