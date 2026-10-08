@@ -25,11 +25,13 @@ function root(input: HTMLInputElement): Document | ShadowRoot {
   return node instanceof ShadowRoot ? node : input.ownerDocument;
 }
 
-// A box with nothing chosen still shows its placeholder; a chosen value replaces it.
+// A React-Select box with nothing chosen still shows its placeholder; a chosen value replaces
+// it. Any other box (Tally's, Ashby's) is empty when its input is.
 export function isComboboxEmpty(input: HTMLInputElement): boolean {
   if (input.value.trim() !== "") return false;
   if (input.id === "") return true;
-  return root(input).getElementById(`${prefixOf(input)}placeholder`) !== null;
+  const parts = root(input).querySelector(`[id^="${CSS.escape(prefixOf(input))}"]`);
+  return parts === null || root(input).getElementById(`${prefixOf(input)}placeholder`) !== null;
 }
 
 function optionElements(input: HTMLInputElement): HTMLElement[] {

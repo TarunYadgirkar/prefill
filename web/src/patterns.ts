@@ -116,6 +116,10 @@ export const SOMEONE_ELSE =
 const IGNORED =
   /^q$|search|query|suche|recherch|busca|検索|搜索|captcha|(promo(tion|tional)?|gift|discount|coupon)[-_. ]*code|gift.?(card|cert)|company|business|organi[sz]ation|firma|empresa|soci[eé]t[eé]|attention|attn/iu;
 
+// Words that ask for a country, and those that ask for a dialling code instead.
+export const COUNTRY = /country|countries|país|pais|\bpays\b|\bpaese\b|\bnazione\b|(\b|_)land(\b|_)|国家/iu;
+export const NOT_COUNTRY = /country.?code|(\b|_)land(\b|_).*mark/iu;
+
 export const RULES: readonly Rule[] = [
   {
     result: { kind: "email" },
@@ -140,9 +144,8 @@ export const RULES: readonly Rule[] = [
   },
   {
     result: { kind: "address", part: "country" },
-    pattern:
-      /country|countries|país|pais|\bpays\b|\bpaese\b|\bnazione\b|(\b|_)land(\b|_)|国家/iu,
-    negative: /country.?code|(\b|_)land(\b|_).*mark/iu,
+    pattern: COUNTRY,
+    negative: NOT_COUNTRY,
     controls: CHOICE,
   },
   {
@@ -154,7 +157,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "address", part: "city" },
     pattern:
-      /(?<!(?:pa|ri|li|di|ni|lo))city|town|suburb|\bort\b|stadt|ciudad|localidad|poblacion|ville|commune|citt[àa]\b|localita|cidade|市区町村|^(?:current |your |home )?location\b/iu,
+      /(?<!(?:pa|ri|li|di|ni|lo))city|town|suburb|\bort\b|stadt|ciudad|localidad|poblacion|ville|commune|citt[àa]\b|localita|cidade|市区町村|^(?:current |your |home )?location\b|where (?:are you|do you) (?:currently )?(?:located|based|live)\b/iu,
     // "Location" on an application is where the person lives, unless it asks where they'd work.
     negative: /prefer|desired|relocat|willing|office|remote|on.?site|hybrid|(?:work|job).?location/iu,
     controls: CHOICE,

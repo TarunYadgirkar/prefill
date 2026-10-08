@@ -225,6 +225,7 @@ describe("classify single fields", () => {
     ['<label>Business email <input name="x"></label>', "email"],
     ['<label>Search <input name="q"></label>', "ignored"],
     ['<label>Recipient name <input name="x"></label>', "ignored"],
+    ["<label>Where are you currently located? <input></label>", "address city"],
     ['<label>Emergency contact phone <input type="tel" name="x"></label>', "ignored"],
     ['<label>Parent/Guardian email <input type="email" name="x"></label>', "ignored"],
     ['<label>Reference name <input name="x"></label>', "ignored"],

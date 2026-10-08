@@ -13,6 +13,8 @@ import { customValues, reply, type Person } from "./heldoutHost";
 import { scoreForm, type Expectation } from "./heldoutScore";
 import greenhouseDatadog from "./fixtures/ats-greenhouse-datadog.html?raw";
 import greenhouseRoblox from "./fixtures/ats-greenhouse-roblox.html?raw";
+import ashbyOpenAi from "./fixtures/ats-ashby-openai.html?raw";
+import tallySfHacks from "./fixtures/tally-sfhacks.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
@@ -330,5 +332,25 @@ describe("Greenhouse's searchable education and location lists", () => {
     const send = { source: "https://job-boards.greenhouse.io/datadog", fields: month };
     const results = await scoreForm(greenhouseDatadog, send, { ...(alex as Person), custom: [{ label: "End date month", value: "May 2027" }] });
     expect(results[0]?.got).toBe("May");
+  }, 30_000);
+});
+
+describe("lists outside React-Select", () => {
+  const PLACES = ["Berkeley, California, United States", "Berkeley Heights, New Jersey, United States", "San Francisco, California, United States"];
+
+  it("fill Tally's school box and its country buttons", async () => {
+    const schools = ["San Francisco State University", "University of California, Berkeley", "Stanford University", "Other"];
+    const fields: Expectation[] = [
+      { field: { id: "dacf19c1-31c1-42ee-90dd-fa93349f23c7" }, want: "fill", accept: ["University of California, Berkeley"], options: schools },
+      { field: { name: "multiple_choice_b6d20b7a-1840-43b2-aa85-9c206dc14f5f" }, want: "fill", accept: ["United States"] },
+    ];
+    const results = await scoreForm(tallySfHacks, { source: "https://tally.so/r/RG2rP4", fields }, alex as Person);
+    expect(results.slice(0, 2).map(({ got }) => got.trim())).toEqual(["University of California, Berkeley", "United States"]);
+  }, 30_000);
+
+  it("fill Ashby's \"Where are you currently located?\" box", async () => {
+    const fields: Expectation[] = [{ field: { label: "Where are you currently located?" }, want: "fill", accept: [PLACES[0] ?? ""], options: PLACES }];
+    const results = await scoreForm(ashbyOpenAi, { source: "https://jobs.ashbyhq.com/openai", fields }, alex as Person);
+    expect(results[0]?.got).toBe(PLACES[0]);
   }, 30_000);
 });

@@ -10,6 +10,7 @@ import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import { fitPhones, isHelper, isOneBoxAddress, isPhoneBox } from "./fillFit";
 import type { GestureGate } from "./gesture";
 import { linkChoices } from "./links";
+import { COUNTRY, NOT_COUNTRY, SOMEONE_ELSE } from "./patterns";
 import {
   LIMITS,
   parseExtensionResponse,
@@ -262,13 +263,27 @@ function radioGroups(elements: readonly FieldElement[]): HTMLInputElement[][] {
   return [...groups.values()];
 }
 
+// "Country of Residence" as a row of buttons asks where the person lives. A longer question
+// that mentions a country (where they may work, their citizenship) asks something else.
+const COUNTRY_QUESTION_WORDS = 8;
+const OTHER_COUNTRY = /citizen|national|authori|sponsor|work|visa|born|birth/iu;
+const COUNTRY_FIELD: ContactField = { kind: "address", part: "country", group: "" };
+
+function isCountryQuestion(question: string): boolean {
+  if (question.split(/\s+/u).length > COUNTRY_QUESTION_WORDS || !COUNTRY.test(question)) return false;
+  return ![NOT_COUNTRY, OTHER_COUNTRY, SOMEONE_ELSE].some((pattern) => pattern.test(question));
+}
+
+const radioWant = (question: string): Want | undefined =>
+  isCountryQuestion(question) ? { from: "contact", field: COUNTRY_FIELD } : freeWant(question);
+
 function radioSlots(elements: readonly FieldElement[]): Slot[] {
   return radioGroups(elements).flatMap((inputs) => {
     if (inputs.length < 2 || inputs.some((input) => input.checked || !isEditable(input))) return [];
     // Pages often draw their own circles and hide the real buttons, so the labels show it's there.
     if (!inputs.some((input) => isRendered(input) || [...(input.labels ?? [])].some(isRendered))) return [];
     if (isSignIn(inputs[0] as HTMLInputElement)) return [];
-    const want = freeWant(questionOf(inputs));
+    const want = radioWant(questionOf(inputs));
     return want === undefined ? [] : [{ control: "radio" as const, inputs, want }];
   });
 }
