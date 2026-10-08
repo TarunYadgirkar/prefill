@@ -103,11 +103,38 @@ const NO_MATCH: OptionMatch = { index: -1, fits: 0 };
 export function matchOption(options: readonly Option[], answer: string): OptionMatch {
   const scores = options.map((option) => (isPlaceholder(option) ? 0 : score(option, answer)));
   const best = Math.max(0, ...scores);
-  if (best === 0) return NO_MATCH;
+  if (best === 0) return datePartMatch(options, answer);
   const index = scores.indexOf(best);
   // An option that says the answer exactly wins outright, even beside others that mean the same.
   if (best === 1) return { index, fits: 1 };
   return { index, fits: scores.filter((points) => points > 0 && best - points < AMBIGUOUS_MARGIN).length };
+}
+
+const MONTHS = [
+  "january", "february", "march", "april", "may", "june",
+  "july", "august", "september", "october", "november", "december",
+];
+const MONTH_ABBREVIATION = 3;
+// "May 2027" or "May 15, 2027": a month name, maybe a day, and a year.
+const MONTH_YEAR = /^([a-z]+)\.?\s+(?:\d{1,2},?\s+)?(\d{4})$/u;
+
+// The ways an option may say each part of a dated answer on its own: the year, and the
+// month in full or cut to three letters.
+function dateParts(answer: string): string[] {
+  const [, monthWord = "", year = ""] = MONTH_YEAR.exec(answer.trim().toLowerCase()) ?? [];
+  const month = MONTHS.find((name) => monthWord.length >= MONTH_ABBREVIATION && name.startsWith(monthWord));
+  return month === undefined ? [] : [year, month, month.slice(0, MONTH_ABBREVIATION)];
+}
+
+// Lever asks for a graduation date as a year list and a month list. A saved "May 2027" fills
+// the option that says only its year or only its month, when exactly one option does.
+function datePartMatch(options: readonly Option[], answer: string): OptionMatch {
+  const parts = dateParts(answer);
+  if (parts.length === 0) return NO_MATCH;
+  const says = (option: Option): boolean =>
+    !isPlaceholder(option) && [option.text, option.value].some((text) => parts.includes(normalize(text)));
+  const hits = options.flatMap((option, index) => (says(option) ? [index] : []));
+  return { index: hits[0] ?? -1, fits: hits.length };
 }
 
 // The index of the option that best says `answer`, or -1 when none says it well enough or

@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { pickOption } from "./choices";
 import { classify, isSensitiveText } from "./classify";
 import { fieldText } from "./custom";
 import { fieldElements } from "./dom";
+import { fillForm } from "./fill";
 import type { FieldElement } from "./fieldTypes";
 import { linkOptions } from "./links";
-import type { SuggestedLink } from "./messages";
+import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
 import leverPalantir from "./fixtures/ats-lever-palantir.html?raw";
 import workableHuggingFace from "./fixtures/ats-workable-huggingface.html?raw";
@@ -98,5 +100,32 @@ describe("one Website box with examples", () => {
       "www.linkedin.com/in/alexrivera",
       "github.com/alexrivera",
     ]);
+  });
+});
+
+describe("a saved date against year and month lists", () => {
+  it("picks the year or the month when only one option fits", () => {
+    const years = ["Select...", "2026", "2027", "2028", "Other"].map((text) => ({ text, value: text === "Select..." ? "" : text }));
+    const months = ["Select...", "April", "May", "June"].map((text) => ({ text, value: text === "Select..." ? "" : text }));
+    expect(pickOption(years, "May 2027")).toBe(2);
+    expect(pickOption(months, "May 2027")).toBe(2);
+    expect(pickOption([{ text: "Spring 2027", value: "a" }, { text: "Fall 2027", value: "b" }], "May 2027")).toBe(-1);
+    expect(pickOption([{ text: "2027", value: "a" }, { text: "May", value: "b" }], "May 2027")).toBe(-1);
+  });
+
+  it("fills Lever's graduation year and month from \"May 2027\"", async () => {
+    load("leverPalantir");
+    const send = (request: ExtensionRequest): Promise<unknown> => {
+      if (request.type !== "customSuggestions") return Promise.resolve({ type: "error", reason: "none" });
+      return Promise.resolve({
+        type: "customSuggestionsResult",
+        fields: request.fields.map(({ text }) => ({ values: /graduation/iu.test(text) ? [{ value: "May 2027", why: "card" }] : [] })),
+      });
+    };
+    await fillForm(document, { host: () => "jobs.lever.co", send });
+    const chosen = (name: string): string =>
+      document.querySelector<HTMLSelectElement>(`select[name="${name}"]`)?.selectedOptions[0]?.text ?? "";
+    expect(chosen("cards[026d7ce7-7ca4-44ed-9db6-1c7857707f0e][field0]")).toBe("2027");
+    expect(chosen("cards[c58728ca-3a96-40b6-9622-d70019b01176][field0]")).toBe("May");
   });
 });
