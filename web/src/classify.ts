@@ -21,6 +21,7 @@ import {
   OTHER_LINKS,
   RULES,
   SENSITIVE as SENSITIVE_PATTERNS,
+  SIGNATURE,
   SOMEONE_ELSE,
   type RuleResult,
 } from "./patterns";
@@ -183,11 +184,18 @@ function fromAutocomplete(
   return mapped === undefined ? IGNORED : contact(mapped, detail);
 }
 
+const STATE_WORDS = RULES.find((rule) => rule.result.kind === "address" && rule.result.part === "state")?.pattern;
+
+// "In what city and state do you reside?" asks for both in one box.
+const asksCityAndState = (result: RuleResult, texts: readonly string[]): boolean =>
+  result.kind === "address" && result.part === "city" && texts.some((text) => STATE_WORDS?.test(text) === true);
+
 function fromRule(
   result: RuleResult,
   texts: readonly string[],
 ): Classification {
   if (result.kind === "link") return link(texts);
+  if (asksCityAndState(result, texts)) return contact({ kind: "address", part: "cityState" });
   return result.kind === "ignored" ? IGNORED : contact(result);
 }
 
@@ -241,6 +249,8 @@ function sourcesOf(field: FieldDescription): string[][] {
     (texts) => texts.filter(Boolean),
   );
 }
+
+const isSignature = (sources: readonly string[][]): boolean => sources.flat().some((text) => SIGNATURE.test(text));
 
 export function isSensitiveText(sources: readonly string[][]): boolean {
   return sources
@@ -388,7 +398,7 @@ function classifyOwnOrOther(field: FieldDescription): Classification {
     return { kind: control };
   if (field.signIn) return IGNORED;
   const sources = sourcesOf(field);
-  if (isSensitiveText(sources)) return SENSITIVE;
+  if (isSensitiveText(sources) || isSignature(sources)) return SENSITIVE;
   const found = positive(field, control, sources);
   if (
     found.kind === "phone" &&

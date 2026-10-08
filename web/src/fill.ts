@@ -241,8 +241,10 @@ function labelledBy(element: Element): string {
   return ids.map((id) => element.ownerDocument.getElementById(id)?.textContent ?? "").join(" ");
 }
 
-const isRadio = (element: FieldElement): element is HTMLInputElement =>
-  element.localName === "input" && (element as HTMLInputElement).type === "radio";
+const isOfType = (type: string) => (element: FieldElement): element is HTMLInputElement =>
+  element.localName === "input" && (element as HTMLInputElement).type === type;
+const isRadio = isOfType("radio");
+const isCheckbox = isOfType("checkbox");
 
 // The question a radio button belongs to: its name within its form, since same-named radios
 // in two forms are two questions, or for a button without a name (Meta's) the radiogroup or
@@ -253,10 +255,10 @@ function radioKey(radio: HTMLInputElement, forms: Map<HTMLFormElement | null, nu
   return `${String(forms.get(radio.form))} ${radio.name}`;
 }
 
-function radioGroups(elements: readonly FieldElement[]): HTMLInputElement[][] {
+function buttonGroups(buttons: readonly HTMLInputElement[]): HTMLInputElement[][] {
   const groups = new Map<string | Element, HTMLInputElement[]>();
   const forms = new Map<HTMLFormElement | null, number>();
-  for (const radio of elements.filter(isRadio)) {
+  for (const radio of buttons) {
     const key = radioKey(radio, forms);
     if (key !== undefined) groups.set(key, [...(groups.get(key) ?? []), radio]);
   }
@@ -277,14 +279,28 @@ function isCountryQuestion(question: string): boolean {
 const radioWant = (question: string): Want | undefined =>
   isCountryQuestion(question) ? { from: "contact", field: COUNTRY_FIELD } : freeWant(question);
 
+// A group the person hasn't answered, can change, and can see. Pages often draw their own
+// circles and hide the real buttons, so the labels show it's there.
+function isOpenGroup(inputs: readonly HTMLInputElement[]): boolean {
+  if (inputs.length < 2 || inputs.some((input) => input.checked || !isEditable(input))) return false;
+  if (!inputs.some((input) => isRendered(input) || [...(input.labels ?? [])].some(isRendered))) return false;
+  return !isSignIn(inputs[0] as HTMLInputElement);
+}
+
 function radioSlots(elements: readonly FieldElement[]): Slot[] {
-  return radioGroups(elements).flatMap((inputs) => {
-    if (inputs.length < 2 || inputs.some((input) => input.checked || !isEditable(input))) return [];
-    // Pages often draw their own circles and hide the real buttons, so the labels show it's there.
-    if (!inputs.some((input) => isRendered(input) || [...(input.labels ?? [])].some(isRendered))) return [];
-    if (isSignIn(inputs[0] as HTMLInputElement)) return [];
+  return buttonGroups(elements.filter(isRadio)).flatMap((inputs) => {
+    if (!isOpenGroup(inputs)) return [];
     const want = radioWant(questionOf(inputs));
     return want === undefined ? [] : [{ control: "radio" as const, inputs, want }];
+  });
+}
+
+// Checkboxes are filled only to decline a demographic question ("Prefer not to answer" in a
+// list of ethnicities), the way a radio group is; any other checkbox is the person's choice.
+function checkboxSlots(elements: readonly FieldElement[]): Slot[] {
+  return buttonGroups(elements.filter(isCheckbox)).flatMap((inputs) => {
+    const question = isOpenGroup(inputs) ? questionOf(inputs) : "";
+    return freeWant(question)?.from === "decline" ? [{ control: "radio" as const, inputs, want: { from: "decline" as const } }] : [];
   });
 }
 
@@ -297,7 +313,7 @@ export function fillScope(doc: Document, anchor?: Element | null): ParentNode {
 export function findSlots(scope: ParentNode): Slot[] {
   const elements = fieldElements(scope, MAX_INSPECTED);
   const fields = elements.filter((element) => !isSignIn(element)).flatMap((element) => slotOf(element) ?? []);
-  return [...(isOneBoxAddress(elements) ? fields.map(wholeAddress) : fields), ...radioSlots(elements)];
+  return [...(isOneBoxAddress(elements) ? fields.map(wholeAddress) : fields), ...radioSlots(elements), ...checkboxSlots(elements)];
 }
 
 // The street box of a form with no other address boxes takes the address on one line.

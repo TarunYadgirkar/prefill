@@ -15,6 +15,9 @@ import greenhouseDatadog from "./fixtures/ats-greenhouse-datadog.html?raw";
 import greenhouseRoblox from "./fixtures/ats-greenhouse-roblox.html?raw";
 import ashbyOpenAi from "./fixtures/ats-ashby-openai.html?raw";
 import tallySfHacks from "./fixtures/tally-sfhacks.html?raw";
+import greenhouseStripe from "./fixtures/ats-greenhouse-stripe.html?raw";
+import jotformLambOfGodVbs from "./fixtures/jotform-lambofgodvbs.html?raw";
+import tallyUvaWics from "./fixtures/tally-uvawics.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
@@ -39,6 +42,9 @@ import tallyHackHub from "./fixtures/tally-hackhub.html?raw";
 // left the held-out set for this one, where its bug stays fixed.
 
 const FIXTURES = {
+  greenhouseStripe,
+  jotformLambOfGodVbs,
+  tallyUvaWics,
   airtableDormRoomFund,
   airtableIbmStartups,
   greenhouseFigma,
@@ -353,4 +359,29 @@ describe("lists outside React-Select", () => {
     const results = await scoreForm(ashbyOpenAi, { source: "https://jobs.ashbyhq.com/openai", fields }, alex as Person);
     expect(results[0]?.got).toBe(PLACES[0]);
   }, 30_000);
+});
+
+describe("signatures", () => {
+  it("are never filled, even a typed signature tagged as a given and family name", async () => {
+    await fillAsAlex("jotformLambOfGodVbs");
+    expect(["first_121", "last_121"].map(valueOf)).toEqual(["", ""]);
+    expect(summary(fieldIn("jotformLambOfGodVbs", "first_121"))).toBe("sensitive");
+  });
+});
+
+describe("Stripe's application", () => {
+  it("leaves the unlisted-school box, puts city and state in one box, and gives the preferred name", async () => {
+    await fillAsAlex("greenhouseStripe");
+    expect(valueOf("question_68843617")).toBe("");
+    expect(valueOf("question_69458357")).toBe("Berkeley, CA");
+    expect(valueOf("question_68581549")).toBe("Alex");
+  }, 60_000);
+});
+
+describe("Tally's ethnicity checkboxes", () => {
+  it("are declined with the box that declines", async () => {
+    await fillAsAlex("tallyUvaWics");
+    const checked = [...document.querySelectorAll<HTMLInputElement>("input[type=checkbox]:checked")].map((box) => labelText(box));
+    expect(checked).toEqual(["Prefer Not to Answer"]);
+  }, 60_000);
 });

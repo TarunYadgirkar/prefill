@@ -77,9 +77,10 @@ export const LINK = new RegExp(
 );
 
 // A question about how to say the name ("Name pronunciation") wants the sound, not the name,
-// and a startup, company, team or project name isn't the person's.
+// a startup, company, team or project name isn't the person's, and a preferred name is a
+// saved answer of its own.
 const nameIgnored =
-  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|how (?:do )?(?:you|we|to) say|start.?up|compan(?:y|ies)|organi[sz]ation|\bteam\b|project|venture|用户名|会社/iu;
+  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|preferred|how (?:do )?(?:you|we|to) say|start.?up|compan(?:y|ies)|organi[sz]ation|\bteam\b|project|venture|用户名|会社/iu;
 const addressNameIgnored =
   /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 
@@ -104,6 +105,11 @@ export const SENSITIVE: readonly RegExp[] = [
 // and Lever names every question "cards[...]".
 export const NOT_PHONE =
   /card(?!s\b|s\[)|(?<![a-z0-9])cc(?![a-z0-9])|(?<![a-z0-9])cc[-_.]?(?:num|no\b|exp|cvv|csc|cvc)|cvv|\bpan\b|expir|routing|account|acct|iban|ssn|social|\btax|\bdob\b|birth|\bpin\b|otp|code|token|secret|pass|pwd/iu;
+
+// A signature typed as a name ("Signature", "Electronic signature", "Type your full name to
+// sign", "Initials" on a waiver) is the person's own act, never filled for them.
+export const SIGNATURE =
+  /signature|\be-?sign|\bsign (?:your|here|below|this)|type your (?:full |legal )?name (?:to|as) (?:sign|your)|^\W*initials?\W*$|\binitial (?:here|below|each)|your initials/iu;
 
 // Words that make a field someone else's: an emergency contact, a parent or guardian, a
 // spouse, a reference or referrer, a gift's recipient. Their name, email, phone or address
