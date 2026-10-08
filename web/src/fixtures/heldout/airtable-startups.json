@@ -1,0 +1,56 @@
+{
+  "source": "https://airtable.com/appGGpHNlmMUkfLol/shrghfGlQLt411Tyr",
+  "fields": [
+    {
+      "field": {
+        "id": "1e90861b773ca73eb2ecb4e0b003e957"
+      },
+      "want": "fill",
+      "accept": [
+        "Alex Rivera"
+      ]
+    },
+    {
+      "field": {
+        "id": "17c783f28cd134da01cd8d4ec48efef1"
+      },
+      "want": "fill",
+      "accept": [
+        "alex.rivera@example.com",
+        "alex.school@example.edu",
+        "alex@work.example.org"
+      ],
+      "note": "must match the Airtable account; any of Alex's emails"
+    },
+    {
+      "field": {
+        "id": "4c9c741e997698bb9c17236bbc1cd5f6"
+      },
+      "want": "fill",
+      "accept": [
+        "https://www.linkedin.com/in/alex-rivera-example"
+      ]
+    },
+    {
+      "field": {
+        "id": "1d8e39ea26a8ce59b8cb97701178a8aa"
+      },
+      "want": "needYou",
+      "note": "Airtable workspace ID (wsp...)"
+    },
+    {
+      "field": {
+        "id": "81eae096a2a97b298fa60132b42cf29f"
+      },
+      "want": "needYou",
+      "note": "Startup's company name, not Alex's current employer"
+    },
+    {
+      "field": {
+        "id": "92d001f359c097a18c80137d8a0612d0"
+      },
+      "want": "needYou",
+      "note": "Company LinkedIn page, not Alex's profile"
+    }
+  ]
+}
