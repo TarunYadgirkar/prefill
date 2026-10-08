@@ -70,7 +70,7 @@ function byName(fields: readonly FieldElement[], name: string): Target | undefin
 }
 
 function byRadios(fields: readonly FieldElement[], labels: readonly string[]): Target | undefined {
-  const radios = fields.filter((element): element is HTMLInputElement => (element as HTMLInputElement).type === "radio");
+  const radios = fields.filter((element): element is HTMLInputElement => isButton(element as HTMLInputElement));
   const start = radios.findIndex((_, index) =>
     labels.every((label, offset) => squash(labelText(radios[index + offset] as FieldElement)).startsWith(squash(label))),
   );
