@@ -188,7 +188,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "name", part: "full" },
     pattern:
-      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム|(?:first|given)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:last|family|surname)|(?:last|family|surname)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:first|given)|name.*first.*last/iu,
+      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム|(?:first|given)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:(?:last|family).?name|surname)|(?:(?:last|family)(?:.?name)?|surname)[\W_]*(?:and|&|\+)?[\W_]*(?:first|given).?name|name[\W_]*(?:first|given)[\W_]*(?:and|&|\+)?[\W_]*(?:last|family|surname)\b/iu,
     negative: nameIgnored,
     controls: NAME,
   },

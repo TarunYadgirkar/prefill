@@ -183,6 +183,9 @@ describe("classify single fields", () => {
     ["<label>Given and family name <input></label>", "name full"],
     ['<input name="first_last_name">', "name full"],
     ["<label>Last name <input></label>", "name family"],
+    ["<label>First name and surname <input></label>", "name full"],
+    ["<label>First name and last initial <input></label>", "name given"],
+    ["<label>First and last dates of employment <input></label>", "ignored"],
     ["<label>First name <input></label>", "name given"],
     ["<label>School name <input></label>", "ignored"],
 
