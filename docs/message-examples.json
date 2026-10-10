@@ -67,7 +67,18 @@
         }
       ]
     },
-    "picked": { "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" }
+    "picked": { "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" },
+    "application": {
+      "type": "application",
+      "host": "jobs.lever.co",
+      "path": "/kepler/2b9c/apply",
+      "title": "Kepler Communications - Embedded Software Intern",
+      "fields": [
+        { "question": "What year of study are you in?", "answer": "3rd" },
+        { "question": "Describe a C or C++ project you've worked on", "answer": "I wrote firmware for a CubeSat radio.\nTested it on a bench." }
+      ],
+      "files": [{ "question": "Resume/CV", "name": "Resume_Fall_2026.pdf" }]
+    }
   },
   "responses": {
     "pong": { "type": "pong" },
@@ -138,6 +149,7 @@
     },
     "answersResult": { "type": "answersResult", "saved": 2, "updated": ["Work authorization"], "ask": ["Sponsorship"] },
     "pickedResult": { "type": "pickedResult", "remembered": true },
+    "applicationResult": { "type": "applicationResult", "saved": true },
     "error": { "type": "error", "reason": "unknown message" }
   }
 }

@@ -1,3 +1,4 @@
+import { collectApplication } from "./applications";
 import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { classify } from "./classify";
@@ -55,7 +56,14 @@ export function startPage(env: PageEnvironment): () => void {
   const stops = [
     installSuggestions(env.doc, { host, send: env.send, ...shown, attach: contactList, skipNames: !isChromium }),
     installCapture(env.doc, env.win, { host, send }),
-    installLearn(env.doc, env.win, { host, send: env.send }),
+    installLearn(env.doc, env.win, {
+      host,
+      send: env.send,
+      onSubmitted: (form) => {
+        const application = collectApplication(form, env.doc, host());
+        if (application !== undefined) send(application);
+      },
+    }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
     installCustom(env.doc, { host, send: env.send, ...shown, textAreas: true }),
   ];

@@ -28,6 +28,8 @@ export interface LearnOptions {
   send: (request: AnswersRequest) => Promise<unknown>;
   isUserEvent?: (event: Event) => boolean;
   now?: () => number;
+  // Every form the person sent with their own press, learned from or not.
+  onSubmitted?: (form: HTMLFormElement) => void;
 }
 
 // What a field asked and held when the person last changed it. A page that relabels the
@@ -332,6 +334,7 @@ export function installLearn(doc: Document, win: Window, options: LearnOptions):
     const isPressed = pressed !== undefined && pressed.form === event.target && now() - pressed.at < SUBMIT_MS;
     pressed = undefined;
     if (!isUserEvent(event) || !isPressed || !(event.target instanceof HTMLFormElement)) return;
+    options.onSubmitted?.(event.target);
     const answers = collectAnswers(event.target, touched);
     if (answers.length === 0) return;
     void send("learn", answers).then((reply) => {

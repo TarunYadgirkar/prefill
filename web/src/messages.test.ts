@@ -21,6 +21,8 @@ import {
   type PinRequest,
   type PickedRequest,
   type PickedResult,
+  type ApplicationRequest,
+  type ApplicationResult,
   type UnpinRequest,
   type UndoCaptureRequest,
   type MuteSiteRequest,
@@ -120,6 +122,18 @@ const picked: PickedRequest = {
   value: "alex.rivera@example.com",
 };
 const pickedResult: PickedResult = { type: "pickedResult", remembered: true };
+const application: ApplicationRequest = {
+  type: "application",
+  host: "jobs.lever.co",
+  path: "/kepler/2b9c/apply",
+  title: "Kepler Communications - Embedded Software Intern",
+  fields: [
+    { question: "What year of study are you in?", answer: "3rd" },
+    { question: "Describe a C or C++ project you've worked on", answer: "I wrote firmware for a CubeSat radio.\nTested it on a bench." },
+  ],
+  files: [{ question: "Resume/CV", name: "Resume_Fall_2026.pdf" }],
+};
+const applicationResult: ApplicationResult = { type: "applicationResult", saved: true };
 const customSuggestionsResult: CustomSuggestionsResult = {
   type: "customSuggestionsResult",
   fields: [
@@ -289,6 +303,7 @@ describe("message contract", () => {
       customSuggestions,
       answers,
       picked,
+      application,
     }),
   )("request %s matches the shared example", (name, typed) => {
     const example: unknown =
@@ -307,6 +322,7 @@ describe("message contract", () => {
       customSuggestionsResult,
       answersResult,
       pickedResult,
+      applicationResult,
       error,
     }),
   )("response %s matches the shared example", (name, typed) => {
