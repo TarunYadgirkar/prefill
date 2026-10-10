@@ -39,6 +39,7 @@ public struct MessageRouter: Sendable {
     private func other(_ request: ExtensionRequest) -> ExtensionResponse {
         if case .answers(let body) = request { return .answers(answers(body)) }
         if case .picked(let body) = request { return .picked(picked(body)) }
+        if case .application(let body) = request { return .application(application(body)) }
         return .popupState(sheet(request))
     }
 

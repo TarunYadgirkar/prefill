@@ -48,7 +48,8 @@ extension MessageCoding {
 extension ExtensionRequest {
     var isBrowserPageRequest: Bool {
         switch self {
-        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers, .picked: true
+        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers, .picked,
+             .application: true
         case .popupState, .pin, .unpin, .undoCapture, .muteSite: false
         }
     }
