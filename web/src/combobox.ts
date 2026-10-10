@@ -54,17 +54,26 @@ async function waitForOptions(input: HTMLInputElement): Promise<HTMLElement[]> {
 
 const CONTROL_DEPTH = 4;
 
-// Whether the box still shows `text` as its one choice. React-Select draws the choice beside
-// the input, a few levels up, and a multi-select's chips would hold more than that.
-function shows(input: HTMLInputElement, text: string): boolean {
-  if (isComboboxEmpty(input)) return false;
+// What the box shows as chosen, or "" when nothing is. React-Select draws the choice beside
+// the input, a few levels up, and a multi-select's chips hold each choice.
+// A box that keeps the choice in its own input (Tally's, Ashby's) shows it there. The walk up
+// stops at the question's label, whose words aren't a choice.
+export function comboboxChoice(input: HTMLInputElement): string {
+  if (input.value.trim() !== "") return input.value.trim();
+  if (isComboboxEmpty(input)) return "";
   let node: HTMLElement | null = input.parentElement;
   for (let depth = 0; node !== null && depth < CONTROL_DEPTH; depth += 1) {
+    if (node.querySelector("label") !== null) return "";
     const shown = node.textContent.trim();
-    if (shown !== "") return shown === text;
+    if (shown !== "") return shown;
     node = node.parentElement;
   }
-  return false;
+  return "";
+}
+
+// Whether the box still shows `text` as its one choice.
+function shows(input: HTMLInputElement, text: string): boolean {
+  return comboboxChoice(input) === text;
 }
 
 function press(input: HTMLInputElement, key: string): void {

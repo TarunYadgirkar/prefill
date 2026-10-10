@@ -1,4 +1,4 @@
-import { collectApplication } from "./applications";
+import { installApplications } from "./applications";
 import { isAtsFrame } from "./atsFrames";
 import { installCapture } from "./capture";
 import { classify } from "./classify";
@@ -53,16 +53,15 @@ export function startPage(env: PageEnvironment): () => void {
   // reorders the card for a page.
   const shown = { attach: showDropdown, skip: isFilled };
   const contactList = contactAttach(isChromium);
+  const applications = installApplications(env.doc, env.win, { host, send });
   const stops = [
+    applications.stop,
     installSuggestions(env.doc, { host, send: env.send, ...shown, attach: contactList, skipNames: !isChromium }),
     installCapture(env.doc, env.win, { host, send }),
     installLearn(env.doc, env.win, {
       host,
       send: env.send,
-      onSubmitted: (form) => {
-        const application = collectApplication(form, env.doc, host());
-        if (application !== undefined) send(application);
-      },
+      onSubmitted: applications.record,
     }),
     installLinks(env.doc, { host, send: env.send, ...shown }),
     installCustom(env.doc, { host, send: env.send, ...shown, textAreas: true }),
