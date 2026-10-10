@@ -16,6 +16,10 @@ xcrun devicectl device copy from --device $device \
   --domain-type appDataContainer --domain-identifier $PERSONAL_BUNDLE_ID \
   --source "Library/Application Support/Prefill/applications.json" \
   --destination $tmp/applications.json >$tmp/copy.log 2>&1 || {
+  if grep -q "error 7000" $tmp/copy.log; then
+    print "the iPhone has no applications to copy yet"
+    exit 0
+  fi
   cat $tmp/copy.log >&2
   print "couldn't copy the applications from $device (is it connected and unlocked?)" >&2
   exit 1
