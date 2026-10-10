@@ -35,6 +35,7 @@ struct SettingsView: View {
             Section {
                 CardStatus()
                 AutofillSection()
+                DeleteDataButton()
             } header: {
                 Text("Advanced")
             } footer: {
@@ -53,6 +54,25 @@ struct SettingsView: View {
 
     private var problemShown: Binding<Bool> {
         Binding(get: { model.problem != nil }, set: { if !$0 { model.problem = nil } })
+    }
+}
+
+struct DeleteDataButton: View {
+    @Environment(MacModel.self) private var model
+    @State private var isConfirming = false
+
+    var body: some View {
+        Button("Delete Prefill data", role: .destructive) { isConfirming = true }
+            .confirmationDialog("Delete Prefill data?", isPresented: $isConfirming) {
+                Button("Delete Prefill data", role: .destructive) {
+                    Task { await model.deleteAllData() }
+                }
+            } message: {
+                Text("""
+                    Deletes your applications, picks and saved history on this Mac. Your contact card \
+                    stays as it is, and your iPhone keeps its own.
+                    """)
+            }
     }
 }
 

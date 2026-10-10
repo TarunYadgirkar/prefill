@@ -131,6 +131,28 @@ final class MacModel {
         await refresh()
     }
 
+    // Forgets everything Prefill stored on this Mac: the store, the applications and those
+    // waiting to merge in from the iPhone. The contact card is left as it is.
+    func deleteAllData() async {
+        do {
+            try archive.removeAll()
+            try? FileManager.default.removeItem(at: Self.importsDirectory)
+            try store.removeAll()
+        } catch {
+            problem = "Prefill couldn’t delete its data. Try again in a moment."
+            return
+        }
+        for key in [Self.heardFromExtensionKey, Self.skippedExtensionKey] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
+        hasHeardFromExtension = false
+        skippedExtension = false
+        state = AppState()
+        events = ExtensionEvents()
+        applications = []
+        await refresh()
+    }
+
     func readStore() {
         state = (try? store.readAppState()) ?? state
         events = (try? store.readEvents()) ?? events
