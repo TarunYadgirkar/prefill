@@ -245,6 +245,27 @@ For an email, phone number, address or link, the app looks for the value among t
 { "type": "pickedResult", "remembered": true }
 ```
 
+## application
+
+When the person sends a job application with their own press of its submit button or Enter (the same gate as `answers`), the content script records what went into it, so they can look up later which resume, graduation date or essay went where. A form counts as an application on a job application host (`atsFrames.ts`), when it uploads a file, or when it asks one of the questions applications ask. A form with a `current-password` field never counts. Every visible field with a value goes in, whoever filled it: `question` is the field's label (or the words before it, or its placeholder), and `answer` is the text, a select's chosen options or the labels of the checked boxes in a group ("Checked" for a single box). An answer keeps its line breaks, other hidden characters become spaces, and it is cut to 4,000 characters, with 48,000 across the whole form. Sensitive fields (passwords, card, codes, bank and government ID, signatures) and demographic questions are never read. `files` holds only the names of the files uploaded, never their contents. `path` is the page's path, never its query, and `title` the page's title. At most 60 fields and 5 files.
+
+The app keeps it in the events (`applications`, the newest 10, at most 5 a minute) and nothing else: no card or contact changes. The iPhone app and the Mac app move each one into their own archive (`ApplicationArchive`, `applications.json` in the app's Application Support folder), which has no cap and which the keyboard never reads. "Delete Prefill data" deletes it. `scripts/sync-applications.sh` copies the iPhone's archive to the Mac over USB, where it merges by id. The reply says whether it was kept; the page doesn't act on it.
+
+```json
+{
+  "type": "application",
+  "host": "jobs.lever.co",
+  "path": "/kepler/2b9c/apply",
+  "title": "Kepler Communications - Embedded Software Intern",
+  "fields": [{ "question": "What year of study are you in?", "answer": "3rd" }],
+  "files": [{ "question": "Resume/CV", "name": "Resume_Fall_2026.pdf" }]
+}
+```
+
+```json
+{ "type": "applicationResult", "saved": true }
+```
+
 ## capture
 
 The content script sends `capture` with `trigger: "submit"` when the person submits a form (a submit event or a click on its submit button, whichever comes first, while Safari reports a fresh tap or keypress), or clicks a button outside any form that says it submits ("Continue", "Sign up") next to the fields they typed in. A page script that submits the form by itself sends nothing. It sends `trigger: "flush"` when the page is hidden, which covers forms that post with `fetch`; that report holds only fields the person has left, and an address only once its postal code is in. Fields reported for a hidden page stay, so a later submit still sends them whole.
