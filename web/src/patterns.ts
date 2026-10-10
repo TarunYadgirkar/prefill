@@ -80,7 +80,7 @@ export const LINK = new RegExp(
 // a startup, company, team or project name isn't the person's, and a preferred name is a
 // saved answer of its own.
 const nameIgnored =
-  /user.?name|user.?id|nickname|maiden name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|preferred|how (?:do )?(?:you|we|to) say|start.?up|compan(?:y|ies)|organi[sz]ation|\bteam\b|project|venture|用户名|会社/iu;
+  /user.?name|user.?id|nickname|maiden|\bformer\b|previous name|title|prefix|suffix|mail|school|universit|college|reference|bank|pronunc|pronounce|phonetic|preferred|how (?:do )?(?:you|we|to) say|start.?up|compan(?:y|ies)|organi[sz]ation|\bteam\b|project|venture|用户名|会社/iu;
 const addressNameIgnored =
   /(?:address|location).*(?:nickname|label|type)|lookup/iu;
 
@@ -109,13 +109,13 @@ export const NOT_PHONE =
 // A signature typed as a name ("Signature", "Electronic signature", "Type your full name to
 // sign", "Initials" on a waiver) is the person's own act, never filled for them.
 export const SIGNATURE =
-  /signature|\be-?sign|\bsign (?:your|here|below|this)|\b(?:typing|signing) (?:and signing )?your (?:full |legal )?name|type your (?:full |legal )?name (?:to|as) (?:sign|your)|^\W*initials?\W*$|\binitial (?:here|below|each)|your initials/iu;
+  /signature|\be-?sign|\bsign (?:your|here|below|this)|\b(?:typing|signing) (?:and signing )?your (?:full |legal |first (?:and|&) last )?name|type your (?:full |legal |first (?:and|&) last )?name (?:to|as) (?:sign|your)|^\W*initials?\W*$|\binitial (?:here|below|each)|your initials/iu;
 
 // Words that make a field someone else's: an emergency contact, a parent or guardian, a
-// spouse, a reference or referrer, a gift's recipient. Their name, email, phone or address
+// spouse, a child, a reference, referrer or manager, a gift's recipient. Their name, email, phone or address
 // is never the person's own.
 export const SOMEONE_ELSE =
-  /emergency|next.?of.?kin|guardian|\bparents?\b|\bmother\b|\bfather\b|spouse|husband|\bwife\b|\breferences?\b|referr(?:er|al|ing)|recipient/iu;
+  /emergency|next.?of.?kin|guardian|\bparents?\b|\bmother\b|\bfather\b|spouse|husband|\bwife\b|\breferences?\b|\breferr(?:er|al|ing|ed)|recipient|\bchild(?:ren)?\b|\bdependents?\b|manager's|\b(?:hiring|direct|line|reporting) manager|supervisor|recommender|\badvis[eo]r\b/iu;
 
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.
@@ -182,12 +182,13 @@ export const RULES: readonly Rule[] = [
     negative: addressNameIgnored,
     controls: STREET,
   },
-  // Says "full" in its own language, so it wins over the family and given words in it
+  // Says "full" in its own language, or asks for both names at once ("First and Last Name",
+  // "Name (first and last)"), so it wins over the family and given words in it
   // ("Nom complet", "Nombre completo").
   {
     result: { kind: "name", part: "full" },
     pattern:
-      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム/iu,
+      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム|(?:first|given)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:(?:last|family).?name|surname)|(?:(?:last|family)(?:.?name)?|surname)[\W_]*(?:and|&|\+)?[\W_]*(?:first|given).?name|name[\W_]*(?:first|given)[\W_]*(?:and|&|\+)?[\W_]*(?:last|family|surname)\b/iu,
     negative: nameIgnored,
     controls: NAME,
   },
