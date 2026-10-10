@@ -27,6 +27,8 @@ final class AppModel {
 
     private(set) var state = AppState()
     private(set) var events = ExtensionEvents()
+    // Every job application sent from this iPhone, newest first, from the app's own archive.
+    private(set) var applications: [SubmittedApplication] = []
     private(set) var card: CardRecord?
     private(set) var cardFailure: CardWriteFailure?
     // What is on the person's own card, which Share Contact sends, and what Prefill's contact holds.
@@ -49,6 +51,7 @@ final class AppModel {
     private let defaults: UserDefaults
     @ObservationIgnored let intelligence = Intelligence()
     @ObservationIgnored var isAskingModel = false
+    @ObservationIgnored let archive = ApplicationArchive.live()
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
@@ -179,6 +182,7 @@ final class AppModel {
     // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
     func deleteAllData() async {
         do {
+            try archive.removeAll()
             try store.removeAll()
         } catch {
             problem = Problem(
@@ -195,6 +199,7 @@ final class AppModel {
         seenChanges = []
         state = AppState()
         events = ExtensionEvents()
+        applications = []
         keyboardValues = []
         keyboardSeen = nil
         await reload()
@@ -227,6 +232,19 @@ final class AppModel {
         state = (try? store.readAppState()) ?? state
         events = (try? store.readEvents()) ?? events
         foldSafariChoices()
+        archiveApplications()
+    }
+
+    // Moves the applications Safari queued into the archive, which keeps every one.
+    private func archiveApplications() {
+        do {
+            applications = try archive.merge(events.applications)
+        } catch {
+            problem = Problem(
+                title: String(localized: "Prefill couldn’t open your applications"),
+                message: String(localized: "Nothing was lost. Prefill tries again the next time it opens.")
+            )
+        }
     }
 
     // Pins, "Don't save on this site" and undone saves from Safari's Prefill sheet.

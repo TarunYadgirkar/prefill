@@ -31,6 +31,9 @@ struct YouList: View {
             }
             group("Links", links, memory: memory)
             group("Answers", answers, memory: memory)
+            if !isSearching {
+                ApplicationsSection(count: model.applications.count)
+            }
             if !isSearching, let memory {
                 PreferencesSection(preferences: memory.preferences)
             }
@@ -129,6 +132,28 @@ struct AnswerText: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, Spacing.xxSmall)
         .accessibilityElement(children: .combine)
+    }
+}
+
+// Where the job applications sent from Safari open, with how many there are.
+private struct ApplicationsSection: View {
+    let count: Int
+
+    var body: some View {
+        Section {
+            NavigationLink {
+                ApplicationsList()
+            } label: {
+                VStack(alignment: .leading, spacing: Spacing.hairline) {
+                    Text("Applications").textRole(.value)
+                    Text(count == 0 ? "None sent yet" : "^[\(count) sent](inflect: true)").textRole(.footnote)
+                }
+                .padding(.vertical, Spacing.xxSmall)
+            }
+            .accessibilityIdentifier("applications")
+        } header: {
+            Text("History").textRole(.groupHeader)
+        }
     }
 }
 
