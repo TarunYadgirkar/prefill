@@ -70,4 +70,12 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
     }
 
     public var site: String { Normalizer.registrableDomain(host) }
+
+    // Held to the limits of the message it came from, for one read from another device's file.
+    var isValid: Bool {
+        let request = ExtensionRequest.application(
+            ApplicationRequest(host: host, path: path, title: title, fields: fields, files: files)
+        )
+        return request.isWithinLimits && request.isWellFormed
+    }
 }

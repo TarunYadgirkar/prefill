@@ -49,6 +49,15 @@ struct ApplicationTests {
         #expect(try Data(contentsOf: archive.url) == Data("not json".utf8))
     }
 
+    @Test func aCopiedFileKeepsOnlyApplicationsAPageCouldSend() throws {
+        let good = SubmittedApplication(date: .now, request: Self.request)
+        let forged = SubmittedApplication(date: .now, request: ApplicationRequest(
+            host: "Evil Host/", path: "/", title: "x", fields: [.init(question: "q", answer: "a")], files: []
+        ))
+        let data = try JSONEncoder().encode([good, forged])
+        #expect(try ApplicationArchive.applications(from: data).map(\.id) == [good.id])
+    }
+
     @Test func theCSVHasARowPerQuestionAndNoFormulas() {
         let application = SubmittedApplication(date: Date(timeIntervalSince1970: 86_400 * 365), request: Self.request)
         let lines = ApplicationExport.csv([application]).components(separatedBy: "\r\n")

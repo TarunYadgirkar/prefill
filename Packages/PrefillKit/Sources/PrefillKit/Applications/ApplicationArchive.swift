@@ -40,9 +40,10 @@ public struct ApplicationArchive: Sendable {
         return merged
     }
 
-    // Another device's archive file, as copied over.
+    // Another device's archive file, as copied over. Only applications a page could have sent
+    // are kept.
     public static func applications(from data: Data) throws -> [SubmittedApplication] {
-        try DocumentCoder.decode([SubmittedApplication].self, from: data)
+        try DocumentCoder.decode([SubmittedApplication].self, from: data).filter(\.isValid)
     }
 
     public func removeAll() throws {
