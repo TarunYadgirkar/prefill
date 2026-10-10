@@ -96,9 +96,12 @@ private extension ApplicationRequest {
             && title.utf16.count <= MessageLimits.text
             && fields.count <= MessageLimits.applicationFields && files.count <= MessageLimits.applicationFiles
             && fields.allSatisfy {
-                $0.question.utf16.count <= MessageLimits.fieldText && $0.answer.utf16.count <= MessageLimits.applicationAnswer
+                $0.question.utf16.count <= MessageLimits.fieldText
+                    && $0.answer.utf16.count <= MessageLimits.applicationAnswer
             }
-            && files.allSatisfy { $0.question.utf16.count <= MessageLimits.fieldText && $0.name.utf16.count <= MessageLimits.text }
+            && files.allSatisfy {
+                $0.question.utf16.count <= MessageLimits.fieldText && $0.name.utf16.count <= MessageLimits.text
+            }
     }
 
     var isWellFormed: Bool {

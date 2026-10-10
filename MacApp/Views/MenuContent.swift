@@ -21,6 +21,8 @@ struct MenuContent: View {
                 CardStatus()
             }
             Divider()
+            ApplicationsRow()
+            Divider()
             AutofillSection(explainsAccess: setup.isComplete)
             Divider()
             BrowserList(browsers: model.browsers.filter(\.isInstalled))
@@ -34,6 +36,26 @@ struct MenuContent: View {
         }
         .padding(Spacing.medium)
         .frame(width: Size.menuWidth)
+    }
+}
+
+// The job applications sent from this Mac's browsers and the iPhone, and the CSV for Sheets.
+struct ApplicationsRow: View {
+    @Environment(MacModel.self) private var model
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                Text("Applications")
+                let count = model.applications.count
+                Text(count == 0 ? "None sent yet" : "^[\(count) sent](inflect: true)")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+            }
+            Spacer()
+            Button("Export for Google Sheets") { model.exportApplications() }
+                .disabled(model.applications.isEmpty)
+        }
     }
 }
 

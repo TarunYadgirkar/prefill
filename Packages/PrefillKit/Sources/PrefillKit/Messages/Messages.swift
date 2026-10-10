@@ -157,6 +157,7 @@ extension ExtensionRequest: Codable {
         case .linkSuggestions: self = .linkSuggestions(try LinkSuggestionsRequest(from: decoder))
         case .contactSuggestions: self = .contactSuggestions(try ContactSuggestionsRequest(from: decoder))
         case .customSuggestions: self = .customSuggestions(try CustomSuggestionsRequest(from: decoder))
+        case .application: self = .application(try ApplicationRequest(from: decoder))
         case .some(let sheet): self = try Self.sheetRequest(sheet, from: decoder)
         case nil: throw MessageError.unknownType
         }
@@ -171,8 +172,7 @@ extension ExtensionRequest: Codable {
         case .muteSite: .muteSite(try MuteSiteRequest(from: decoder))
         case .answers: .answers(try AnswersRequest(from: decoder))
         case .picked: .picked(try PickedRequest(from: decoder))
-        case .application: .application(try ApplicationRequest(from: decoder))
-        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions:
+        case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .application:
             throw MessageError.unknownType
         }
     }

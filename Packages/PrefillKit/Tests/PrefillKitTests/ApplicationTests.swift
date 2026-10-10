@@ -40,7 +40,8 @@ struct ApplicationTests {
 
     @Test func aDamagedArchiveIsNeverOverwritten() throws {
         let archive = temporaryArchive()
-        try FileManager.default.createDirectory(at: archive.url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let folder = archive.url.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
         try Data("not json".utf8).write(to: archive.url)
         #expect(throws: (any Error).self) {
             try archive.merge([SubmittedApplication(date: .now, request: Self.request)])

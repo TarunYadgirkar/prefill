@@ -40,6 +40,11 @@ public struct ApplicationArchive: Sendable {
         return merged
     }
 
+    // Another device's archive file, as copied over.
+    public static func applications(from data: Data) throws -> [SubmittedApplication] {
+        try DocumentCoder.decode([SubmittedApplication].self, from: data)
+    }
+
     public func removeAll() throws {
         do {
             try FileManager.default.removeItem(at: url)
@@ -54,7 +59,9 @@ public struct ApplicationArchive: Sendable {
     }
 
     #if os(iOS)
-    private static let writeOptions: Data.WritingOptions = [.atomic, .completeFileProtectionUntilFirstUserAuthentication]
+    private static let writeOptions: Data.WritingOptions = [
+        .atomic, .completeFileProtectionUntilFirstUserAuthentication
+    ]
     #else
     private static let writeOptions: Data.WritingOptions = [.atomic]
     #endif
