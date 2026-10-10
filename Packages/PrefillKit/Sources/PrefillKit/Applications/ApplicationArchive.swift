@@ -28,13 +28,13 @@ public struct ApplicationArchive: Sendable {
         return try DocumentCoder.decode([SubmittedApplication].self, from: Data(contentsOf: url))
     }
 
+    // A later send of the same application replaces the earlier one.
     @discardableResult
     public func merge(_ new: [SubmittedApplication]) throws -> [SubmittedApplication] {
         let current = try read()
-        let known = Set(current.map(\.id))
-        let added = new.filter { !known.contains($0.id) }
-        guard !added.isEmpty else { return current }
-        let merged = Self.uniqued(current + added).sorted { $0.date > $1.date }
+        let latest = Self.latest(current + new)
+        guard Set(latest) != Set(current) else { return current }
+        let merged = latest.sorted { $0.date > $1.date }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try DocumentCoder.encode(merged).write(to: url, options: Self.writeOptions)
         return merged
@@ -54,9 +54,8 @@ public struct ApplicationArchive: Sendable {
         }
     }
 
-    private static func uniqued(_ applications: [SubmittedApplication]) -> [SubmittedApplication] {
-        var seen = Set<UUID>()
-        return applications.filter { seen.insert($0.id).inserted }
+    private static func latest(_ applications: [SubmittedApplication]) -> [SubmittedApplication] {
+        Array(Dictionary(applications.map { ($0.id, $0) }) { $0.date >= $1.date ? $0 : $1 }.values)
     }
 
     #if os(iOS)

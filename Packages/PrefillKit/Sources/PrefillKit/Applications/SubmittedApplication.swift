@@ -26,6 +26,9 @@ public struct ApplicationRequest: Codable, Sendable, Hashable {
         }
     }
 
+    // One per page, so a second send from it (after the page turned an answer away) replaces
+    // the first.
+    public let id: UUID
     public let host: String
     // The page's path only: its query can carry tokens.
     public let path: String
@@ -33,7 +36,8 @@ public struct ApplicationRequest: Codable, Sendable, Hashable {
     public let fields: [Field]
     public let files: [File]
 
-    public init(host: String, path: String, title: String, fields: [Field], files: [File]) {
+    public init(id: UUID = UUID(), host: String, path: String, title: String, fields: [Field], files: [File]) {
+        self.id = id
         self.host = host
         self.path = path
         self.title = title
@@ -59,8 +63,8 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
     public let fields: [ApplicationRequest.Field]
     public let files: [ApplicationRequest.File]
 
-    public init(id: UUID = UUID(), date: Date, request: ApplicationRequest) {
-        self.id = id
+    public init(date: Date, request: ApplicationRequest) {
+        id = request.id
         self.date = date
         host = request.host
         path = request.path
@@ -74,7 +78,7 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
     // Held to the limits of the message it came from, for one read from another device's file.
     var isValid: Bool {
         let request = ExtensionRequest.application(
-            ApplicationRequest(host: host, path: path, title: title, fields: fields, files: files)
+            ApplicationRequest(id: id, host: host, path: path, title: title, fields: fields, files: files)
         )
         return request.isWithinLimits && request.isWellFormed
     }

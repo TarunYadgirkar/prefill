@@ -70,6 +70,7 @@
     "picked": { "type": "picked", "host": "boards.example.io", "kind": "email", "value": "alex.rivera@example.com" },
     "application": {
       "type": "application",
+      "id": "6F9619FF-8B86-D011-B42D-00C04FC964FF",
       "host": "jobs.lever.co",
       "path": "/kepler/2b9c/apply",
       "title": "Kepler Communications - Embedded Software Intern",

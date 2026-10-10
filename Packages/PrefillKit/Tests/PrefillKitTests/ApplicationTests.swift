@@ -12,6 +12,11 @@ struct ApplicationTests {
         files: [.init(question: "Resume/CV", name: "Resume_Fall_2026.pdf")]
     )
 
+    private static let other = ApplicationRequest(
+        host: "jobs.ashbyhq.com", path: "/openai/apply", title: "OpenAI", fields: [.init(question: "q", answer: "a")],
+        files: []
+    )
+
     private func temporaryArchive() -> ApplicationArchive {
         ApplicationArchive(directory: FileManager.default.temporaryDirectory.appending(path: UUID().uuidString))
     }
@@ -30,10 +35,13 @@ struct ApplicationTests {
     @Test func theArchiveKeepsEveryApplicationOnceNewestFirst() throws {
         let archive = temporaryArchive()
         let older = SubmittedApplication(date: Date(timeIntervalSince1970: 1), request: Self.request)
-        let newer = SubmittedApplication(date: Date(timeIntervalSince1970: 2), request: Self.request)
+        let newer = SubmittedApplication(date: Date(timeIntervalSince1970: 2), request: Self.other)
+        let resent = SubmittedApplication(date: Date(timeIntervalSince1970: 3), request: Self.request)
         try archive.merge([older])
         try archive.merge([newer, older])
         #expect(try archive.read().map(\.id) == [newer.id, older.id])
+        try archive.merge([resent])
+        #expect(try archive.read().map(\.date) == [resent.date, newer.date])
         try archive.removeAll()
         #expect(try archive.read().isEmpty)
     }

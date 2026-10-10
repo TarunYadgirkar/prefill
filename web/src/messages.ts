@@ -309,6 +309,8 @@ const pageRequests = {
   // The person sent a job application: the app keeps what went into it for them to look up.
   application: object({
     type: literal("application"),
+    // One per page, so a second send from it replaces the first.
+    id: uuid,
     host: hostName,
     path: text(LIMITS.path),
     title: text(LIMITS.text),

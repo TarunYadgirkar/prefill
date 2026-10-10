@@ -124,6 +124,7 @@ const picked: PickedRequest = {
 const pickedResult: PickedResult = { type: "pickedResult", remembered: true };
 const application: ApplicationRequest = {
   type: "application",
+  id: "6F9619FF-8B86-D011-B42D-00C04FC964FF",
   host: "jobs.lever.co",
   path: "/kepler/2b9c/apply",
   title: "Kepler Communications - Embedded Software Intern",
