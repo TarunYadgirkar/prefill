@@ -182,12 +182,13 @@ export const RULES: readonly Rule[] = [
     negative: addressNameIgnored,
     controls: STREET,
   },
-  // Says "full" in its own language, so it wins over the family and given words in it
+  // Says "full" in its own language, or asks for both names at once ("First and Last Name",
+  // "Name (first and last)"), so it wins over the family and given words in it
   // ("Nom complet", "Nombre completo").
   {
     result: { kind: "name", part: "full" },
     pattern:
-      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム/iu,
+      /full.?name|nom(?:bre|e)? complet[oa]?|vollst[äa]ndiger.?name|氏名|姓名|フルネーム|(?:first|given)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:last|family|surname)|(?:last|family|surname)(?:.?name)?[\W_]*(?:and|&|\+)?[\W_]*(?:first|given)|name.*first.*last/iu,
     negative: nameIgnored,
     controls: NAME,
   },
