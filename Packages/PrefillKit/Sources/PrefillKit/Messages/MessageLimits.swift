@@ -28,6 +28,10 @@ public enum MessageLimits {
     static let answers = JobQuestion.allCases.count
     // The options an answered select or radio group offered, each cut to `text`.
     static let answerOptions = 10
+    static let applicationFields = 60
+    static let applicationFiles = 5
+    static let applicationAnswer = 4_000
+    static let path = 200
 }
 
 extension ExtensionRequest {
@@ -54,6 +58,7 @@ extension ExtensionRequest {
         case .picked(let body):
             body.host.count <= MessageLimits.host && body.value.utf16.count <= MessageLimits.value
                 && (body.question?.utf16.count ?? 0) <= MessageLimits.fieldText
+        case .application(let body): body.isWithinLimits
         }
     }
 }
@@ -82,6 +87,28 @@ private extension AnswersRequest.Answer {
 
     var isWellFormed: Bool {
         ([value, text ?? ""] + (options ?? [])).allSatisfy { MessageText.isPlain($0) }
+    }
+}
+
+private extension ApplicationRequest {
+    var isWithinLimits: Bool {
+        host.count <= MessageLimits.host && path.utf16.count <= MessageLimits.path
+            && title.utf16.count <= MessageLimits.text
+            && fields.count <= MessageLimits.applicationFields && files.count <= MessageLimits.applicationFiles
+            && fields.allSatisfy {
+                $0.question.utf16.count <= MessageLimits.fieldText
+                    && $0.answer.utf16.count <= MessageLimits.applicationAnswer
+            }
+            && files.allSatisfy {
+                $0.question.utf16.count <= MessageLimits.fieldText && $0.name.utf16.count <= MessageLimits.text
+            }
+    }
+
+    var isWellFormed: Bool {
+        let lines = fields.map(\.answer)
+        let texts = [path, title] + fields.map(\.question) + files.flatMap { [$0.question, $0.name] }
+        return MessageText.isHost(host) && texts.allSatisfy { MessageText.isPlain($0) }
+            && lines.allSatisfy { MessageText.isPlain($0, allowingNewlines: true) }
     }
 }
 
@@ -119,6 +146,7 @@ extension ExtensionRequest {
             MessageText.isHost(body.host) && body.answers.allSatisfy(\.isWellFormed)
         case .picked(let body):
             MessageText.isHost(body.host) && MessageText.isPlain(body.value) && MessageText.isPlain(body.question ?? "")
+        case .application(let body): body.isWellFormed
         }
     }
 
@@ -137,6 +165,7 @@ extension ExtensionRequest {
         case .customSuggestions(let body): body.host
         case .answers(let body): body.host
         case .picked(let body): body.host
+        case .application(let body): body.host
         }
     }
 }

@@ -37,6 +37,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - Reads both contacts as one `CardRecord` and writes each part back to its own contact.
   - Callers (`CardWriter`, never-drop guard, readers, Mac) don't know about the split.
 - **`Memory`** (`PrefillKit/Memory/`): a read-only view of every answer (contact values, links, custom fields) with its origin, where it's stored and `uses(of:)` ("Used on"). The app's Inbox and You screens read it through `AppSupport/MemoryLookup.swift`. The message routers still read `CardRecord` directly (see PLAN 3.2).
+- **Sent applications** (`PrefillKit/Applications/`): on a trusted submit of a job application, `web/src/applications.ts` sends every question with its answer and the uploaded files' names. They wait in `ExtensionEvents.applications` (newest 10) until the app or the Mac app moves them into `ApplicationArchive` (its own `applications.json`, uncapped, never read by the keyboard, wiped by "Delete Prefill data"). The You tab's Applications row lists them; both apps export a CSV for Google Sheets. `scripts/sync-applications.sh` copies the iPhone's file to the Mac over USB (auto-reinstall runs it daily). The Mac has no "Delete Prefill data" yet, so its archive stays until the file is removed.
 - **Per-device app state** (pins, usage, picks, muted sites, review queue):
   - iPhone: the Keychain store for Personal, the App Group store for AppStore.
   - Mac: `~/Library/Application Support/Prefill/Store`.

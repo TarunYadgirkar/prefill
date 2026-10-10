@@ -248,6 +248,7 @@ fi
 print $$ >$LOCK/pid
 
 log "checking $DEVICE"
+zsh ${0:A:h}/sync-applications.sh $DEVICE >>$LOG 2>&1 || log "applications not copied from the iPhone this time"
 install_due || exit 0
 [[ -n $BUNDLE_ID ]] || give_up "no PREFILL_BUNDLE_ID in Config/Personal.xcconfig"
 

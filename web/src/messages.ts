@@ -70,6 +70,12 @@ export const LIMITS = {
   answers: 8,
   // The options an answered select or radio group offered, each cut to `text`.
   answerOptions: 10,
+  // What a job application the person sent holds: each question with its answer (an essay
+  // may run long and span lines), the uploaded files' names, and the page's path and title.
+  applicationFields: 60,
+  applicationFiles: 5,
+  applicationAnswer: 4_000,
+  path: 200,
 } as const;
 
 export type FieldKind = (typeof FIELD_KINDS)[number];
@@ -300,6 +306,21 @@ const pageRequests = {
     value: text(LIMITS.value),
     question: optional(text(LIMITS.fieldText)),
   }),
+  // The person sent a job application: the app keeps what went into it for them to look up.
+  application: object({
+    type: literal("application"),
+    host: hostName,
+    path: text(LIMITS.path),
+    title: text(LIMITS.text),
+    fields: arrayOf(
+      object({
+        question: text(LIMITS.fieldText),
+        answer: text(LIMITS.applicationAnswer, HIDDEN_EXCEPT_NEWLINE),
+      }),
+      LIMITS.applicationFields,
+    ),
+    files: arrayOf(object({ question: text(LIMITS.fieldText), name: text(LIMITS.text) }), LIMITS.applicationFiles),
+  }),
 };
 
 const contactKind = oneOf(CONTACT_KINDS);
@@ -394,6 +415,7 @@ const pageResponses = {
     ask: optional(arrayOf(text(LIMITS.text), LIMITS.answers)),
   }),
   pickedResult: object({ type: literal("pickedResult"), remembered: boolean }),
+  applicationResult: object({ type: literal("applicationResult"), saved: boolean }),
   error: object({ type: literal("error"), reason: text(LIMITS.reason) }),
 };
 
@@ -425,8 +447,10 @@ export type CustomSuggestionsRequest = Parsed<
 >;
 export type AnswersRequest = Parsed<typeof pageRequests.answers>;
 export type PickedRequest = Parsed<typeof pageRequests.picked>;
+export type ApplicationRequest = Parsed<typeof pageRequests.application>;
 export type PageRequest =
   | Ping
+  | ApplicationRequest
   | AnswersRequest
   | PickedRequest
   | CaptureRequest
@@ -462,8 +486,10 @@ export type CustomSuggestionsResult = Parsed<
 >;
 export type AnswersResult = Parsed<typeof pageResponses.answersResult>;
 export type PickedResult = Parsed<typeof pageResponses.pickedResult>;
+export type ApplicationResult = Parsed<typeof pageResponses.applicationResult>;
 export type PageResponse =
   | Pong
+  | ApplicationResult
   | AnswersResult
   | PickedResult
   | CaptureResult

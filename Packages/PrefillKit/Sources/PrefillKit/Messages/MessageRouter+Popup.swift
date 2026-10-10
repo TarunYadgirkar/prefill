@@ -12,7 +12,7 @@ extension MessageRouter {
         case .undoCapture(let body): undoCapture(body)
         case .muteSite(let body): muteSite(body)
         case .ping, .capture, .linkSuggestions, .contactSuggestions, .customSuggestions, .answers,
-             .picked:
+             .picked, .application:
             PopupStateResponse(failure: .other)
         }
     }

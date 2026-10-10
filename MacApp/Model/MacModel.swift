@@ -35,11 +35,15 @@ final class MacModel {
     private(set) var hasHeardFromExtension = UserDefaults.standard.bool(forKey: heardFromExtensionKey)
     private(set) var skippedExtension = UserDefaults.standard.bool(forKey: skippedExtensionKey)
     var problem: String?
+    // Job applications sent from the browsers here, and from the iPhone once its history is
+    // copied over USB (scripts/sync-applications.sh), newest first.
+    private(set) var applications: [SubmittedApplication] = []
 
     let store: any SharedStore
     let gateway: any ContactsGateway
     // Set only in the browser test build, which uses a fixed card instead of My Card.
     private let fixedLink: CardLink?
+    @ObservationIgnored let archive = ApplicationArchive(directory: RelaySocket.directory)
     @ObservationIgnored private var server: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
 
@@ -132,6 +136,11 @@ final class MacModel {
         events = (try? store.readEvents()) ?? events
         let folded = state.folding(events)
         if folded != state { commit(folded) }
+        archiveApplications()
+    }
+
+    func setApplications(_ merged: [SubmittedApplication]) {
+        applications = merged
     }
 
     func commit(_ next: AppState) {
