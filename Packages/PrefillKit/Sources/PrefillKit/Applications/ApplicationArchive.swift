@@ -33,7 +33,7 @@ public struct ApplicationArchive: Sendable {
     public func merge(_ new: [SubmittedApplication]) throws -> [SubmittedApplication] {
         let current = try read()
         let latest = Self.latest(current + new)
-        guard Set(latest) != Set(current) else { return current }
+        guard latest.count != current.count || Set(latest) != Set(current) else { return current }
         let merged = latest.sorted { $0.date > $1.date }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
         try DocumentCoder.encode(merged).write(to: url, options: Self.writeOptions)
@@ -54,8 +54,13 @@ public struct ApplicationArchive: Sendable {
         }
     }
 
+    // Every step and send of one application shares its id: they become one record, each
+    // question with its latest answer, under the latest page's title.
     private static func latest(_ applications: [SubmittedApplication]) -> [SubmittedApplication] {
-        Array(Dictionary(applications.map { ($0.id, $0) }) { $0.date >= $1.date ? $0 : $1 }.values)
+        let byID = Dictionary(grouping: applications, by: \.id)
+        return byID.values.compactMap { sends in
+            sends.sorted { $0.date < $1.date }.reduce(nil) { combined, send in combined?.adding(send) ?? send }
+        }
     }
 
     #if os(iOS)
