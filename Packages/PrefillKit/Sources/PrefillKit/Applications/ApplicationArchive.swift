@@ -32,7 +32,7 @@ public struct ApplicationArchive: Sendable {
     @discardableResult
     public func merge(_ new: [SubmittedApplication]) throws -> [SubmittedApplication] {
         let current = try read()
-        let latest = Self.latest(current + new).map(\.withoutSelfIdentification)
+        let latest = Self.latest(current + new)
         guard Set(latest) != Set(current) else { return current }
         let merged = latest.sorted { $0.date > $1.date }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)

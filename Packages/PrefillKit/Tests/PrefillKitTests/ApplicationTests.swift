@@ -66,22 +66,6 @@ struct ApplicationTests {
         #expect(try ApplicationArchive.applications(from: data).map(\.id) == [good.id])
     }
 
-    @Test func demographicAnswersNeverStayEvenFromAnOlderRecord() throws {
-        let archive = temporaryArchive()
-        let request = ApplicationRequest(
-            host: "jobs.ashbyhq.com", path: "/hex/apply", title: "Hex",
-            fields: [
-                .init(question: "U.S. EQUAL EMPLOYMENT OPPORTUNITY INFORMATION", answer: "Male"),
-                .init(question: "Veteran status", answer: "I am not a protected veteran"),
-                .init(question: "Ethnicity", answer: "Decline to self-identify"),
-                .init(question: "Graduation year", answer: "2028")
-            ],
-            files: []
-        )
-        let merged = try archive.merge([SubmittedApplication(date: .now, request: request)])
-        #expect(merged.first?.fields.map(\.answer) == ["2028"])
-    }
-
     @Test func theCSVHasARowPerQuestionAndNoFormulas() {
         let application = SubmittedApplication(date: Date(timeIntervalSince1970: 86_400 * 365), request: Self.request)
         let lines = ApplicationExport.csv([application]).components(separatedBy: "\r\n")
