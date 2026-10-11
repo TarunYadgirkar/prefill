@@ -16,9 +16,17 @@ enum Size {
     static let settingsHeight: CGFloat = 640
     static let reviewRows = 5
     static let learnedRows = 3
+    static let liftMarkWidth: CGFloat = 18
+    static let liftMarkHeight: CGFloat = 10
 }
 
 enum Palette {
+    // Lift, the iPhone app's teal (App/Theme/Palette.swift), as the tint of every control.
+    static let accent = Color(nsColor: NSColor(name: nil) { appearance in
+        appearance.bestMatch(from: [.aqua, .darkAqua]) == .darkAqua
+            ? NSColor(srgbRed: 0x4C / 255, green: 0xC9 / 255, blue: 0xD6 / 255, alpha: 1)
+            : NSColor(srgbRed: 0, green: 0x70 / 255, blue: 0x7E / 255, alpha: 1)
+    })
     static let positive = Color(nsColor: .systemGreen)
     static let warning = Color(nsColor: .systemOrange)
     // Marks what waits for the person, as on the iPhone: systemOrange is short of 3:1 on a

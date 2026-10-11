@@ -16,6 +16,7 @@ struct MenuContent: View {
                 Divider()
             }
             if isReady {
+                MenuHeader()
                 ReviewList()
             } else if setup.hasContacts {
                 CardStatus()
@@ -36,6 +37,26 @@ struct MenuContent: View {
         }
         .padding(Spacing.medium)
         .frame(width: Size.menuWidth)
+    }
+}
+
+// Whose card Prefill fills from and what it holds, before anything that needs the person.
+// The capsule is the lifted row from the app icon.
+struct MenuHeader: View {
+    @Environment(MacModel.self) private var model
+
+    var body: some View {
+        HStack(alignment: .center, spacing: Spacing.small) {
+            Capsule()
+                .fill(Palette.accent)
+                .frame(width: Size.liftMarkWidth, height: Size.liftMarkHeight)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                Text(model.cardName).font(.title3.weight(.semibold).width(.expanded))
+                Text(model.cardSummary).font(.callout).foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -98,7 +119,7 @@ struct CardStatus: View {
 
     @ViewBuilder private var granted: some View {
         if model.hasMeCard, model.card != nil {
-            Notice(symbol: "person.crop.circle.badge.checkmark", title: model.cardName, detail: summary) {
+            Notice(symbol: "person.crop.circle.badge.checkmark", title: model.cardName, detail: model.cardSummary) {
                 EmptyView()
             }
         } else {
@@ -111,14 +132,6 @@ struct CardStatus: View {
         }
     }
 
-    private var summary: String {
-        let counts = [
-            (model.values(.email).count, "email", "emails"),
-            (model.values(.phone).count, "phone number", "phone numbers"),
-            (model.values(.address).count, "address", "addresses")
-        ]
-        return counts.filter { $0.0 > 0 }.map { "\($0.0) \($0.0 == 1 ? $0.1 : $0.2)" }.joined(separator: ", ")
-    }
 }
 
 struct Notice<Actions: View>: View {
@@ -144,6 +157,18 @@ struct Notice<Actions: View>: View {
                 actions()
             }
         }
+    }
+}
+
+extension MacModel {
+    // "2 emails, 1 phone number, 1 address", what the card gives Prefill to fill with.
+    var cardSummary: String {
+        let counts = [
+            (values(.email).count, "email", "emails"),
+            (values(.phone).count, "phone number", "phone numbers"),
+            (values(.address).count, "address", "addresses")
+        ]
+        return counts.filter { $0.0 > 0 }.map { "\($0.0) \($0.0 == 1 ? $0.1 : $0.2)" }.joined(separator: ", ")
     }
 }
 

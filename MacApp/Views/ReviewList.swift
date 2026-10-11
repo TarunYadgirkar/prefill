@@ -42,8 +42,32 @@ private struct InboxMark: View {
 
     var body: some View {
         Image(systemName: isWaiting ? "circle" : "sparkle")
-            .foregroundStyle(isWaiting ? Palette.attention : Color.accentColor)
+            .foregroundStyle(isWaiting ? Palette.attention : Palette.accent)
             .accessibilityHidden(true)
+    }
+}
+
+// Each row: the mark, the value with where it came from, then its actions under it, so a
+// long email keeps the menu's width instead of being cut off beside the buttons.
+private struct ReviewRow<Actions: View>: View {
+    let isWaiting: Bool
+    let value: String
+    let detail: String
+    @ViewBuilder let actions: () -> Actions
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
+            InboxMark(isWaiting: isWaiting)
+            VStack(alignment: .leading, spacing: Spacing.xSmall) {
+                VStack(alignment: .leading, spacing: Spacing.hairline) {
+                    Text(value).lineLimit(2).truncationMode(.middle)
+                    Text(detail).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                }
+                HStack(spacing: Spacing.xSmall) { actions() }
+                    .controlSize(.small)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
     }
 }
 
@@ -52,19 +76,13 @@ private struct WaitingRow: View {
     let item: RecentItem
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
-            InboxMark(isWaiting: true)
-            VStack(alignment: .leading, spacing: Spacing.hairline) {
-                Text(item.value.display).lineLimit(2)
-                Text("Typed on \(item.host)").font(.caption).foregroundStyle(.secondary)
-            }
-            Spacer()
-            Button("Add") { Task { await model.save(item) } }
+        ReviewRow(isWaiting: true, value: item.value.display, detail: "Typed on \(item.host)") {
+            Button("Add to card") { Task { await model.save(item) } }
+                .buttonStyle(.borderedProminent)
                 .accessibilityLabel("Add \(item.value.display) to your card")
             Button("Dismiss") { model.dismiss(item) }
                 .accessibilityLabel("Dismiss \(item.value.display)")
         }
-        .controlSize(.small)
     }
 }
 
@@ -73,17 +91,10 @@ private struct LearnedRow: View {
     let answer: LearnedAnswer
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
-            InboxMark(isWaiting: false)
-            VStack(alignment: .leading, spacing: Spacing.hairline) {
-                Text(answer.value).lineLimit(2)
-                Text("Learned from \(answer.host): \(answer.label)").font(.caption).foregroundStyle(.secondary)
-            }
-            Spacer()
+        ReviewRow(isWaiting: false, value: answer.value, detail: "\(answer.label), learned from \(answer.host)") {
             Button("Remove", role: .destructive) { Task { await model.removeLearned(answer) } }
                 .accessibilityLabel("Remove \(answer.label) answer")
         }
-        .controlSize(.small)
     }
 }
 
