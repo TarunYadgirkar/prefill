@@ -146,7 +146,7 @@ private struct ApplicationsSection: View {
             } label: {
                 VStack(alignment: .leading, spacing: Spacing.hairline) {
                     Text("Applications").textRole(.value)
-                    Text(count == 0 ? "None sent yet" : "^[\(count) sent](inflect: true)").textRole(.footnote)
+                    Text(count == 0 ? "None sent yet" : "\(count) sent").textRole(.footnote)
                 }
                 .padding(.vertical, Spacing.xxSmall)
             }

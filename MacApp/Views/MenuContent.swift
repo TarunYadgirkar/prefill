@@ -48,7 +48,7 @@ struct ApplicationsRow: View {
             VStack(alignment: .leading, spacing: Spacing.hairline) {
                 Text("Applications")
                 let count = model.applications.count
-                Text(count == 0 ? "None sent yet" : "^[\(count) sent](inflect: true)")
+                Text(count == 0 ? "None sent yet" : "\(count) sent")
                     .foregroundStyle(.secondary)
                     .font(.caption)
             }
