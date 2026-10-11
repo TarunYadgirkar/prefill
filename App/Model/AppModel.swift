@@ -5,7 +5,8 @@ import PrefillKit
 
 // What the app knows and shows: the person's card as Contacts has it, the order they want,
 // and what the Safari extension has reported. Values never leave the device and are never
-// logged; only the card and the shared store hold them.
+// logged; only the card and the shared store hold them. The one exception is opt-in: sent job
+// applications go to the person's own Google Sheet once they add its link (AppModel+Sheet).
 @Observable
 final class AppModel {
     enum Phase: Equatable {
@@ -29,6 +30,8 @@ final class AppModel {
     private(set) var events = ExtensionEvents()
     // Every job application sent from this iPhone, newest first, from the app's own archive.
     private(set) var applications: [SubmittedApplication] = []
+    var sheet = SheetSettings()
+    var sheetProblem: String?
     private(set) var card: CardRecord?
     private(set) var cardFailure: CardWriteFailure?
     // What is on the person's own card, which Share Contact sends, and what Prefill's contact holds.
@@ -52,6 +55,8 @@ final class AppModel {
     @ObservationIgnored let intelligence = Intelligence()
     @ObservationIgnored var isAskingModel = false
     @ObservationIgnored let archive = ApplicationArchive.live()
+    @ObservationIgnored let sheetFile = SheetSettingsFile.live()
+    @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
@@ -69,6 +74,7 @@ final class AppModel {
         self.hasFinishedOnboarding = defaults.bool(forKey: Self.finishedOnboardingKey)
         self.hasDeclinedShortCard = defaults.bool(forKey: Self.declinedShortCardKey)
         self.seenChanges = defaults.stringArray(forKey: Self.seenChangesKey) ?? []
+        self.sheet = sheetFile.read()
     }
 
     // The one model of the running app, shared by its screens.
@@ -183,6 +189,7 @@ final class AppModel {
     func deleteAllData() async {
         do {
             try archive.removeAll()
+            try sheetFile.removeAll()
             try store.removeAll()
         } catch {
             problem = Problem(
@@ -200,6 +207,8 @@ final class AppModel {
         state = AppState()
         events = ExtensionEvents()
         applications = []
+        sheet = SheetSettings()
+        sheetProblem = nil
         keyboardValues = []
         keyboardSeen = nil
         await reload()
@@ -239,6 +248,7 @@ final class AppModel {
     private func archiveApplications() {
         do {
             applications = try archive.merge(events.applications)
+            Task { await sendToSheet() }
         } catch {
             problem = Problem(
                 title: String(localized: "Prefill couldn’t open your applications"),

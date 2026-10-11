@@ -54,6 +54,12 @@ struct SettingsScreen: View {
                         LabeledContent("Use Prefill in other apps", value: model.keyboardSeen == nil ? "" : "On")
                     }
                     .accessibilityIdentifier("use-in-other-apps")
+                    NavigationLink {
+                        GoogleSheetScreen()
+                    } label: {
+                        LabeledContent("Google Sheet", value: model.sheet.isOn ? "On" : "")
+                    }
+                    .accessibilityIdentifier("google-sheet")
                 }
                 AdvancedSection()
             }
