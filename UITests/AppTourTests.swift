@@ -37,6 +37,25 @@ final class AppTourTests: XCTestCase {
         snapAs("inbox-school-label")
     }
 
+    // The main screens on the lived-in state SeedHostTests' showcase mode leaves, for the
+    // README and portfolio screenshots.
+    func testShowcase() throws {
+        try XCTSkipUnless(env["PREFILL_TOUR"] == "showcase")
+        app.launch()
+        tab("Inbox")
+        XCTAssertTrue(app.buttons.matching(identifier: "inbox-add").firstMatch.waitForExistence(timeout: 10))
+        snapAs("showcase-inbox")
+        tab("You")
+        XCTAssertTrue(element("value-alex@work.example.org").waitForExistence(timeout: 10))
+        snapAs("showcase-you")
+        let applications = element("applications")
+        swipeUp(until: applications, above: tabBarTop)
+        snapAs("showcase-you-answers")
+        applications.tap()
+        XCTAssertTrue(app.navigationBars["Applications"].waitForExistence(timeout: 5))
+        snapAs("showcase-applications")
+    }
+
     // Records a reorder in the You tab, for frame-by-frame checking.
     func testBarMotion() throws {
         try XCTSkipUnless(env["PREFILL_TOUR"] == "motion")

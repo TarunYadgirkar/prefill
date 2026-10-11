@@ -37,7 +37,7 @@ struct SeedHostTests {
 
     private static let mode = ProcessInfo.processInfo.environment["PREFILL_SEED"]
 
-    @Test(.enabled(if: mode != "school"))
+    @Test(.enabled(if: mode != "school" && mode != "showcase"))
     func seedTheTour() async throws {
         let identifier = try alexIdentifier()
         try resetCard(identifier)
@@ -77,6 +77,86 @@ struct SeedHostTests {
         // The test host quits right after, sometimes before the default is written out.
         UserDefaults.standard.synchronize()
         #expect(try store.readEvents().captures.last?.value.id == school.id)
+    }
+
+    // A linked card past onboarding with links, answers, a changed answer, two values waiting
+    // and three sent applications, so every main screen opens on a lived-in state for
+    // screenshots.
+    @Test(.enabled(if: mode == "showcase"))
+    func seedShowcase() async throws {
+        let identifier = try alexIdentifier()
+        try resetCard(identifier)
+        let gateway = CNContactStoreGateway()
+        let card = try gateway.fetchCard(identifier: identifier)
+        let links = [
+            CardEntry(label: "LinkedIn", payload: .link("https://www.linkedin.com/in/alex-rivera-example")),
+            CardEntry(label: "GitHub", payload: .link("https://github.com/alex-rivera-example"))
+        ]
+        if card.links.isEmpty {
+            let target = card.replacing(.link, with: links)
+            _ = try gateway.save(target, basis: card, scope: .personEdit, transactionAuthor: "prefill-seed")
+        }
+        let editor = CardEditor(gateway: gateway)
+        let current = try gateway.fetchCard(identifier: identifier)
+        let fields = try Self.showcaseFields.map { try $0.get() }
+            .filter { field in !current.customFields.contains { $0.id == field.id } }
+        if !fields.isEmpty {
+            _ = editor.apply(.addCustomFields(fields), cardIdentifier: identifier)
+        }
+        try await Task.sleep(for: .seconds(2))
+        let store = try #require(StoreFactory.make() as? KeychainStore)
+        try store.removeAll()
+        try ApplicationArchive.live().removeAll()
+        let linked = try gateway.fetchCard(identifier: identifier)
+        try store.writeAppState(AppState(cardLink: CardLink(
+            contactIdentifier: identifier, containerIdentifier: nil, linkedIdentifiers: [],
+            original: linked, snapshotAt: .now
+        )))
+        let tour = Self.events(now: .now)
+        try store.appendEvents(ExtensionEvents(
+            usage: tour.usage, captures: tour.captures, pins: tour.pins,
+            answers: Self.showcaseAnswers(now: .now), applications: Self.showcaseApplications(now: .now),
+            lastPageSeen: .now
+        ))
+        UserDefaults.standard.set(true, forKey: "finishedOnboarding")
+        UserDefaults.standard.set(true, forKey: "declinedShortCard")
+        UserDefaults.standard.synchronize()
+        #expect(try store.readEvents().applications.count == 3)
+    }
+
+    private static let showcaseFields = [
+        CustomField.make(label: "School", value: "University of California, Berkeley", alsoMatches: "university"),
+        CustomField.make(label: "Graduation", value: "May 2027", alsoMatches: "graduation date"),
+        CustomField.make(label: "Major", value: "Computer Science", alsoMatches: "field of study"),
+        CustomField.make(label: "Work authorization (US)", value: "Yes", alsoMatches: "")
+    ]
+
+    private static func showcaseAnswers(now: Date) -> [LearnedAnswer] {
+        [
+            LearnedAnswer(
+                host: "jobs.lumen-robotics.example", label: "Graduation", value: "May 2027",
+                date: now.addingTimeInterval(-3 * 3_600), previous: "December 2026"
+            )
+        ]
+    }
+
+    private static func showcaseApplications(now: Date) -> [SubmittedApplication] {
+        let fields = [
+            ApplicationRequest.Field(question: "School", answer: "University of California, Berkeley"),
+            ApplicationRequest.Field(question: "Graduation date", answer: "May 2027")
+        ]
+        let resume = [ApplicationRequest.File(question: "Resume", name: "Alex-Rivera-Resume.pdf")]
+        let sent = [
+            ("jobs.lumen-robotics.example", "Software Engineering Intern, Lumen Robotics", 3.0),
+            ("apply.harborline.example", "Product Design Fellowship, Harborline", 27.0),
+            ("careers.tidewater-labs.example", "Research Assistant, Tidewater Labs", 75.0)
+        ]
+        return sent.map { host, title, hours in
+            SubmittedApplication(
+                date: now.addingTimeInterval(-hours * 3_600),
+                request: ApplicationRequest(host: host, path: "/apply", title: title, fields: fields, files: resume)
+            )
+        }
     }
 
     private func alexIdentifier() throws -> String {
