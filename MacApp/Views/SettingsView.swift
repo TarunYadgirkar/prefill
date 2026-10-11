@@ -26,6 +26,7 @@ struct SettingsView: View {
                 .foregroundStyle(.secondary)
             }
             SharingSection()
+            SheetSection()
             Section {
                 BrowserList(browsers: model.browsers.filter(\.isInstalled))
                 ExtensionFolder()

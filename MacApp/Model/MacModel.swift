@@ -38,12 +38,17 @@ final class MacModel {
     // Job applications sent from the browsers here, and from the iPhone once its history is
     // copied over USB (scripts/sync-applications.sh), newest first.
     private(set) var applications: [SubmittedApplication] = []
+    // Where applications go in the person's Google Sheet, once they add its link (MacModel+Sheet).
+    var sheet = SheetSettingsFile(directory: RelaySocket.directory).read()
+    var sheetProblem: String?
 
     let store: any SharedStore
     let gateway: any ContactsGateway
     // Set only in the browser test build, which uses a fixed card instead of My Card.
     private let fixedLink: CardLink?
     @ObservationIgnored let archive = ApplicationArchive(directory: RelaySocket.directory)
+    @ObservationIgnored let sheetFile = SheetSettingsFile(directory: RelaySocket.directory)
+    @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var server: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
 
@@ -136,6 +141,7 @@ final class MacModel {
     func deleteAllData() async {
         do {
             try archive.removeAll()
+            try sheetFile.removeAll()
             try? FileManager.default.removeItem(at: Self.importsDirectory)
             try store.removeAll()
         } catch {
@@ -150,6 +156,8 @@ final class MacModel {
         state = AppState()
         events = ExtensionEvents()
         applications = []
+        sheet = SheetSettings()
+        sheetProblem = nil
         await refresh()
     }
 
@@ -163,6 +171,7 @@ final class MacModel {
 
     func setApplications(_ merged: [SubmittedApplication]) {
         applications = merged
+        Task { await sendToSheet() }
     }
 
     func commit(_ next: AppState) {
