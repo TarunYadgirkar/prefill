@@ -11,6 +11,7 @@ struct PrefillMacApp: App {
         MenuBarExtra {
             MenuContent()
                 .environment(model)
+                .tint(Palette.accent)
                 .task { await model.refresh() }
         } label: {
             Label(
@@ -22,8 +23,30 @@ struct PrefillMacApp: App {
         Settings {
             SettingsView()
                 .environment(model)
+                .tint(Palette.accent)
                 .task { await model.refresh() }
         }
+
+        #if PREFILL_TEST_BROWSERS
+        // The menu and settings in ordinary windows, so a screenshot can find them by id.
+        Window("Prefill menu", id: "showcase-menu") {
+            MenuContent()
+                .environment(model)
+                .tint(Palette.accent)
+                .task { await model.refresh() }
+        }
+        .windowResizability(.contentSize)
+        .defaultLaunchBehavior(MacModel.isShowcase ? .presented : .suppressed)
+
+        Window("Prefill settings", id: "showcase-settings") {
+            SettingsView()
+                .environment(model)
+                .tint(Palette.accent)
+                .task { await model.refresh() }
+        }
+        .windowResizability(.contentSize)
+        .defaultLaunchBehavior(MacModel.isShowcase ? .presented : .suppressed)
+        #endif
     }
 }
 
@@ -31,6 +54,12 @@ struct PrefillMacApp: App {
 // have started the app to answer a page.
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
+        guard !MacModel.isShowcase else {
+            #if PREFILL_TEST_BROWSERS
+            E2EFixture.snapWindowsLater()
+            #endif
+            return
+        }
         Task {
             await MacModel.shared.start()
             let model = MacModel.shared

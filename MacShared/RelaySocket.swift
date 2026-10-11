@@ -9,7 +9,13 @@ enum RelaySocket {
     static let timeout: TimeInterval = 5
 
     static var directory: URL {
-        URL.applicationSupportDirectory.appending(path: "Prefill", directoryHint: .isDirectory)
+        #if PREFILL_TEST_BROWSERS
+        // The showcase run keeps its socket, archive and sheet link apart from the installed app's.
+        if let path = ProcessInfo.processInfo.environment["PREFILL_E2E_DIR"] {
+            return URL(filePath: path, directoryHint: .isDirectory)
+        }
+        #endif
+        return URL.applicationSupportDirectory.appending(path: "Prefill", directoryHint: .isDirectory)
     }
 
     static var path: String {

@@ -58,12 +58,25 @@ final class MacModel {
             self.store = store
             self.gateway = fixture
             self.fixedLink = fixture.link
+            if E2EFixture.isShowcase {
+                hasHeardFromExtension = true
+                E2EFixture.seedShowcase(store)
+            }
             return
         }
         #endif
         self.store = AppGroupStore(directory: RelaySocket.directory.appending(path: "Store"))
         self.gateway = CNContactStoreGateway()
         self.fixedLink = nil
+    }
+
+    // The screenshot run: a finished setup on the fixture card, with nothing asked of macOS.
+    static var isShowcase: Bool {
+        #if PREFILL_TEST_BROWSERS
+        E2EFixture.isShowcase
+        #else
+        false
+        #endif
     }
 
     var cardName: String {
@@ -102,7 +115,7 @@ final class MacModel {
         access = fixedLink == nil ? Self.currentAccess : .granted
         browsers = fixedLink == nil ? HostInstaller.installAll() : []
         opensAtLogin = SMAppService.mainApp.status == .enabled
-        isAccessibilityTrusted = AccessibilityTrust.isTrusted
+        isAccessibilityTrusted = AccessibilityTrust.isTrusted || Self.isShowcase
         guard access == .granted else {
             card = nil
             return
@@ -114,7 +127,7 @@ final class MacModel {
     // Contacts and Accessibility are granted in System Settings, which tells Prefill nothing,
     // so the setup list asks again while it's on screen.
     func recheckSetup() async {
-        isAccessibilityTrusted = AccessibilityTrust.isTrusted
+        isAccessibilityTrusted = AccessibilityTrust.isTrusted || Self.isShowcase
         guard fixedLink == nil, Self.currentAccess != access else { return }
         await refresh()
     }
