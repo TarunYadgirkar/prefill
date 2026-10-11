@@ -120,3 +120,39 @@ describe("recording forms that send without a submit event", () => {
     expect(fields.filter((field) => field.answer === "United States")).toHaveLength(1);
   });
 });
+
+describe("keeping demographic answers out", () => {
+  it("drops a button picked under the self-identification section and never counts Upload File", () => {
+    vi.useFakeTimers();
+    document.body.innerHTML = ashby.replace(/<link[^>]*>/gu, "").replace(/<script[\s\S]*?<\/script>/gu, "");
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<div><p>U.S. EQUAL EMPLOYMENT OPPORTUNITY INFORMATION (Completion is voluntary)</p>
+       <div><button>Male</button><button>Female</button></div></div>`,
+    );
+    const send = vi.fn();
+    const { stop } = installApplications(document, window, {
+      host: () => "jobs.ashbyhq.com",
+      send,
+      isUserEvent: () => true,
+      newID: () => ID,
+    });
+    const click = (text: string): void => {
+      const button = [...document.querySelectorAll("button")].find((found) => found.textContent.trim() === text);
+      button?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    };
+    click("Male");
+    click("Upload File");
+    click("Yes");
+    const submit = [...document.querySelectorAll("button")].find((button) => button.textContent.includes("Submit Application"));
+    submit?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    vi.advanceTimersByTime(400);
+    stop();
+    vi.useRealTimers();
+
+    const answers = (send.mock.calls[0]?.[0] as ApplicationRequest | undefined)?.fields.map((field) => field.answer) ?? [];
+    expect(answers).toContain("Yes");
+    expect(answers).not.toContain("Male");
+    expect(answers).not.toContain("Upload File");
+  });
+});

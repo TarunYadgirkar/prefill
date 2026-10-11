@@ -2,7 +2,7 @@ import { isAtsHost } from "./atsFrames";
 import { isPlaceholder } from "./choices";
 import { comboboxChoice, isCombobox } from "./combobox";
 import { classifyForCapture, isSignIn } from "./classify";
-import { joinFieldText } from "./custom";
+import { headingOf, joinFieldText } from "./custom";
 import { isDemographic } from "./demographics";
 import { eventOrigin, fieldElements, inferredLabel, isRendered, labelText, nearbyText, placeholderText } from "./dom";
 import type { FieldElement } from "./fieldTypes";
@@ -17,6 +17,8 @@ import { LIMITS, type ApplicationRequest } from "./messages";
 // its query, which can carry tokens.
 
 type Field = ApplicationRequest["fields"][number];
+// A field as read, with the element it came from, for the checks that look around it.
+type Read = Field & { source: Element };
 type FileName = ApplicationRequest["files"][number];
 
 const MAX_INSPECTED = 300;
@@ -35,14 +37,33 @@ const typeOf = (element: FieldElement): string =>
 
 // The field's own label first: labelText joins it with aria-labelledby, which on Greenhouse
 // names the same label again.
+// A label that points at the field's name rather than its id, as Ashby's do.
+function labelForName(element: Element): string {
+  const name = element.getAttribute("name") ?? "";
+  if (name === "") return "";
+  return element.ownerDocument.querySelector(`label[for="${CSS.escape(name)}"]`)?.textContent ?? "";
+}
+
 function questionFor(element: FieldElement): string {
   const own = [...(element.labels ?? [])].map((label) => label.textContent).join(" ");
-  const label = joinFieldText([own]) || labelText(element) || inferredLabel(element) || placeholderText(element);
+  const label =
+    joinFieldText([own]) || labelText(element) || joinFieldText([labelForName(element)]) || inferredLabel(element) ||
+    placeholderText(element) || nearbyText(element);
   return joinFieldText([label]);
 }
 
-function isPrivate(element: FieldElement, question: string): boolean {
-  return classifyForCapture(element).kind === "sensitive" || isDemographic(question);
+// The voluntary self-identification section of a US application, whatever its questions say.
+const SELF_IDENTIFICATION = /equal (?:employment )?opportunit|\beeo\b|\beeoc\b|voluntary self|self.?identif|affirmative action/iu;
+
+const isPersonal = (text: string): boolean => isDemographic(text) || SELF_IDENTIFICATION.test(text);
+
+// Demographic answers never go in, judged by the question, the answer and the section's heading.
+function isPrivate(read: Read): boolean {
+  if (isPersonal(read.question) || isPersonal(read.answer)) return true;
+  if (read.source instanceof HTMLInputElement || read.source instanceof HTMLSelectElement || read.source instanceof HTMLTextAreaElement) {
+    if (classifyForCapture(read.source).kind === "sensitive") return true;
+  }
+  return isPersonal(headingOf(read.source) ?? "");
 }
 
 function selectAnswer(select: HTMLSelectElement): string {
@@ -53,12 +74,20 @@ function selectAnswer(select: HTMLSelectElement): string {
 }
 
 // A radio or checkbox group answers once, with the labels of the boxes the person checked.
-function groupField(boxes: readonly HTMLInputElement[]): Field | undefined {
+// A group the page hides entirely (Ashby keeps one under its Yes and No buttons) says
+// nothing the buttons don't.
+function groupField(boxes: readonly HTMLInputElement[]): Read | undefined {
   const checked = boxes.filter((box) => box.checked);
-  if (checked.length === 0) return undefined;
-  const question = boxes.length === 1 ? questionFor(boxes[0] as HTMLInputElement) : questionOf([...boxes]);
-  const answer = boxes.length === 1 && boxes[0]?.type === "checkbox" ? "Checked" : checked.map(labelText).join(", ");
-  return { question: question.replace(HIDDEN, " "), answer };
+  const first = boxes[0];
+  if (checked.length === 0 || first === undefined || !boxes.some(isShown)) return undefined;
+  const question = boxes.length === 1 ? questionFor(first) : questionOf([...boxes]) || questionFor(first);
+  const answer = boxes.length === 1 && first.type === "checkbox" ? "Checked" : checked.map(labelText).join(", ");
+  return { question: question.replace(HIDDEN, " "), answer, source: first };
+}
+
+// A custom radio hides its input but shows its label.
+function isShown(box: HTMLInputElement): boolean {
+  return isRendered(box) || [...(box.labels ?? [])].some(isRendered);
 }
 
 function groupKey(box: HTMLInputElement): string {
@@ -85,21 +114,21 @@ function answerOf(element: FieldElement): string {
 
 // A select often hides behind the page's own dropdown, and a searchable dropdown's text box
 // shrinks once something is chosen, so only plain typed fields must show.
-function valueField(element: FieldElement): Field | undefined {
+function valueField(element: FieldElement): Read | undefined {
   const hidesItself = element.localName === "select" || isCombobox(element);
   if (!hidesItself && !isRendered(element)) return undefined;
   const answer = answerOf(element);
-  return answer === "" ? undefined : { question: questionFor(element), answer };
+  return answer === "" ? undefined : { question: questionFor(element), answer, source: element };
 }
 
 const PRESSED = "button[aria-pressed=true], [role=radio][aria-checked=true], [role=checkbox][aria-checked=true]";
 
 // Yes/No buttons a page draws instead of radios (Ashby's), answered by the pressed one.
-function pressedFields(scope: ParentNode): Field[] {
+function pressedFields(scope: ParentNode): Read[] {
   return [...scope.querySelectorAll(PRESSED)].flatMap((button) => {
     const answer = (button.getAttribute("aria-label") ?? button.textContent).trim();
     const question = nearbyText(button.parentElement ?? button);
-    return answer === "" || question === "" || isDemographic(question) ? [] : [{ question, answer }];
+    return answer === "" || question === "" ? [] : [{ question, answer, source: button }];
   });
 }
 
@@ -110,11 +139,14 @@ function fileNames(element: FieldElement): FileName[] {
   return [...files].map((file) => ({ question, name: clean(file.name, LIMITS.text) }));
 }
 
-function fitted(fields: readonly Field[]): Field[] {
+// Without its question an answer can't be looked up, so it isn't kept.
+function fitted(fields: readonly Read[]): Field[] {
   const seen = new Set<string>();
   let left = ANSWER_BUDGET;
   return fields.flatMap((field) => {
-    const question = clean(field.question, LIMITS.fieldText) || "Untitled question";
+    if (isPrivate(field)) return [];
+    const question = clean(field.question, LIMITS.fieldText);
+    if (question === "") return [];
     const answer = clean(field.answer, Math.min(LIMITS.applicationAnswer, left));
     const key = `${question}\n${answer}`;
     if (answer === "" || seen.has(key)) return [];
@@ -124,31 +156,26 @@ function fitted(fields: readonly Field[]): Field[] {
   }).slice(0, LIMITS.applicationFields);
 }
 
-function boxField(box: HTMLInputElement, groups: ReadonlyMap<HTMLInputElement, HTMLInputElement[]>): Field | undefined {
+function boxField(box: HTMLInputElement, groups: ReadonlyMap<HTMLInputElement, HTMLInputElement[]>): Read | undefined {
   const group = groups.get(box);
   const field = group === undefined ? undefined : groupField(group);
-  return field === undefined || group?.some((member) => isPrivate(member, field.question)) === true ? undefined : field;
+  return field === undefined || group?.some((member) => isPrivate({ ...field, source: member })) === true ? undefined : field;
 }
 
-function textField(element: FieldElement): Field | undefined {
-  const field = valueField(element);
-  return field === undefined || isPrivate(element, field.question) ? undefined : field;
-}
-
-function fieldOf(element: FieldElement, groups: ReadonlyMap<HTMLInputElement, HTMLInputElement[]>): Field | undefined {
+function fieldOf(element: FieldElement, groups: ReadonlyMap<HTMLInputElement, HTMLInputElement[]>): Read | undefined {
   const type = typeOf(element);
   if (SKIPPED_TYPES.has(type) || type === "file") return undefined;
-  return type === "radio" || type === "checkbox" ? boxField(element as HTMLInputElement, groups) : textField(element);
+  return type === "radio" || type === "checkbox" ? boxField(element as HTMLInputElement, groups) : valueField(element);
 }
 
 // The answers the person gave by clicking one of a question's buttons, by the buttons' row.
 export type ButtonChoices = ReadonlyMap<Element, string>;
 
-function chosenFields(scope: ParentNode, chosen: ButtonChoices): Field[] {
+function chosenFields(scope: ParentNode, chosen: ButtonChoices): Read[] {
   return [...chosen].flatMap(([row, answer]) => {
     if (!row.isConnected || !(scope === row.ownerDocument || (scope as Node).contains(row))) return [];
     const question = nearbyText(row);
-    return question === "" || isDemographic(question) ? [] : [{ question, answer }];
+    return question === "" ? [] : [{ question, answer, source: row }];
   });
 }
 
@@ -203,6 +230,8 @@ export interface ApplicationOptions {
 const SEND_WORDS = /\b(?:submit|send|apply)\b/iu;
 // After the click, so the page's own handler has run and the fields read as sent.
 const CLICK_DELAY_MS = 300;
+// Buttons that pick, take back or show a file, which answer nothing.
+const FILE_WORDS = /upload|attach|browse|choose file|drag|remove|replace|delete|clear|view|download/iu;
 // A choice button says a word or two ("Yes", "No", "Remote"), never a sentence.
 const MAX_CHOICE_LENGTH = 40;
 
@@ -227,7 +256,7 @@ function choiceOf(target: EventTarget | null): [Element, string] | undefined {
   if (found === undefined) return undefined;
   const [button, row] = found;
   const answer = button.textContent.trim();
-  const isChoice = answer !== "" && answer.length <= MAX_CHOICE_LENGTH && !SEND_WORDS.test(answer);
+  const isChoice = answer !== "" && answer.length <= MAX_CHOICE_LENGTH && !SEND_WORDS.test(answer) && !FILE_WORDS.test(answer);
   return isChoice && row.querySelector("input[type=file]") === null ? [row, answer] : undefined;
 }
 
