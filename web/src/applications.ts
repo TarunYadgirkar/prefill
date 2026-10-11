@@ -2,8 +2,7 @@ import { isAtsHost } from "./atsFrames";
 import { isPlaceholder } from "./choices";
 import { comboboxChoice, isCombobox } from "./combobox";
 import { classifyForCapture, isSignIn } from "./classify";
-import { headingOf, joinFieldText } from "./custom";
-import { isDemographic } from "./demographics";
+import { joinFieldText } from "./custom";
 import { eventOrigin, fieldElements, inferredLabel, isRendered, labelText, nearbyText, placeholderText } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { questionOf } from "./fill";
@@ -13,8 +12,8 @@ import { LIMITS, type ApplicationRequest } from "./messages";
 // The record of a job application the person sent: every question on the form with what
 // went in, and the names of the files uploaded, so they can look up later which resume,
 // graduation date or essay went where. Sensitive fields (passwords, card, ID, codes,
-// signatures) and demographic questions are never read. Only the page's path is kept, never
-// its query, which can carry tokens.
+// signatures) are never read. Demographic answers are kept: the record is the person's own.
+// Only the page's path is kept, never its query, which can carry tokens.
 
 type Field = ApplicationRequest["fields"][number];
 // A field as read, with the element it came from, for the checks that look around it.
@@ -52,18 +51,12 @@ function questionFor(element: FieldElement): string {
   return joinFieldText([label]);
 }
 
-// The voluntary self-identification section of a US application, whatever its questions say.
-const SELF_IDENTIFICATION = /equal (?:employment )?opportunit|\beeo\b|\beeoc\b|voluntary self|self.?identif|affirmative action/iu;
-
-const isPersonal = (text: string): boolean => isDemographic(text) || SELF_IDENTIFICATION.test(text);
-
-// Demographic answers never go in, judged by the question, the answer and the section's heading.
+// Sensitive fields (passwords, card, ID, codes, signatures) never go in. Demographic answers
+// do: the record is the person's own, and they want it to show how they answered.
 function isPrivate(read: Read): boolean {
-  if (isPersonal(read.question) || isPersonal(read.answer)) return true;
-  if (read.source instanceof HTMLInputElement || read.source instanceof HTMLSelectElement || read.source instanceof HTMLTextAreaElement) {
-    if (classifyForCapture(read.source).kind === "sensitive") return true;
-  }
-  return isPersonal(headingOf(read.source) ?? "");
+  const source = read.source;
+  const isField = source instanceof HTMLInputElement || source instanceof HTMLSelectElement || source instanceof HTMLTextAreaElement;
+  return isField && classifyForCapture(source).kind === "sensitive";
 }
 
 function selectAnswer(select: HTMLSelectElement): string {

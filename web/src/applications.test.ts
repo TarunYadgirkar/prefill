@@ -60,7 +60,7 @@ describe("recording a sent application", () => {
     expect(application?.fields.find((field) => field.answer === "3rd")?.question).toMatch(/year of study/iu);
   });
 
-  it("leaves out demographic questions and sensitive fields", () => {
+  it("keeps demographic answers and leaves out sensitive fields", () => {
     form().insertAdjacentHTML(
       "beforeend",
       `<label>Gender <select name="gender"><option>Select</option><option selected>Male</option></select></label>
@@ -71,7 +71,7 @@ describe("recording a sent application", () => {
     const answers = collectApplication(form(), document, "jobs.lever.co", ID)?.fields.map((field) => field.answer) ?? [];
 
     expect(answers).toContain("Alex Rivera");
-    expect(answers).not.toContain("Male");
+    expect(answers).toContain("Male");
     expect(answers).not.toContain("123-45-6789");
   });
 
@@ -121,8 +121,8 @@ describe("recording forms that send without a submit event", () => {
   });
 });
 
-describe("keeping demographic answers out", () => {
-  it("drops a button picked under the self-identification section and never counts Upload File", () => {
+describe("answer buttons", () => {
+  it("keeps a button picked under the self-identification section and never counts Upload File", () => {
     vi.useFakeTimers();
     document.body.innerHTML = ashby.replace(/<link[^>]*>/gu, "").replace(/<script[\s\S]*?<\/script>/gu, "");
     document.body.insertAdjacentHTML(
@@ -152,7 +152,7 @@ describe("keeping demographic answers out", () => {
 
     const answers = (send.mock.calls[0]?.[0] as ApplicationRequest | undefined)?.fields.map((field) => field.answer) ?? [];
     expect(answers).toContain("Yes");
-    expect(answers).not.toContain("Male");
+    expect(answers).toContain("Male");
     expect(answers).not.toContain("Upload File");
   });
 });
