@@ -192,14 +192,10 @@ function collectFields(
 // A careers site's own application (amazon.jobs, careers.example.com/apply) says so in its address.
 const APPLICATION_PAGE = /(?:^|[./-])(?:jobs?|careers?|apply|application|recruit\w*|talent|hiring)(?:$|[./-])/iu;
 
-// A sign-in form never counts. A later step of an application already recorded counts
-// whatever the page asks.
-function counts(elements: readonly FieldElement[], hostname: string, path: string, isLaterStep: boolean): boolean {
-  if (elements.some((element) => isSignIn(element))) return false;
-  return isLaterStep || isApplication(elements, hostname, path);
-}
-
+// A sign-in form never counts. On an application's own site (amazon.jobs) every step counts,
+// whatever it asks; the page's session storage can't make any other page count.
 function isApplication(elements: readonly FieldElement[], hostname: string, path: string): boolean {
+  if (elements.some((element) => isSignIn(element))) return false;
   if (isAtsHost(hostname) || APPLICATION_PAGE.test(hostname) || APPLICATION_PAGE.test(path)) return true;
   if (elements.some((element) => typeOf(element) === "file")) return true;
   return elements.some((element) => jobQuestion(questionFor(element)) !== undefined);
@@ -218,10 +214,9 @@ export function collectApplication(
   host: string,
   id: string,
   chosen: ButtonChoices = new Map(),
-  isLaterStep = false,
 ): ApplicationRequest | undefined {
   const elements = fieldElements(scope, MAX_INSPECTED);
-  if (!counts(elements, host, doc.location.pathname, isLaterStep)) return undefined;
+  if (!isApplication(elements, host, doc.location.pathname)) return undefined;
   const { fields, files } = collectFields(scope, elements, chosen);
   if (fields.length === 0 && files.length === 0) return undefined;
   return { type: "application", id, host, ...pageOf(doc, host), fields, files };
@@ -232,6 +227,7 @@ export interface ApplicationOptions {
   send: (request: ApplicationRequest) => void;
   isUserEvent?: (event: Event) => boolean;
   newID?: () => string;
+  now?: () => number;
 }
 
 // The words on a button that sends the application, for forms that never fire a submit event.
@@ -282,21 +278,38 @@ function choiceOf(target: EventTarget | null): [Element, string] | undefined {
 // each page gets its own id.
 const SESSION_KEY = "prefill.application";
 
+// An application left this long between steps is over: the next one starts fresh.
+const SESSION_MS = 30 * 60_000;
+const UUID = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/iu;
+
 interface Session {
   id: string;
-  // Whether a step of it was already recorded, which makes the next pages part of it.
+  // Whether a step of it was recorded, so that a press on Submit ends it.
   recorded: boolean;
+  host: string;
+  // When its last step was recorded.
+  at: number;
 }
 
-function readSession(win: Window): Session | undefined {
+// The page can write its own session storage, so a stored session counts only for the same
+// host, within the time, and (in collectApplication) only on a page that looks like an
+// application by its address.
+function storedSession(win: Window): Partial<Session> | undefined {
   try {
     const parsed: unknown = JSON.parse(win.sessionStorage.getItem(SESSION_KEY) ?? "null");
-    if (typeof parsed !== "object" || parsed === null) return undefined;
-    const { id, recorded } = parsed as Partial<Session>;
-    return typeof id === "string" && typeof recorded === "boolean" ? { id, recorded } : undefined;
+    return typeof parsed === "object" && parsed !== null ? (parsed) : undefined;
   } catch {
     return undefined;
   }
+}
+
+const isSession = (value: Partial<Session>): value is Session =>
+  typeof value.id === "string" && UUID.test(value.id) && typeof value.recorded === "boolean" && typeof value.at === "number";
+
+function readSession(win: Window, host: string, now: number): Session | undefined {
+  const stored = storedSession(win);
+  if (stored === undefined || !isSession(stored)) return undefined;
+  return stored.host === host && now - stored.at >= 0 && now - stored.at < SESSION_MS ? stored : undefined;
 }
 
 function writeSession(win: Window, session: Session | undefined): void {
@@ -315,17 +328,21 @@ function writeSession(win: Window, session: Session | undefined): void {
 export function installApplications(doc: Document, win: Window, options: ApplicationOptions) {
   const isUserEvent = options.isUserEvent ?? ((event: Event) => event.isTrusted);
   const newID = options.newID ?? (() => win.crypto.randomUUID());
-  let session = readSession(win) ?? { id: newID(), recorded: false };
+  const now = options.now ?? (() => Date.now());
+  const fresh = (): Session => ({ id: newID(), recorded: false, host: options.host(), at: now() });
+  let session = readSession(win, options.host(), now()) ?? fresh();
   const chosen = new Map<Element, string>();
-  const record = (scope: ParentNode, sends = true): void => {
-    const application = collectApplication(scope, doc, options.host(), session.id, chosen, session.recorded);
+  // `sends` is a press on a Submit, Send or Apply button: after it the next application in
+  // this tab starts fresh. A form's own submit event may be one step of several, so it doesn't.
+  const record = (scope: ParentNode, sends: boolean): void => {
+    if (readSession(win, options.host(), now())?.id !== session.id && session.recorded) session = fresh();
+    const application = collectApplication(scope, doc, options.host(), session.id, chosen);
     if (application !== undefined) {
       options.send(application);
-      session = { ...session, recorded: true };
+      session = { ...session, recorded: true, at: now() };
     }
-    // Once sent, the next application in this tab starts fresh.
     if (sends && session.recorded) {
-      session = { id: newID(), recorded: false };
+      session = fresh();
       chosen.clear();
     }
     writeSession(win, session.recorded ? session : undefined);
@@ -344,7 +361,7 @@ export function installApplications(doc: Document, win: Window, options: Applica
   doc.addEventListener("click", click, true);
   return {
     record: (scope: ParentNode) => {
-      record(scope);
+      record(scope, false);
     },
     stop: () => {
       doc.removeEventListener("click", click, true);

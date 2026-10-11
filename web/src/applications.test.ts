@@ -187,3 +187,32 @@ describe("multi-step applications", () => {
     expect(window.sessionStorage.getItem("prefill.application")).toBeNull();
   });
 });
+
+describe("the session a page could write", () => {
+  it("never makes a page that isn't an application count, and expires after half an hour", () => {
+    vi.useFakeTimers();
+    const send = vi.fn();
+    const at = 1_000_000;
+    window.sessionStorage.setItem("prefill.application", JSON.stringify({ id: ID, recorded: true, host: "shop.example.net", at }));
+    document.body.innerHTML = `<form><label>Note <input name="note" value="hello"></label><button type="button">Next</button></form>`;
+    const { stop } = installApplications(document, window, { host: () => "shop.example.net", send, isUserEvent: () => true, now: () => at });
+    document.querySelector("button")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    vi.advanceTimersByTime(400);
+    stop();
+    expect(send).not.toHaveBeenCalled();
+
+    window.sessionStorage.setItem("prefill.application", JSON.stringify({ id: ID, recorded: true, host: "account.amazon.jobs", at }));
+    const later = installApplications(document, window, {
+      host: () => "account.amazon.jobs",
+      send,
+      isUserEvent: () => true,
+      now: () => at + 31 * 60_000,
+      newID: () => "0D7A3E0B-5C4B-4F3A-9C1E-2B8D6A1F4E7C",
+    });
+    document.querySelector("button")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    vi.advanceTimersByTime(400);
+    later.stop();
+    vi.useRealTimers();
+    expect((send.mock.calls[0]?.[0] as ApplicationRequest | undefined)?.id).toBe("0D7A3E0B-5C4B-4F3A-9C1E-2B8D6A1F4E7C");
+  });
+});
