@@ -57,27 +57,37 @@ const EARLY_CLICK_MS = 500;
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 420;
 
-// Drawn to look like Chrome's own autofill popup, following the browser's light or dark look.
+// Prefill's own colors (App/Theme/Palette.swift), in the shape of the browser's autofill
+// popup so it reads as part of filling in a form. The row the arrows or the pointer are on
+// lifts on a wash of the accent, like the lifted row in the app icon. The key hint shows only
+// where there is a keyboard to press.
 const STYLE = `
 :host { all: initial; }
 .menu {
-  --surface: #ffffff; --text: #1f1f1f; --text-muted: #474747; --accent: #0b57d0; --hover: rgb(31 31 31 / 0.08); --divider: rgb(31 31 31 / 0.12);
-  box-sizing: border-box; padding: 4px 0; border-radius: 8px; background: var(--surface); color: var(--text);
-  font: 13px/20px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3), 0 4px 8px 3px rgb(0 0 0 / 0.15);
+  --surface: #ffffff; --text: #142022; --text-muted: #56666a; --accent: #00707e; --lift: rgb(0 112 126 / 0.1); --divider: rgb(20 32 34 / 0.1); --ring: rgb(20 32 34 / 0.12);
+  box-sizing: border-box; padding: 4px; border-radius: 12px; background: var(--surface); color: var(--text);
+  font: 13px/18px -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased;
+  box-shadow: 0 0 0 0.5px var(--ring), 0 2px 4px rgb(0 0 0 / 0.06), 0 12px 28px -6px rgb(0 0 0 / 0.24);
   overflow: hidden; user-select: none; cursor: default;
 }
 @media (prefers-color-scheme: dark) {
-  .menu { --surface: #282a2d; --text: #e3e3e3; --text-muted: #c4c7c5; --accent: #a8c7fa; --hover: rgb(227 227 227 / 0.08); --divider: rgb(227 227 227 / 0.12); }
+  .menu { --surface: #1b2527; --text: #e8eeee; --text-muted: #a3b2b5; --accent: #4cc9d6; --lift: rgb(76 201 214 / 0.16); --divider: rgb(232 238 238 / 0.1); --ring: rgb(232 238 238 / 0.12); }
 }
-.row { all: unset; box-sizing: border-box; display: grid; width: 100%; padding: 6px 16px; cursor: default; }
-.row[aria-selected="true"], .row:hover { background: var(--hover); }
+.row { all: unset; box-sizing: border-box; display: grid; width: 100%; padding: 6px 10px; border-radius: 8px; cursor: default; transition-property: background-color; transition-duration: 120ms; transition-timing-function: cubic-bezier(0.2, 0, 0, 1); }
+.row[aria-selected="true"], .row:hover { background: var(--lift); }
+.row[aria-selected="true"] .value { color: var(--accent); }
 .value, .detail { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.value { font-size: 14px; line-height: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .detail { font-size: 12px; line-height: 16px; color: var(--text-muted); }
-.guess .value, .draft .value { color: var(--text-muted); }
+.guess .value, .draft .value { color: var(--text-muted); font-weight: 400; }
 .guess .detail, .draft .detail { color: var(--accent); }
-.note { padding: 6px 16px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
-.footer { margin-top: 4px; padding: 6px 16px 2px; border-top: 1px solid var(--divider); font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.note { padding: 6px 10px; font-size: 12px; line-height: 16px; color: var(--text-muted); }
+.footer { display: flex; align-items: center; gap: 6px; margin: 4px -4px -4px; padding: 7px 14px; border-top: 1px solid var(--divider); font-size: 11px; line-height: 14px; color: var(--text-muted); }
+.brand { font-weight: 600; }
+.mark { flex: none; width: 14px; height: 8px; border-radius: 4px; background: var(--accent); }
+.keys { margin-left: auto; white-space: nowrap; }
+@media (hover: none) { .keys { display: none; } }
+@media (prefers-reduced-motion: reduce) { .row { transition: none; } }
 `;
 
 // Sets the value the way typing would, so pages built on React (Airtable) see the change:
@@ -165,6 +175,23 @@ function noteFor(doc: Document, note: Choice): HTMLElement {
   return line;
 }
 
+// Who the list is from, and how to pick from it without a pointer.
+function footerFor(doc: Document): HTMLElement {
+  const footer = doc.createElement("div");
+  footer.className = "footer";
+  const mark = doc.createElement("span");
+  mark.className = "mark";
+  mark.setAttribute("aria-hidden", "true");
+  const brand = doc.createElement("span");
+  brand.className = "brand";
+  brand.textContent = "Prefill";
+  const keys = doc.createElement("span");
+  keys.className = "keys";
+  keys.textContent = "\u2191\u2193 to choose, Enter to fill";
+  footer.append(mark, brand, keys);
+  return footer;
+}
+
 // Prefill's own suggestion list for Chrome and Arc, under the focused field. It sits in
 // the top layer inside a closed shadow root, so the page can neither cover nor read it,
 // and only the person's own clicks and keys pick a value.
@@ -232,9 +259,7 @@ export function showDropdown(
     if (!wasShown && shown.length > 0) shownAt = Date.now();
     selected = Math.min(selected, shown.length - 1);
     isOpen = shown.length > 0 || (!hidden && notes.length > 0);
-    const footer = doc.createElement("div");
-    footer.className = "footer";
-    footer.textContent = "Prefill";
+    const footer = footerFor(doc);
     menu.replaceChildren(
       ...shown.map((choice, index) => rowFor(doc, choice, index)),
       ...notes.map((note) => noteFor(doc, note)),

@@ -31,28 +31,34 @@ const GAP = 6;
 const EARLY_TAP_MS = 400;
 const DONE_MS = 8_000;
 
+// Prefill's colors, as in its list. Fill form is the one filled button, so the offer reads
+// at a glance beside a field; Undo and "need you" stay in the accent's text color.
 export const PILL_STYLE = `
 :host { all: initial; }
 .pill {
-  --surface: rgb(255 255 255 / 0.96); --text: #1c1c1e; --muted: #6c6c70; --accent: #0068d6; --line: rgb(60 60 67 / 0.18);
+  --surface: rgb(255 255 255 / 0.96); --text: #142022; --muted: #56666a; --accent: #00707e; --on-accent: #ffffff; --line: rgb(20 32 34 / 0.12); --ring: rgb(20 32 34 / 0.12);
   display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 999px;
-  background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgb(0 0 0 / 0.18), 0 6px 18px rgb(0 0 0 / 0.14);
-  font: 13px/18px -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; user-select: none; -webkit-user-select: none;
+  background: var(--surface); color: var(--text); box-shadow: 0 0 0 0.5px var(--ring), 0 1px 2px rgb(0 0 0 / 0.12), 0 8px 20px -4px rgb(0 0 0 / 0.2);
+  font: 13px/18px -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; font-variant-numeric: tabular-nums; -webkit-font-smoothing: antialiased; user-select: none; -webkit-user-select: none;
   -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
 }
 @media (prefers-color-scheme: dark) {
-  .pill { --surface: rgb(44 44 46 / 0.96); --text: #f2f2f7; --muted: #aeaeb2; --accent: #0a84ff; --line: rgb(235 235 245 / 0.18); }
+  .pill { --surface: rgb(27 37 39 / 0.96); --text: #e8eeee; --muted: #a3b2b5; --accent: #4cc9d6; --on-accent: #062a2e; --line: rgb(232 238 238 / 0.14); --ring: rgb(232 238 238 / 0.12); }
 }
-button { all: unset; cursor: pointer; border-radius: 999px; padding: 5px 12px; white-space: nowrap; }
+button { all: unset; cursor: pointer; border-radius: 999px; padding: 5px 12px; white-space: nowrap; transition-property: background-color, scale; transition-duration: 120ms; transition-timing-function: cubic-bezier(0.2, 0, 0, 1); }
 button:hover { background: var(--line); }
-button:focus-visible { outline: 2px solid var(--accent); }
+button:active { scale: 0.96; }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .main { color: var(--accent); font-weight: 600; }
-.main .count { color: var(--muted); font-weight: 400; margin-left: 4px; }
+.main[data-action="fill"] { background: var(--accent); color: var(--on-accent); }
+.main[data-action="fill"]:hover { background: color-mix(in srgb, var(--accent) 88%, var(--text)); }
+.main .count { opacity: 0.8; font-weight: 400; margin-left: 4px; }
 .close { color: var(--muted); padding: 5px 9px; }
 .status { padding: 5px 4px 5px 12px; color: var(--text); white-space: nowrap; }
 .dot { color: var(--muted); }
-.next { color: var(--accent); }
+.next { color: var(--accent); font-weight: 600; }
 .sep { width: 1px; align-self: stretch; margin: 4px 0; background: var(--line); }
+@media (prefers-reduced-motion: reduce) { button { transition: none; } button:active { scale: none; } }
 `;
 
 type State = { name: "offer"; count: number } | { name: "busy" } | { name: "done"; result: FillResult };
