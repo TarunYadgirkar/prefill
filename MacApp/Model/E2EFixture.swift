@@ -73,7 +73,8 @@ extension E2EFixture {
                 NSApp.activate()
                 window.makeKeyAndOrderFront(nil)
                 try? await Task.sleep(for: .milliseconds(500))
-                guard let view = window.contentView,
+                // The frame view draws the window's background; the content view alone is clear.
+                guard let view = window.contentView?.superview ?? window.contentView,
                       let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { continue }
                 view.cacheDisplay(in: view.bounds, to: rep)
                 let name = window.title.lowercased().replacingOccurrences(of: " ", with: "-")

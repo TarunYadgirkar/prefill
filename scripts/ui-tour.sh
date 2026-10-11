@@ -1,17 +1,23 @@
 #!/bin/zsh
-# usage: ui-tour.sh [light|dark|large ...] [--motion]
+# usage: ui-tour.sh [light|dark|large ...] [--motion | --showcase]
 # Seeds the simulator ($PREFILL_SIM) through SeedHostTests, then walks onboarding and every
 # screen with AppTourTests, saving assets/generated/ui-<screen>-<variant>.png. "large" is
 # the largest accessibility text size. --motion records the bar while values move
-# (assets/generated/motion-*.mov) instead of taking screenshots.
+# (assets/generated/motion-*.mov) instead of taking screenshots. --showcase seeds a lived-in
+# state past onboarding and saves showcase-<screen>-<variant>.png of Inbox, You and Applications.
 source ${0:A:h}/lib.sh
 
 OUT=$ROOT/assets/generated
 PORT=${PREFILL_SNAP_PORT:-8834}
 variants=()
 motion=false
+showcase=false
 for arg in "$@"; do
-  [[ $arg == --motion ]] && motion=true || variants+=$arg
+  case $arg in
+    --motion) motion=true ;;
+    --showcase) showcase=true ;;
+    *) variants+=$arg ;;
+  esac
 done
 (( ${#variants} )) || variants=(light dark large)
 
@@ -31,7 +37,7 @@ server=$!
 trap "kill $server 2>/dev/null; xcrun simctl ui $SIM_UDID appearance light; xcrun simctl ui $SIM_UDID content_size large" EXIT
 
 seed() {
-  export TEST_RUNNER_PREFILL_SEED=1
+  export TEST_RUNNER_PREFILL_SEED=$($showcase && print showcase || print 1)
   run_xcodebuild_test $LOGS/tour-seed.log 'Test run with [0-9]+ tests? .*passed' \
     test-without-building -project $PROJECT -scheme PrefillHostTests -configuration Personal \
     -destination "platform=iOS Simulator,id=$SIM_UDID" -derivedDataPath $DERIVED \
@@ -54,7 +60,9 @@ for variant in $variants; do
   xcrun simctl ui $SIM_UDID appearance $([[ $variant == dark ]] && print dark || print light)
   xcrun simctl ui $SIM_UDID content_size $([[ $variant == large ]] && print accessibility-extra-extra-extra-large || print large)
   seed
-  if $motion; then
+  if $showcase; then
+    tour testShowcase showcase $variant
+  elif $motion; then
     tour testTour tour $variant
     tour testBarMotion motion $variant
   else
