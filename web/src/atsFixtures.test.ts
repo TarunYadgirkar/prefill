@@ -187,7 +187,7 @@ describe("Greenhouse's searchable dropdowns", () => {
     expect(isCombobox(auth)).toBe(true);
     expect(isComboboxEmpty(auth)).toBe(true);
     const asks = findSlots(document).flatMap((slot) => (slot.control === "combobox" ? [slot.want] : []));
-    expect(asks).toContainEqual({ from: "decline" });
+    expect(asks).toContainEqual(expect.objectContaining({ from: "decline" }));
     expect(asks).toContainEqual(expect.objectContaining({ from: "custom", text: expect.stringMatching(/^School/u) as string }));
   });
 

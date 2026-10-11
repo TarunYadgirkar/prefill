@@ -45,7 +45,9 @@ type Want =
   | { from: "contact"; field: ContactField }
   | { from: "link"; types: readonly LinkType[]; fullUrl: boolean }
   | { from: "custom"; text: string }
-  | { from: "decline" };
+  // A demographic question: the person's own saved answer when they keep one, or else the
+  // option that declines.
+  | { from: "decline"; text: string };
 
 type Slot =
   | { control: "text"; element: TextField; want: Want }
@@ -140,8 +142,8 @@ function isEmpty(element: FieldElement): boolean {
 
 const optionOf = (option: HTMLOptionElement): Option => ({ text: option.text, value: option.value });
 
-// Where a field's words come from when nothing else claims it: a custom answer, unless
-// the field asks a demographic question, which is declined.
+// Where a field's words come from when nothing else claims it: a custom answer, or for a
+// demographic question the person's saved answer to it, declined when there is none.
 // "If other, please specify" and "If you answered yes, explain" follow another answer, so
 // they're left for the person. "If you are enrolled, when do you graduate?" stands alone.
 const FOLLOW_UP =
@@ -155,7 +157,7 @@ export function takesSavedAnswer(text: string): boolean {
 
 function freeWant(text: string): Want | undefined {
   if (text === "" || FOLLOW_UP.test(text) || isSensitiveText([[text]])) return undefined;
-  return isDemographic(text) ? { from: "decline" } : { from: "custom", text };
+  return isDemographic(text) ? { from: "decline", text } : { from: "custom", text };
 }
 
 function linkWant(element: FieldElement, types: readonly LinkType[] | undefined): Want | undefined {
@@ -300,7 +302,9 @@ function radioSlots(elements: readonly FieldElement[]): Slot[] {
 function checkboxSlots(elements: readonly FieldElement[]): Slot[] {
   return buttonGroups(elements.filter(isCheckbox)).flatMap((inputs) => {
     const question = isOpenGroup(inputs) ? questionOf(inputs) : "";
-    return freeWant(question)?.from === "decline" ? [{ control: "radio" as const, inputs, want: { from: "decline" as const } }] : [];
+    return freeWant(question)?.from === "decline"
+      ? [{ control: "radio" as const, inputs, want: { from: "decline" as const, text: question } }]
+      : [];
   });
 }
 
@@ -339,7 +343,7 @@ const linkTypesWanted = (slots: readonly Slot[]): LinkType[] => [
 ];
 
 const customTexts = (slots: readonly Slot[]): string[] =>
-  [...new Set(slots.flatMap((slot) => (slot.want.from === "custom" ? [slot.want.text] : [])))].slice(
+  [...new Set(slots.flatMap((slot) => (slot.want.from === "custom" || slot.want.from === "decline" ? [slot.want.text] : [])))].slice(
     0,
     LIMITS.pageFields,
   );
@@ -356,7 +360,7 @@ function optionTexts(slot: Slot): string[] {
 // Each question once, with the heading above its first field and a list's options.
 function customFields(slots: readonly Slot[], texts: readonly string[]): CustomSuggestionsRequest["fields"] {
   return texts.map((text) => {
-    const slot = slots.find((candidate) => candidate.want.from === "custom" && candidate.want.text === text);
+    const slot = slots.find((candidate) => "text" in candidate.want && candidate.want.text === text);
     const element = slot === undefined ? undefined : slotField(slot);
     return slot === undefined || element === undefined ? { text } : askedField(text, element, optionTexts(slot));
   });
@@ -411,11 +415,18 @@ function choicesOf(want: Want, answers: Answers, report: Report = NO_REPORT): Ch
         report({ kind: "custom", value, question: want.text });
       }));
     case "decline":
-      return [];
+      return demographicChoices(answers.custom.get(want.text));
   }
 }
 
 const valuesOf = (choices: readonly Choice[]): string[] => choices.map(({ value }) => value);
+
+// Only an answer the person saved under a demographic label ("Gender", "Race") answers a
+// demographic question, never one that merely shares a word with it.
+function demographicChoices(field: CustomSuggestionsResult["fields"][number] | undefined): Choice[] {
+  const own = (field?.values ?? []).filter((value) => isDemographic(value.label ?? ""));
+  return own.map((value) => ({ value: value.value, detail: value.label ?? "" }));
+}
 
 function setSelect(select: HTMLSelectElement, index: number): void {
   Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, "selectedIndex")?.set?.call(select, index);
@@ -487,10 +498,12 @@ function applyText(element: TextField, choices: readonly Choice[]): Filled | und
   return { field: element, undo, took: () => sameValue(element.value, value), shown: value.trim() };
 }
 
-// Which option to choose. A demographic question has one answer, the decline, so only a saved
-// answer can fit more than one option.
+// Which option to choose. A demographic question takes the person's saved answer when one
+// option clearly says it, and otherwise the option that declines.
 function optionMatch(want: Want, options: readonly Option[], values: readonly string[]): OptionMatch {
   if (want.from !== "decline") return chooseOption(options, values);
+  const saved = values.length === 0 ? undefined : chooseOption(options, values);
+  if (saved !== undefined && (saved.index >= 0 || saved.fits > 1)) return saved;
   const index = declineOption(options);
   return { index, fits: index < 0 ? 0 : 1 };
 }
@@ -552,7 +565,7 @@ const radioText = (radio: HTMLInputElement): string | undefined => radio.labels?
 // `values` are what the box is searched with; `matchOn` what its options are compared with.
 async function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[], marks: Marks, matchOn = values): Promise<Filled | undefined> {
   if (want.from !== "decline" && values[0] === undefined) return undefined;
-  const search = want.from === "decline" ? undefined : values[0];
+  const search = values[0];
   let fits = 0;
   const undo = await fillCombobox(input, (options) => {
     const match = optionMatch(want, options, matchOn);
