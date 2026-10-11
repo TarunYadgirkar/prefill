@@ -33,6 +33,7 @@ enum Size {
     // (assets/generated/ios27-prefix-casey-4th-value.png).
     static let loneSlotGutter: CGFloat = 30
     static let statusMark: CGFloat = 24
+    static let kindGlyph: CGFloat = 30
     static let hitTarget: CGFloat = 44
     static let barSeparator: CGFloat = 1
     static let readableWidth: CGFloat = 560

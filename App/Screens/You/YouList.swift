@@ -19,6 +19,11 @@ struct YouList: View {
         let links = items(model.values(.link).map(YouItem.value))
         let answers = items(model.customFields.map(YouItem.field))
         List {
+            if !isSearching, model.card != nil {
+                Section {
+                    YouSummary()
+                }
+            }
             if !contact.isEmpty {
                 Section {
                     ForEach(ContactKind.siteKinds) { kind in
@@ -38,6 +43,7 @@ struct YouList: View {
                 PreferencesSection(preferences: memory.preferences)
             }
         }
+        .prefillCanvas()
         .listStyle(.insetGrouped)
         .overlay { emptyState(isEmpty: contact.isEmpty && links.isEmpty && answers.isEmpty) }
         .sensoryFeedback(.selection, trigger: model.state.values.map(\.id))
@@ -92,24 +98,38 @@ struct YouList: View {
     }
 }
 
-// A value as Safari's bar captions it, or an answer under its question, then how many
-// sites it went into.
+// A value as Safari's bar captions it, or an answer under its question, after a glyph for its
+// kind, then how many sites it went into. At accessibility sizes the count moves under the
+// value so the value keeps the width.
 struct YouRow: View {
     let item: YouItem
     let useCount: Int
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    private var layout: AnyLayout {
+        typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: Spacing.xxSmall))
+            : AnyLayout(HStackLayout(alignment: .center, spacing: Spacing.small))
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.hairline) {
-            switch item {
-            case .value(let value):
-                ValueRow(value: value)
-            case .field(let field):
-                AnswerText(field: field)
+        HStack(alignment: .center, spacing: Spacing.small) {
+            KindGlyph(item: item)
+            layout {
+                switch item {
+                case .value(let value):
+                    ValueRow(value: value)
+                case .field(let field):
+                    AnswerText(field: field)
+                }
+                if useCount > 0 {
+                    Text("^[\(useCount) site](inflect: true)")
+                        .textRole(.footnote)
+                        .monospacedDigit()
+                        .accessibilityLabel(Text("Used on ^[\(useCount) site](inflect: true)"))
+                }
             }
-            if useCount > 0 {
-                Text("Used on ^[\(useCount) site](inflect: true)")
-                    .textRole(.footnote)
-            }
+            .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
         }
     }
 }
@@ -144,11 +164,14 @@ private struct ApplicationsSection: View {
             NavigationLink {
                 ApplicationsList()
             } label: {
-                VStack(alignment: .leading, spacing: Spacing.hairline) {
-                    Text("Applications").textRole(.value)
-                    Text(count == 0 ? "None sent yet" : "\(count) sent").textRole(.footnote)
+                HStack(spacing: Spacing.small) {
+                    KindGlyph(symbol: "paperplane")
+                    VStack(alignment: .leading, spacing: Spacing.hairline) {
+                        Text("Applications").textRole(.value)
+                        Text(count == 0 ? "None sent yet" : "\(count) sent").textRole(.footnote)
+                    }
+                    .padding(.vertical, Spacing.xxSmall)
                 }
-                .padding(.vertical, Spacing.xxSmall)
             }
             .accessibilityIdentifier("applications")
         } header: {
