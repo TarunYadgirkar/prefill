@@ -69,6 +69,18 @@ struct ApplicationTests {
         #expect(try archive.read().isEmpty)
     }
 
+    @Test func aQuestionAskedTwiceKeepsBothAnswers() {
+        let id = UUID()
+        let jobs: [ApplicationRequest.Field] = [
+            .init(question: "Employer", answer: "Hex"), .init(question: "Employer", answer: "Gem")
+        ]
+        let first = SubmittedApplication(date: .now, request: ApplicationRequest(
+            id: id, host: "a.jobs", path: "/", title: "A", fields: jobs, files: []
+        ))
+        let again = first.adding(first)
+        #expect(again.fields.map(\.answer) == ["Hex", "Gem"])
+    }
+
     @Test func aDamagedArchiveIsNeverOverwritten() throws {
         let archive = temporaryArchive()
         let folder = archive.url.deletingLastPathComponent()

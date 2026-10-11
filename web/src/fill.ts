@@ -415,16 +415,30 @@ function choicesOf(want: Want, answers: Answers, report: Report = NO_REPORT): Ch
         report({ kind: "custom", value, question: want.text });
       }));
     case "decline":
-      return demographicChoices(answers.custom.get(want.text));
+      return demographicChoices(answers.custom.get(want.text), want.text);
   }
 }
 
 const valuesOf = (choices: readonly Choice[]): string[] => choices.map(({ value }) => value);
 
-// Only an answer the person saved under a demographic label ("Gender", "Race") answers a
-// demographic question, never one that merely shares a word with it.
-function demographicChoices(field: CustomSuggestionsResult["fields"][number] | undefined): Choice[] {
-  const own = (field?.values ?? []).filter((value) => isDemographic(value.label ?? ""));
+// What a demographic question or a saved answer's label is about, so a saved race never
+// answers a gender question however the app matched it.
+const DEMOGRAPHIC_TOPICS: readonly RegExp[] = [
+  /\bgender|\bsex\b|transgender/iu,
+  /\brace\b|racial|ethnic|hispanic|latin[oax]/iu,
+  /veteran|military/iu,
+  /disabilit/iu,
+  /sexual orientation|lgbt/iu,
+];
+
+const topicOf = (text: string): number => DEMOGRAPHIC_TOPICS.findIndex((topic) => topic.test(text));
+
+// Only an answer the person saved under a label on the question's own topic ("Gender" for
+// "What is your gender?") answers a demographic question.
+function demographicChoices(field: CustomSuggestionsResult["fields"][number] | undefined, question: string): Choice[] {
+  const topic = topicOf(question);
+  if (topic < 0) return [];
+  const own = (field?.values ?? []).filter((value) => topicOf(value.label ?? "") === topic);
   return own.map((value) => ({ value: value.value, detail: value.label ?? "" }));
 }
 
@@ -561,17 +575,23 @@ function uncheck(radio: HTMLInputElement): void {
 // A radio button's answer as learning reads it: its first label's text.
 const radioText = (radio: HTMLInputElement): string | undefined => radio.labels?.[0]?.textContent.trim();
 
+const looksAgain = (want: Want, values: readonly string[], fits: number): boolean =>
+  want.from === "decline" && values.length > 0 && fits <= 1;
+
 // Types the answer to narrow the list, or opens it with the down arrow to decline.
 // `values` are what the box is searched with; `matchOn` what its options are compared with.
 async function applyCombobox(input: HTMLInputElement, want: Want, values: readonly string[], marks: Marks, matchOn = values): Promise<Filled | undefined> {
   if (want.from !== "decline" && values[0] === undefined) return undefined;
-  const search = values[0];
   let fits = 0;
-  const undo = await fillCombobox(input, (options) => {
-    const match = optionMatch(want, options, matchOn);
+  const choose = (matchWith: readonly string[]) => (options: readonly Option[]): number => {
+    const match = optionMatch(want, options, matchWith);
     fits = match.fits;
     return isClear(match) ? match.index : -1;
-  }, search);
+  };
+  let undo = await fillCombobox(input, choose(matchOn), values[0]);
+  // A saved demographic answer the list doesn't have hides the declining option behind the
+  // search, so the whole list gets a second look for it.
+  if (undo === undefined && looksAgain(want, values, fits)) undo = await fillCombobox(input, choose([]), undefined);
   if (fits > 1) marks.push(markUnsure(input, undefined, fits));
   return undo === undefined ? undefined : { field: input, undo, took: () => !isComboboxEmpty(input) };
 }

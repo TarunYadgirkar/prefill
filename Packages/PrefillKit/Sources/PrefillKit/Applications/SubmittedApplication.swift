@@ -76,18 +76,34 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
     public var site: String { Normalizer.registrableDomain(host) }
 
     // A later step or send of this application: its answers replace earlier ones to the same
-    // question and join the rest, in the order the questions were first asked.
+    // question and join the rest, in the order the questions were first asked. A question asked
+    // twice (a second "Employer") is matched by its turn, so neither answer is lost.
     func adding(_ later: SubmittedApplication) -> SubmittedApplication {
-        let answers = Dictionary(later.fields.map { ($0.question, $0) }) { _, last in last }
-        let kept = fields.map { answers[$0.question] ?? $0 }
-        let asked = Set(fields.map(\.question))
-        let added = later.fields.filter { !asked.contains($0.question) }
+        let earlier = Self.numbered(fields)
+        let answers = Dictionary(Self.numbered(later.fields)) { _, last in last }
+        let kept = earlier.map { answers[$0.0] ?? $0.1 }
+        let asked = Set(earlier.map(\.0))
+        let added = Self.numbered(later.fields).filter { !asked.contains($0.0) }.map(\.1)
         let names = Set(files.map(\.name))
         let request = ApplicationRequest(
             id: id, host: later.host, path: later.path, title: later.title,
             fields: kept + added, files: files + later.files.filter { !names.contains($0.name) }
         )
         return SubmittedApplication(date: later.date, request: request)
+    }
+
+    private struct Asked: Hashable {
+        let question: String
+        let turn: Int
+    }
+
+    private static func numbered(_ fields: [ApplicationRequest.Field]) -> [(Asked, ApplicationRequest.Field)] {
+        var turns: [String: Int] = [:]
+        return fields.map { field in
+            let turn = turns[field.question, default: 0]
+            turns[field.question] = turn + 1
+            return (Asked(question: field.question, turn: turn), field)
+        }
     }
 
     // Held to the limits of the message it came from, for one read from another device's file.
