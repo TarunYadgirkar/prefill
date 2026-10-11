@@ -78,10 +78,14 @@ public struct Preference: Hashable, Sendable {
     public let rule: String
     public var kind: Answer.Kind { .preference }
 
-    // Self-identification questions (gender, race, veteran, disability) always get the option
-    // that declines, or "No" when there is none; a text box asking one is left alone.
+    // Self-identification questions (gender, race, veteran, disability) get the person's saved
+    // answer under that label, or else the option that declines, or "No" when there is none; a
+    // text box asking one is left alone.
     public static let demographics = Preference(
         title: String(localized: "Demographic questions"),
-        rule: String(localized: "Declines when the form offers it, otherwise answers No")
+        rule: String(localized: """
+            Uses your saved answer (Gender, Race, Veteran status, Disability). Without one, declines \
+            when the form offers it, otherwise answers No
+            """)
     )
 }

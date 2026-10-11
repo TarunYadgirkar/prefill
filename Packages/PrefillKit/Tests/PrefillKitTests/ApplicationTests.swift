@@ -42,6 +42,29 @@ struct ApplicationTests {
         #expect(try archive.read().map(\.id) == [newer.id, older.id])
         try archive.merge([resent])
         #expect(try archive.read().map(\.date) == [resent.date, newer.date])
+    }
+
+    @Test func theStepsOfOneApplicationBecomeOneRecord() throws {
+        let archive = temporaryArchive()
+        let id = UUID()
+        let contact = ApplicationRequest(
+            id: id, host: "account.amazon.jobs", path: "/apply/1", title: "Contact",
+            fields: [.init(question: "Phone", answer: "925-555-0100"), .init(question: "School", answer: "Cal")],
+            files: []
+        )
+        let education = ApplicationRequest(
+            id: id, host: "account.amazon.jobs", path: "/apply/2", title: "Education",
+            fields: [
+                .init(question: "School", answer: "UC Berkeley"), .init(question: "Graduation", answer: "May 2028")
+            ],
+            files: [.init(question: "Resume", name: "Resume_Fall.pdf")]
+        )
+        try archive.merge([SubmittedApplication(date: Date(timeIntervalSince1970: 1), request: contact)])
+        let merged = try archive.merge([SubmittedApplication(date: Date(timeIntervalSince1970: 2), request: education)])
+        #expect(merged.count == 1)
+        #expect(merged.first?.fields.map(\.answer) == ["925-555-0100", "UC Berkeley", "May 2028"])
+        #expect(merged.first?.files.map(\.name) == ["Resume_Fall.pdf"])
+        #expect(merged.first?.path == "/apply/2")
         try archive.removeAll()
         #expect(try archive.read().isEmpty)
     }

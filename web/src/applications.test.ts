@@ -156,3 +156,34 @@ describe("answer buttons", () => {
     expect(answers).not.toContain("Upload File");
   });
 });
+
+describe("multi-step applications", () => {
+  it("gives every step one id until the application is sent", () => {
+    vi.useFakeTimers();
+    window.sessionStorage.clear();
+    const send = vi.fn();
+    let next = 0;
+    const ids = ["6F9619FF-8B86-D011-B42D-00C04FC964FF", "0D7A3E0B-5C4B-4F3A-9C1E-2B8D6A1F4E7C"];
+    const step = (html: string, button: string): void => {
+      document.body.innerHTML = `<form>${html}<button type="button">${button}</button></form>`;
+      const { stop } = installApplications(document, window, {
+        host: () => "account.amazon.jobs",
+        send,
+        isUserEvent: () => true,
+        newID: () => ids[next++] ?? "",
+      });
+      document.querySelector("button")?.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      vi.advanceTimersByTime(400);
+      stop();
+    };
+    step(`<label>Phone <input name="phone" value="925-555-0100"></label>`, "Continue");
+    step(`<label>Graduation date <input name="grad" value="May 2028"></label>`, "Save and continue");
+    step(`<p>Review your answers</p>`, "Submit application");
+    vi.useRealTimers();
+
+    const sent = send.mock.calls.map((call) => call[0] as ApplicationRequest);
+    expect(sent.map((request) => request.id)).toEqual([ids[0], ids[0]]);
+    expect(sent.map((request) => request.fields[0]?.answer)).toEqual(["925-555-0100", "May 2028"]);
+    expect(window.sessionStorage.getItem("prefill.application")).toBeNull();
+  });
+});

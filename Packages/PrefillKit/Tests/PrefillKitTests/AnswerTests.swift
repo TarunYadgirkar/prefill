@@ -76,6 +76,19 @@ struct AnswerTests {
         #expect(router.customSuggestions(asked).fields.map { $0.values.first?.label } == ["College", "School"])
     }
 
+    @Test func aSavedDemographicAnswerIsOfferedForItsQuestion() {
+        let fields = [
+            CustomField(label: "Gender", value: "Male", matchWords: []),
+            CustomField(label: "Race", value: "Asian", matchWords: [])
+        ]
+        gateway.state.withLock { $0.card = Alex.card.replacingCustomFields(with: fields) }
+        let (router, _) = router()
+        let asked = CustomSuggestionsRequest(
+            host: "jobs.example.com", fields: [.init(text: "Gender *"), .init(text: "Please identify your race")]
+        )
+        #expect(router.customSuggestions(asked).fields.map { $0.values.first?.value } == ["Male", "Asian"])
+    }
+
     @Test func eachLearnedAnswerIsReplacedAtMostOnceADay() {
         let (router, _) = router()
         _ = router.answers(applied)

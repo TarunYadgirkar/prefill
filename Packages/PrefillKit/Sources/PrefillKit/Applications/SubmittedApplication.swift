@@ -75,6 +75,21 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
 
     public var site: String { Normalizer.registrableDomain(host) }
 
+    // A later step or send of this application: its answers replace earlier ones to the same
+    // question and join the rest, in the order the questions were first asked.
+    func adding(_ later: SubmittedApplication) -> SubmittedApplication {
+        let answers = Dictionary(later.fields.map { ($0.question, $0) }) { _, last in last }
+        let kept = fields.map { answers[$0.question] ?? $0 }
+        let asked = Set(fields.map(\.question))
+        let added = later.fields.filter { !asked.contains($0.question) }
+        let names = Set(files.map(\.name))
+        let request = ApplicationRequest(
+            id: id, host: later.host, path: later.path, title: later.title,
+            fields: kept + added, files: files + later.files.filter { !names.contains($0.name) }
+        )
+        return SubmittedApplication(date: later.date, request: request)
+    }
+
     // Held to the limits of the message it came from, for one read from another device's file.
     var isValid: Bool {
         let request = ExtensionRequest.application(

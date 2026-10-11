@@ -148,6 +148,25 @@ describe("one-tap fill", () => {
     ]);
   });
 
+  it("answers demographic questions with the person's saved answers, and declines the rest", async () => {
+    const saved: Record<string, string> = { Gender: "Male", "Veteran status": "I am not a protected veteran" };
+    const send = vi.fn((request: ExtensionRequest) => {
+      if (request.type !== "customSuggestions") return Promise.resolve(reply(request));
+      return Promise.resolve({
+        type: "customSuggestionsResult",
+        fields: request.fields.map(({ text }) => {
+          const label = Object.keys(saved).find((key) => text.toLowerCase().includes(key.split(" ")[0]?.toLowerCase() ?? ""));
+          return { values: label === undefined ? [] : [{ value: saved[label], why: "card", label }] };
+        }),
+      });
+    });
+    await fillForm(document, { host: () => "boards.greenhouse.io", send });
+    expect(selected("gender")).toBe("Male");
+    expect(selected("veteran")).toBe("I am not a protected veteran");
+    expect(selected("hispanic")).toBe("No");
+    expect(value("pronouns_text")).toBe("");
+  });
+
   it("puts everything back on undo, keeping what the person typed", async () => {
     const send = vi.fn((request: ExtensionRequest) => Promise.resolve(reply(request)));
     const result = await fillForm(document, { host: () => "boards.greenhouse.io", send });
