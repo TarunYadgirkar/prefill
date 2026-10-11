@@ -91,6 +91,8 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 
 - **Testing:** the user wants it lean. Add a few unit tests plus one real end-to-end check per feature. Don't build big test suites, and never tune field rules on generated data; use real page markup as fixtures. Measure on the held-out forms in `web/src/fixtures/heldout/` (`pnpm --dir web run score`) and never tune rules on them (`docs/ACCURACY.md`).
 - **Before pushing:** run `pnpm --dir web test`, `pnpm --dir web lint`, `pnpm --dir web typecheck`, `swift test` in `Packages/PrefillKit`, `swiftlint --strict`, `scripts/build.sh` and the Mac build.
+- **Screenshots:** `scripts/ui-tour.sh light dark --showcase` seeds the simulator with a lived-in state (SeedHostTests' showcase mode) and snaps Inbox, You and Applications; `scripts/mac-showcase.sh` draws the Mac menu and settings from a test build on the Alex Rivera card, with its own store and socket folder (`PREFILL_E2E_DIR`), so the installed app and the real card are never touched.
+- **Look:** the accent is Lift, a teal (`#00707E` light, `#4CC9D6` dark) shared by the iPhone app (`App/Theme/Palette.swift`), the Mac app, the Safari sheet and Prefill's list and pill in pages; grays lean toward it. Screen titles and the You tab's summary numbers use SF Pro Expanded. Green stays for what is saved, orange for what waits.
 - **Commits:** conventional, short subjects, no Co-Authored-By. Merge with `--no-ff` into `main` and push. The repo is public.
 - **Parallel agents:** work in your own worktree under `.claude/worktrees/`. Never switch the branch of the main checkout.
 - **Devices:**

@@ -11,6 +11,14 @@ Prefill is for people who apply to a lot of things: jobs, fellowships, accelerat
   - **iPhone keyboard:** the Prefill keyboard lets you tap a saved value in another app. A keyboard isn't told the field's label, so you choose the value yourself, and some apps block third-party keyboards (password and other secure fields always do).
 - **Sync:** everything lives in iCloud Contacts, so the iPhone and Mac stay in step with no server and no paid developer account.
 
+<p>
+  <img src="assets/generated/prefill-after-ios-inbox-light.png" width="240" alt="The Inbox: a phone number and an address typed on a ticket site wait to be added, and a graduation answer a form changed waits to be kept or changed back.">
+  <img src="assets/generated/prefill-after-ios-you-light.png" width="240" alt="The You tab: 14 answers, 7 sites and 3 applications above Alex Rivera's emails and phone numbers, each with the number of sites it went into.">
+  <img src="assets/generated/prefill-after-mac-menu-light.png" width="200" alt="The Mac menu: Alex Rivera's card, two values that need a decision, and a learned answer.">
+</p>
+
+![Prefill's list under an email field on a job application, then Fill form filling six fields and pointing to the one left.](assets/generated/prefill-after-flow.gif)
+
 Read [docs/PRODUCT.md](docs/PRODUCT.md) for the full picture: what it was built to do, how it works, and how it was built. Read [AGENTS.md](AGENTS.md) before changing code.
 
 ## Install
