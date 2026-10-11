@@ -63,6 +63,7 @@ struct SettingsScreen: View {
                 }
                 AdvancedSection()
             }
+            .prefillCanvas()
             .navigationTitle("Settings")
             .screenTitleDisplay()
         }

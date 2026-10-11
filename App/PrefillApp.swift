@@ -2,6 +2,10 @@ import SwiftUI
 
 @main
 struct PrefillApp: App {
+    init() {
+        ScreenTitles.apply()
+    }
+
     var body: some Scene {
         WindowGroup {
             #if DEBUG

@@ -19,6 +19,7 @@ struct GoogleSheetScreen: View {
             }
             if model.sheet.address == nil { linkSection } else { statusSection }
         }
+        .prefillCanvas()
         .navigationTitle("Google Sheet")
         .navigationBarTitleDisplayMode(.inline)
         .alert("That isn’t a web app link", isPresented: $isRefused) {

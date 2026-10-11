@@ -63,6 +63,7 @@ private struct InboxList: View {
                 }
             }
         }
+        .prefillCanvas()
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.needsYou)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.exceptions)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.offersShortCard)

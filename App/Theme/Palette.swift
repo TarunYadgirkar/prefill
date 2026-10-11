@@ -4,29 +4,33 @@ import UIKit
 // Semantic colors, the only colors views use. The keyboard colors live in KeyboardPalette,
 // which the Prefill keyboard shares.
 enum Palette {
-    static let canvas = Color(uiColor: .systemGroupedBackground)
+    // The grays lean toward the accent's teal, so the grouped canvas reads as Prefill's own
+    // rather than Settings'. Dark mode keeps near-black with the same lean.
+    static let canvas = dynamic(light: 0xEEF2F2, dark: 0x0B1011)
+    // List rows keep the system's grouped surface, so onboarding cards match them.
     static let surface = Color(uiColor: .secondarySystemGroupedBackground)
     static let textPrimary = Color(uiColor: .label)
-    // The system's light secondaryLabel is 3.4:1 on white, short of 4.5:1 for the 13pt captions
-    // and footnotes it sets. This gray reaches 5.2:1 on white and 4.7:1 on the grouped canvas;
-    // dark mode keeps the system color, which already passes.
+    // 6.0:1 on white and 5.3:1 on the canvas, past 4.5:1 for the 13pt captions and footnotes
+    // it sets; dark mode keeps the system color, which already passes.
     static let textSecondary = Color(uiColor: UIColor {
-        $0.userInterfaceStyle == .dark ? .secondaryLabel : UIColor(hex: 0x6C6C70)
+        $0.userInterfaceStyle == .dark ? .secondaryLabel : UIColor(hex: 0x56666A)
     })
     static let highlight = Color(uiColor: .tertiarySystemFill)
     static let fieldBorder = Color(uiColor: .opaqueSeparator)
     static let focusRing = accent.opacity(0.4)
 
-    static let accent = Color(uiColor: .systemBlue)
-    // systemBlue is 4.0:1 on white; small accent text needs 4.5:1, so light mode goes darker.
-    static let accentText = Color(uiColor: UIColor {
-        $0.userInterfaceStyle == .dark ? .systemBlue : UIColor(hex: 0x0068D6)
-    })
+    // Lift, the teal of a value Prefill raises into a field. 5.8:1 on white in light mode and
+    // about 8:1 on the dark list surface, so the same color serves text, tint and marks. It stays apart
+    // from the green that marks what is saved.
+    static let accent = dynamic(light: 0x00707E, dark: 0x4CC9D6)
+    static let accentText = accent
+    // The tinted wash behind a kind glyph or a summary number.
+    static let accentWash = accent.opacity(0.12)
     static let positive = Color(uiColor: .systemGreen)
     static let pending = Color(uiColor: .secondaryLabel)
     static let destructive = Color(uiColor: .systemRed)
     // Marks what waits for the person. systemOrange is 2.2:1 on white, short of 3:1 for a
-    // mark; light mode goes darker, to 4.0:1 on white and 3.6:1 on the grouped canvas.
+    // mark; light mode goes darker, to 4.0:1 on white and 3.6:1 on the canvas.
     static let attention = Color(uiColor: UIColor {
         $0.userInterfaceStyle == .dark ? .systemOrange : UIColor(hex: 0xC86400)
     })
@@ -37,6 +41,17 @@ enum Palette {
     static let keyboardCaption = KeyboardPalette.caption
     static let keyboardValue = KeyboardPalette.value
     static let keyboardGlyph = KeyboardPalette.glyph
+
+    private static func dynamic(light: UInt32, dark: UInt32) -> Color {
+        Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) })
+    }
+}
+
+extension View {
+    // Lists and forms sit on Prefill's canvas instead of the system's grouped gray.
+    func prefillCanvas() -> some View {
+        scrollContentBackground(.hidden).background(Palette.canvas)
+    }
 }
 
 private extension UIColor {

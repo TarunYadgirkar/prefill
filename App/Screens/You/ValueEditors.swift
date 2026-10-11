@@ -19,6 +19,7 @@ struct RelabelSheet: View {
                     .focused($isFocused)
                     .accessibilityLabel("Label")
             }
+            .prefillCanvas()
             .navigationTitle("Custom label")
             .navigationSubtitle(value.display)
             .navigationBarTitleDisplayMode(.inline)
@@ -81,6 +82,7 @@ struct AddValueSheet: View {
                     }
                 }
             }
+            .prefillCanvas()
             .navigationTitle(kind.addTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

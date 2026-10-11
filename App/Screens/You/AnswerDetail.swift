@@ -54,6 +54,7 @@ struct AnswerDetail: View {
                 actions(current)
             }
         }
+        .prefillCanvas()
         .listStyle(.insetGrouped)
         .confirmationDialog(
             removeTitle(current), isPresented: $isRemoving, titleVisibility: .visible

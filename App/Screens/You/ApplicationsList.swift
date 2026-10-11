@@ -24,6 +24,7 @@ struct ApplicationsList: View {
             }
             .accessibilityIdentifier("application-\(application.id)")
         }
+        .prefillCanvas()
         .listStyle(.insetGrouped)
         .navigationTitle("Applications")
         .searchable(text: $query, prompt: Text("Search questions and answers"))
@@ -95,6 +96,7 @@ struct ApplicationDetail: View {
                 Text("Answers").textRole(.groupHeader)
             }
         }
+        .prefillCanvas()
         .listStyle(.insetGrouped)
         .navigationTitle(application.title)
         .navigationBarTitleDisplayMode(.inline)

@@ -38,6 +38,7 @@ struct SharingScreen: View {
                 macSection
             }
         }
+        .prefillCanvas()
         .navigationTitle("Sharing your card")
         .navigationBarTitleDisplayMode(.inline)
     }

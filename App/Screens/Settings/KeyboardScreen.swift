@@ -39,6 +39,7 @@ struct KeyboardScreen: View {
             }
             statusSection
         }
+        .prefillCanvas()
         .navigationTitle("Use Prefill in other apps")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { model.readKeyboardSeen() }

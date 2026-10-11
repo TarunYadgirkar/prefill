@@ -29,6 +29,7 @@ struct CardChooser: View {
                     .textRole(.footnote)
             }
         }
+        .prefillCanvas()
         .navigationTitle("Which card is yours?")
         .screenTitleDisplay()
         .searchable(text: $query, prompt: "Name or email")

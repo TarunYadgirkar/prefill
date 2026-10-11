@@ -30,6 +30,7 @@ struct StudentAnswersSheet: View {
                     Text("Change anything that isn’t right and leave blank what you’d rather type each time.")
                 }
             }
+            .prefillCanvas()
             .navigationTitle("Student answers")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -102,6 +103,7 @@ struct CustomFieldSheet: View {
                     }
                 }
             }
+            .prefillCanvas()
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

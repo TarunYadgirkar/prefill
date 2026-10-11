@@ -42,6 +42,7 @@ struct MutedSitesScreen: View {
                     .textRole(.footnote)
             }
         }
+        .prefillCanvas()
     }
 }
 
