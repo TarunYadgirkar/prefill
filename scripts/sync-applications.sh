@@ -12,6 +12,9 @@ mkdir -p $imports
 tmp=$(mktemp -d)
 trap 'rm -rf $tmp' EXIT
 
+# The app moves Safari's queued applications into its file when it opens, so open it first.
+xcrun devicectl device process launch --device $device $PERSONAL_BUNDLE_ID >$tmp/launch.log 2>&1 && sleep 5
+
 xcrun devicectl device copy from --device $device \
   --domain-type appDataContainer --domain-identifier $PERSONAL_BUNDLE_ID \
   --source "Library/Application Support/Prefill/applications.json" \
