@@ -75,6 +75,34 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
 
     public var site: String { Normalizer.registrableDomain(host) }
 
+    // Mirrors the content script's demographic and self-identification words, so an answer to
+    // one of those questions never stays, even in a record an older build kept.
+    private static let selfIdentificationWords = [
+        #"\bgender"#, #"\bsex\b"#, #"\brace\b"#, "racial", "ethnic", "hispanic", "latin[oax]", "veteran",
+        "military status", "disabilit", "sexual orientation", "transgender", "lgbt", "self.?identif",
+        "equal (?:employment )?opportunit", #"\beeoc?\b"#, "voluntary self", "affirmative action"
+    ]
+    // swiftlint:disable:next force_try
+    nonisolated(unsafe) static let selfIdentification = try! Regex(selfIdentificationWords.joined(separator: "|"))
+        .ignoresCase()
+
+    var withoutSelfIdentification: SubmittedApplication {
+        let kept = fields.filter { field in
+            !field.question.contains(Self.selfIdentification) && !field.answer.contains(Self.selfIdentification)
+        }
+        return kept.count == fields.count ? self : SubmittedApplication(copying: self, fields: kept)
+    }
+
+    private init(copying application: SubmittedApplication, fields: [ApplicationRequest.Field]) {
+        id = application.id
+        date = application.date
+        host = application.host
+        path = application.path
+        title = application.title
+        self.fields = fields
+        files = application.files
+    }
+
     // Held to the limits of the message it came from, for one read from another device's file.
     var isValid: Bool {
         let request = ExtensionRequest.application(

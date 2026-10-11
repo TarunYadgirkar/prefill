@@ -13,7 +13,8 @@ extension MessageRouter {
             guard !request.fields.isEmpty || !request.files.isEmpty, recent < Self.maxApplicationsPerWindow else {
                 return ApplicationResponse(saved: false)
             }
-            let saved = append(ExtensionEvents(applications: [SubmittedApplication(date: date, request: request)]))
+            let application = SubmittedApplication(date: date, request: request).withoutSelfIdentification
+            let saved = append(ExtensionEvents(applications: [application]))
             return ApplicationResponse(saved: saved)
         }
     }
