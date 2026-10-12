@@ -90,6 +90,9 @@ public enum ApplicationSheet {
     // (Greenhouse) or "Company - Role" (Lever). Otherwise the title is the role and the company
     // comes from the board's address.
     static func companyAndRole(_ application: SubmittedApplication) -> (String, String) {
+        if application.site == "icims.com" {
+            return (company(host: application.host, path: application.path), icimsRole(application))
+        }
         let title = application.title.replacing(#/^Job Application for /#, with: "")
         for separator in [" @ ", " at "] {
             if let range = title.ranges(of: separator).last {
@@ -103,6 +106,23 @@ public enum ApplicationSheet {
     }
 
     private static let boardsByPath: Set<String> = ["greenhouse.io", "lever.co", "ashbyhq.com", "workable.com"]
+    // iCIMS hosts read like us-careers-rivian.icims.com or careers-acme.icims.com.
+    private static let icimsHostWords: Set<String> = ["us", "uk", "ca", "eu", "careers", "career", "jobs", "external"]
+
+    // iCIMS titles a page "Role in City, State | Careers at Location", and every page of one
+    // application sits under /jobs/<id>/<role-slug>/. The title's role is kept when it matches
+    // the slug, else the slug is spelled out.
+    static func icimsRole(_ application: SubmittedApplication) -> String {
+        let segments = application.path.split(separator: "/")
+        guard segments.count > 2, segments[0] == "jobs",
+              let slug = String(segments[2]).removingPercentEncoding, !slug.isEmpty else { return application.title }
+        let heading = String(application.title.split(separator: " | ").first ?? "")
+            .replacing(#/ in [^|]*$/#, with: "")
+        let letters = { (text: String) in text.lowercased().filter { $0.isLetter || $0.isNumber } }
+        if letters(heading) == letters(slug) { return heading }
+        let words = slug.replacing("---", with: " - ").replacing("-", with: " ")
+        return words.prefix(1).uppercased() + words.dropFirst()
+    }
 
     static func company(host: String, path: String) -> String {
         let site = Normalizer.registrableDomain(host)
@@ -110,6 +130,10 @@ public enum ApplicationSheet {
             path.split(separator: "/").first.map(String.init)
         } else if site == "myworkdayjobs.com" {
             host.split(separator: ".").first.map(String.init)
+        } else if site == "icims.com" {
+            host.split(separator: ".").first.map { label in
+                label.split(separator: "-").filter { !icimsHostWords.contains(String($0)) }.joined(separator: "-")
+            }
         } else {
             site.split(separator: ".").first.map(String.init)
         }

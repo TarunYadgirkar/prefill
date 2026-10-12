@@ -100,7 +100,7 @@ it.each([
   expect(send).not.toHaveBeenCalled();
 });
 
-it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com"])(
+it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com", "us-careers-rivian.icims.com"])(
   "runs in a job application frame from %s, under its own host",
   async (hostname) => {
     const send = await load('<input type="email" autocomplete="email">', { isTopFrame: false, hostname });

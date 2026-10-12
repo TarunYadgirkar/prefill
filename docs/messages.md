@@ -7,7 +7,7 @@ The content script runs in the top frame of `https` pages, plus plain `http` on 
 | Match | Hosts |
 | --- | --- |
 | Exact host | `boards.greenhouse.io`, `boards.eu.greenhouse.io`, `job-boards.greenhouse.io`, `job-boards.eu.greenhouse.io`, `jobs.lever.co`, `jobs.eu.lever.co`, `jobs.ashbyhq.com`, `apply.workable.com`, `jobs.smartrecruiters.com` |
-| That domain or any subdomain | `myworkdayjobs.com` |
+| That domain or any subdomain | `myworkdayjobs.com`, `icims.com` |
 
 Such a frame works under its own host, not the host of the page around it: its captures and suggestions are for `boards.greenhouse.io`, say, and the career page's top frame runs separately under its own host. The manifest still matches every `http` and `https` page in every frame, because Safari only offers the All Websites switch for a pattern that covers every site, so the script itself bails out anywhere else, before adding any listener, and checks that it is in a secure context and the top frame or a listed frame, and the background script checks the sender's address and frame again. Other frames are left out so an embedded widget from another site can't read the person's values or record values under its own host, and plain `http` is left out so a network attacker can't feed values to the card. A page without email, phone or address fields sends nothing.
 
