@@ -17,6 +17,12 @@ struct ApplicationSheetTests {
          "Kepler", "Embedded Software Intern"),
         ("nvidia.wd5.myworkdayjobs.com", "/en-US/apply", "Deep Learning Intern", "Nvidia", "Deep Learning Intern"),
         ("job-boards.greenhouse.io", "/five-rings/jobs/2", "Software Developer", "Five Rings", "Software Developer"),
+        ("us-careers-rivian.icims.com",
+         "/jobs/33832/software-engineering-intern---embedded-software-%28spring-2027-co-op%29/candidate",
+         "Software Engineering Intern - Embedded Software (Spring 2027 Co-op) in Palo Alto, CA | Careers at Rivian",
+         "Rivian", "Software Engineering Intern - Embedded Software (Spring 2027 Co-op)"),
+        ("careers-acme.icims.com", "/jobs/12/data-analyst/candidate", "Candidate Profile | Careers at Acme",
+         "Acme", "Data analyst"),
         ("www.gem.com", "/form", "Gen SWE Intern Interest Form", "Gem", "Gen SWE Intern Interest Form")
     ])
     func companyAndRoleComeFromTheTitleOrTheBoard(

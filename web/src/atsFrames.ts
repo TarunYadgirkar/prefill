@@ -13,8 +13,9 @@ const EXACT_HOSTS: ReadonlySet<string> = new Set([
   "jobs.smartrecruiters.com",
 ]);
 
-// Each company gets its own subdomain here, such as acme.wd5.myworkdayjobs.com.
-const DOMAIN_SUFFIXES: readonly string[] = ["myworkdayjobs.com"];
+// Each company gets its own subdomain here, such as acme.wd5.myworkdayjobs.com or
+// us-careers-acme.icims.com (iCIMS shows its form in a frame from the same host).
+const DOMAIN_SUFFIXES: readonly string[] = ["myworkdayjobs.com", "icims.com"];
 
 export function isAtsHost(hostname: string): boolean {
   return EXACT_HOSTS.has(hostname) || DOMAIN_SUFFIXES.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`));
