@@ -129,7 +129,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - A later answer replaces a learned one that still reads as learned, with Undo; an answer the person wrote or edited in the app is never replaced.
   - Answers can be scoped by the question's words: "Work authorization (US)" and "(Canada)" are separate fields (`AnswerScope`). A US answer is never offered for a Canada question (the list says "No answer for Canada yet"); an unscoped answer for a scoped question, or the reverse, is offered but never filled.
 - **Mac "Fill form":** text fields only. `scripts/e2e-mac-ax.sh` covers it; that script needs an unlocked screen and Chrome for Testing left in front for about 15 seconds.
-- **Prefill keyboard:** built in `feat/keyboard`, checked only in the simulator. Needs Full Access to read the keychain item; not yet run on the iPhone.
+- **Prefill keyboard:** needs Full Access to read the keychain item. `KeyboardE2ETests` adds it in the simulator's Settings and picks a value in Safari. Oct 13: on the iPhone its chip row rendered blurred (iOS's scroll edge effect, now hidden) and it crashed on dynamic colors resolved off the main thread (`KeyboardPalette` and `Palette` are now nonisolated). Web fields rarely give a content type, so name, email and phone lead the row ahead of recently used answers.
 - **NameDrop:** a minimal card's phones are never reordered (`CardSplit.minimalCardEntries`). The check with a real NameDrop on the iPhone is still to do.
 
 ## Ongoing
