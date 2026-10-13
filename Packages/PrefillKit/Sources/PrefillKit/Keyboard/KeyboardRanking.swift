@@ -22,7 +22,9 @@ public struct KeyboardContext: Sendable, Hashable {
 
 extension KeyboardSnapshot {
     // Strongest signal first: what's typed, the field's traits, the keyboard's own recent
-    // picks, the last use anywhere, then a fixed order. A value already in the field is left out.
+    // picks, the person's name, email and phone, the last use anywhere, then a fixed order.
+    // Web fields rarely say what they want, so a recently filled answer ("School") must not
+    // push the name off a First name field. A value already in the field is left out.
     public func ranked(for context: KeyboardContext) -> [KeyboardValue] {
         let typed = KeyboardTyped(context.before)
         let fallback = KeyboardFallback(values)
@@ -32,6 +34,7 @@ extension KeyboardSnapshot {
                 typed: typed.score(value),
                 fitsField: context.hint?.matches(value) ?? false,
                 recent: recent[value.id] ?? .max,
+                identity: min(fallback.rank(value), KeyboardFallback.identityCount),
                 lastUsed: value.lastUsed ?? .distantPast,
                 fallback: fallback.rank(value),
                 offset: offset
@@ -45,6 +48,7 @@ struct KeyboardRankKey: Comparable {
     let typed: Int
     let fitsField: Bool
     let recent: Int
+    let identity: Int
     let lastUsed: Date
     let fallback: Int
     let offset: Int
@@ -53,14 +57,18 @@ struct KeyboardRankKey: Comparable {
         if lhs.typed != rhs.typed { return lhs.typed > rhs.typed }
         if lhs.fitsField != rhs.fitsField { return lhs.fitsField }
         if lhs.recent != rhs.recent { return lhs.recent < rhs.recent }
+        if lhs.identity != rhs.identity { return lhs.identity < rhs.identity }
         if lhs.lastUsed != rhs.lastUsed { return lhs.lastUsed > rhs.lastUsed }
         if lhs.fallback != rhs.fallback { return lhs.fallback < rhs.fallback }
         return lhs.offset < rhs.offset
     }
 }
 
-// Name, primary email, phone, LinkedIn, GitHub, website, then answers, then everything else.
+// Name and its parts, primary email, phone, LinkedIn, GitHub, website, then answers, then
+// everything else. The first identityCount ranks are who the person is and lead the row.
 struct KeyboardFallback {
+    static let identityCount = 3
+
     private let primaryEmail: String?
     private let primaryPhone: String?
 
@@ -70,7 +78,7 @@ struct KeyboardFallback {
     }
 
     func rank(_ value: KeyboardValue) -> Int {
-        if value.kind == .name, value.label == KeyboardValue.fullNameLabel { return 0 }
+        if value.kind == .name { return 0 }
         if value.id == primaryEmail { return 1 }
         if value.id == primaryPhone { return 2 }
         if value.kind == .link, let site = Self.siteRank(value) { return site }

@@ -24,8 +24,8 @@ private func ranked(
 struct KeyboardRankingTests {
     @Test func withNoSignalTheFixedOrderLeads() {
         #expect(ranked() == [
-            "Name", "Home email", "Mobile", "LinkedIn", "GitHub", "Website", "School",
-            "First name", "Work email", "Home address"
+            "Name", "First name", "Home email", "Mobile", "LinkedIn", "GitHub", "Website", "School",
+            "Work email", "Home address"
         ])
     }
 
@@ -53,8 +53,8 @@ struct KeyboardRankingTests {
     @Test func recentPicksBeatLastUseAndTheFixedOrder() {
         let used = KeyboardValue(kind: .custom, label: "Pronouns", text: "they/them", lastUsed: .daysAgo(1))
         let values = all + [used]
-        #expect(ranked(values).first == "Pronouns")
-        #expect(ranked(values, recent: [school, github]).prefix(3) == ["School", "GitHub", "Pronouns"])
+        #expect(ranked(values).prefix(5) == ["Name", "First name", "Home email", "Mobile", "Pronouns"])
+        #expect(ranked(values, recent: [school, github]).prefix(3) == ["School", "GitHub", "Name"])
         #expect(ranked(values, hint: .link, recent: [school, site]).prefix(2) == ["Website", "LinkedIn"])
     }
 

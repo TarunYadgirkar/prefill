@@ -4,7 +4,9 @@ import UIKit
 // The keyboard's colors, shared by the Prefill keyboard and the app (whose Palette reads
 // them), sampled from iOS 27 screenshots of the system keyboard: Safari's in light
 // (assets/generated/ios27-*.png) and the keyboard over Prefill's own form in dark.
-enum KeyboardPalette {
+// Nonisolated: SwiftUI resolves dynamic colors off the main thread, and a main-actor color
+// provider traps there, which crashed the keyboard and left iOS's blurred placeholder.
+nonisolated enum KeyboardPalette {
     static let surface = dynamic(light: 0xE2E3E9, dark: 0x222223)
     static let key = dynamic(light: 0xFFFFFF, dark: 0x464646)
     // Not sampled: a key held down, a step toward the surface.
@@ -47,7 +49,7 @@ nonisolated enum KeyboardMetrics {
 }
 
 private extension UIColor {
-    convenience init(keyboardHex hex: UInt32) {
+    nonisolated convenience init(keyboardHex hex: UInt32) {
         self.init(
             red: CGFloat((hex >> 16) & 0xFF) / 255,
             green: CGFloat((hex >> 8) & 0xFF) / 255,

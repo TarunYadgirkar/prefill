@@ -2,8 +2,9 @@ import SwiftUI
 import UIKit
 
 // Semantic colors, the only colors views use. The keyboard colors live in KeyboardPalette,
-// which the Prefill keyboard shares.
-enum Palette {
+// which the Prefill keyboard shares. Nonisolated, as SwiftUI resolves dynamic colors off the
+// main thread (see KeyboardPalette).
+nonisolated enum Palette {
     // The grays lean toward the accent's teal, so the grouped canvas reads as Prefill's own
     // rather than Settings'. Dark mode keeps near-black with the same lean.
     static let canvas = dynamic(light: 0xEEF2F2, dark: 0x0B1011)
@@ -55,7 +56,7 @@ extension View {
 }
 
 private extension UIColor {
-    convenience init(hex: UInt32) {
+    nonisolated convenience init(hex: UInt32) {
         self.init(
             red: CGFloat((hex >> 16) & 0xFF) / 255,
             green: CGFloat((hex >> 8) & 0xFF) / 255,

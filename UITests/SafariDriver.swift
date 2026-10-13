@@ -28,6 +28,42 @@ enum SafariDriver {
         safari.terminate()
     }
 
+    // Settings > General > Keyboard > Keyboards: adds Prefill and turns on Allow Full Access.
+    static func enableKeyboard() {
+        settings.terminate()
+        settings.launch()
+        popToRoot(settings)
+        for label in ["General", "Keyboard"] {
+            tapRow(label, in: settings)
+        }
+        // The page's own title is also "Keyboards", so tap the row that lists them.
+        settings.cells.containing(.staticText, identifier: "Keyboards").firstMatch.tap()
+        Thread.sleep(forTimeInterval: 1.5)
+        let added = settings.cells.staticTexts[extensionName]
+        if !added.waitForExistence(timeout: 3) {
+            tapRow("Add New Keyboard", in: settings)
+            // Third-party keyboards are listed after every language, at the end of the sheet.
+            let row = settings.cells.containing(.staticText, identifier: extensionName).firstMatch
+            for _ in 0..<80 where !(row.exists && row.isHittable) {
+                settings.collectionViews.firstMatch.swipeUp(velocity: .fast)
+            }
+            XCTAssertTrue(row.isHittable, "no Prefill row in Add New Keyboard")
+            row.tap()
+            Thread.sleep(forTimeInterval: 1.5)
+        }
+        tapRow(extensionName, in: settings)
+        let toggle = settings.switches["Allow Full Access"].firstMatch
+        XCTAssertTrue(toggle.waitForExistence(timeout: 10), "no Allow Full Access switch")
+        if toggle.value as? String != "1" {
+            toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+            let allow = settings.alerts.buttons["Allow"].firstMatch
+            if allow.waitForExistence(timeout: 5) { allow.tap() }
+        }
+        E2EServer.screenshot("settings-keyboard-full-access")
+        settings.terminate()
+        safari.terminate()
+    }
+
     static func open(_ url: URL, waitingFor field: String) {
         safari.open(url)
         XCTAssertTrue(self.field(field).waitForExistence(timeout: 20), "page \(url.path()) never showed \(field)")
