@@ -17,6 +17,7 @@ final class KeyboardViewController: UIInputViewController {
         let host = UIHostingController(rootView: panel())
         host.view.backgroundColor = .clear
         host.sizingOptions = []
+        host.safeAreaRegions = []
         addChild(host)
         view.addSubview(host.view)
         host.view.translatesAutoresizingMaskIntoConstraints = false

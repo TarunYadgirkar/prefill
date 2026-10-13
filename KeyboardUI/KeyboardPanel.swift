@@ -55,6 +55,9 @@ private struct KeyboardChipRow: View {
             }
             .contentMargins(.horizontal, KeyboardMetrics.rowInset, for: .scrollContent)
             .scrollIndicators(.hidden)
+            // The keyboard host gives the panel a top inset, and iOS 26's soft scroll edge
+            // blurred the whole chip row under it (seen in Safari on the iPhone).
+            .scrollEdgeEffectHidden(true, for: .all)
             // Back to the start whenever the order changes, so the likeliest value is in view.
             .id(values.map(\.id))
         }
