@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { Attach, Choice, TextField } from "./dropdown";
 import {
   customChoices,
+  fieldText,
   fillable,
   installCustom,
   isCustomCandidate,
@@ -189,5 +190,14 @@ describe("customChoices", () => {
       ["No answer for Canada yet", "", "note"],
     ]);
     expect(fillable(choices)).toEqual([]);
+  });
+});
+
+describe("fieldText", () => {
+  it("reads a label once when aria-labelledby and aria-label repeat it (Greenhouse)", () => {
+    document.body.innerHTML = `<label id="q-label" for="q">Do you currently have any offers?<span aria-hidden="true">*</span></label>
+      <input id="q" type="text" aria-labelledby="q-label" aria-label="Do you currently have any offers?">`;
+    const input = document.querySelector("input") as HTMLInputElement;
+    expect(fieldText(input)).toBe("Do you currently have any offers? * q");
   });
 });
