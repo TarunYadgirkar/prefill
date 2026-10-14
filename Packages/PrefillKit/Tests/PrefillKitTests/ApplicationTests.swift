@@ -110,3 +110,26 @@ struct ApplicationTests {
         #expect(lines[1].contains("lever.co,https://jobs.lever.co/kepler/2b9c/apply"))
     }
 }
+
+struct ApplicationCloudRecordTests {
+    private static let application = SubmittedApplication(
+        date: Date(timeIntervalSince1970: 1_760_000_000),
+        request: ApplicationRequest(
+            host: "jobs.lever.co", path: "/kepler/apply", title: "Kepler",
+            fields: [.init(question: "Why Kepler?", answer: "Radios.")], files: []
+        )
+    )
+
+    @Test func aRecordReadsBackAsTheSameApplication() throws {
+        let payload = try #require(ApplicationCloudRecord.payload(Self.application))
+        let name = ApplicationCloudRecord.recordName(Self.application.id)
+        #expect(ApplicationCloudRecord.application(recordName: name, payload: payload) == Self.application)
+    }
+
+    @Test func aRecordUnderAnotherNameOrBrokenIsRefused() throws {
+        let payload = try #require(ApplicationCloudRecord.payload(Self.application))
+        #expect(ApplicationCloudRecord.application(recordName: UUID().uuidString, payload: payload) == nil)
+        let name = ApplicationCloudRecord.recordName(Self.application.id)
+        #expect(ApplicationCloudRecord.application(recordName: name, payload: Data("{".utf8)) == nil)
+    }
+}

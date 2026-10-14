@@ -4,6 +4,12 @@
 <dict>
 	<key>PrefillAppGroup</key>
 	<string>$(PREFILL_APP_GROUP)</string>
+	<!-- Lets iCloud wake the app when the Mac sends an application (AppCloud/). It does
+	     nothing in a build without push, the free team's. -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>PrefillKeychainGroup</key>
 	<string>$(PREFILL_KEYCHAIN_GROUP)</string>
 </dict>

@@ -1,5 +1,9 @@
 // Free personal team. Simulator builds and sideloading onto your own iPhone.
 // Its own bundle IDs, so registering them under the free team never blocks the plain
 // IDs the App Store build needs under the paid team.
+#include "Cloud.xcconfig"
 DEVELOPMENT_TEAM = 5AKJYZ7USP
 PREFILL_BUNDLE_ID = com.tarunyadgirkar.prefill.dev
+PREFILL_SHARED_ENTITLEMENTS = Config/Personal.entitlements
+// YES once DEVELOPMENT_TEAM is the paid team (docs/PAID-ACCOUNT.md, step 1).
+PREFILL_CLOUD_SYNC = NO

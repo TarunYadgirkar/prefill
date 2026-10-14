@@ -37,7 +37,7 @@ final class MacModel {
     var problem: String?
     // Job applications sent from the browsers here, and from the iPhone once its history is
     // copied over USB (scripts/sync-applications.sh), newest first.
-    private(set) var applications: [SubmittedApplication] = []
+    var applications: [SubmittedApplication] = []
     // Where applications go in the person's Google Sheet, once they add its link (MacModel+Sheet).
     var sheet = SheetSettingsFile(directory: RelaySocket.directory).read()
     var sheetProblem: String?
@@ -51,6 +51,8 @@ final class MacModel {
     @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var server: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
+    // Set in the build the paid team signs (MacModel+Cloud).
+    @ObservationIgnored var cloud: ApplicationSync?
 
     init() {
         #if PREFILL_TEST_BROWSERS
@@ -106,12 +108,16 @@ final class MacModel {
         ) { _ in
             Task { @MainActor in await MacModel.shared.refresh() }
         }
-        if fixedLink == nil { registerLoginItemOnce() }
+        if fixedLink == nil {
+            registerLoginItemOnce()
+            startCloud()
+        }
         await refresh()
     }
 
     func refresh() async {
         readStore()
+        Task { await cloud?.fetch() }
         access = fixedLink == nil ? Self.currentAccess : .granted
         browsers = fixedLink == nil ? HostInstaller.installAll() : []
         opensAtLogin = SMAppService.mainApp.status == .enabled
@@ -152,6 +158,7 @@ final class MacModel {
     // Forgets everything Prefill stored on this Mac: the store, the applications and those
     // waiting to merge in from the iPhone. The contact card is left as it is.
     func deleteAllData() async {
+        guard await deleteCloudCopy() else { return }
         do {
             try archive.removeAll()
             try sheetFile.removeAll()
@@ -183,6 +190,7 @@ final class MacModel {
     }
 
     func setApplications(_ merged: [SubmittedApplication]) {
+        sendToCloud(ApplicationArchive.changed(from: applications, to: merged))
         applications = merged
         Task { await sendToSheet() }
     }
