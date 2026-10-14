@@ -50,19 +50,11 @@ extension AppModel {
         return (changed + guessesToConfirm.map(InboxEntry.guess)).sorted { $0.date > $1.date }
     }
 
-    // Each question once, while its guess stands and the person hasn't picked an answer for it.
+    // The guesses still to confirm, one per question and per answer on each site.
     var guessesToConfirm: [GuessToConfirm] {
-        let variant = Intelligence.modelVariant
-        let picked = Set(events.answerPicks.map(\.words))
-        var seen = Set<String>()
-        return events.questions.reversed().compactMap { question in
-            let words = CustomFieldMatcher.key(question.text)
-            guard seen.insert(words).inserted, !picked.contains(words),
-                  let field = state.guessedAnswer(for: question, in: customFields, variant: variant) else {
-                return nil
-            }
-            return GuessToConfirm(question: question, field: field)
-        }
+        AnswerGuessing.toConfirm(events.questions, picks: events.answerPicks) { question in
+            state.guessedAnswer(for: question, in: customFields, variant: Intelligence.modelVariant)
+        }.map(GuessToConfirm.init)
     }
 
     // The question gets the answer from now on, as if the person had picked it from the list.

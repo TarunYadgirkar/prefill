@@ -110,11 +110,20 @@ function labelledByText(el: Element): string {
 }
 
 // Label text in the order browsers use: <label> elements, aria-labelledby, aria-label.
+// Greenhouse gives a question its <label>, points aria-labelledby at that same label and
+// repeats it in aria-label, so a part whose words an earlier part already holds is left out.
 export function labelText(el: FieldElement): string {
   const labels = [...(el.labels ?? [])].map(ownText).join(" ");
-  return squash(
-    [labels, labelledByText(el), el.getAttribute("aria-label") ?? ""].join(" "),
-  );
+  const parts = [labels, labelledByText(el), el.getAttribute("aria-label") ?? ""];
+  const kept = parts.reduce<string[]>((found, part) => {
+    const words = wordsOf(part);
+    return words === "" || found.some((earlier) => ` ${wordsOf(earlier)} `.includes(` ${words} `)) ? found : [...found, part];
+  }, []);
+  return squash(kept.join(" "));
+}
+
+function wordsOf(text: string): string {
+  return text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
 // How far up from a field to look for the words before it.
