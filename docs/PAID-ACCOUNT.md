@@ -15,7 +15,7 @@ Oct 14. What the paid team unlocks, what changes, ranked by how much it helps th
 
 ## Plan, ranked
 
-### 1. Sign with the paid team (needs Tarun, then small)
+### 1. Sign with the paid team (done Oct 14: 5AKJYZ7USP itself became paid; App Group move still to do)
 - Personal builds use the paid team ID. Development profiles last a year, so the daily reinstall job and its USB dependency go away (keep `install-device.sh`).
 - Turn on the App Group for the iPhone build; `StoreFactory` already prefers it over the Keychain.
 - The Mac app gets a provisioning profile, which CloudKit needs.

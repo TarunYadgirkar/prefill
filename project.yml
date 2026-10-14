@@ -35,14 +35,13 @@ settings:
     Personal:
       PREFILL_APP_GROUP: ""
 settingGroups:
-  # Signed by hand with the free team's Apple Development certificate: no provisioning
-  # profile is needed for a Mac app without restricted entitlements, and the stable
-  # signature keeps the Contacts grant across rebuilds.
+  # Xcode-managed profiles from the paid team (iCloud needs one), with the same Apple
+  # Development certificate as before, so the stable signature keeps the Contacts grant
+  # across rebuilds.
   macSigning:
     DEVELOPMENT_TEAM: 5AKJYZ7USP
-    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_STYLE: Automatic
     CODE_SIGN_IDENTITY: Apple Development
-    PROVISIONING_PROFILE_SPECIFIER: ""
     ENABLE_HARDENED_RUNTIME: YES
     # Without this, a debug signature lets any process of the same user attach to Prefill
     # and read Contacts through it.
