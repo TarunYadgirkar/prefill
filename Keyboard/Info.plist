@@ -20,9 +20,7 @@
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).KeyboardViewController</string>
 	</dict>
-	<key>PrefillAppGroup</key>
-	<string>$(PREFILL_APP_GROUP)</string>
-	<key>PrefillKeychainGroup</key>
-	<string>$(PREFILL_KEYCHAIN_GROUP)</string>
+	<key>PrefillKeyboardGroup</key>
+	<string>$(PREFILL_KEYBOARD_GROUP)</string>
 </dict>
 </plist>

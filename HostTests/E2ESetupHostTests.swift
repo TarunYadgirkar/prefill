@@ -77,8 +77,8 @@ struct E2ESetupHostTests {
         .compactMap { $0.mutableCopy() as? CNMutableContact }
     }
 
-    private func sharedStore() throws -> KeychainStore {
-        try #require(StoreFactory.make() as? KeychainStore)
+    private func sharedStore() throws -> any SharedStore {
+        StoreFactory.make()
     }
 
     @Test(.enabled(if: mode == "link"))

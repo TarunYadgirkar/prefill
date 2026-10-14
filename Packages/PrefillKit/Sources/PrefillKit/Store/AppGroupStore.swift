@@ -37,13 +37,15 @@ public struct AppGroupStore: SharedStore, DocumentStore {
     }
 
     public func removeAll() throws {
-        for document in StoreDocument.allCases {
-            try coordinate(document, options: .forDeleting) { url in
-                do {
-                    try FileManager.default.removeItem(at: url)
-                } catch let error as CocoaError where error.code == .fileNoSuchFile {
-                    return
-                }
+        for document in StoreDocument.allCases { try removeDocument(document) }
+    }
+
+    func removeDocument(_ document: StoreDocument) throws {
+        try coordinate(document, options: .forDeleting) { url in
+            do {
+                try FileManager.default.removeItem(at: url)
+            } catch let error as CocoaError where error.code == .fileNoSuchFile {
+                return
             }
         }
     }

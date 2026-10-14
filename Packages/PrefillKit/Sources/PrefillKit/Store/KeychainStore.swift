@@ -48,10 +48,12 @@ public struct KeychainStore: SharedStore, DocumentStore {
     }
 
     public func removeAll() throws {
-        for document in StoreDocument.allCases {
-            let status = SecItemDelete(query(document) as CFDictionary)
-            guard status == errSecSuccess || status == errSecItemNotFound else { throw StoreError.keychain(status) }
-        }
+        for document in StoreDocument.allCases { try removeDocument(document) }
+    }
+
+    func removeDocument(_ document: StoreDocument) throws {
+        let status = SecItemDelete(query(document) as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else { throw StoreError.keychain(status) }
     }
 
     func readDocument(_ document: StoreDocument) throws -> Data? {
