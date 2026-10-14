@@ -143,9 +143,9 @@ describe("one Website box with examples", () => {
     const field = classify(labeled("metaDataScience", "Website (Examples"));
     if (field.kind !== "link") throw new Error(`not a link: ${field.kind}`);
     expect(linkOptions(field.linkTypes ?? [], links, false)).toEqual([
-      "alexrivera.dev",
-      "www.linkedin.com/in/alexrivera",
-      "github.com/alexrivera",
+      "https://alexrivera.dev",
+      "https://www.linkedin.com/in/alexrivera",
+      "https://github.com/alexrivera",
     ]);
   });
 });
@@ -219,7 +219,7 @@ describe("Meta's radio buttons without a name", () => {
 describe("Workable's application", () => {
   it("fills the LinkedIn text area and the one address box, and leaves the hidden helpers", async () => {
     await fillAsAlex("workableBlueground");
-    expect(valueOf("QA_12102922")).toBe("www.linkedin.com/in/alex-rivera-example");
+    expect(valueOf("QA_12102922")).toBe("https://www.linkedin.com/in/alex-rivera-example");
     expect(valueOf("address")).toBe("2400 Durant Ave, Berkeley, CA 94704");
     expect(["city", "postcode", "country"].map(valueOf)).toEqual(["", "", ""]);
   });

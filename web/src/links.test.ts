@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { linkChoices, linkOptions } from "./links";
+import { linkChoices, linkOptions, listedLinkTypes } from "./links";
 import type { SuggestedLink } from "./messages";
 
 const github: SuggestedLink = {
@@ -22,20 +22,38 @@ const links = [linkedin, website, github];
 describe("linkOptions", () => {
   it("offers both links in one option first, then each alone", () => {
     expect(linkOptions(["github", "website"], links, false)).toEqual([
-      "github.com/alexrivera - alexrivera.dev",
-      "github.com/alexrivera",
-      "alexrivera.dev",
+      "https://github.com/alexrivera - https://alexrivera.dev/",
+      "https://github.com/alexrivera",
+      "https://alexrivera.dev/",
     ]);
   });
 
-  it("offers a single kind first and whole addresses in a url field", () => {
+  it("offers a single kind, and no combined option in a url field", () => {
     expect(linkOptions(["linkedin"], links, false)).toEqual([
-      "www.linkedin.com/in/alexrivera",
+      "https://www.linkedin.com/in/alexrivera",
     ]);
     expect(linkOptions(["github", "website"], links, true)).toEqual([
       "https://github.com/alexrivera",
       "https://alexrivera.dev/",
     ]);
+  });
+});
+
+describe("listedLinkTypes", () => {
+  it("offers every link on a field that asks only for a website, the website first", () => {
+    const x: SuggestedLink = { type: "x", url: "https://x.com/alexrivera", why: "card" };
+    const wanted = listedLinkTypes(["website"]);
+    expect(linkChoices(wanted, [...links, x], false).map((choice) => [choice.value, choice.detail])).toEqual([
+      ["https://alexrivera.dev/", "Website"],
+      ["https://github.com/alexrivera", "GitHub"],
+      ["https://www.linkedin.com/in/alexrivera", "LinkedIn"],
+      ["https://x.com/alexrivera", "X"],
+    ]);
+  });
+
+  it("keeps a field that names a kind to that kind", () => {
+    expect(listedLinkTypes(["github"])).toEqual(["github"]);
+    expect(listedLinkTypes(["github", "website"])).toEqual(["github", "website"]);
   });
 });
 
@@ -51,6 +69,6 @@ describe("linkChoices", () => {
       false,
       false,
     ]);
-    expect(picked).toEqual(["github.com/alexrivera", "alexrivera.dev"]);
+    expect(picked).toEqual(["https://github.com/alexrivera", "https://alexrivera.dev/"]);
   });
 });

@@ -40,7 +40,7 @@ extension KeyboardSnapshot {
         case .custom(let label):
             return { KeyboardValue(kind: .custom, label: label, text: answer.text, lastUsed: $0) }
         case .kind(let kind):
-            let text = answer.address?.oneLine ?? answer.text
+            let text = answer.address?.oneLine ?? (kind == .link ? LinkURL.full(answer.text) : answer.text)
             let caption = KeyboardCaption.of(answer.label, kind: kind)
             return { KeyboardValue(kind: KeyboardValue.Kind(kind), label: caption, text: text, lastUsed: $0) }
         }

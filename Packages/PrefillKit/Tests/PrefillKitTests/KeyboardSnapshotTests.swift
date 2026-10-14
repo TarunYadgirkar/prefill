@@ -29,6 +29,16 @@ struct KeyboardSnapshotTests {
         #expect(values.first { $0.kind == .link }?.shownText == "github.com/alexrivera")
     }
 
+    @Test func aLinkSavedWithoutASchemeIsTypedWithHTTPS() {
+        let bare = CardEntry(label: nil, payload: .link("alexrivera.dev"))
+        let memory = Memory.read(
+            card: card.replacing(.link, with: [bare]), placement: CardPlacement(onCard: []),
+            state: AppState(), events: ExtensionEvents()
+        )
+        let link = KeyboardSnapshot.make(memory: memory, now: .testNow).values.first { $0.kind == .link }
+        #expect(link?.text == "https://alexrivera.dev")
+    }
+
     @Test func recentlyUsedValuesComeFirstWithinTheirKind() {
         let events = ExtensionEvents(
             usage: [
