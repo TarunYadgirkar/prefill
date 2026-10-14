@@ -7,7 +7,7 @@ import { classifyDescription, type FieldDescription } from "../classify";
 import { customChoices, joinFieldText } from "../custom";
 import type { Choice } from "../dropdown";
 import { isContact, type ContactField } from "../fieldTypes";
-import { linkChoices } from "../links";
+import { linkChoices, listedLinkTypes } from "../links";
 import { splitNames } from "../dom";
 import { takesSavedAnswer } from "../fill";
 import {
@@ -71,7 +71,7 @@ export function plan(field: FieldDescription): Plan {
   const found = classifyDescription(field);
   if (found.kind === "link") {
     if (field.tag === "select") return NONE;
-    const linkTypes = [...(found.linkTypes ?? [])];
+    const linkTypes = [...listedLinkTypes(found.linkTypes ?? [])];
     return { kind: "link", linkTypes, fullUrl: wantsUrl(field), request: { type: "linkSuggestions", host: "", types: linkTypes } };
   }
   if (isContact(found)) return SUGGESTED_KINDS.has(found.kind) && takesText(field, CONTACT_INPUTS) ? contactPlan(found) : NONE;

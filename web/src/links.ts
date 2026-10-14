@@ -7,6 +7,7 @@ import { whyDetail } from "./why";
 import { eventOrigin, hasOwnList, fieldElements, isFieldElement } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import {
+  LINK_TYPES,
   parseExtensionResponse,
   type LinkSuggestionsRequest,
   type LinkType,
@@ -27,6 +28,7 @@ export interface LinkOptions {
 
 // A short list: the combined option, then the best of each type.
 const MAX_OPTIONS = 3;
+const MAX_EVERY_LINK = 8;
 const MAX_INSPECTED = 200;
 const PAIR = 2;
 
@@ -41,6 +43,14 @@ const TYPE_LABELS: Readonly<Record<LinkType, string>> = {
 // Shorter in the bar: no scheme and no trailing slash.
 export function shown(url: string): string {
   return url.replace(/^https?:\/\//iu, "").replace(/\/+$/u, "");
+}
+
+// A field that asks only for a website ("Website", "URL", "Links") takes any of the person's
+// links, so its list offers every one, websites first. Fill form still fills only a website.
+export function listedLinkTypes(wanted: readonly LinkType[]): readonly LinkType[] {
+  return wanted.length === 1 && wanted[0] === "website"
+    ? [...new Set<LinkType>(["website", ...LINK_TYPES])]
+    : wanted;
 }
 
 // What the bar offers a field that wants `wanted`, best first. A field that names exactly two
@@ -67,7 +77,7 @@ export function linkOptions(
   );
   return [
     ...new Set([...combined, ...firsts.map(text), ...rest.map(text)]),
-  ].slice(0, MAX_OPTIONS);
+  ].slice(0, wanted.length === LINK_TYPES.length ? MAX_EVERY_LINK : MAX_OPTIONS);
 }
 
 // Each option with the kind of link it is, or both kinds for a combined one. `onPick` hears
@@ -96,7 +106,7 @@ export function linkChoices(
 function linkTypesOf(element: FieldElement): readonly LinkType[] {
   if (element.localName === "select") return [];
   const field = classify(element);
-  return field.kind === "link" ? (field.linkTypes ?? []) : [];
+  return field.kind === "link" ? listedLinkTypes(field.linkTypes ?? []) : [];
 }
 
 // A url input, or a field tagged autocomplete="url" (Airtable's), wants a whole address.

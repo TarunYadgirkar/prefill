@@ -108,7 +108,7 @@ The content script asks for the person's links of the types a page's `link` fiel
 
 A link's `why` is `pinned` for the one picked on this site and `card` for the rest.
 
-The content script then shows Prefill's own list under the field, with up to three options. A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links. Options leave out the scheme and trailing slash, except in a `type=url` field, which gets whole addresses and no combined option. The list shows when the field takes focus, from the links the content script already has, and goes away when the field loses focus.
+The content script then shows Prefill's own list under the field, with up to three options. A field that asks for two types gets both in one option first (`github.com/alexrivera - alexrivera.dev`), then each alone; a field that asks for one type gets that type's links, except a field that asks only for a website ("Website", "URL"), which asks for every type and lists up to eight of the person's links, websites first, each labeled with its kind. Fill form still fills such a field with a website. Options leave out the scheme and trailing slash, except in a `type=url` field, which gets whole addresses and no combined option. The list shows when the field takes focus, from the links the content script already has, and goes away when the field loses focus.
 
 ## contactSuggestions
 

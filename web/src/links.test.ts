@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { linkChoices, linkOptions } from "./links";
+import { linkChoices, linkOptions, listedLinkTypes } from "./links";
 import type { SuggestedLink } from "./messages";
 
 const github: SuggestedLink = {
@@ -36,6 +36,24 @@ describe("linkOptions", () => {
       "https://github.com/alexrivera",
       "https://alexrivera.dev/",
     ]);
+  });
+});
+
+describe("listedLinkTypes", () => {
+  it("offers every link on a field that asks only for a website, the website first", () => {
+    const x: SuggestedLink = { type: "x", url: "https://x.com/alexrivera", why: "card" };
+    const wanted = listedLinkTypes(["website"]);
+    expect(linkChoices(wanted, [...links, x], false).map((choice) => [choice.value, choice.detail])).toEqual([
+      ["alexrivera.dev", "Website"],
+      ["github.com/alexrivera", "GitHub"],
+      ["www.linkedin.com/in/alexrivera", "LinkedIn"],
+      ["x.com/alexrivera", "X"],
+    ]);
+  });
+
+  it("keeps a field that names a kind to that kind", () => {
+    expect(listedLinkTypes(["github"])).toEqual(["github"]);
+    expect(listedLinkTypes(["github", "website"])).toEqual(["github", "website"]);
   });
 });
 
