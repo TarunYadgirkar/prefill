@@ -40,6 +40,12 @@ public struct ApplicationArchive: Sendable {
         return merged
     }
 
+    // What a merge added or changed, by id, to send on to the other device.
+    public static func changed(from before: [SubmittedApplication], to after: [SubmittedApplication]) -> [UUID] {
+        let old = Set(before)
+        return after.filter { !old.contains($0) }.map(\.id)
+    }
+
     // Another device's archive file, as copied over. Only applications a page could have sent
     // are kept.
     public static func applications(from data: Data) throws -> [SubmittedApplication] {

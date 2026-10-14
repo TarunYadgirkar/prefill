@@ -29,7 +29,7 @@ final class AppModel {
     private(set) var state = AppState()
     private(set) var events = ExtensionEvents()
     // Every job application sent from this iPhone, newest first, from the app's own archive.
-    private(set) var applications: [SubmittedApplication] = []
+    var applications: [SubmittedApplication] = []
     var sheet = SheetSettings()
     var sheetProblem: String?
     private(set) var card: CardRecord?
@@ -60,6 +60,8 @@ final class AppModel {
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
+    // Set in the build the paid team signs (AppModel+Cloud).
+    @ObservationIgnored var cloud: ApplicationSync?
 
     init(
         store: any SharedStore, gateway: any ContactsGateway, contacts: any ContactsSource,
@@ -84,9 +86,11 @@ final class AppModel {
         let gateway = CNContactStoreGateway()
         let store = StoreFactory.make()
         ReinstallCleanup.run(store: store, defaults: .standard)
-        return AppModel(
+        let model = AppModel(
             store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway), keyboard: .make()
         )
+        model.startCloud()
+        return model
     }
 
     var phase: Phase {
@@ -135,6 +139,7 @@ final class AppModel {
 
     func reload() async {
         readStore()
+        Task { await cloud?.fetch() }
         access = contacts.access
         await refreshCard()
         await refreshExtension()
@@ -187,6 +192,7 @@ final class AppModel {
 
     // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
     func deleteAllData() async {
+        guard await deleteCloudCopy() else { return }
         do {
             try archive.removeAll()
             try sheetFile.removeAll()
@@ -247,7 +253,9 @@ final class AppModel {
     // Moves the applications Safari queued into the archive, which keeps every one.
     private func archiveApplications() {
         do {
+            let before = applications
             applications = try archive.merge(events.applications)
+            sendToCloud(ApplicationArchive.changed(from: before, to: applications))
             Task { await sendToSheet() }
         } catch {
             problem = Problem(

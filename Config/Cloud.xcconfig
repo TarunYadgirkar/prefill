@@ -1,0 +1,12 @@
+// iCloud sync of sent applications (AppCloud/). PREFILL_CLOUD_SYNC is YES only for a build the
+// paid team signs: the free team can't sign iCloud, and an entitlement it can't sign fails the
+// device build. These pick the app's entitlements and the Swift flag from it.
+PREFILL_APP_ENTITLEMENTS_NO = $(PREFILL_SHARED_ENTITLEMENTS)
+PREFILL_APP_ENTITLEMENTS_YES = Config/AppCloud.entitlements
+PREFILL_APP_ENTITLEMENTS = $(PREFILL_APP_ENTITLEMENTS_$(PREFILL_CLOUD_SYNC))
+PREFILL_MAC_ENTITLEMENTS_NO = MacApp/Prefill.entitlements
+PREFILL_MAC_ENTITLEMENTS_YES = MacApp/PrefillCloud.entitlements
+PREFILL_MAC_ENTITLEMENTS = $(PREFILL_MAC_ENTITLEMENTS_$(PREFILL_CLOUD_SYNC))
+PREFILL_CLOUD_CONDITION_NO =
+PREFILL_CLOUD_CONDITION_YES = PREFILL_CLOUD
+PREFILL_CLOUD_CONDITION = $(PREFILL_CLOUD_CONDITION_$(PREFILL_CLOUD_SYNC))
