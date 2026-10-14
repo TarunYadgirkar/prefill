@@ -15,7 +15,7 @@ xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
 
 step "Building Prefill for this Mac"
 xcodebuild -project $PROJECT -scheme PrefillMac -configuration Personal -destination 'platform=macOS' \
-  -derivedDataPath $MAC_DERIVED build >$LOGS/build-mac.log 2>&1 || fail_with_log $LOGS/build-mac.log
+  -derivedDataPath $MAC_DERIVED -allowProvisioningUpdates build >$LOGS/build-mac.log 2>&1 || fail_with_log $LOGS/build-mac.log
 
 step "Installing in $INSTALLED"
 osascript -e 'quit app id "com.tarunyadgirkar.prefill.mac"' 2>/dev/null || true

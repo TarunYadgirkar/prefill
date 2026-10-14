@@ -23,7 +23,7 @@ pnpm --dir $ROOT/web build
 xcodegen generate --spec $ROOT/project.yml --project $ROOT --quiet
 xcodebuild -project $PROJECT -scheme PrefillMac -configuration Personal -destination 'platform=macOS' \
   -derivedDataPath $E2E_DERIVED 'SWIFT_ACTIVE_COMPILATION_CONDITIONS=$(inherited) PREFILL_TEST_BROWSERS' \
-  build >$LOGS/build-mac-e2e.log 2>&1 || fail_with_log $LOGS/build-mac-e2e.log
+  -allowProvisioningUpdates build >$LOGS/build-mac-e2e.log 2>&1 || fail_with_log $LOGS/build-mac-e2e.log
 
 was_running=false
 pgrep -qf "/Applications/Prefill.app/Contents/MacOS/Prefill" && was_running=true

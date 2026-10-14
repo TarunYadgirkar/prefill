@@ -1,8 +1,7 @@
-// Fill in the paid Apple Developer team ID before archiving for the App Store.
-// Simulator builds work while it is empty.
 #include "Cloud.xcconfig"
-APP_STORE_TEAM_ID =
+APP_STORE_TEAM_ID = 5AKJYZ7USP
 DEVELOPMENT_TEAM = $(APP_STORE_TEAM_ID)
 PREFILL_BUNDLE_ID = com.tarunyadgirkar.prefill
 PREFILL_SHARED_ENTITLEMENTS = Config/AppStore.entitlements
+PREFILL_CLOUD_ENTITLEMENTS = Config/AppCloud.entitlements
 PREFILL_CLOUD_SYNC = YES
