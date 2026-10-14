@@ -182,7 +182,7 @@ extension MessageRouter {
     private func guess(_ asked: CustomSuggestionsRequest.Field, _ context: CustomContext) -> Answered {
         let (state, variant) = (context.state, context.variant)
         let key = InsightKey.answer(asked.text, variant: variant, revision: context.revision, context: asked.context)
-        if let guess = state.guessedAnswer(key: key, in: context.custom) {
+        if let guess = state.guessedAnswer(key: key, text: asked.text, in: context.custom) {
             return (.init(values: [], guesses: [guess.value]), nil)
         }
         let known = state.insight(key) != nil

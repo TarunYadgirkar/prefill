@@ -49,13 +49,14 @@ public extension AppState {
 
     // The saved answer the model said to use for a question, judged against the answers as
     // they are now (`revision`), if it's still among `fields`.
-    func guessedAnswer(key: String, in fields: [CustomField]) -> CustomField? {
-        guard let cached = insight(key), case .use(let label)? = AnswerVerdict(cached: cached) else { return nil }
+    func guessedAnswer(key: String, text: String, in fields: [CustomField]) -> CustomField? {
+        guard let cached = insight(key), case .use(let label)? = AnswerVerdict(cached: cached),
+              AnswerVerdict.fits(label, text) else { return nil }
         return fields.first { !$0.isDraft && $0.id == label.lowercased() }
     }
 
     func guessedAnswer(for question: FormQuestion, in fields: [CustomField], variant: String) -> CustomField? {
-        guessedAnswer(key: Self.answerKey(question, fields: fields, variant: variant), in: fields)
+        guessedAnswer(key: Self.answerKey(question, fields: fields, variant: variant), text: question.text, in: fields)
     }
 
     // The person said the model's guess doesn't answer the question.

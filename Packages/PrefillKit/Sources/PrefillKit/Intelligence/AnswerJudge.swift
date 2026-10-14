@@ -66,7 +66,14 @@ public enum AnswerVerdict: Hashable, Sendable {
         }
         let kinds: Set<AnswerScope.Kind> = chosen.scope.map { [$0.kind] } ?? []
         let asked = AnswerScope.find(in: question.text, kinds: kinds)
-        return ScopeFit(answer: chosen.scope, asked: asked) == .clash ? .needsNew : .use(label: chosen.label)
+        if ScopeFit(answer: chosen.scope, asked: asked) == .clash { return .needsNew }
+        return fits(chosen.label, question.text) ? .use(label: chosen.label) : .unsure
+    }
+
+    // Whether a saved answer may be guessed for a question's words at all; checked again when a
+    // cached verdict is read, so verdicts made before the check don't show.
+    static func fits(_ label: String, _ text: String) -> Bool {
+        JobQuestion(label: AnswerScope.split(label).base).map { WorkQuestion.guessFits($0, text) } ?? true
     }
 
     // How the app's cache keeps it, read by the Safari handler.
@@ -130,6 +137,23 @@ public enum AnswerGuessing {
             answers.append(CachedInsight(key: key, answer: verdict.cached))
         }
         return answers
+    }
+
+    // Newest first, each question once while its guess stands and the person hasn't picked an
+    // answer for it, and each answer once per site: a form with ten questions the model maps
+    // to one answer shows the newest, and the next once that one is confirmed or turned down.
+    public static func toConfirm(
+        _ questions: [FormQuestion], picks: [AnswerPick], guess: (FormQuestion) -> CustomField?
+    ) -> [(question: FormQuestion, field: CustomField)] {
+        let picked = Set(picks.map(\.words))
+        var seenWords = Set<String>()
+        var seenAnswers = Set<String>()
+        return questions.reversed().compactMap { question in
+            let words = CustomFieldMatcher.key(question.text)
+            guard seenWords.insert(words).inserted, !picked.contains(words), let field = guess(question),
+                  seenAnswers.insert("\(question.host)\u{1F}\(field.id)").inserted else { return nil }
+            return (question, field)
+        }
     }
 
     // The saved answer to suggest for a question asked live (the Mac's panel), if the model

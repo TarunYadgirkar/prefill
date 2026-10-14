@@ -35,6 +35,48 @@ struct AnswerJudgeTests {
         #expect(ask("Can you work in Canada?", "use", "Work authorization (US)") == .needsNew)
         #expect(ask("Favourite colour", "needsNew", "none") == .needsNew)
         #expect(ask("Favourite colour", "maybe", "School") == .unsure)
+        // The model reads a "Yes" about work authorization as the answer to any yes/no question.
+        #expect(ask("Do you currently have any offers?", "use", "Work authorization (US)") == .unsure)
+        #expect(ask("Will you require visa sponsorship?", "use", "Work authorization (US)") == .unsure)
+        #expect(ask("Do you have US work authorization?", "use", "Work authorization (US)")
+            == .use(label: "Work authorization (US)"))
+        #expect(ask("Are you legally authorized to work in the US?", "use", "Work authorization (US)")
+            == .use(label: "Work authorization (US)"))
+    }
+
+    // Verdicts cached before the check above still don't show for a question that isn't about it.
+    @Test func aCachedWorkAuthorizationGuessShowsOnlyForAWorkQuestion() async {
+        let fields = [usAuthorization]
+        let offers = FormQuestion(host: "greenhouse.io", text: "Do you currently have any offers?", date: .testNow)
+        let asked = FormQuestion(host: "greenhouse.io", text: "Are you a US citizen?", date: .testNow)
+        let judge = FakeJudge([offers.text: .use(label: "Work authorization (US)"),
+                               asked.text: .use(label: "Work authorization (US)")])
+        let cached = await AnswerGuessing.ask([offers, asked], fields: fields, judge: judge, variant: "v")
+        let state = AppState().recording(cached, siteKinds: [:])
+        #expect(state.guessedAnswer(for: offers, in: fields, variant: "v") == nil)
+        #expect(state.guessedAnswer(for: asked, in: fields, variant: "v") == usAuthorization)
+    }
+
+    // A form whose questions the model all maps to one answer shows one card, the newest, and a
+    // question whose label the page read twice is still one question.
+    @Test func theInboxShowsEachAnswerOncePerSite() {
+        let ask = { (host: String, text: String, minutes: Double) in
+            FormQuestion(host: host, text: text, date: .testNow.addingTimeInterval(minutes * 60))
+        }
+        let questions = [
+            ask("greenhouse.io", "Alma mater", 0),
+            ask("greenhouse.io", "Alma mater * Alma mater", 1),
+            ask("greenhouse.io", "Where did you study?", 2),
+            ask("lever.co", "Alma mater", 3),
+            ask("greenhouse.io", "Favourite colour", 4)
+        ]
+        let shown = AnswerGuessing.toConfirm(questions, picks: []) { $0.text == "Favourite colour" ? nil : school }
+        #expect(shown.map(\.question.text) == ["Alma mater", "Where did you study?"])
+        #expect(shown.map(\.question.host) == ["lever.co", "greenhouse.io"])
+        let words = CustomFieldMatcher.key("Where did you study?")
+        let picked = [AnswerPick(words: words, label: "School", date: .testNow)]
+        let afterPick = AnswerGuessing.toConfirm(questions, picks: picked) { _ in school }
+        #expect(afterPick.map(\.question.text) == ["Favourite colour", "Alma mater"])
     }
 
     // The app's background pass: the model sees the question with its heading and options and

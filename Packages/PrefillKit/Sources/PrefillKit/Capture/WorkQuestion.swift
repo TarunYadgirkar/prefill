@@ -36,4 +36,21 @@ enum WorkQuestion: Equatable {
         default: return true
         }
     }
+
+    // "Do you have US work authorization?", "Are you a US citizen?": words that put a question
+    // about authorization, where the stricter `authorizedWords` don't.
+    nonisolated(unsafe) private static let workWords =
+        /(?i)\bwork (?:authori[sz]ation|permit)|authori[sz]ation to work|\bcitizen|permanent resident|green card/
+
+    // Whether the on-device model's pick of `question`'s answer may stand for `text`. The model
+    // reads "Yes, I have US work authorization" as the answer to any yes/no question, so these
+    // answers are guessed only for a question that is plainly about them.
+    static func guessFits(_ question: JobQuestion, _ text: String) -> Bool {
+        let asked = WorkQuestion(asking: text)
+        switch question {
+        case .sponsorship: return asked == .sponsorship
+        case .authorization: return asked == .authorization || (asked == nil && text.contains(workWords))
+        default: return true
+        }
+    }
 }
