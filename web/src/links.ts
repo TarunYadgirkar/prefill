@@ -40,11 +40,6 @@ const TYPE_LABELS: Readonly<Record<LinkType, string>> = {
   other: "Link",
 };
 
-// Shorter in the bar: no scheme and no trailing slash.
-export function shown(url: string): string {
-  return url.replace(/^https?:\/\//iu, "").replace(/\/+$/u, "");
-}
-
 // A field that asks only for a website ("Website", "URL", "Links") takes any of the person's
 // links, so its list offers every one, websites first. Fill form still fills only a website.
 export function listedLinkTypes(wanted: readonly LinkType[]): readonly LinkType[] {
@@ -53,17 +48,16 @@ export function listedLinkTypes(wanted: readonly LinkType[]): readonly LinkType[
     : wanted;
 }
 
-// What the bar offers a field that wants `wanted`, best first. A field that names exactly two
-// kinds ("GitHub/Portfolio") gets both in one option first, then each alone; one that wants
-// more is a box that lists examples and takes one link. A url field gets whole addresses,
-// which a combined option is not, so it gets none.
+// What the bar offers a field that wants `wanted`, best first, always as whole https://
+// addresses. A field that names exactly two kinds ("GitHub/Portfolio") gets both in one option
+// first, then each alone; one that wants more is a box that lists examples and takes one link.
+// A url field takes one address, so it gets no combined option.
 export function linkOptions(
   wanted: readonly LinkType[],
   links: readonly SuggestedLink[],
   fullUrl: boolean,
 ): string[] {
-  const text = (link: SuggestedLink): string =>
-    fullUrl ? link.url : shown(link.url);
+  const text = (link: SuggestedLink): string => link.url;
   const firsts = wanted.flatMap(
     (type) => links.find((link) => link.type === type) ?? [],
   );
@@ -89,9 +83,7 @@ export function linkChoices(
   onPick?: (value: string) => void,
 ): Choice[] {
   const linkOf = (value: string): SuggestedLink | undefined =>
-    links.find(
-      (candidate) => value === candidate.url || value === shown(candidate.url),
-    );
+    links.find((candidate) => value === candidate.url);
   return linkOptions(wanted, links, fullUrl).map((value, index) => {
     const link = linkOf(value);
     if (link === undefined)

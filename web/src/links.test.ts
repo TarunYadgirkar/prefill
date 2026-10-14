@@ -22,15 +22,15 @@ const links = [linkedin, website, github];
 describe("linkOptions", () => {
   it("offers both links in one option first, then each alone", () => {
     expect(linkOptions(["github", "website"], links, false)).toEqual([
-      "github.com/alexrivera - alexrivera.dev",
-      "github.com/alexrivera",
-      "alexrivera.dev",
+      "https://github.com/alexrivera - https://alexrivera.dev/",
+      "https://github.com/alexrivera",
+      "https://alexrivera.dev/",
     ]);
   });
 
-  it("offers a single kind first and whole addresses in a url field", () => {
+  it("offers a single kind, and no combined option in a url field", () => {
     expect(linkOptions(["linkedin"], links, false)).toEqual([
-      "www.linkedin.com/in/alexrivera",
+      "https://www.linkedin.com/in/alexrivera",
     ]);
     expect(linkOptions(["github", "website"], links, true)).toEqual([
       "https://github.com/alexrivera",
@@ -44,10 +44,10 @@ describe("listedLinkTypes", () => {
     const x: SuggestedLink = { type: "x", url: "https://x.com/alexrivera", why: "card" };
     const wanted = listedLinkTypes(["website"]);
     expect(linkChoices(wanted, [...links, x], false).map((choice) => [choice.value, choice.detail])).toEqual([
-      ["alexrivera.dev", "Website"],
-      ["github.com/alexrivera", "GitHub"],
-      ["www.linkedin.com/in/alexrivera", "LinkedIn"],
-      ["x.com/alexrivera", "X"],
+      ["https://alexrivera.dev/", "Website"],
+      ["https://github.com/alexrivera", "GitHub"],
+      ["https://www.linkedin.com/in/alexrivera", "LinkedIn"],
+      ["https://x.com/alexrivera", "X"],
     ]);
   });
 
@@ -69,6 +69,6 @@ describe("linkChoices", () => {
       false,
       false,
     ]);
-    expect(picked).toEqual(["github.com/alexrivera", "alexrivera.dev"]);
+    expect(picked).toEqual(["https://github.com/alexrivera", "https://alexrivera.dev/"]);
   });
 });

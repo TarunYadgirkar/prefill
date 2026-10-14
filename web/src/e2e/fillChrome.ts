@@ -223,8 +223,8 @@ async function main(): Promise<void> {
     check(filled.first_name === "Alex" && filled.last_name === "Rivera", "one tap fills the name");
     check(filled.email === "alex.rivera@example.com", "one tap fills the first email");
     check(filled.phone === "+1 (510) 555-0134", "one tap fills the phone");
-    check(filled.question_1 === "www.linkedin.com/in/alexrivera", "one tap fills LinkedIn");
-    check(filled.question_0 === "github.com/alexrivera - alexrivera.dev", "one tap fills GitHub/Portfolio with both links");
+    check(filled.question_1 === "https://www.linkedin.com/in/alexrivera", "one tap fills LinkedIn");
+    check(filled.question_0 === "https://github.com/alexrivera - https://alexrivera.dev", "one tap fills GitHub/Portfolio with both links");
     check(filled.school === "University of California, Berkeley", "one tap fills a custom answer");
     check(filled.state === "California", "one tap picks the state in a select");
     check(filled.authorized === "Yes", "one tap answers a yes/no radio question");

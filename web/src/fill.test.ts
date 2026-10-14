@@ -132,7 +132,7 @@ describe("one-tap fill", () => {
     expect(value("last_name")).toBe("Yadgirkar");
     expect(value("email")).toBe("tarun@example.com");
     expect(value("phone")).toBe("+1 510 555 0100");
-    expect(value("li")).toBe("linkedin.com/in/tarun");
+    expect(value("li")).toBe("https://linkedin.com/in/tarun");
     expect(value("school")).toBe("University of California, Berkeley");
     expect(value("state")).toBe("CA");
     expect((document.querySelector("input[name=auth][value='1']") as HTMLInputElement).checked).toBe(true);
