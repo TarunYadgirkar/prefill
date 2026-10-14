@@ -135,7 +135,8 @@ struct ContactsGatewayHostTests {
         }
     }
 
-    @Test func cardWriterRewritesTheRealCardAndThenLeavesItAlone() throws {
+    // A pin only reorders Prefill's own list: the card is never ranked for a site.
+    @Test func cardWriterLeavesTheRealCardInItsOrderForAPin() throws {
         try withThrowawayCard { identifier in
             let school = ContactValue(
                 payload: .email(emails[2]), label: CNLabelHome, source: .card, createdAt: .now
@@ -146,10 +147,9 @@ struct ContactsGatewayHostTests {
                 page: PageSignal(host: "shop.example.net", hints: [:], now: .now, matchEachSite: true)
             )
             let writer = CardWriter(gateway: gateway)
-            #expect(writer.sync(request).outcome == .saved)
-            let first = try storedEmails(identifier).first.map { $0.value as String }
-            #expect(first == emails[2])
             #expect(writer.sync(request).outcome == .unchanged)
+            let stored = try storedEmails(identifier).map { $0.value as String }
+            #expect(stored == emails)
         }
     }
 

@@ -133,3 +133,28 @@ struct ApplicationCloudRecordTests {
         #expect(ApplicationCloudRecord.application(recordName: name, payload: Data("{".utf8)) == nil)
     }
 }
+
+struct StoreMigrationTests {
+    @Test func theKeychainStoreMovesIntoAnEmptyAppGroupOnce() throws {
+        let old = InMemoryStore()
+        let new = InMemoryStore()
+        let state = AppState(settings: Settings(matchEachSite: false))
+        try old.writeAppState(state)
+        try old.appendEvents(usage: [UsageEvent(valueID: UUID(), host: "example.org", date: .now)], captures: [])
+        StoreMigration.adopt(from: old, into: new)
+        #expect(try new.readAppState() == state)
+        #expect(try new.readEvents().usage.count == 1)
+        #expect(try old.readAppState() == AppState())
+    }
+
+    @Test func anAppGroupWithItsOwnStateIsLeftAlone() throws {
+        let old = InMemoryStore()
+        let new = InMemoryStore()
+        try old.writeAppState(AppState(settings: Settings(matchEachSite: false)))
+        let current = AppState(settings: Settings(saveNewInfo: false))
+        try new.writeAppState(current)
+        StoreMigration.adopt(from: old, into: new)
+        #expect(try new.readAppState() == current)
+        #expect(try old.readAppState() != AppState())
+    }
+}

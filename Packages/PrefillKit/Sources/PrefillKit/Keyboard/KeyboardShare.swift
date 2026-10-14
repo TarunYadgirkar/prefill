@@ -1,10 +1,9 @@
 import Foundation
 
-// What the app and the Prefill keyboard pass each other through the store both reach (the
-// shared keychain group, or the App Group for the App Store build): the app writes the
-// values, the keyboard writes when it was last shown. One writer each. The keyboard shares
-// the whole group, so with Full Access it could read app-state and ext-events too; it only
-// ever reads keyboard-values, and the free team has no way to give it a group of its own.
+// What the app and the Prefill keyboard pass each other through an App Group of their own,
+// which the Safari extension's store is not in: the app writes the values, the keyboard writes
+// when it was last shown. One writer each. So even with Full Access the keyboard can read only
+// keyboard-values. Without that group (a build with no paid team) it falls back to the store.
 public struct KeyboardShare: Sendable {
     private let store: any DocumentStore
 
@@ -13,7 +12,12 @@ public struct KeyboardShare: Sendable {
     }
 
     public static func make(bundle: Bundle = .main) -> KeyboardShare {
-        switch StoreFactory.backend(bundle: bundle) {
+        let group = bundle.object(forInfoDictionaryKey: StoreFactory.keyboardGroupKey) as? String
+        if let group, !group.isEmpty, !group.hasPrefix("$("),
+           let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: group) {
+            return KeyboardShare(store: AppGroupStore(directory: StoreFactory.directory(in: url)))
+        }
+        return switch StoreFactory.backend(bundle: bundle) {
         case .appGroup(let url): KeyboardShare(store: AppGroupStore(directory: StoreFactory.directory(in: url)))
         case .keychain(let group): KeyboardShare(store: KeychainStore(accessGroup: group))
         }
@@ -39,9 +43,15 @@ public struct KeyboardShare: Sendable {
     public func writeSeen(_ date: Date) throws {
         try store.writeDocument(.keyboardSeen, data: DocumentCoder.encode(date))
     }
+
+    // For "Delete Prefill data".
+    public func removeAll() throws {
+        for document in [StoreDocument.keyboardValues, .keyboardSeen] { try store.removeDocument(document) }
+    }
 }
 
 protocol DocumentStore: Sendable {
     func readDocument(_ document: StoreDocument) throws -> Data?
     func writeDocument(_ document: StoreDocument, data: Data) throws
+    func removeDocument(_ document: StoreDocument) throws
 }

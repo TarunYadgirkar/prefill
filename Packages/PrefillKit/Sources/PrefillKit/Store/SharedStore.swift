@@ -50,6 +50,7 @@ public enum StoreFactory {
 
     public static let appGroupKey = "PrefillAppGroup"
     public static let keychainGroupKey = "PrefillKeychainGroup"
+    public static let keyboardGroupKey = "PrefillKeyboardGroup"
 
     public static func make(bundle: Bundle = .main) -> any SharedStore {
         let backend = backend(bundle: bundle)

@@ -43,7 +43,7 @@ struct SeedHostTests {
         try resetCard(identifier)
         // The host app reacts to the card change by storing its state; let that land first.
         try await Task.sleep(for: .seconds(2))
-        let store = try #require(StoreFactory.make() as? KeychainStore)
+        let store = StoreFactory.make()
         try store.removeAll()
         let events = Self.events(now: .now)
         try store.appendEvents(events)
@@ -59,7 +59,7 @@ struct SeedHostTests {
         let identifier = try alexIdentifier()
         try resetCard(identifier)
         try await Task.sleep(for: .seconds(2))
-        let store = try #require(StoreFactory.make() as? KeychainStore)
+        let store = StoreFactory.make()
         try store.removeAll()
         let card = try CNContactStoreGateway().fetchCard(identifier: identifier)
         let link = CardLink(
@@ -104,7 +104,7 @@ struct SeedHostTests {
             _ = editor.apply(.addCustomFields(fields), cardIdentifier: identifier)
         }
         try await Task.sleep(for: .seconds(2))
-        let store = try #require(StoreFactory.make() as? KeychainStore)
+        let store = StoreFactory.make()
         try store.removeAll()
         try ApplicationArchive.live().removeAll()
         let linked = try gateway.fetchCard(identifier: identifier)

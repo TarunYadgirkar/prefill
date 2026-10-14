@@ -85,6 +85,7 @@ final class AppModel {
     static func live() -> AppModel {
         let gateway = CNContactStoreGateway()
         let store = StoreFactory.make()
+        StoreMigration.adoptKeychainStore(into: store)
         ReinstallCleanup.run(store: store, defaults: .standard)
         let model = AppModel(
             store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway), keyboard: .make()
@@ -197,6 +198,7 @@ final class AppModel {
             try archive.removeAll()
             try sheetFile.removeAll()
             try store.removeAll()
+            try keyboard?.removeAll()
         } catch {
             problem = Problem(
                 title: String(localized: "Prefill couldn’t delete its data"),

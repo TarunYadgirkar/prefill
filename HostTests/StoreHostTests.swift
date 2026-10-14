@@ -19,11 +19,10 @@ struct StoreHostTests {
         Bundle.main.object(forInfoDictionaryKey: StoreFactory.keychainGroupKey) as? String
     }
 
-    @Test func thePersonalBuildUsesTheSharedKeychainGroup() throws {
-        let store = try #require(StoreFactory.make() as? KeychainStore)
-        let group = try #require(store.accessGroup)
-        #expect(group.hasSuffix(".com.tarunyadgirkar.prefill.shared"))
-        #expect(!group.hasPrefix("$("))
+    @Test func thePersonalBuildUsesItsAppGroup() throws {
+        #expect(StoreFactory.make() is AppGroupStore)
+        let group = try #require(Bundle.main.object(forInfoDictionaryKey: StoreFactory.appGroupKey) as? String)
+        #expect(group == "group.com.tarunyadgirkar.prefill.dev")
     }
 
     @Test func keychainStoreRoundTripsBothDocuments() throws {
