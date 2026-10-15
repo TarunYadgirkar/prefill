@@ -52,6 +52,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `App/` | iPhone app: Inbox, You (search, groups, value detail, Add menu), Settings (Sharing your card, Advanced: sites Prefill doesn't save on, Restore, Delete). |
 | `Extension/` | Safari Web Extension handler; it inherits the app's Contacts grant and never calls `requestAccess`. |
 | `Keyboard/`, `KeyboardUI/` | The Prefill keyboard for other apps (`PrefillKeyboard` target): a value picker that reads the snapshot the app shares through the store (`PrefillKit/Keyboard/`), types a value and switches back. `KeyboardUI/` is shared with the app for its debug preview and colors. |
+| `AutoFill/` | `PrefillAutoFill`, a credential provider extension that declares only text insertion: long-press a field in any app, AutoFill, Prefill, pick a value. It reads the keyboard's snapshot from the keyboard's App Group and has no network code. Turned on from Settings › Use Prefill in other apps. Not yet checked on the iPhone (the free-team spike's text never landed in the Simulator). |
 | `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu (with the first-run checklist, `SetupChecklist.swift`) and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
 | `MacShared/` | Code identity checks and the socket used by both sides. |
