@@ -3,47 +3,54 @@ import Foundation
 import os
 import PrefillKit
 
-// Sends the applications in this device's archive to the person's private iCloud database and
-// brings back the ones the other device sent, so the iPhone and the Mac list the same ones.
-// It never writes the archive itself: what arrives goes to `receive`, which the app merges on
-// the main actor like everything else it archives and returns the merged archive, or nil. Only the iPhone app and the Mac app
-// compile this; the keyboard and the extensions never do.
-actor ApplicationSync: CKSyncEngineDelegate {
+// One zone of the person's private iCloud database kept in step with a local file: what this
+// device has goes up, what the other device sent comes down. Each record is one item, its JSON
+// in one encrypted field. It never writes the local file itself: arrivals go to the zone's
+// `receive`, which the app merges on the main actor and answers with this device's version of
+// those items. Only the iPhone app and the Mac app compile this; the keyboard and the
+// extensions never do.
+actor ZoneSync: CKSyncEngineDelegate {
     static let containerID = "iCloud.com.tarunyadgirkar.prefill"
-    static let stateFileName = "cloud-sync.json"
+    static let payloadKey = "payload"
 
-    // The engine's own bookkeeping, and whether this device's archive went up once.
+    struct Zone: Sendable {
+        let name: String
+        let recordType: String
+        let stateFile: URL
+        // This device's items as record name to payload, or nil when the file can't be read now.
+        let local: @Sendable () -> [String: Data]?
+        // Merges what arrived; returns this device's payloads for those names afterwards, or nil
+        // when the file couldn't take them.
+        let receive: @MainActor @Sendable ([String: Data]) -> [String: Data]?
+        // The other device deleted Prefill's data, or the person removed it in iCloud settings.
+        let deletedElsewhere: @MainActor @Sendable () -> Void
+    }
+
+    // The engine's own bookkeeping, and whether this device's items went up once.
     nonisolated private struct Saved: Codable {
         var engine: CKSyncEngine.State.Serialization?
         var uploadedArchive = false
     }
 
-    private let archive: ApplicationArchive
-    private let stateFile: URL
-    private let receive: @MainActor @Sendable ([SubmittedApplication]) -> [SubmittedApplication]?
-    private let deletedElsewhere: @MainActor @Sendable () -> Void
-    private var saved: Saved
-    private var engine: CKSyncEngine?
-    // The latest server copy of each record, so a save updates it instead of colliding.
-    private var serverRecords: [CKRecord.ID: CKRecord] = [:]
-
-    private static let zoneID = CKRecordZone.ID(zoneName: ApplicationCloudRecord.zoneName)
-    private static let log = PrefillLog.logger("cloud")
-
     enum SyncError: Error {
         case zoneNotDeleted
     }
 
-    init(
-        archive: ApplicationArchive,
-        receive: @escaping @MainActor @Sendable ([SubmittedApplication]) -> [SubmittedApplication]?,
-        deletedElsewhere: @escaping @MainActor @Sendable () -> Void
-    ) {
-        self.archive = archive
-        stateFile = archive.url.deletingLastPathComponent().appending(path: Self.stateFileName)
-        self.receive = receive
-        self.deletedElsewhere = deletedElsewhere
-        saved = (try? JSONDecoder().decode(Saved.self, from: Data(contentsOf: stateFile))) ?? Saved()
+    private let zone: Zone
+    private let zoneID: CKRecordZone.ID
+    private var saved: Saved
+    private var engine: CKSyncEngine?
+    // The latest server copy of each record, so a save updates it instead of colliding.
+    private var serverRecords: [CKRecord.ID: CKRecord] = [:]
+    // Items that changed before the engine started, sent once it does.
+    private var queued: [String] = []
+
+    private static let log = PrefillLog.logger("cloud")
+
+    init(_ zone: Zone) {
+        self.zone = zone
+        zoneID = CKRecordZone.ID(zoneName: zone.name)
+        saved = (try? JSONDecoder().decode(Saved.self, from: Data(contentsOf: zone.stateFile))) ?? Saved()
     }
 
     func start() {
@@ -53,20 +60,23 @@ actor ApplicationSync: CKSyncEngineDelegate {
             CKSyncEngine.Configuration(database: database, stateSerialization: saved.engine, delegate: self)
         )
         self.engine = engine
-        if saved.engine == nil { engine.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: Self.zoneID))]) }
-        if !saved.uploadedArchive { uploadArchive() }
+        if saved.engine == nil { engine.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))]) }
+        if !saved.uploadedArchive { uploadAll() }
+        send(queued)
+        queued = []
     }
 
-    // Applications that just landed in the archive.
-    func send(_ ids: [UUID]) {
-        engine?.state.add(pendingRecordZoneChanges: ids.map { .saveRecord(Self.recordID($0)) })
+    // Items that just changed here.
+    func send(_ names: [String]) {
+        guard let engine else { return queued.append(contentsOf: names) }
+        engine.state.add(pendingRecordZoneChanges: names.map { .saveRecord(recordID($0)) })
     }
 
     func fetch() async {
         do {
             try await engine?.fetchChanges()
         } catch {
-            Self.log.error("fetch failed: \(error.localizedDescription, privacy: .public)")
+            Self.log.error("\(self.zone.name, privacy: .public) fetch failed: \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -75,7 +85,7 @@ actor ApplicationSync: CKSyncEngineDelegate {
     // deleted then. Afterwards this sync stops; the next launch starts a fresh one.
     func deleteEverything() async throws {
         if let engine {
-            let delete = CKSyncEngine.PendingDatabaseChange.deleteZone(Self.zoneID)
+            let delete = CKSyncEngine.PendingDatabaseChange.deleteZone(zoneID)
             engine.state.add(pendingDatabaseChanges: [delete])
             try await engine.sendChanges()
             guard !engine.state.pendingDatabaseChanges.contains(delete) else {
@@ -96,11 +106,11 @@ actor ApplicationSync: CKSyncEngineDelegate {
         case .accountChange(let change):
             // Another account's iCloud gets nothing from this one: only a sign-in uploads.
             if case .signIn = change.changeType {
-                engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: Self.zoneID))])
-                uploadArchive()
+                engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
+                uploadAll()
             }
         case .fetchedDatabaseChanges(let changes):
-            await zonesDeleted(changes.deletions.filter { $0.zoneID == Self.zoneID }.map(\.reason))
+            await zonesDeleted(changes.deletions.filter { $0.zoneID == zoneID }.map(\.reason))
         case .fetchedRecordZoneChanges(let changes):
             await arrived(changes.modifications.map(\.record))
         case .sentRecordZoneChanges(let sent):
@@ -116,23 +126,19 @@ actor ApplicationSync: CKSyncEngineDelegate {
     ) async -> CKSyncEngine.RecordZoneChangeBatch? {
         let pending = syncEngine.state.pendingRecordZoneChanges.filter { context.options.scope.contains($0) }
         guard !pending.isEmpty else { return nil }
-        // An archive that can't be read now keeps every change waiting for the next batch.
-        guard let archived = try? archive.read() else { return nil }
-        let applications = Dictionary(archived.map { ($0.id, $0) }) { first, _ in first }
+        // A file that can't be read now keeps every change waiting for the next batch.
+        guard let payloads = zone.local() else { return nil }
         var records: [CKRecord.ID: CKRecord] = [:]
         var unsendable: [CKSyncEngine.PendingRecordZoneChange] = []
         for change in pending {
             guard case .saveRecord(let recordID) = change else { continue }
-            guard let id = UUID(uuidString: recordID.recordName), let application = applications[id],
-                  let payload = ApplicationCloudRecord.payload(application)
-            else {
-                Self.log.error("application \(recordID.recordName, privacy: .public) is gone or too large to send")
+            guard let payload = payloads[recordID.recordName] else {
+                Self.log.error("\(recordID.recordName, privacy: .public) is gone or too large to send")
                 unsendable.append(change)
                 continue
             }
-            let record = serverRecords[recordID]
-                ?? CKRecord(recordType: ApplicationCloudRecord.recordType, recordID: recordID)
-            record.encryptedValues[ApplicationCloudRecord.payloadKey] = payload
+            let record = serverRecords[recordID] ?? CKRecord(recordType: zone.recordType, recordID: recordID)
+            record.encryptedValues[Self.payloadKey] = payload
             records[recordID] = record
         }
         syncEngine.state.remove(pendingRecordZoneChanges: unsendable)
@@ -144,44 +150,37 @@ actor ApplicationSync: CKSyncEngineDelegate {
 
     // MARK: Private
 
-    // False when the archive couldn't take them, so nothing may overwrite the server's copy.
+    // False when the file couldn't take them, so nothing may overwrite the server's copy.
     @discardableResult
     private func arrived(_ records: [CKRecord]) async -> Bool {
         for record in records { serverRecords[record.recordID] = record }
-        let applications = records.compactMap { record -> SubmittedApplication? in
-            guard let payload = record.encryptedValues[ApplicationCloudRecord.payloadKey] as? Data,
-                  let application = ApplicationCloudRecord.application(
-                      recordName: record.recordID.recordName, payload: payload
-                  )
-            else {
+        var incoming: [String: Data] = [:]
+        for record in records {
+            guard let payload = record.encryptedValues[Self.payloadKey] as? Data else {
                 Self.log.error("skipped unreadable record \(record.recordID.recordName, privacy: .public)")
-                return nil
+                continue
             }
-            return application
+            incoming[record.recordID.recordName] = payload
         }
-        guard !applications.isEmpty else { return true }
-        guard let merged = await receive(applications) else { return false }
-        // One that combined with steps sent from this device goes back up whole.
-        let ids = Set(applications.map(\.id))
-        send(ApplicationArchive.changed(from: applications, to: merged.filter { ids.contains($0.id) }))
+        guard !incoming.isEmpty else { return true }
+        guard let current = await zone.receive(incoming) else { return false }
+        // One that combined with changes made here goes back up whole.
+        send(current.filter { incoming[$0.key] != $0.value }.map(\.key))
         return true
     }
 
-    // The other device deleted Prefill's data, or the person removed it in iCloud settings:
-    // this device's copy goes too. A reset of iCloud's encryption keys is no request to
-    // delete, so the archive goes up again.
+    // A reset of iCloud's encryption keys is no request to delete, so everything goes up again.
     private func zonesDeleted(_ reasons: [CKDatabase.DatabaseChange.Deletion.Reason]) async {
         guard let reason = reasons.first else { return }
+        serverRecords = [:]
         switch reason {
         case .encryptedDataReset:
-            serverRecords = [:]
-            engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: Self.zoneID))])
-            uploadArchive()
+            engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
+            uploadAll()
         default:
-            serverRecords = [:]
             saved.uploadedArchive = false
             persist()
-            await deletedElsewhere()
+            await zone.deletedElsewhere()
         }
     }
 
@@ -196,7 +195,7 @@ actor ApplicationSync: CKSyncEngineDelegate {
                 newer.append(server)
                 resend.append(recordID)
             case .zoneNotFound:
-                engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: Self.zoneID))])
+                engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
                 serverRecords[recordID] = nil
                 resend.append(recordID)
             case .unknownItem:
@@ -206,15 +205,15 @@ actor ApplicationSync: CKSyncEngineDelegate {
                 Self.log.error("couldn't save \(recordID.recordName, privacy: .public): \(failure.error.code.rawValue)")
             }
         }
-        // The other device's version merges into the archive first, so what goes back up
-        // carries both. If it couldn't, the server's copy stays as it is.
+        // The other device's version merges in first, so what goes back up carries both. If
+        // it couldn't, the server's copy stays as it is.
         guard await arrived(newer) else { return }
         engine?.state.add(pendingRecordZoneChanges: resend.map { .saveRecord($0) })
     }
 
-    private func uploadArchive() {
-        guard let engine, let applications = try? archive.read() else { return }
-        engine.state.add(pendingRecordZoneChanges: applications.map { .saveRecord(Self.recordID($0.id)) })
+    private func uploadAll() {
+        guard let engine, let payloads = zone.local() else { return }
+        engine.state.add(pendingRecordZoneChanges: payloads.keys.map { .saveRecord(recordID($0)) })
         saved.uploadedArchive = true
         persist()
     }
@@ -222,19 +221,20 @@ actor ApplicationSync: CKSyncEngineDelegate {
     private func reset() {
         engine = nil
         serverRecords = [:]
+        queued = []
         saved = Saved()
-        try? FileManager.default.removeItem(at: stateFile)
+        try? FileManager.default.removeItem(at: zone.stateFile)
     }
 
     private func persist() {
         guard let data = try? JSONEncoder().encode(saved) else { return }
         try? FileManager.default.createDirectory(
-            at: stateFile.deletingLastPathComponent(), withIntermediateDirectories: true
+            at: zone.stateFile.deletingLastPathComponent(), withIntermediateDirectories: true
         )
-        try? data.write(to: stateFile, options: .atomic)
+        try? data.write(to: zone.stateFile, options: .atomic)
     }
 
-    private static func recordID(_ id: UUID) -> CKRecord.ID {
-        CKRecord.ID(recordName: ApplicationCloudRecord.recordName(id), zoneID: zoneID)
+    private func recordID(_ name: String) -> CKRecord.ID {
+        CKRecord.ID(recordName: name, zoneID: zoneID)
     }
 }

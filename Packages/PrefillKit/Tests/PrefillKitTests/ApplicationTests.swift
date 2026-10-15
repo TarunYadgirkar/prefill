@@ -158,3 +158,56 @@ struct StoreMigrationTests {
         #expect(try old.readAppState() != AppState())
     }
 }
+
+struct CloudCardCopyTests {
+    private static let field = CustomField(label: "Pronouns", value: "they/them", matchWords: [])
+    private static let link = CardEntry(label: "LinkedIn", payload: .link("https://linkedin.com/in/alex"))
+
+    private static func card(fields: [CustomField], links: [CardEntry]) -> CardRecord {
+        CardRecord(
+            identifier: "me", givenName: "Alex", familyName: "Rivera", emails: [], phones: [], addresses: [],
+            links: links, customFields: fields
+        )
+    }
+
+    @Test func aFieldThatLeavesTheContactBecomesATombstone() {
+        var extras = CloudCardCopy()
+        let start = Date(timeIntervalSince1970: 1)
+        #expect(extras.mirror(Self.card(fields: [Self.field], links: [Self.link]), now: start).count == 2)
+        #expect(extras.mirror(Self.card(fields: [Self.field], links: [Self.link]), now: start).isEmpty)
+        let changed = extras.mirror(Self.card(fields: [], links: [Self.link]), now: start.addingTimeInterval(1))
+        #expect(changed == [CloudCardCopy.recordName(.field(Self.field))])
+        #expect(extras.entries[changed[0]]?.body == nil)
+    }
+
+    @Test func anEntryFromTheOtherDeviceSurvivesUntilItReachesThisContact() {
+        var extras = CloudCardCopy()
+        let name = CloudCardCopy.recordName(.field(Self.field))
+        extras.merge([name: .init(body: .field(Self.field), modifiedAt: Date(timeIntervalSince1970: 5))])
+        let changed = extras.mirror(Self.card(fields: [], links: [Self.link]), now: Date(timeIntervalSince1970: 6))
+        #expect(changed.count == 1)
+        #expect(extras.entries[name]?.body == .field(Self.field))
+    }
+
+    @Test func aDeletionFromTheOtherDeviceIsNotUndoneByThisContact() {
+        var extras = CloudCardCopy()
+        let card = Self.card(fields: [Self.field], links: [])
+        _ = extras.mirror(card, now: Date(timeIntervalSince1970: 1))
+        let name = CloudCardCopy.recordName(.field(Self.field))
+        extras.merge([name: .init(body: nil, modifiedAt: Date(timeIntervalSince1970: 2))])
+        #expect(extras.mirror(card, now: Date(timeIntervalSince1970: 3)).isEmpty)
+        #expect(extras.entries[name]?.body == nil)
+    }
+
+    @Test func anOlderChangeFromTheOtherDeviceLoses() throws {
+        var extras = CloudCardCopy()
+        _ = extras.mirror(Self.card(fields: [Self.field], links: []), now: Date(timeIntervalSince1970: 10))
+        let name = CloudCardCopy.recordName(.field(Self.field))
+        extras.merge([name: .init(body: nil, modifiedAt: Date(timeIntervalSince1970: 5))])
+        #expect(extras.entries[name]?.body == .field(Self.field))
+        let entry = try #require(extras.entries[name])
+        let payload = try #require(CloudCardCopyFile.payload(entry))
+        #expect(CloudCardCopyFile.entry(recordName: name, payload: payload) == extras.entries[name])
+        #expect(CloudCardCopyFile.entry(recordName: "f-other", payload: payload) == nil)
+    }
+}

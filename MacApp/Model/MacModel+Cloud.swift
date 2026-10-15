@@ -2,28 +2,21 @@ import Foundation
 import PrefillKit
 
 // Sent applications travel between this Mac and the iPhone through the person's private
-// iCloud database, in the build the paid team signs (PREFILL_CLOUD), in place of the USB copy
-// into Imports. Elsewhere `cloud` stays nil and every call here does nothing.
+// iCloud, in place of the USB copy into Imports, with a copy of the links and custom fields on
+// Prefill's contact (PrefillCloud). Without PREFILL_CLOUD, `cloud` stays nil and every call
+// here does nothing.
 extension MacModel {
     func startCloud() {
         #if PREFILL_CLOUD
         guard cloud == nil else { return }
-        let sync = ApplicationSync(
+        let cloud = PrefillCloud(
             archive: archive,
-            receive: { [weak self] incoming in self?.receiveFromCloud(incoming) },
-            deletedElsewhere: { [weak self] in self?.cloudCopyDeleted() }
+            receiveApplications: { [weak self] incoming in self?.receiveFromCloud(incoming) },
+            applicationsDeletedElsewhere: { [weak self] in self?.cloudCopyDeleted() }
         )
-        cloud = sync
-        Task {
-            await sync.start()
-            await sync.fetch()
-        }
+        self.cloud = cloud
+        Task { await cloud.start() }
         #endif
-    }
-
-    func sendToCloud(_ ids: [UUID]) {
-        guard let cloud, !ids.isEmpty else { return }
-        Task { await cloud.send(ids) }
     }
 
     // False when iCloud couldn't be reached, so "Delete Prefill data" deletes nothing.
