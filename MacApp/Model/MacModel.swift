@@ -52,7 +52,7 @@ final class MacModel {
     @ObservationIgnored private var server: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     // Set in the build the paid team signs (MacModel+Cloud).
-    @ObservationIgnored var cloud: ApplicationSync?
+    @ObservationIgnored var cloud: PrefillCloud?
 
     init() {
         #if PREFILL_TEST_BROWSERS
@@ -190,7 +190,7 @@ final class MacModel {
     }
 
     func setApplications(_ merged: [SubmittedApplication]) {
-        sendToCloud(ApplicationArchive.changed(from: applications, to: merged))
+        cloud?.sendApplications(ApplicationArchive.changed(from: applications, to: merged))
         applications = merged
         Task { await sendToSheet() }
     }
@@ -261,6 +261,7 @@ final class MacModel {
             return
         }
         card = fetched
+        cloud?.mirror(fetched)
         let merged = ManualOrder.allValues(card: fetched, known: state.values, now: .now)
         if merged.map(\.id) != state.values.map(\.id) { commit(state.with(values: merged)) }
     }

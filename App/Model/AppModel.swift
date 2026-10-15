@@ -61,7 +61,7 @@ final class AppModel {
     @ObservationIgnored var reorderSync: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
     // Set in the build the paid team signs (AppModel+Cloud).
-    @ObservationIgnored var cloud: ApplicationSync?
+    @ObservationIgnored var cloud: PrefillCloud?
 
     init(
         store: any SharedStore, gateway: any ContactsGateway, contacts: any ContactsSource,
@@ -160,6 +160,7 @@ final class AppModel {
         case .success(let fresh):
             card = fresh
             cardFailure = nil
+            cloud?.mirror(fresh)
             adoptCardValues(fresh)
             if let fresh = await CardWork.placement(gateway, identifier: link.contactIdentifier) {
                 placement = fresh
@@ -257,7 +258,7 @@ final class AppModel {
         do {
             let before = applications
             applications = try archive.merge(events.applications)
-            sendToCloud(ApplicationArchive.changed(from: before, to: applications))
+            cloud?.sendApplications(ApplicationArchive.changed(from: before, to: applications))
             Task { await sendToSheet() }
         } catch {
             problem = Problem(

@@ -29,7 +29,7 @@ Oct 14. What the paid team unlocks, what changes, ranked by how much it helps th
 - The Google Sheet stays as is; it now gets the phone's applications through the Mac within seconds.
 - Off until the paid team signs the build (a build setting), so nothing breaks before step 1.
 
-### 3. Answers, picks, usage and the inbox on CloudKit (PLAN 14.1)
+### 3. Answers, picks, usage and the inbox on CloudKit (PLAN 14.1; Oct 15: the shadow copy is built and syncing, nothing reads it yet)
 - Custom fields, links and drafts move off the Prefill contact into CloudKit records with real labels, scopes and history.
 - The Me card stays the only thing Safari's bar reads; the Prefill contact becomes an import/export.
 - Picks and usage sync, so a pick on the Mac reorders the phone's list.
