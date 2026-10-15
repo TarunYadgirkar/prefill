@@ -68,6 +68,8 @@ targets:
         embed: true
       - target: PrefillKeyboard
         embed: true
+      - target: PrefillAutoFill
+        embed: true
   PrefillSafari:
     type: app-extension
     platform: iOS
@@ -116,6 +118,24 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Config/Keyboard.entitlements
         PRODUCT_BUNDLE_IDENTIFIER: $(PREFILL_BUNDLE_ID).keyboard
         INFOPLIST_FILE: Keyboard/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    dependencies:
+      - package: PrefillKit
+  # Prefill in iOS's long-press AutoFill menu (text insertion only). It reads the keyboard's
+  # snapshot from the keyboard's App Group and nothing else.
+  PrefillAutoFill:
+    type: app-extension
+    platform: iOS
+    sources:
+      - AutoFill
+      - App/Theme/Palette.swift
+      - KeyboardUI/KeyboardPalette.swift
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: Config/AutoFill.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: $(PREFILL_BUNDLE_ID).autofill
+        INFOPLIST_FILE: AutoFill/Info.plist
         INFOPLIST_KEY_CFBundleDisplayName: Prefill
         SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
     dependencies:
