@@ -112,6 +112,13 @@ function labelledByText(el: Element): string {
 // Label text in the order browsers use: <label> elements, aria-labelledby, aria-label.
 // Greenhouse gives a question its <label>, points aria-labelledby at that same label and
 // repeats it in aria-label, so a part whose words an earlier part already holds is left out.
+// A label that points at the field's name rather than its id, as Ashby's do.
+export function labelForName(element: Element): string {
+  const name = element.getAttribute("name") ?? "";
+  if (name === "") return "";
+  return element.ownerDocument.querySelector(`label[for="${CSS.escape(name)}"]`)?.textContent ?? "";
+}
+
 export function labelText(el: FieldElement): string {
   const labels = [...(el.labels ?? [])].map(ownText).join(" ");
   const parts = [labels, labelledByText(el), el.getAttribute("aria-label") ?? ""];

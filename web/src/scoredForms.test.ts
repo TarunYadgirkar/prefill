@@ -21,6 +21,7 @@ import jotformLastPatrol from "./fixtures/jotform-lastpatrol.html?raw";
 import tallyUvaWics from "./fixtures/tally-uvawics.html?raw";
 import { linkOptions } from "./links";
 import type { ExtensionRequest, SuggestedLink } from "./messages";
+import ashbyReplit from "./fixtures/ats-ashby-replit.html?raw";
 import airtableDormRoomFund from "./fixtures/airtable-dormroomfund.html?raw";
 import airtableIbmStartups from "./fixtures/airtable-ibmstartups.html?raw";
 import greenhouseFigma from "./fixtures/ats-greenhouse-figma.html?raw";
@@ -43,6 +44,7 @@ import tallyHackHub from "./fixtures/tally-hackhub.html?raw";
 // left the held-out set for this one, where its bug stays fixed.
 
 const FIXTURES = {
+  ashbyReplit,
   greenhouseStripe,
   jotformLambOfGodVbs,
   jotformLastPatrol,
@@ -360,6 +362,37 @@ describe("lists outside React-Select", () => {
     const fields: Expectation[] = [{ field: { label: "Where are you currently located?" }, want: "fill", accept: [PLACES[0] ?? ""], options: PLACES }];
     const results = await scoreForm(ashbyOpenAi, { source: "https://jobs.ashbyhq.com/openai", fields }, alex as Person);
     expect(results[0]?.got).toBe(PLACES[0]);
+  }, 30_000);
+});
+
+describe("Ashby's application", () => {
+  // Ashby's React marks the button pressed on its click, as the page does.
+  function pressable(): void {
+    for (const row of document.querySelectorAll(".ashby-application-form-input-yesno"))
+      for (const button of row.querySelectorAll("button"))
+        button.addEventListener("click", () => {
+          const pressed = button.getAttribute("aria-pressed") === "true";
+          for (const other of row.querySelectorAll("button")) other.setAttribute("aria-pressed", "false");
+          button.setAttribute("aria-pressed", String(!pressed));
+        });
+  }
+  const pressedFor = (question: string): string | undefined =>
+    [...document.querySelectorAll(".ashby-application-form-field-entry")]
+      .find((entry) => entry.querySelector("label")?.textContent.startsWith(question) === true)
+      ?.querySelector("button[aria-pressed=true]")?.textContent ?? undefined;
+
+  it("presses Yes or No and declines the self-identification radios titled by a label", async () => {
+    load("ashbyReplit");
+    pressable();
+    const send = (request: ExtensionRequest): Promise<unknown> => Promise.resolve(reply(alex as Person, request));
+    const result = await fillForm(document, { host: () => "jobs.ashbyhq.com", send });
+    expect(pressedFor("Are you legally authorized")).toBe("Yes");
+    expect(pressedFor("Will you now, or in the future, require sponsorship")).toBe("No");
+    expect(pressedFor("Are you at least 18")).toBeUndefined();
+    const checked = [...document.querySelectorAll<HTMLInputElement>("input[type=radio]:checked")].map((radio) => labelText(radio));
+    expect(checked).toEqual(["Decline to self-identify", "Decline to self-identify", "I decline to self-identify for protected veteran status"]);
+    result.undo();
+    expect(pressedFor("Are you legally authorized")).toBeUndefined();
   }, 30_000);
 });
 

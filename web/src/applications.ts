@@ -3,7 +3,7 @@ import { isPlaceholder } from "./choices";
 import { comboboxChoice, isCombobox } from "./combobox";
 import { classifyForCapture, isSignIn } from "./classify";
 import { joinFieldText } from "./custom";
-import { eventOrigin, fieldElements, inferredLabel, isRendered, labelText, nearbyText, placeholderText } from "./dom";
+import { eventOrigin, fieldElements, inferredLabel, isRendered, labelForName, labelText, nearbyText, placeholderText } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { questionOf } from "./fill";
 import { jobQuestion } from "./learn";
@@ -36,13 +36,6 @@ const typeOf = (element: FieldElement): string =>
 
 // The field's own label first: labelText joins it with aria-labelledby, which on Greenhouse
 // names the same label again.
-// A label that points at the field's name rather than its id, as Ashby's do.
-function labelForName(element: Element): string {
-  const name = element.getAttribute("name") ?? "";
-  if (name === "") return "";
-  return element.ownerDocument.querySelector(`label[for="${CSS.escape(name)}"]`)?.textContent ?? "";
-}
-
 function questionFor(element: FieldElement): string {
   const own = [...(element.labels ?? [])].map((label) => label.textContent).join(" ");
   const label =

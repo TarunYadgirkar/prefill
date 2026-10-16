@@ -4,7 +4,7 @@ import { classify, isSensitiveText, isSignIn } from "./classify";
 import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { askedField, customChoices, fieldText, fillable, joinFieldText } from "./custom";
 import { declineOption, isDemographic } from "./demographics";
-import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelText, nearbyText } from "./dom";
+import { eventOrigin, fieldElements, hasOwnList, isFieldElement, isRendered, labelForName, labelText, nearbyText } from "./dom";
 import { fillField, showDropdown, type Attach, type Choice, type TextField } from "./dropdown";
 import { isContact, type ContactField, type FieldElement } from "./fieldTypes";
 import { fitPhones, isHelper, isOneBoxAddress, isPhoneBox } from "./fillFit";
@@ -53,7 +53,9 @@ type Slot =
   | { control: "text"; element: TextField; want: Want }
   | { control: "select"; element: HTMLSelectElement; want: Want }
   | { control: "radio"; inputs: HTMLInputElement[]; want: Want }
-  | { control: "combobox"; element: HTMLInputElement; want: Want };
+  | { control: "combobox"; element: HTMLInputElement; want: Want }
+  // Yes/No buttons, with the hidden checkbox under them standing in as the field.
+  | { control: "press"; buttons: HTMLButtonElement[]; field: HTMLInputElement; want: Want };
 
 interface Answers {
   contact: Omit<ContactSuggestionsResult, "type"> | undefined;
@@ -207,11 +209,19 @@ function slotOf(element: FieldElement): Slot | undefined {
     : { control: "text", element: element as TextField, want };
 }
 
-// The question a group of radio buttons answers: its fieldset's legend, its radiogroup's
-// label, or the words around the buttons that aren't the buttons' own labels.
-function groupLabel(first: HTMLInputElement): string {
-  const legend = first.closest("fieldset")?.querySelector("legend")?.textContent ?? "";
+// Ashby titles a fieldset with a label that labels none of its buttons.
+function fieldsetTitle(fieldset: HTMLFieldSetElement | null): string {
+  if (fieldset === null) return "";
+  const legend = fieldset.querySelector("legend")?.textContent ?? "";
   if (legend.trim() !== "") return legend;
+  return [...fieldset.querySelectorAll("label")].find((label) => label.control === null)?.textContent ?? "";
+}
+
+// The question a group of radio buttons answers: its fieldset's legend or title, its
+// radiogroup's label, or the words around the buttons that aren't the buttons' own labels.
+function groupLabel(first: HTMLInputElement): string {
+  const title = fieldsetTitle(first.closest("fieldset"));
+  if (title.trim() !== "") return title;
   const group = first.closest("[role=radiogroup]");
   return group === null ? "" : (group.getAttribute("aria-label") ?? labelledBy(group));
 }
@@ -308,6 +318,26 @@ function checkboxSlots(elements: readonly FieldElement[]): Slot[] {
   });
 }
 
+const isPressed = (button: HTMLButtonElement): boolean => button.getAttribute("aria-pressed") === "true";
+
+function pressButtons(row: Element): HTMLButtonElement[] {
+  return [...row.children].filter((child): child is HTMLButtonElement => child.localName === "button" && child.hasAttribute("aria-pressed"));
+}
+
+// Yes/No buttons a page draws instead of radios (Ashby's): a row of pressable buttons over a
+// hidden checkbox that the question's label names.
+function pressSlots(scope: ParentNode): Slot[] {
+  const rows = new Set([...scope.querySelectorAll("button[aria-pressed]")].flatMap((button) => button.parentElement ?? []));
+  return [...rows].flatMap((row) => {
+    const buttons = pressButtons(row);
+    const field = row.querySelector<HTMLInputElement>(":scope > input[type=checkbox]");
+    if (field === null || buttons.length < 2 || !buttons.some(isRendered)) return [];
+    if (buttons.some((button) => button.disabled || isPressed(button))) return [];
+    const want = radioWant(joinFieldText([labelForName(field) || nearbyText(row)]));
+    return want === undefined ? [] : [{ control: "press" as const, buttons, field, want }];
+  });
+}
+
 // The form the person is in, or the whole page when they aren't in one.
 export function fillScope(doc: Document, anchor?: Element | null): ParentNode {
   const field = anchor ?? doc.activeElement;
@@ -317,7 +347,7 @@ export function fillScope(doc: Document, anchor?: Element | null): ParentNode {
 export function findSlots(scope: ParentNode): Slot[] {
   const elements = fieldElements(scope, MAX_INSPECTED);
   const fields = elements.filter((element) => !isSignIn(element)).flatMap((element) => slotOf(element) ?? []);
-  return [...(isOneBoxAddress(elements) ? fields.map(wholeAddress) : fields), ...radioSlots(elements), ...checkboxSlots(elements)];
+  return [...(isOneBoxAddress(elements) ? fields.map(wholeAddress) : fields), ...radioSlots(elements), ...checkboxSlots(elements), ...pressSlots(scope)];
 }
 
 // The street box of a form with no other address boxes takes the address on one line.
@@ -353,6 +383,7 @@ function optionTexts(slot: Slot): string[] {
   const options =
     slot.control === "select" ? [...slot.element.options].map(optionOf).filter((option) => !isPlaceholder(option))
     : slot.control === "radio" ? radioOptions(slot.inputs)
+    : slot.control === "press" ? pressOptions(slot.buttons)
     : [];
   return options.map((option) => joinFieldText([option.text], LIMITS.text)).filter(Boolean);
 }
@@ -572,6 +603,24 @@ function uncheck(radio: HTMLInputElement): void {
   radio.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
+const pressOptions = (buttons: readonly HTMLButtonElement[]): Option[] =>
+  buttons.map((button) => ({ text: button.textContent.trim(), value: button.getAttribute("data-option") ?? "" }));
+
+// Presses the button the answer says, as a person would; pressing it again takes it back.
+function applyPress(slot: Extract<Slot, { control: "press" }>, values: readonly string[], marks: Marks): Filled | undefined {
+  const { buttons, field, want } = slot;
+  const match = optionMatch(want, pressOptions(buttons), values);
+  if (!field.isConnected || buttons.some(isPressed)) return undefined;
+  if (match.fits > 1) marks.push(markUnsure(field, buttons[0]?.parentElement ?? undefined, match.fits));
+  const button = isClear(match) ? buttons[match.index] : undefined;
+  if (button === undefined) return undefined;
+  button.click();
+  const undo = (): void => {
+    if (isPressed(button)) button.click();
+  };
+  return { field, undo, took: () => isPressed(button), shown: button.textContent.trim() };
+}
+
 // A radio button's answer as learning reads it: its first label's text.
 const radioText = (radio: HTMLInputElement): string | undefined => radio.labels?.[0]?.textContent.trim();
 
@@ -605,6 +654,7 @@ function apply(slot: Slot, answers: Answers, report: Report, marks: Marks): Fill
   const values = valuesOf(choices);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values, marks);
   if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values, marks);
+  if (slot.control === "press") return applyPress(slot, values, marks);
   return undefined;
 }
 
@@ -638,7 +688,10 @@ function hasAnswer(slot: Slot, answers: Answers): boolean {
   if (slot.control === "combobox") return slot.want.from === "decline" || choicesOf(slot.want, answers).length > 0;
   const values = valuesOf(choicesOf(slot.want, answers));
   if (slot.control === "text") return values.length > 0;
-  const options = slot.control === "select" ? [...slot.element.options].map(optionOf) : radioOptions(slot.inputs);
+  const options =
+    slot.control === "select" ? [...slot.element.options].map(optionOf)
+    : slot.control === "press" ? pressOptions(slot.buttons)
+    : radioOptions(slot.inputs);
   return isClear(optionMatch(slot.want, options, values));
 }
 
@@ -652,6 +705,7 @@ export async function fillableCount(scope: ParentNode, options: FillOptions): Pr
 
 // The field a slot is: the box, the list, or a group's first button.
 export function slotField(slot: Slot): FieldElement | undefined {
+  if (slot.control === "press") return slot.field;
   return slot.control === "radio" ? slot.inputs[0] : slot.element;
 }
 
