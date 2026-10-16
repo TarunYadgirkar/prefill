@@ -29,7 +29,7 @@ public enum CustomFieldMatcher {
     // question gives only as examples ("active funding (e.g., grants, sponsorships)") aren't
     // what it asks for.
     static func candidates(for fieldText: String, in fields: [CustomField]) -> [CustomField] {
-        let page = words(fieldText.replacing(examples, with: " "))
+        let page = withShortForms(words(fieldText.replacing(examples, with: " ")))
         guard !page.isEmpty else { return [] }
         let asked = fields.filter { asks(fieldText, for: $0) }
         let scored = asked.compactMap { field in score(field, page: page).map { (field, $0) } }
@@ -81,6 +81,14 @@ public enum CustomFieldMatcher {
             .filter { !$0.isEmpty && $0.isSubset(of: page) }
             .map(\.count)
             .max()
+    }
+
+    // A question that spells a word out still asks for a field that shortens it: "Student
+    // Identification Number" asks for "Student ID".
+    private static let shortForms = ["identification": "id"]
+
+    private static func withShortForms(_ page: Set<String>) -> Set<String> {
+        page.union(page.compactMap { shortForms[$0] })
     }
 
     // A question's words in one string, the same however the question orders them.
