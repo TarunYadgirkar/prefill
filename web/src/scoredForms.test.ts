@@ -394,6 +394,18 @@ describe("Ashby's application", () => {
     result.undo();
     expect(pressedFor("Are you legally authorized")).toBeUndefined();
   }, 30_000);
+
+  it("gives the person's own saved gender and race when they keep them", async () => {
+    load("ashbyReplit");
+    const person: Person = {
+      ...(alex as Person),
+      custom: [...(alex as Person).custom, { label: "Gender", value: "Male" }, { label: "Race", value: "Asian" }, { label: "Veteran status", value: "I am not a protected veteran" }],
+    };
+    const send = (request: ExtensionRequest): Promise<unknown> => Promise.resolve(reply(person, request));
+    await fillForm(document, { host: () => "jobs.ashbyhq.com", send });
+    const checked = [...document.querySelectorAll<HTMLInputElement>("input[type=radio]:checked")].map((radio) => labelText(radio));
+    expect(checked).toEqual(["Male", "Asian (Not Hispanic or Latino)", "I am not a protected veteran"]);
+  }, 30_000);
 });
 
 describe("signatures", () => {
