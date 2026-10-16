@@ -16,6 +16,11 @@ struct GoogleSheetScreen: View {
                     the page you applied on. An application the sheet already lists is skipped.
                     """)
                 .textRole(.body)
+                Text("""
+                    Easiest: choose Connect Google Sheets in Prefill's settings on your Mac. Applications \
+                    from this iPhone reach the Mac through iCloud, so nothing needs setting up here.
+                    """)
+                .textRole(.body)
             }
             if model.sheet.address == nil { linkSection } else { statusSection }
         }

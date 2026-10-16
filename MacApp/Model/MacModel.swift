@@ -48,6 +48,7 @@ final class MacModel {
     private let fixedLink: CardLink?
     @ObservationIgnored let archive = ApplicationArchive(directory: RelaySocket.directory)
     @ObservationIgnored let sheetFile = SheetSettingsFile(directory: RelaySocket.directory)
+    @ObservationIgnored let google = GoogleAccount()
     @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var server: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
@@ -162,6 +163,7 @@ final class MacModel {
         do {
             try archive.removeAll()
             try sheetFile.removeAll()
+            google.signOut()
             try? FileManager.default.removeItem(at: Self.importsDirectory)
             try store.removeAll()
         } catch {
