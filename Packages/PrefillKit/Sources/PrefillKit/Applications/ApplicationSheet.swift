@@ -148,6 +148,9 @@ public enum ApplicationSheet {
 // "Delete Prefill data" removes it.
 public struct SheetSettings: Codable, Sendable, Equatable {
     public var address: URL?
+    // The sheet Prefill created after the person signed in with Google (GoogleSheets), used
+    // instead of an Apps Script link.
+    public var spreadsheet: GoogleSheets.Spreadsheet?
     public var isOn = false
     public var listed: Set<UUID> = []
     public var lastSent: Date?

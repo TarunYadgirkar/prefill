@@ -74,3 +74,41 @@ struct ApplicationSheetTests {
         #expect(file.read() == SheetSettings())
     }
 }
+
+struct GoogleSheetsTests {
+    private static let client = GoogleSheets.Client(id: "123-abc.apps.googleusercontent.com")!
+
+    @Test func signInAsksOnlyForPrefillsOwnFilesAndChecksTheState() throws {
+        let url = GoogleSheets.authorizationURL(client: Self.client, verifier: "v", state: "s1")
+        let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        #expect(items.first { $0.name == "scope" }?.value == "https://www.googleapis.com/auth/drive.file")
+        let redirect = items.first { $0.name == "redirect_uri" }?.value
+        #expect(redirect == "com.googleusercontent.apps.123-abc:/oauth2redirect")
+        let back = try #require(URL(string: "com.googleusercontent.apps.123-abc:/oauth2redirect?state=s1&code=c"))
+        #expect(GoogleSheets.code(from: back, state: "s1") == "c")
+        #expect(GoogleSheets.code(from: back, state: "other") == nil)
+        #expect(GoogleSheets.Client(id: "$(PREFILL_GOOGLE_CLIENT_ID)") == nil)
+        let made = Data(
+            #"{"spreadsheetId":"1a-B_c","spreadsheetUrl":"https://docs.google.com/spreadsheets/d/1a-B_c"}"#.utf8
+        )
+        #expect(try GoogleSheets.spreadsheet(from: made).id == "1a-B_c")
+        let odd = Data(#"{"spreadsheetId":"../x","spreadsheetUrl":"https://docs.google.com/x"}"#.utf8)
+        #expect(throws: GoogleSheets.Failure.unreadable) { try GoogleSheets.spreadsheet(from: odd) }
+    }
+
+    @Test func aRefreshKeepsTheRefreshTokenAndRowsUseTheSheetsColumns() throws {
+        let data = Data(#"{"access_token":"a2","expires_in":3600}"#.utf8)
+        let tokens = try GoogleSheets.tokens(from: data, keeping: "r1", now: Date(timeIntervalSince1970: 0))
+        #expect(tokens.refreshToken == "r1")
+        #expect(tokens.isFresh(at: Date(timeIntervalSince1970: 3000)))
+        let application = SubmittedApplication(
+            date: Date(timeIntervalSince1970: 1_760_000_000),
+            request: ApplicationRequest(host: "jobs.ashbyhq.com", path: "/notion/apply", title: "Intern @ Notion",
+                                        fields: [], files: [])
+        )
+        let request = GoogleSheets.appendRequest([application], to: "S", token: "a2")
+        #expect(request.url?.path() == "/v4/spreadsheets/S/values/Applications!A1:append")
+        let body = try JSONSerialization.jsonObject(with: try #require(request.httpBody)) as? [String: [[String]]]
+        #expect(body?["values"]?.first?[1] == "Notion")
+    }
+}
