@@ -30,6 +30,15 @@ struct CustomFieldTests {
         #expect(CustomFieldMatcher.values(for: text, in: fields) == expected)
     }
 
+    // Calendly's question on a Berkeley advising form.
+    @Test func aSpelledOutIdentificationNumberGetsTheStudentID() {
+        let studentID = field("Student ID", "3042505924", also: "SID")
+        let calendly = "Student Identification Number (SID) question_0"
+        #expect(CustomFieldMatcher.values(for: calendly, in: [studentID]) == ["3042505924"])
+        #expect(CustomFieldMatcher.values(for: "SID", in: [studentID]) == ["3042505924"])
+        #expect(CustomFieldMatcher.values(for: "Student number", in: [studentID]) == [])
+    }
+
     // Questions from web/src/fixtures: tally-hackhub.html and ats-lever-zoox.html.
     @Test func aQuestionThatOnlyMentionsAWordDoesntGetTheAnswer() {
         let sponsorship = field("Sponsorship", "No", also: "sponsor, visa")
