@@ -10,8 +10,8 @@ import Security
 @MainActor
 final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProviding {
     // Prefill's OAuth client in Google Cloud (type iOS, bundle com.tarunyadgirkar.prefill.mac).
-    // An installed app's client ID isn't a secret. Empty until it's created.
-    static let clientID = ""
+    // An installed app's client ID isn't a secret (Google Cloud project My Maps Project).
+    static let clientID = "954823334855-u2fe0qpv01c43s86iit84ccfp93o0vem.apps.googleusercontent.com"
     static let client = GoogleSheets.Client(id: clientID)
 
     private static let service = "com.tarunyadgirkar.prefill.google"
