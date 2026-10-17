@@ -97,9 +97,10 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
     public static let maxQuestions = 40
     public static let maxAnswerPicks = 200
     public static let maxOverrides = 40
-    // Sent applications wait here until the app moves them into its archive. A long essay
-    // makes one large, so only a few are kept.
-    public static let maxApplications = 10
+    // Sent applications wait here until the app moves them into its archive. The steps of one
+    // application combine into one entry, so a multi-step form takes one slot. A long essay
+    // makes one large, so the cap stays well under the store's size.
+    public static let maxApplications = 25
 
     public let usage: [UsageEvent]
     public let captures: [Capture]
@@ -163,7 +164,9 @@ public struct ExtensionEvents: Codable, Sendable, Hashable {
             questions: Array((questions + new.questions).suffix(Self.maxQuestions)),
             answerPicks: Array((answerPicks + new.answerPicks).suffix(Self.maxAnswerPicks)),
             overrides: Array((overrides + new.overrides).suffix(Self.maxOverrides)),
-            applications: Array((applications + new.applications).suffix(Self.maxApplications)),
+            applications: Array(
+                SubmittedApplication.combined(applications + new.applications).suffix(Self.maxApplications)
+            ),
             lastPageSeen: new.lastPageSeen ?? lastPageSeen
         )
     }

@@ -32,7 +32,7 @@ public struct ApplicationArchive: Sendable {
     @discardableResult
     public func merge(_ new: [SubmittedApplication]) throws -> [SubmittedApplication] {
         let current = try read()
-        let latest = Self.latest(current + new)
+        let latest = SubmittedApplication.combined(current + new)
         guard latest.count != current.count || Set(latest) != Set(current) else { return current }
         let merged = latest.sorted { $0.date > $1.date }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -46,10 +46,12 @@ public struct ApplicationArchive: Sendable {
         return after.filter { !old.contains($0) }.map(\.id)
     }
 
-    // Another device's archive file, as copied over. Only applications a page could have sent
-    // are kept.
-    public static func applications(from data: Data) throws -> [SubmittedApplication] {
-        try DocumentCoder.decode([SubmittedApplication].self, from: data).filter(\.isValid)
+    // Another device's archive file, as copied over. Only records a page's sends could have
+    // combined into are kept; `refused` counts the rest, so the caller can keep the file.
+    public static func applications(from data: Data) throws -> (kept: [SubmittedApplication], refused: Int) {
+        let records = try DocumentCoder.decode([SubmittedApplication].self, from: data)
+        let kept = records.filter(\.isValidRecord)
+        return (kept, records.count - kept.count)
     }
 
     public func removeAll() throws {
@@ -57,15 +59,6 @@ public struct ApplicationArchive: Sendable {
             try FileManager.default.removeItem(at: url)
         } catch CocoaError.fileNoSuchFile {
             return
-        }
-    }
-
-    // Every step and send of one application shares its id: they become one record, each
-    // question with its latest answer, under the latest page's title.
-    private static func latest(_ applications: [SubmittedApplication]) -> [SubmittedApplication] {
-        let byID = Dictionary(grouping: applications, by: \.id)
-        return byID.values.compactMap { sends in
-            sends.sorted { $0.date < $1.date }.reduce(nil) { combined, send in combined?.adding(send) ?? send }
         }
     }
 

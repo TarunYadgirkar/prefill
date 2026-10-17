@@ -30,6 +30,9 @@ public enum MessageLimits {
     static let answerOptions = 10
     static let applicationFields = 60
     static let applicationFiles = 5
+    // One application's steps combined (an archive or iCloud record).
+    static let recordFields = 600
+    static let recordFiles = 50
     static let applicationAnswer = 4_000
     static let path = 200
 }
@@ -90,11 +93,15 @@ private extension AnswersRequest.Answer {
     }
 }
 
-private extension ApplicationRequest {
-    var isWithinLimits: Bool {
+extension ApplicationRequest {
+    fileprivate var isWithinLimits: Bool {
+        hasPartsWithinLimits
+            && fields.count <= MessageLimits.applicationFields && files.count <= MessageLimits.applicationFiles
+    }
+
+    var hasPartsWithinLimits: Bool {
         host.count <= MessageLimits.host && path.utf16.count <= MessageLimits.path
             && title.utf16.count <= MessageLimits.text
-            && fields.count <= MessageLimits.applicationFields && files.count <= MessageLimits.applicationFiles
             && fields.allSatisfy {
                 $0.question.utf16.count <= MessageLimits.fieldText
                     && $0.answer.utf16.count <= MessageLimits.applicationAnswer

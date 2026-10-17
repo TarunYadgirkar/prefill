@@ -23,20 +23,29 @@ extension MacModel {
     }
 
     // A file that isn't a copy of the iPhone's archive moves to Imports/Rejected, so it never
-    // blocks the next one.
+    // blocks the next one. So does one with a record Prefill refused, after the rest merge in,
+    // so that record is never deleted.
     private func importApplications(_ file: URL) throws -> [SubmittedApplication]? {
-        let incoming: [SubmittedApplication]
+        let incoming: (kept: [SubmittedApplication], refused: Int)
         do {
             incoming = try ApplicationArchive.applications(from: Data(contentsOf: file))
         } catch {
-            let rejected = Self.importsDirectory.appending(path: "Rejected", directoryHint: .isDirectory)
-            try FileManager.default.createDirectory(at: rejected, withIntermediateDirectories: true)
-            try FileManager.default.moveItem(at: file, to: rejected.appending(path: "\(UUID().uuidString).json"))
+            try Self.reject(file)
             return nil
         }
-        let merged = try archive.merge(incoming)
-        try FileManager.default.removeItem(at: file)
+        let merged = try archive.merge(incoming.kept)
+        if incoming.refused > 0 {
+            try Self.reject(file)
+        } else {
+            try FileManager.default.removeItem(at: file)
+        }
         return merged
+    }
+
+    private static func reject(_ file: URL) throws {
+        let rejected = importsDirectory.appending(path: "Rejected", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: rejected, withIntermediateDirectories: true)
+        try FileManager.default.moveItem(at: file, to: rejected.appending(path: "\(UUID().uuidString).json"))
     }
 
     // A CSV in Downloads, one row per question, which Google Sheets opens with File, Import.
