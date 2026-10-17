@@ -38,7 +38,8 @@ function optionElements(input: HTMLInputElement): HTMLElement[] {
   const finder = root(input);
   const listId = input.getAttribute("aria-controls") ?? input.getAttribute("aria-owns");
   const list = listId === null ? null : finder.getElementById(listId);
-  if (list !== null) return [...list.querySelectorAll<HTMLElement>("[role=option]")];
+  // Oracle's lists are grids whose cells are the options.
+  if (list !== null) return [...list.querySelectorAll<HTMLElement>("[role=option], [role=gridcell]")];
   if (input.id === "") return [];
   return [...finder.querySelectorAll<HTMLElement>(`[id^="${CSS.escape(prefixOf(input))}option-"]`)];
 }
