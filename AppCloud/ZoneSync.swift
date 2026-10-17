@@ -24,6 +24,8 @@ actor ZoneSync: CKSyncEngineDelegate {
         let receive: @MainActor @Sendable ([String: Data]) -> [String: Data]?
         // The other device deleted Prefill's data, or the person removed it in iCloud settings.
         let deletedElsewhere: @MainActor @Sendable () -> Void
+        // The other device deleted these items, by record name.
+        var removedElsewhere: @MainActor @Sendable ([String]) -> Void = { _ in }
     }
 
     // The engine's own bookkeeping, and whether this device's items went up once.
@@ -72,6 +74,13 @@ actor ZoneSync: CKSyncEngineDelegate {
         engine.state.add(pendingRecordZoneChanges: names.map { .saveRecord(recordID($0)) })
     }
 
+    // Items deleted here.
+    func delete(_ names: [String]) {
+        guard let engine else { return }
+        for name in names { serverRecords[recordID(name)] = nil }
+        engine.state.add(pendingRecordZoneChanges: names.map { .deleteRecord(recordID($0)) })
+    }
+
     func fetch() async {
         do {
             try await engine?.fetchChanges()
@@ -113,6 +122,9 @@ actor ZoneSync: CKSyncEngineDelegate {
             await zonesDeleted(changes.deletions.filter { $0.zoneID == zoneID }.map(\.reason))
         case .fetchedRecordZoneChanges(let changes):
             await arrived(changes.modifications.map(\.record))
+            let gone = changes.deletions.map(\.recordID).filter { $0.zoneID == zoneID }
+            for recordID in gone { serverRecords[recordID] = nil }
+            if !gone.isEmpty { await zone.removedElsewhere(gone.map(\.recordName)) }
         case .sentRecordZoneChanges(let sent):
             for record in sent.savedRecords { serverRecords[record.recordID] = record }
             await failedSaves(sent.failedRecordSaves)

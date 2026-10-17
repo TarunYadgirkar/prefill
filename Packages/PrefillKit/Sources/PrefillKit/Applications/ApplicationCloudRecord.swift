@@ -15,6 +15,10 @@ public enum ApplicationCloudRecord {
         id.uuidString
     }
 
+    public static func id(recordName: String) -> UUID? {
+        UUID(uuidString: recordName)
+    }
+
     public static func payload(_ application: SubmittedApplication) -> Data? {
         guard let data = try? DocumentCoder.encode(application), data.count <= maxPayloadBytes else { return nil }
         return data

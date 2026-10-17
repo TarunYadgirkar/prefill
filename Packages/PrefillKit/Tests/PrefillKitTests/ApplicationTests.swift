@@ -44,6 +44,19 @@ struct ApplicationTests {
         #expect(try archive.read().map(\.date) == [resent.date, newer.date])
     }
 
+    @Test func aDeletedApplicationNeverComesBackFromAnotherCopy() throws {
+        let archive = temporaryArchive()
+        let kept = SubmittedApplication(date: Date(timeIntervalSince1970: 1), request: Self.request)
+        let deleted = SubmittedApplication(date: Date(timeIntervalSince1970: 2), request: Self.other)
+        try archive.merge([kept, deleted])
+        #expect(try archive.remove([deleted.id]).map(\.id) == [kept.id])
+        try archive.merge([deleted])
+        #expect(try archive.read().map(\.id) == [kept.id])
+        try archive.removeAll()
+        try archive.merge([deleted])
+        #expect(try archive.read().map(\.id) == [deleted.id])
+    }
+
     @Test func theStepsOfOneApplicationBecomeOneRecord() throws {
         let archive = temporaryArchive()
         let id = UUID()

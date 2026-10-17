@@ -3,11 +3,17 @@ import Foundation
 // Every application the person sent from this device, newest first, in one JSON file the app
 // owns. Unlike the shared store, it has no cap: the extension's queue in ExtensionEvents is
 // small, and the app moves each queued application here. Applications from another device
-// (the iPhone's, copied to the Mac over USB) merge in by id. "Delete Prefill data" removes it.
+// (the iPhone's, copied to the Mac over USB) merge in by id. An application the person deleted
+// is remembered by id beside it, so another device's copy never brings it back. "Delete Prefill
+// data" removes both files.
 public struct ApplicationArchive: Sendable {
     public static let fileName = "applications.json"
 
     public let url: URL
+
+    private var removedURL: URL {
+        url.deletingLastPathComponent().appending(path: "applications-removed.json")
+    }
 
     public init(url: URL) {
         self.url = url
@@ -32,12 +38,33 @@ public struct ApplicationArchive: Sendable {
     @discardableResult
     public func merge(_ new: [SubmittedApplication]) throws -> [SubmittedApplication] {
         let current = try read()
-        let latest = SubmittedApplication.combined(current + new)
+        let removed = try removedIDs()
+        let latest = SubmittedApplication.combined(current + new.filter { !removed.contains($0.id) })
         guard latest.count != current.count || Set(latest) != Set(current) else { return current }
         let merged = latest.sorted { $0.date > $1.date }
-        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try DocumentCoder.encode(merged).write(to: url, options: Self.writeOptions)
+        try write(merged)
         return merged
+    }
+
+    // Deletes these applications and keeps their ids, so no later merge adds them again.
+    @discardableResult
+    public func remove(_ ids: Set<UUID>) throws -> [SubmittedApplication] {
+        let current = try read()
+        let removed = try removedIDs().union(ids)
+        try write(removed.sorted { $0.uuidString < $1.uuidString }, to: removedURL)
+        let kept = current.filter { !ids.contains($0.id) }
+        if kept.count != current.count { try write(kept) }
+        return kept
+    }
+
+    private func removedIDs() throws -> Set<UUID> {
+        guard FileManager.default.fileExists(atPath: removedURL.path(percentEncoded: false)) else { return [] }
+        return try Set(DocumentCoder.decode([UUID].self, from: Data(contentsOf: removedURL)))
+    }
+
+    private func write(_ value: some Encodable, to target: URL? = nil) throws {
+        try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try DocumentCoder.encode(value).write(to: target ?? url, options: Self.writeOptions)
     }
 
     // What a merge added or changed, by id, to send on to the other device.
@@ -55,10 +82,12 @@ public struct ApplicationArchive: Sendable {
     }
 
     public func removeAll() throws {
-        do {
-            try FileManager.default.removeItem(at: url)
-        } catch CocoaError.fileNoSuchFile {
-            return
+        for file in [url, removedURL] {
+            do {
+                try FileManager.default.removeItem(at: file)
+            } catch CocoaError.fileNoSuchFile {
+                continue
+            }
         }
     }
 

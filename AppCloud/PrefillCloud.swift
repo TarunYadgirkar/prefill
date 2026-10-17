@@ -14,14 +14,19 @@ final class PrefillCloud {
     init(
         archive: ApplicationArchive,
         receiveApplications: @escaping @MainActor @Sendable ([SubmittedApplication]) -> [SubmittedApplication]?,
-        applicationsDeletedElsewhere: @escaping @MainActor @Sendable () -> Void
+        applicationsDeletedElsewhere: @escaping @MainActor @Sendable () -> Void,
+        applicationsRemovedElsewhere: @escaping @MainActor @Sendable (Set<UUID>) -> Void
     ) {
         let directory = archive.url.deletingLastPathComponent()
         let cardFile = CloudCardCopyFile(directory: directory)
         self.cardFile = cardFile
-        applications = ZoneSync(Self.applicationsZone(
+        var zone = Self.applicationsZone(
             archive: archive, receive: receiveApplications, deletedElsewhere: applicationsDeletedElsewhere
-        ))
+        )
+        zone.removedElsewhere = { names in
+            applicationsRemovedElsewhere(Set(names.compactMap(ApplicationCloudRecord.id(recordName:))))
+        }
+        applications = ZoneSync(zone)
         card = ZoneSync(Self.cardZone(file: cardFile, directory: directory))
     }
 
@@ -40,6 +45,11 @@ final class PrefillCloud {
         guard !ids.isEmpty else { return }
         let names = ids.map(ApplicationCloudRecord.recordName)
         Task { await applications.send(names) }
+    }
+
+    func deleteApplications(_ ids: Set<UUID>) {
+        let names = ids.map(ApplicationCloudRecord.recordName)
+        Task { await applications.delete(names) }
     }
 
     // Copies what Prefill's contact holds now into the card copy and sends what changed.
