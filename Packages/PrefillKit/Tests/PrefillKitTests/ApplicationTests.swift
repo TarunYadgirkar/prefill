@@ -98,7 +98,73 @@ struct ApplicationTests {
             host: "Evil Host/", path: "/", title: "x", fields: [.init(question: "q", answer: "a")], files: []
         ))
         let data = try JSONEncoder().encode([good, forged])
-        #expect(try ApplicationArchive.applications(from: data).map(\.id) == [good.id])
+        let copied = try ApplicationArchive.applications(from: data)
+        #expect(copied.kept.map(\.id) == [good.id])
+        #expect(copied.refused == 1)
+    }
+
+    @Test func aCopiedFileKeepsARecordCombinedFromManySteps() throws {
+        let id = UUID()
+        let steps = (0..<3).map { step in
+            SubmittedApplication(date: Date(timeIntervalSince1970: Double(step)), request: ApplicationRequest(
+                id: id, host: "account.amazon.jobs", path: "/apply/\(step)", title: "Step \(step)",
+                fields: (0..<25).map { .init(question: "Question \(step)-\($0)", answer: "Answer") },
+                files: (0..<2).map { .init(question: "File \(step)-\($0)", name: "file\(step)-\($0).pdf") }
+            ))
+        }
+        let combined = SubmittedApplication.combined(steps)
+        #expect(combined.map(\.fields.count) == [75])
+        let copied = try ApplicationArchive.applications(from: JSONEncoder().encode(combined))
+        #expect(copied.kept.map(\.fields.count) == [75])
+        #expect(copied.refused == 0)
+        let payload = try #require(ApplicationCloudRecord.payload(combined[0]))
+        let name = ApplicationCloudRecord.recordName(id)
+        let record = ApplicationCloudRecord.application(recordName: name, payload: payload)
+        #expect(record?.fields.count == 75)
+    }
+
+    @Test func anArchiveInTodaysFormatStillReads() throws {
+        let json = """
+        [{"date":800000000,"fields":[{"answer":"May 2028","question":"Expected graduation"}],
+        "files":[{"name":"Resume.pdf","question":"Resume/CV"}],"host":"jobs.lever.co",
+        "id":"6F1C2A9E-3B4D-4E5F-8A6B-7C8D9E0F1A2B","path":"/kepler/apply","title":"Kepler"}]
+        """
+        let copied = try ApplicationArchive.applications(from: Data(json.utf8))
+        #expect(copied.kept.map(\.title) == ["Kepler"])
+        let archive = temporaryArchive()
+        let folder = archive.url.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        try Data(json.utf8).write(to: archive.url)
+        #expect(try archive.read().map(\.fields.count) == [1])
+    }
+
+    @Test func theStepsOfOneApplicationTakeOneSlotInTheQueue() {
+        let id = UUID()
+        let others = (0..<ExtensionEvents.maxApplications).map { index in
+            SubmittedApplication(date: Date(timeIntervalSince1970: Double(index)), request: Self.other)
+        }
+        let first = SubmittedApplication(date: Date(timeIntervalSince1970: 0), request: ApplicationRequest(
+            id: id, host: "account.amazon.jobs", path: "/apply/1", title: "Contact",
+            fields: [.init(question: "Phone", answer: "925-555-0100")], files: []
+        ))
+        var events = ExtensionEvents(applications: [first])
+        for step in 2...6 {
+            events = events.appending(ExtensionEvents(applications: [SubmittedApplication(
+                date: Date(timeIntervalSince1970: Double(step)), request: ApplicationRequest(
+                    id: id, host: "account.amazon.jobs", path: "/apply/\(step)", title: "Step \(step)",
+                    fields: [.init(question: "Question \(step)", answer: "Answer")], files: []
+                )
+            )]))
+        }
+        #expect(events.applications.count == 1)
+        #expect(events.applications.first?.fields.count == 6)
+        let later = others.map { SubmittedApplication(date: $0.date.addingTimeInterval(10), request: ApplicationRequest(
+            host: "jobs.ashbyhq.com", path: "/a", title: "A", fields: [.init(question: "q", answer: "a")], files: []
+        )) }
+        let room = Array(later.prefix(ExtensionEvents.maxApplications - 1))
+        let full = events.appending(ExtensionEvents(applications: room))
+        #expect(full.applications.count == ExtensionEvents.maxApplications)
+        #expect(full.applications.contains { $0.id == id })
     }
 
     @Test func theCSVHasARowPerQuestionAndNoFormulas() {
