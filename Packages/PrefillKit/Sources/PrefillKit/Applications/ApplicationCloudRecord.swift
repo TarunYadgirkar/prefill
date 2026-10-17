@@ -20,12 +20,12 @@ public enum ApplicationCloudRecord {
         return data
     }
 
-    // A record another device wrote is held to the same limits as a page's message, and must
+    // A record another device wrote is held to the limits of the sends it combines, and must
     // carry the id it's named by.
     public static func application(recordName: String, payload: Data) -> SubmittedApplication? {
         guard payload.count <= maxPayloadBytes,
               let application = try? DocumentCoder.decode(SubmittedApplication.self, from: payload),
-              recordName == Self.recordName(application.id), application.isValid
+              recordName == Self.recordName(application.id), application.isValidRecord
         else { return nil }
         return application
     }

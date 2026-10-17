@@ -106,11 +106,22 @@ public struct SubmittedApplication: Codable, Sendable, Hashable, Identifiable {
         }
     }
 
-    // Held to the limits of the message it came from, for one read from another device's file.
-    var isValid: Bool {
-        let request = ExtensionRequest.application(
-            ApplicationRequest(id: id, host: host, path: path, title: title, fields: fields, files: files)
-        )
-        return request.isWithinLimits && request.isWellFormed
+    // Every step and send of one application shares its id: they become one record, each
+    // question with its latest answer, under the latest page's title. Records come out in the
+    // order of each one's latest send.
+    static func combined(_ applications: [SubmittedApplication]) -> [SubmittedApplication] {
+        let byID = Dictionary(grouping: applications, by: \.id)
+        return byID.values.compactMap { sends in
+            sends.sorted { $0.date < $1.date }.reduce(nil) { combined, send in combined?.adding(send) ?? send }
+        }
+        .sorted { $0.date < $1.date }
+    }
+
+    // A record read from another device's file or iCloud: each part is held to a page message's
+    // limits, but its steps combined can ask more questions than one message carries.
+    var isValidRecord: Bool {
+        let request = ApplicationRequest(id: id, host: host, path: path, title: title, fields: fields, files: files)
+        return request.hasPartsWithinLimits && request.isWellFormed
+            && fields.count <= MessageLimits.recordFields && files.count <= MessageLimits.recordFiles
     }
 }
