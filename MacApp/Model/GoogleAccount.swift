@@ -27,7 +27,8 @@ final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProvi
         let url = GoogleSheets.authorizationURL(client: client, verifier: verifier, state: state)
         let callback = try await withCheckedThrowingContinuation { continuation in
             let callback = ASWebAuthenticationSession.Callback.customScheme(client.callbackScheme)
-            let session = ASWebAuthenticationSession(url: url, callback: callback) { url, error in
+            // Google's answer comes back off the main thread, so the handler isn't main-actor bound.
+            let session = ASWebAuthenticationSession(url: url, callback: callback) { @Sendable url, error in
                 if let url { continuation.resume(returning: url) } else {
                     continuation.resume(throwing: error ?? GoogleSheets.Failure.signInNeeded)
                 }
