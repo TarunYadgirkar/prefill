@@ -109,7 +109,7 @@ public enum ApplicationSheet {
     // iCIMS hosts read like us-careers-rivian.icims.com or careers-acme.icims.com.
     private static let icimsHostWords: Set<String> = ["us", "uk", "ca", "eu", "careers", "career", "jobs", "external"]
 
-    // iCIMS titles a page "Role in City, State | Careers at Location", and every page of one
+    // iCIMS titles a page "Role in City, State | Careers at Location" or "Step - Role", and every page of one
     // application sits under /jobs/<id>/<role-slug>/. The title's role is kept when it matches
     // the slug, else the slug is spelled out.
     static func icimsRole(_ application: SubmittedApplication) -> String {
@@ -119,7 +119,11 @@ public enum ApplicationSheet {
         let heading = String(application.title.split(separator: " | ").first ?? "")
             .replacing(#/ in [^|]*$/#, with: "")
         let letters = { (text: String) in text.lowercased().filter { $0.isLetter || $0.isNumber } }
-        if letters(heading) == letters(slug) { return heading }
+        // A step's title leads with the step: "Application Questions - Role".
+        let starts = [heading.startIndex] + heading.ranges(of: " - ").map(\.upperBound)
+        if let start = starts.first(where: { letters(String(heading[$0...])) == letters(slug) }) {
+            return String(heading[start...])
+        }
         let words = slug.replacing("---", with: " - ").replacing("-", with: " ")
         return words.prefix(1).uppercased() + words.dropFirst()
     }
