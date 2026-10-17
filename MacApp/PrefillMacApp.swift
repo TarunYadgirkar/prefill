@@ -66,4 +66,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             AutofillEngine.shared.start(router: MessageRouter(store: model.store, gateway: model.gateway))
         }
     }
+
+    // Google's sign-in comes back here, through the URL scheme in Config/MacInfo.plist.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        Task { @MainActor in
+            for url in urls { MacModel.shared.google.handle(url) }
+        }
+    }
 }

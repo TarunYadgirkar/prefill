@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Where Google sends the browser back after Connect Google Sheets: the reversed ID of
+	     Prefill's OAuth client (GoogleAccount.clientID). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Google sign-in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.954823334855-u2fe0qpv01c43s86iit84ccfp93o0vem</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

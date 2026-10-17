@@ -1,14 +1,12 @@
 import AppKit
-import AuthenticationServices
 import Foundation
 import PrefillKit
 import Security
 
-// The person's Google sign-in for their applications sheet. Google's page opens in a sheet of
-// its own; Prefill keeps only the refresh token, in this Mac's Keychain, and asks for nothing
+// The person's Google sign-in for their applications sheet, in their own browser; Prefill keeps only the refresh token, in this Mac's Keychain, and asks for nothing
 // but the files it creates (drive.file).
 @MainActor
-final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProviding {
+final class GoogleAccount {
     // Prefill's OAuth client in Google Cloud (type iOS, bundle com.tarunyadgirkar.prefill.mac).
     // An installed app's client ID isn't a secret (Google Cloud project My Maps Project).
     static let clientID = "954823334855-u2fe0qpv01c43s86iit84ccfp93o0vem.apps.googleusercontent.com"
@@ -16,26 +14,22 @@ final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProvi
 
     private static let service = "com.tarunyadgirkar.prefill.google"
     private var tokens: GoogleSheets.Tokens?
-    private var session: ASWebAuthenticationSession?
+    private var pending: CheckedContinuation<URL, any Error>?
 
     static var isSignedIn: Bool { storedRefreshToken() != nil }
 
+    // Opens Google's sign-in in the person's default browser, where the accounts they're already
+    // signed in to are offered, and waits for Google to send them back to Prefill through its URL
+    // scheme (`handle`). A sign-in started again replaces one left unfinished.
     func signIn() async throws {
         guard let client = Self.client else { throw GoogleSheets.Failure.signInNeeded }
         let verifier = GoogleSheets.newVerifier()
         let state = UUID().uuidString
         let url = GoogleSheets.authorizationURL(client: client, verifier: verifier, state: state)
+        pending?.resume(throwing: CancellationError())
         let callback = try await withCheckedThrowingContinuation { continuation in
-            let callback = ASWebAuthenticationSession.Callback.customScheme(client.callbackScheme)
-            // Google's answer comes back off the main thread, so the handler isn't main-actor bound.
-            let session = ASWebAuthenticationSession(url: url, callback: callback) { @Sendable url, error in
-                if let url { continuation.resume(returning: url) } else {
-                    continuation.resume(throwing: error ?? GoogleSheets.Failure.signInNeeded)
-                }
-            }
-            session.presentationContextProvider = self
-            self.session = session
-            session.start()
+            pending = continuation
+            NSWorkspace.shared.open(url)
         }
         guard let code = GoogleSheets.code(from: callback, state: state) else {
             throw GoogleSheets.Failure.signInNeeded
@@ -45,6 +39,14 @@ final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProvi
         guard let refresh = fresh.refreshToken else { throw GoogleSheets.Failure.signInNeeded }
         try Self.storeRefreshToken(refresh)
         tokens = fresh
+    }
+
+    // Google's redirect back to Prefill. Only a sign-in in progress takes it, and only with the
+    // state that sign-in sent (checked in `signIn`).
+    func handle(_ url: URL) {
+        guard let client = Self.client, url.scheme == client.callbackScheme, let pending else { return }
+        self.pending = nil
+        pending.resume(returning: url)
     }
 
     // A current access token, refreshed when it's about to run out.
@@ -91,10 +93,6 @@ final class GoogleAccount: NSObject, ASWebAuthenticationPresentationContextProvi
             throw GoogleSheets.Failure.refused(status)
         }
         return data
-    }
-
-    nonisolated func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        MainActor.assumeIsolated { NSApp.keyWindow ?? NSApp.windows.first ?? NSWindow() }
     }
 
     // In the data protection keychain, under this app's own access group, so no other app of
