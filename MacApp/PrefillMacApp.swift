@@ -67,10 +67,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    // Google's sign-in comes back here, through the URL scheme in Config/MacInfo.plist.
-    func application(_ application: NSApplication, open urls: [URL]) {
-        Task { @MainActor in
-            for url in urls { MacModel.shared.google.handle(url) }
-        }
+    // Google's sign-in comes back as a URL in the scheme from Config/MacInfo.plist. The Apple
+    // event is taken directly, since a SwiftUI app with no window for it can drop the URL.
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        NSAppleEventManager.shared().setEventHandler(
+            self, andSelector: #selector(openURL(_:reply:)),
+            forEventClass: AEEventClass(kInternetEventClass), andEventID: AEEventID(kAEGetURL)
+        )
+    }
+
+    @objc private func openURL(_ event: NSAppleEventDescriptor, reply: NSAppleEventDescriptor) {
+        guard let text = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
+              let url = URL(string: text) else { return }
+        Task { @MainActor in MacModel.shared.google.handle(url) }
     }
 }

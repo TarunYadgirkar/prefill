@@ -45,7 +45,9 @@ final class GoogleAccount {
     // Google's redirect back to Prefill. Only a sign-in in progress takes it, and only with the
     // state that sign-in sent (checked in `signIn`).
     func handle(_ url: URL) {
-        guard let client = Self.client, url.scheme == client.callbackScheme, let pending else { return }
+        guard let client = Self.client, url.scheme == client.callbackScheme else { return }
+        MacModel.sheetLog.notice("Google sign-in came back; waiting: \(self.pending != nil, privacy: .public)")
+        guard let pending else { return }
         self.pending = nil
         pending.resume(returning: url)
     }
