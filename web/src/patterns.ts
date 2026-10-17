@@ -120,7 +120,7 @@ export const SOMEONE_ELSE =
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.
 const IGNORED =
-  /^q$|search|query|suche|recherch|busca|検索|搜索|captcha|(promo(tion|tional)?|gift|discount|coupon)[-_. ]*code|gift.?(card|cert)|company|business|organi[sz]ation|firma|empresa|soci[eé]t[eé]|attention|attn/iu;
+  /^q$|search|query|suche|recherch|busca|検索|搜索|captcha|(promo(tion|tional)?|gift|discount|coupon)[-_. ]*code|gift.?(card|cert)|company|business|organi[sz]ation|firma|empresa|soci[eé]t[eé]|attention|attn|^\W*county\W*$|tax.?district|address.?line.?(?:3|three)\b|\baddress.?3\b/iu;
 
 // Words that ask for a country, and those that ask for a dialling code instead.
 export const COUNTRY = /country|countries|país|pais|\bpays\b|\bpaese\b|\bnazione\b|(\b|_)land(\b|_)|国家/iu;
@@ -157,7 +157,7 @@ export const RULES: readonly Rule[] = [
   {
     result: { kind: "address", part: "state" },
     pattern:
-      /(?<!(united|hist|history).?)state|region|province|county|principality|estado|provincia|都道府県|省/iu,
+      /(?<!(united|hist|history).?)state|region|province|principality|estado|provincia|都道府県|省/iu,
     controls: CHOICE,
   },
   {

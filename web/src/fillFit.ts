@@ -21,11 +21,15 @@ function maxLengthOf(element: Element): number {
   return Number.isNaN(max) || max <= 0 ? Number.POSITIVE_INFINITY : max;
 }
 
+// "+1" before the number, spaced or not: "+1 (510) 555-0134", "+15105550134".
+const US_CODE = /^\s*\+1(?:(?!\d)|(?=\d{10}\s*$))\s*/u;
+
 // A script's value isn't cut to maxlength, so a box that takes 10 characters gets the number
 // as saved when it fits, else without "+1", else digits only; none when nothing fits.
+
 export function fitPhone(value: string, maxLength: number): string | undefined {
   if (value.length <= maxLength) return value;
-  const national = value.replace(/^\s*\+1\b\s*/u, "");
+  const national = value.replace(US_CODE, "");
   return [national, national.replace(/\D/gu, ""), value.replace(/\D/gu, "")].find(
     (way) => way !== "" && way.length <= maxLength,
   );
@@ -44,7 +48,7 @@ function asksNational(element: Element): boolean {
 // number has no form such a box takes, so it gets none rather than a part of one.
 function nationalPhone(value: string): string | undefined {
   if (!value.trim().startsWith("+")) return value;
-  const national = value.replace(/^\s*\+1\b\s*/u, "");
+  const national = value.replace(US_CODE, "");
   return national.startsWith("+") ? undefined : national;
 }
 

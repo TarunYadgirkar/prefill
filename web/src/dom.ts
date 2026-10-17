@@ -174,12 +174,23 @@ function lastWordsBefore(node: Element): string {
 }
 
 // What a group of boxes is for, when a field is one part of it (a name in a first and a last
-// box): the group's own label and the words just before it.
+// box): the group's own label and the words just before it, and the named section it sits in.
 export function groupContext(el: Element): string {
+  return squash([boxGroupText(el), regionLabel(el)].join(" "));
+}
+
+function boxGroupText(el: Element): string {
   const group = el.parentElement?.closest("[role=group], fieldset");
   if (group === null || group === undefined) return "";
   const legend = group.localName === "fieldset" ? (group.querySelector("legend")?.textContent ?? "") : "";
-  return squash([legend, labelledByText(group), group.getAttribute("aria-label") ?? "", lastWordsBefore(group)].join(" "));
+  return [legend, labelledByText(group), group.getAttribute("aria-label") ?? "", lastWordsBefore(group)].join(" ");
+}
+
+// The named section a field sits in (Oracle's "E-Signature" region holding a "Full Name" box).
+function regionLabel(el: Element): string {
+  const region = el.parentElement?.closest("[role=region]");
+  if (region === null || region === undefined) return "";
+  return [labelledByText(region), region.getAttribute("aria-label") ?? ""].join(" ");
 }
 
 // The field's label, or the words before it when the page didn't label it.
