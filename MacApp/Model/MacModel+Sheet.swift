@@ -7,6 +7,9 @@ import PrefillKit
 // (GoogleAccount), or the Apps Script web app they deployed (scripts/sheet/Code.gs). An
 // application waits until the sheet takes it, so a failed send is retried on the next refresh.
 extension MacModel {
+    // Errors only: a Google error carries a status code, never a token.
+    static let sheetLog = PrefillLog.logger("sheet")
+
     func sendToSheet() async {
         guard !isSendingToSheet, sheet.isOn, !sheet.waiting(applications).isEmpty else { return }
         isSendingToSheet = true
@@ -18,6 +21,7 @@ extension MacModel {
             sheetProblem = nil
             saveSheet()
         } catch {
+            Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
             sheetProblem = Self.sheetMessage(error)
         }
     }
@@ -47,6 +51,7 @@ extension MacModel {
             sheetProblem = nil
             await sendToSheet()
         } catch {
+            Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
             sheetProblem = Self.sheetMessage(error)
         }
     }
