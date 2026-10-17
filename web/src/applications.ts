@@ -185,10 +185,13 @@ function collectFields(
 // A careers site's own application (amazon.jobs, careers.example.com/apply) says so in its address.
 const APPLICATION_PAGE = /(?:^|[./-])(?:jobs?|careers?|apply|application|recruit\w*|talent|hiring)(?:$|[./-])/iu;
 
+// A sign-in step never counts, even one that asks only for an email (iCIMS's /login).
+const SIGN_IN_PAGE = /\/(?:log-?in|log-?on|sign-?in)\/?$/iu;
+
 // A sign-in form never counts. On an application's own site (amazon.jobs) every step counts,
 // whatever it asks; the page's session storage can't make any other page count.
 function isApplication(elements: readonly FieldElement[], hostname: string, path: string): boolean {
-  if (elements.some((element) => isSignIn(element))) return false;
+  if (SIGN_IN_PAGE.test(path) || elements.some((element) => isSignIn(element))) return false;
   if (isAtsHost(hostname) || APPLICATION_PAGE.test(hostname) || APPLICATION_PAGE.test(path)) return true;
   if (elements.some((element) => typeOf(element) === "file")) return true;
   return elements.some((element) => jobQuestion(questionFor(element)) !== undefined);

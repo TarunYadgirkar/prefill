@@ -75,6 +75,14 @@ describe("recording a sent application", () => {
     expect(answers).not.toContain("123-45-6789");
   });
 
+  it("ignores an application site's sign-in step", () => {
+    window.history.replaceState({}, "", "/jobs/33832/software-engineering-intern/login");
+    document.body.innerHTML = '<form><label for="email">Email</label><input id="email" type="email" value="alex@example.com">' +
+      '<label><input type="checkbox" checked> I confirm I have read the Candidate Data Privacy Notice</label></form>';
+    expect(collectApplication(form(), document, "us-careers-rivian.icims.com", ID)).toBeUndefined();
+    window.history.replaceState({}, "", "/");
+  });
+
   it("ignores a form that isn't an application", () => {
     document.body.innerHTML = `<form><label>Email <input type="email" value="a@example.com"></label></form>`;
     expect(collectApplication(form(), document, "shop.example.net", ID)).toBeUndefined();

@@ -21,6 +21,10 @@ struct ApplicationSheetTests {
          "/jobs/33832/software-engineering-intern---embedded-software-%28spring-2027-co-op%29/candidate",
          "Software Engineering Intern - Embedded Software (Spring 2027 Co-op) in Palo Alto, CA | Careers at Rivian",
          "Rivian", "Software Engineering Intern - Embedded Software (Spring 2027 Co-op)"),
+        ("us-careers-rivian.icims.com",
+         "/jobs/33832/software-engineering-intern---embedded-software-%28spring-2027-co-op%29/questions",
+         "Application Questions - Software Engineering Intern - Embedded Software (Spring 2027 Co-op)",
+         "Rivian", "Software Engineering Intern - Embedded Software (Spring 2027 Co-op)"),
         ("careers-acme.icims.com", "/jobs/12/data-analyst/candidate", "Candidate Profile | Careers at Acme",
          "Acme", "Data analyst"),
         ("www.gem.com", "/form", "Gen SWE Intern Interest Form", "Gem", "Gen SWE Intern Interest Form")
