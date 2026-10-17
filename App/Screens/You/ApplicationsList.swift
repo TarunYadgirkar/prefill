@@ -4,7 +4,8 @@ import UniformTypeIdentifiers
 
 // Every job application sent from Safari on this iPhone, newest first. A search covers the
 // questions and answers too, so "graduation" finds what each form was told. Export shares a
-// CSV, one row per question, that Google Sheets opens as is.
+// CSV, one row per question, that Google Sheets opens as is. A swipe deletes one, here and on
+// the Mac.
 struct ApplicationsList: View {
     @Environment(AppModel.self) private var model
     @State private var query = ""
@@ -23,6 +24,11 @@ struct ApplicationsList: View {
                 ApplicationRow(application: application)
             }
             .accessibilityIdentifier("application-\(application.id)")
+            .swipeActions {
+                Button("Delete", systemImage: "trash", role: .destructive) {
+                    model.removeApplications([application.id])
+                }
+            }
         }
         .prefillCanvas()
         .listStyle(.insetGrouped)

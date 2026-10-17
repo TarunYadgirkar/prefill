@@ -12,7 +12,8 @@ extension MacModel {
         let cloud = PrefillCloud(
             archive: archive,
             receiveApplications: { [weak self] incoming in self?.receiveFromCloud(incoming) },
-            applicationsDeletedElsewhere: { [weak self] in self?.cloudCopyDeleted() }
+            applicationsDeletedElsewhere: { [weak self] in self?.cloudCopyDeleted() },
+            applicationsRemovedElsewhere: { [weak self] ids in self?.removeApplications(ids, sync: false) }
         )
         self.cloud = cloud
         Task { await cloud.start() }
@@ -32,6 +33,17 @@ extension MacModel {
             )
             return false
         }
+    }
+
+    // Deletes these applications here and, unless the other device deleted them, there too.
+    func removeApplications(_ ids: Set<UUID>, sync: Bool = true) {
+        do {
+            applications = try archive.remove(ids)
+        } catch {
+            problem = "Prefill couldn’t delete that application. Try again in a moment."
+            return
+        }
+        if sync { cloud?.deleteApplications(ids) }
     }
 
     // What the iPhone sent.

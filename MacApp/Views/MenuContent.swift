@@ -60,9 +60,13 @@ struct MenuHeader: View {
     }
 }
 
-// The job applications sent from this Mac's browsers and the iPhone, and the CSV for Sheets.
+// The job applications sent from this Mac's browsers and the iPhone, the CSV for Sheets, and
+// Delete for one sent by mistake.
 struct ApplicationsRow: View {
     @Environment(MacModel.self) private var model
+    @State private var toDelete: SubmittedApplication?
+    // The newest ones; an older one is deleted on the iPhone.
+    private static let deletable = 25
 
     var body: some View {
         HStack {
@@ -74,8 +78,24 @@ struct ApplicationsRow: View {
                     .font(.caption)
             }
             Spacer()
+            Menu("Delete") {
+                ForEach(model.applications.prefix(Self.deletable)) { application in
+                    Button("\(application.title), \(application.date.formatted(date: .abbreviated, time: .omitted))") {
+                        toDelete = application
+                    }
+                }
+            }
+            .fixedSize()
+            .disabled(model.applications.isEmpty)
             Button("Export for Google Sheets") { model.exportApplications() }
                 .disabled(model.applications.isEmpty)
+        }
+        .confirmationDialog(
+            "Delete this application from this Mac and your iPhone?",
+            isPresented: Binding { toDelete != nil } set: { if !$0 { toDelete = nil } },
+            presenting: toDelete
+        ) { application in
+            Button("Delete \(application.title)", role: .destructive) { model.removeApplications([application.id]) }
         }
     }
 }
