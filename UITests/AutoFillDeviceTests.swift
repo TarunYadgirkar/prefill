@@ -1,8 +1,9 @@
 import XCTest
 
 // Long-press AutoFill with Prefill, on the iPhone itself (the Simulator never delivered inserted
-// text): turns Prefill on in Settings › General › AutoFill & Passwords, // inserts the first value Prefill offers into Notes' search field and checks it landed. Run with
-// PREFILL_DEVICE_AUTOFILL=1 on a connected, unlocked phone.
+// text): turns Prefill on in Settings' AutoFill & Passwords, inserts the first value Prefill
+// offers into Notes' search field and checks it landed. Run with
+// TEST_RUNNER_PREFILL_DEVICE_AUTOFILL=1 on a connected, unlocked phone.
 @MainActor
 final class AutoFillDeviceTests: XCTestCase {
     private let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
@@ -43,7 +44,9 @@ final class AutoFillDeviceTests: XCTestCase {
 
         let cancel = notes.buttons["Cancel"].firstMatch
         XCTAssertTrue(cancel.waitForExistence(timeout: 10), "Prefill's list never opened")
-        let value = notes.buttons.allElementsBoundByIndex.first { !["Cancel", "Passwords"].contains($0.label) && $0.isHittable }
+        let value = notes.buttons.allElementsBoundByIndex.first {
+            !["Cancel", "Passwords"].contains($0.label) && $0.isHittable
+        }
         let picked = try XCTUnwrap(value, "Prefill's list has no values")
         let text = picked.label
         picked.tap()
@@ -51,7 +54,7 @@ final class AutoFillDeviceTests: XCTestCase {
 
         let typed = ((body.value as? String) ?? "").replacing("Search", with: "")
         attach(name: "note-after-insert")
-        XCTAssertFalse(typed.isEmpty, "nothing landed in the note (picked \(text))")
+        XCTAssertFalse(typed.isEmpty, "nothing landed in the field (picked \(text))")
     }
 
     // Settings' own search finds the page wherever this iOS keeps it.
@@ -66,7 +69,8 @@ final class AutoFillDeviceTests: XCTestCase {
         let result = settings.cells.containing(NSPredicate(format: "label CONTAINS 'AutoFill & Passwords'")).firstMatch
         XCTAssertTrue(result.waitForExistence(timeout: 5), "no AutoFill & Passwords result")
         result.tap()
-        let toggle = settings.switches.matching(NSPredicate(format: "identifier CONTAINS 'Prefill' OR label CONTAINS 'Prefill'")).firstMatch
+        let prefill = NSPredicate(format: "identifier CONTAINS 'Prefill' OR label CONTAINS 'Prefill'")
+        let toggle = settings.switches.matching(prefill).firstMatch
         XCTAssertTrue(toggle.waitForExistence(timeout: 5), "Prefill isn't listed under AutoFill From")
         if (toggle.value as? String) != "1" { toggle.switches.firstMatch.tap() }
         Thread.sleep(forTimeInterval: 1)
