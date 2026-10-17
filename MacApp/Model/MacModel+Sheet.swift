@@ -1,4 +1,3 @@
-import AuthenticationServices
 import Foundation
 import PrefillKit
 
@@ -95,7 +94,7 @@ extension MacModel {
         if case GoogleSheets.Failure.refused(let status) = error {
             return String(localized: "Google turned the applications away (error \(status)). Prefill tries later.")
         }
-        if (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin { return "" }
+        if error is CancellationError { return "" }
         if case ApplicationSheet.Failure.refused(let reason) = error {
             return String(localized: "The sheet turned the applications away: \(reason)")
         }

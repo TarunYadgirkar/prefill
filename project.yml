@@ -154,6 +154,7 @@ targets:
         PRODUCT_NAME: Prefill
         PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.mac
         CODE_SIGN_ENTITLEMENTS: MacApp/Prefill.entitlements
+        INFOPLIST_FILE: Config/MacInfo.plist
         SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) PREFILL_CLOUD
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Prefill
