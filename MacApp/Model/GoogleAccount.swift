@@ -3,8 +3,9 @@ import Foundation
 import PrefillKit
 import Security
 
-// The person's Google sign-in for their applications sheet, in their own browser; Prefill keeps only the refresh token, in this Mac's Keychain, and asks for nothing
-// but the files it creates (drive.file).
+// The person's Google sign-in for their applications sheet, in their own browser; Prefill
+// keeps only the refresh token, in this Mac's Keychain, and asks for nothing but the files it
+// creates (drive.file).
 @MainActor
 final class GoogleAccount {
     // Prefill's OAuth client in Google Cloud (type iOS, bundle com.tarunyadgirkar.prefill.mac).
