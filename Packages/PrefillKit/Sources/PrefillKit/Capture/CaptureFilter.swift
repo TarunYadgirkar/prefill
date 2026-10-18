@@ -66,7 +66,8 @@ public struct CaptureFilter: Sendable {
         if cardIDs.contains(value.id) { return .duplicate(value.id) }
         if rejected.contains(value.id) { return .ignore(.rejected) }
         if form.parsed[..<index].contains(where: { $0?.id == value.id }) { return .duplicate(value.id) }
-        guard settings.saveNewInfo, form.trigger == .submit, !form.isContested(index) else { return .review(value) }
+        guard settings.saveNewInfo, form.trigger == .submit, !form.isContested(index),
+              !form.isAnotherEmail(index, cardIDs: cardIDs) else { return .review(value) }
         return form.isCorroborated(except: index, cardIDs: cardIDs) ? .save(value) : .review(value)
     }
 
@@ -130,6 +131,15 @@ public struct CaptureFilter: Sendable {
             guard foreignSections.contains(where: { Self.overlaps($0, field.section) }) else { return false }
             guard field.kind == .email else { return true }
             return !ownSections.contains { Self.overlaps($0, field.section) }
+        }
+
+        // A new email on a form where the person also typed one of their own is more often a
+        // teammate's or a friend's than a second address of theirs, so it waits for review.
+        func isAnotherEmail(_ index: Int, cardIDs: Set<UUID>) -> Bool {
+            fields[index].kind == .email && parsed.indices.contains { other in
+                other != index && kept[other] && fields[other].kind == .email
+                    && parsed[other].map { cardIDs.contains($0.id) } == true
+            }
         }
 
         // Only kept fields count, and those were typed by the person.

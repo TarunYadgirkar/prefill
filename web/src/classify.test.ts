@@ -256,6 +256,9 @@ describe("classify single fields", () => {
     ['<label>Reference name <input name="x"></label>', "ignored"],
     ['<label>Referrer\'s email <input type="email" name="x"></label>', "ignored"],
     ['<label>Spouse name <input name="x"></label>', "ignored"],
+    ['<label>Teammate email <input type="email" name="x"></label>', "ignored"],
+    ['<label>Team member 2 email <input type="email" name="x"></label>', "ignored"],
+    ['<label>Member 3 name <input name="x"></label>', "ignored"],
     ['<label>Name of Participant <input name="x"></label>', "name full"],
     ['<label>Username <input name="x"></label>', "ignored"],
     [
