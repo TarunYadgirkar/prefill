@@ -40,7 +40,12 @@ struct CaptureFilterTests: CaptureTesting {
         ("Invited by", nil),
         (nil, "to_email"),
         (nil, "toEmail"),
-        ("Referral email", nil)
+        ("Referral email", nil),
+        ("Teammate's email", nil),
+        (nil, "teamMemberEmail"),
+        ("Member 2 email", nil),
+        (nil, "cofounder_email"),
+        ("Partner email", nil)
     ] as [(String?, String?)])
     func fieldsForSomeoneElseAreIgnored(label: String?, name: String?) {
         let decisions = decide([field(.email, newEmail, name: name, label: label)], hasPassword: true)
@@ -69,6 +74,13 @@ struct CaptureFilterTests: CaptureTesting {
         )
         let decisions = decide([field(.email, "alex.rivera@example.com"), field(.address, name: name, address: gym)])
         #expect(decisions[1] == .save(newValue(.address(gym))))
+    }
+
+    @Test func aSecondEmailNextToYourOwnNeedsReview() {
+        let decisions = decide([
+            field(.name, "Alex Rivera"), field(.email, "alex.rivera@example.com"), field(.email, "sam@example.org")
+        ])
+        #expect(decisions[2] == .review(newValue(.email("sam@example.org"))))
     }
 
     @Test func aPhoneLabeledToReachYouIsKept() {

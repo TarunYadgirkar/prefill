@@ -3,7 +3,13 @@ import Foundation
 // The words a field is described by: its autocomplete tokens, its name or id split at
 // camelCase and punctuation, and its label.
 struct FieldWords {
-    private static let someoneElseStems = ["recipient", "friend", "gift", "invit", "referr"]
+    private static let someoneElseStems = [
+        "recipient", "friend", "gift", "invit", "referr", "teammate", "partner", "cofounder", "collaborat",
+        "colleague", "coworker", "classmate", "roommate"
+    ]
+    // "Member" alone is often the person's own (a gym's member email); "team member" or
+    // "Member 2" is someone else on the form.
+    private static let otherPersonWords: Set<String> = ["member", "person", "participant", "player"]
     private static let sendVerbs: Set<String> = ["send", "forward", "share"]
     private static let sensitiveWords: Set<String> = [
         "password", "passcode", "passwd", "pwd", "otp", "cvv", "cvc", "csc", "ssn", "mfa"
@@ -63,10 +69,18 @@ struct FieldWords {
         let words = name + label
         let hasStem = words.contains { word in Self.someoneElseStems.contains { word.contains($0) } }
         return hasStem || name.first == "to" || [name, label].contains(where: Self.hasSendTo)
+            || [name, label].contains(where: Self.namesAnotherPerson)
     }
 
     var isPartialPhone: Bool {
         !autocomplete.isDisjoint(with: Self.partialPhoneTokens) || name.joined().contains("areacode")
+    }
+
+    private static func namesAnotherPerson(_ words: [String]) -> Bool {
+        zip(words, words.dropFirst()).contains { first, second in
+            (first == "team" && second == "member")
+                || (otherPersonWords.contains(first) && second.allSatisfy(\.isNumber))
+        }
     }
 
     private static func hasSendTo(_ words: [String]) -> Bool {

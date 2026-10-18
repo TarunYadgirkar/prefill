@@ -115,7 +115,7 @@ export const SIGNATURE =
 // spouse, a child, a reference, referrer or manager, a gift's recipient. Their name, email, phone or address
 // is never the person's own.
 export const SOMEONE_ELSE =
-  /emergency|next.?of.?kin|guardian|\bparents?\b|\bmother\b|\bfather\b|spouse|husband|\bwife\b|\breferences?\b|\breferr(?:er|al|ing|ed)|recipient|\bchild(?:ren)?\b|\bdependents?\b|manager's|\b(?:hiring|direct|line|reporting) manager|supervisor|recommender|\badvis[eo]r\b/iu;
+  /emergency|next.?of.?kin|guardian|\bparents?\b|\bmother\b|\bfather\b|spouse|husband|\bwife\b|\breferences?\b|\breferr(?:er|al|ing|ed)|recipient|\bchild(?:ren)?\b|\bdependents?\b|manager's|\b(?:hiring|direct|line|reporting) manager|supervisor|recommender|\badvis[eo]r\b|team.?mates?|\bteam.?members?\b|\b(?:member|participant|person|player)\s*#?\s*\d|co.?founder|collaborator|colleague|co.?worker|classmate|roommate|\bpartner'?s?\b/iu;
 
 // Fields that look like contact data but are not the person's own details. Checked after
 // email and phone, so "Business email" is still an email.
