@@ -30,6 +30,9 @@ struct MenuContent: View {
             Divider()
             HStack {
                 OpenSettingsButton()
+                if Updates.isAvailable {
+                    Button("Check for Updates") { Updates.check() }
+                }
                 Spacer()
                 Button("Quit Prefill") { NSApplication.shared.terminate(nil) }
             }

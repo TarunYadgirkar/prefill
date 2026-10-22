@@ -70,6 +70,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             #endif
             return
         }
+        _ = Updates.controller
         Task {
             await MacModel.shared.start()
             let model = MacModel.shared
