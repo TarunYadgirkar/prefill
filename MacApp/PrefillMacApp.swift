@@ -20,6 +20,16 @@ struct PrefillMacApp: App {
         }
         .menuBarExtraStyle(.window)
 
+        Window("Welcome to Prefill", id: WelcomeView.windowID) {
+            WelcomeView()
+                .environment(model)
+                .tint(Palette.accent)
+                .task { await model.refresh() }
+        }
+        .windowResizability(.contentSize)
+        .windowStyle(.hiddenTitleBar)
+        .defaultLaunchBehavior(model.hasSeenWelcome || MacModel.isShowcase ? .suppressed : .presented)
+
         Settings {
             SettingsView()
                 .environment(model)
