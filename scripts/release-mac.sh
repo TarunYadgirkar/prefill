@@ -85,14 +85,15 @@ rm -rf $ARCHIVE
 xcodebuild -project $PROJECT -scheme PrefillMac -configuration AppStore -destination 'generic/platform=macOS' \
   -derivedDataPath $REL/DerivedData -archivePath $ARCHIVE -allowProvisioningUpdates \
   MARKETING_VERSION=$VERSION CURRENT_PROJECT_VERSION=$BUILD ONLY_ACTIVE_ARCH=NO \
-  PREFILL_FEED_URL=$FEED_URL \
+  PREFILL_FEED_URL=$FEED_URL PREFILL_CLOUD_FLAGS=PREFILL_PRODUCTION_CLOUD \
   archive >$LOGS/release-mac-archive.log 2>&1 || fail_with_log $LOGS/release-mac-archive.log
 print "archived $ARCHIVE"
 (( ARCHIVE_ONLY )) && exit 0
 
-# ExportMac.plist keeps iCloudContainerEnvironment at Development: the iPhone builds sync in
-# CloudKit's Development environment, and a Production Mac build would split the person's
-# synced applications into a second, empty database.
+# Developer ID builds must sync in CloudKit's Production database (export refuses
+# Development), apart from Xcode builds, which use Development. PREFILL_PRODUCTION_CLOUD gives
+# the release its own sync state, so it uploads this Mac's files there and never reads the
+# other database's zone as deleted.
 APP=
 rm -f $LOGS/release-mac-upload.log
 if ! xcodebuild -help 2>&1 | grep -q -- -exportNotarizedApp || ! notarize_with_xcode; then

@@ -159,7 +159,10 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.mac
         CODE_SIGN_ENTITLEMENTS: MacApp/Prefill.entitlements
         INFOPLIST_FILE: Config/MacInfo.plist
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) PREFILL_CLOUD
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) PREFILL_CLOUD $(PREFILL_CLOUD_FLAGS)
+        # scripts/release-mac.sh sets PREFILL_PRODUCTION_CLOUD: a Developer ID build syncs in
+        # CloudKit's Production database.
+        PREFILL_CLOUD_FLAGS: ""
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Prefill
         INFOPLIST_KEY_LSUIElement: YES
