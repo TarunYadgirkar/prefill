@@ -57,8 +57,9 @@ struct ChromiumMessageTests {
             with: MessageCoding.validatedRequest(sheet, allowingSheet: true)
         ) as? NSDictionary
         #expect(relayed?["type"] as? String == "popupState")
+        let badHost = Data(#"{"type":"popupState","host":"A B","kinds":[]}"#.utf8)
         #expect(throws: MessageError.malformed) {
-            try MessageCoding.validatedRequest(Data(#"{"type":"pin","host":"A B"}"#.utf8), allowingSheet: true)
+            try MessageCoding.validatedRequest(badHost, allowingSheet: true)
         }
     }
 }
