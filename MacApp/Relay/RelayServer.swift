@@ -4,29 +4,34 @@ import Foundation
 import os
 import PrefillKit
 
-// Listens on the relay socket and answers each request from Prefill's native messaging host
-// with the same MessageRouter the Safari extension uses on iPhone. Requests are checked
-// again here, so a host that let something through still can't reach the card with it.
+// Listens on a relay socket and answers each request from Prefill's native messaging host, or
+// from its Safari extension, with the same MessageRouter the Safari extension uses on iPhone.
+// Requests are checked again here, so a host that let something through still can't reach the
+// card with it.
 final class RelayServer: Sendable {
     private static let log = PrefillLog.logger("relay")
     private static let backlog: Int32 = 16
+    private static let safari = "com.apple.Safari"
 
     private let router: MessageRouter
     private let answered: @Sendable () -> Void
     private let queue = DispatchQueue(label: "com.tarunyadgirkar.prefill.relay", attributes: .concurrent)
     private let listener: Int32
+    private let peer: String
 
-    init?(router: MessageRouter, answered: @escaping @Sendable () -> Void) {
-        guard let listener = Self.listen(at: RelaySocket.path) else { return nil }
+    init?(path: String, peer: String, router: MessageRouter, answered: @escaping @Sendable () -> Void) {
+        guard let listener = Self.listen(at: path) else { return nil }
         self.router = router
         self.answered = answered
         self.listener = listener
+        self.peer = peer
         Thread.detachNewThread { [self] in acceptLoop() }
     }
 
     private static func listen(at path: String) -> Int32? {
-        try? FileManager.default.createDirectory(at: RelaySocket.directory, withIntermediateDirectories: true)
-        chmod(RelaySocket.directory.path(percentEncoded: false), 0o700)
+        let directory = URL(filePath: path).deletingLastPathComponent()
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        chmod(directory.path(percentEncoded: false), 0o700)
         unlink(path)
         guard var address = RelaySocket.address(path) else { return nil }
         let socket = Darwin.socket(AF_UNIX, SOCK_STREAM, 0)
@@ -60,8 +65,14 @@ final class RelayServer: Sendable {
         }
     }
 
-    // The host is started by the browser running the extension, so its parent is that browser.
-    private static func noteBrowser(behind connection: Int32) {
+    // Chrome's host is started by the browser running the extension, so its parent is that
+    // browser. Safari runs its extension itself.
+    private func noteBrowser(behind connection: Int32) {
+        if peer == CodeIdentity.safariIdentifier {
+            let safari = NSRunningApplication.runningApplications(withBundleIdentifier: Self.safari).first
+            if let safari { ExtensionPresence.saw(bundleID: Self.safari, pid: safari.processIdentifier) }
+            return
+        }
         var host = pid_t(0)
         var size = socklen_t(MemoryLayout<pid_t>.size)
         guard getsockopt(connection, SOL_LOCAL, LOCAL_PEERPID, &host, &size) == 0 else { return }
@@ -76,14 +87,15 @@ final class RelayServer: Sendable {
     private func serve(_ connection: Int32) {
         defer { close(connection) }
         RelaySocket.setTimeout(connection)
-        guard CodeIdentity.isPeer(CodeIdentity.hostIdentifier, socket: connection) else {
-            Self.log.error("refused a connection from something other than Prefill's host")
+        guard CodeIdentity.isPeer(peer, socket: connection) else {
+            Self.log.error("refused a connection from something other than \(self.peer, privacy: .public)")
             return
         }
         guard let body = FrameIO.read(connection, max: NativeFraming.maxRequest) else { return }
-        let checked = try? MessageCoding.validatedRequest(body)
+        let isSafari = peer == CodeIdentity.safariIdentifier
+        let checked = try? MessageCoding.validatedRequest(body, allowingSheet: isSafari)
         let message = checked.flatMap { try? JSONSerialization.jsonObject(with: $0) }
-        Self.noteBrowser(behind: connection)
+        noteBrowser(behind: connection)
         let response = checked.map { _ in router.route(message) } ?? .error(reason: "unknown message")
         _ = FrameIO.write(connection, body: MessageCoding.replyData(response))
         answered()

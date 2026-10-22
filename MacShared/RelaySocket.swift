@@ -2,9 +2,9 @@ import Darwin
 import Foundation
 import PrefillKit
 
-// The local channel between the native messaging host Chrome starts and the running app:
-// a Unix socket in the app's support folder, one framed request and one framed reply per
-// connection.
+// The local channels between the running app and what asks it: the native messaging host
+// Chrome starts and Safari's extension. Each is a Unix socket with one framed request and one
+// framed reply per connection.
 enum RelaySocket {
     static let timeout: TimeInterval = 5
 
@@ -20,6 +20,20 @@ enum RelaySocket {
 
     static var path: String {
         directory.appending(path: "relay.sock").path(percentEncoded: false)
+    }
+
+    // Safari's extension is sandboxed, so its socket sits in the group container both sides
+    // share. The group name stays short: a socket path holds at most 103 bytes.
+    static let appGroup = "5AKJYZ7USP.prefill"
+
+    static var safariPath: String? {
+        #if PREFILL_TEST_BROWSERS
+        if ProcessInfo.processInfo.environment["PREFILL_E2E_DIR"] != nil {
+            return directory.appending(path: "safari.sock").path(percentEncoded: false)
+        }
+        #endif
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appGroup)?
+            .appending(path: "safari.sock").path(percentEncoded: false)
     }
 
     static func address(_ path: String) -> sockaddr_un? {

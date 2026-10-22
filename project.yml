@@ -169,6 +169,8 @@ targets:
         codeSign: true
         copy:
           destination: executables
+      - target: PrefillMacSafari
+        embed: true
     postCompileScripts:
       - name: Copy the Chrome extension and the field rules
         basedOnDependencyAnalysis: false
@@ -180,6 +182,46 @@ targets:
           rules="$SRCROOT/web/dist-mac/autofill.js"
           if [ ! -f "$rules" ]; then echo "error: run pnpm --dir web build first"; exit 1; fi
           cp "$rules" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/autofill.js"
+  # Safari's extension on the Mac: the same scripts as on iPhone, with a handler that asks the
+  # running app over a socket in the shared group container instead of reading Contacts.
+  PrefillMacSafari:
+    type: app-extension
+    platform: macOS
+    sources:
+      - MacSafari/SafariWebExtensionHandler.swift
+      - MacShared
+      - path: Extension/Resources/manifest.json
+        buildPhase: resources
+      - path: Extension/Resources/content.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/background.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.html
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.css
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/_locales
+        type: folder
+        buildPhase: resources
+      - path: Extension/Resources/images
+        type: folder
+        buildPhase: resources
+    settings:
+      groups: [macSigning]
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.mac.safari
+        CODE_SIGN_ENTITLEMENTS: MacSafari/PrefillSafari.entitlements
+        INFOPLIST_FILE: MacSafari/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+    dependencies:
+      - package: PrefillKit
   PrefillHost:
     type: tool
     platform: macOS

@@ -51,6 +51,7 @@ final class MacModel {
     @ObservationIgnored let google = GoogleAccount()
     @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var server: RelayServer?
+    @ObservationIgnored private var safariServer: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     // Set in the build the paid team signs (MacModel+Cloud).
     @ObservationIgnored var cloud: PrefillCloud?
@@ -100,8 +101,10 @@ final class MacModel {
     func start() async {
         guard server == nil else { return }
         let router = MessageRouter(store: store, gateway: gateway)
-        server = RelayServer(router: router) {
-            Task { @MainActor in MacModel.shared.relayAnswered() }
+        let answered: @Sendable () -> Void = { Task { @MainActor in MacModel.shared.relayAnswered() } }
+        server = RelayServer(path: RelaySocket.path, peer: CodeIdentity.hostIdentifier, router: router, answered: answered)
+        safariServer = RelaySocket.safariPath.flatMap {
+            RelayServer(path: $0, peer: CodeIdentity.safariIdentifier, router: router, answered: answered)
         }
         isRelayRunning = server != nil
         cardObserver = NotificationCenter.default.addObserver(

@@ -8,6 +8,7 @@ import Security
 enum CodeIdentity {
     static let hostIdentifier = "com.tarunyadgirkar.prefill.mac.host"
     static let appIdentifier = "com.tarunyadgirkar.prefill.mac"
+    static let safariIdentifier = "com.tarunyadgirkar.prefill.mac.safari"
 
     // Each browser's bundle ID with its maker's team: Google, The Browser Company, Brave
     // and Microsoft. The team alone would also let their other apps in.

@@ -6,6 +6,7 @@ included:
   - MacApp
   - MacHost
   - MacShared
+  - MacSafari
   - Packages/PrefillKit/Sources
   - Packages/PrefillKit/Tests
   - Packages/PrefillKit/Package.swift
