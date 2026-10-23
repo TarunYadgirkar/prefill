@@ -27,7 +27,9 @@ extension MessageCoding {
     // page's content script sends there, which passed every check, rebuilt from its known
     // fields. Safari's sheet requests are turned away, so another extension that claims
     // Prefill's ID can't read the card the way the sheet does or pin values for a site.
-    public static func validatedRequest(_ body: Data) throws -> Data {
+    // Prefill's own Safari extension on the Mac sends its sheet's requests too, which only
+    // Safari can start.
+    public static func validatedRequest(_ body: Data, allowingSheet: Bool = false) throws -> Data {
         guard body.count <= MessageLimits.bytes else { throw MessageError.tooLarge }
         let object: Any
         do {
@@ -36,7 +38,7 @@ extension MessageCoding {
             throw MessageError.notJSON
         }
         let request = try request(from: object)
-        guard request.isBrowserPageRequest else { throw MessageError.unknownType }
+        guard allowingSheet || request.isBrowserPageRequest else { throw MessageError.unknownType }
         return try JSONEncoder().encode(request)
     }
 

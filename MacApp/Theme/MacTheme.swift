@@ -7,11 +7,14 @@ enum Spacing {
     static let xSmall: CGFloat = 8
     static let small: CGFloat = 12
     static let medium: CGFloat = 16
+    static let large: CGFloat = 24
 }
 
 enum Size {
     static let menuWidth: CGFloat = 320
     static let settingsWidth: CGFloat = 460
+    static let welcomeWidth: CGFloat = 480
+    static let welcomeIcon: CGFloat = 64
     // The form scrolls inside this, so a long list doesn't grow the window past the screen.
     static let settingsHeight: CGFloat = 640
     static let reviewRows = 5

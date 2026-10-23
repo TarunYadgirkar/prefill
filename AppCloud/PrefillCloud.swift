@@ -67,6 +67,15 @@ final class PrefillCloud {
         try cardFile.removeAll()
     }
 
+    // CloudKit keeps its Development and Production databases apart, and a Developer ID release
+    // syncs in Production. It keeps its own sync state, so it starts fresh there from this
+    // device's files instead of reading the other database's missing zone as a deletion.
+    #if PREFILL_PRODUCTION_CLOUD
+    nonisolated private static let stateSuffix = "-production"
+    #else
+    nonisolated private static let stateSuffix = ""
+    #endif
+
     nonisolated private static func applicationsZone(
         archive: ApplicationArchive,
         receive: @escaping @MainActor @Sendable ([SubmittedApplication]) -> [SubmittedApplication]?,
@@ -75,7 +84,7 @@ final class PrefillCloud {
         ZoneSync.Zone(
             name: ApplicationCloudRecord.zoneName,
             recordType: ApplicationCloudRecord.recordType,
-            stateFile: archive.url.deletingLastPathComponent().appending(path: "cloud-sync.json"),
+            stateFile: archive.url.deletingLastPathComponent().appending(path: "cloud-sync\(stateSuffix).json"),
             local: { (try? archive.read()).map(payloads) },
             receive: { incoming in
                 let arrived = incoming.compactMap { ApplicationCloudRecord.application(recordName: $0.key, payload: $0.value) }
@@ -91,7 +100,7 @@ final class PrefillCloud {
         ZoneSync.Zone(
             name: "Card",
             recordType: "CardEntry",
-            stateFile: directory.appending(path: "card-sync.json"),
+            stateFile: directory.appending(path: "card-sync\(stateSuffix).json"),
             local: { (try? file.read()).map { $0.entries.compactMapValues(CloudCardCopyFile.payload) } },
             receive: { incoming in
                 guard var copy = try? file.read() else { return nil }

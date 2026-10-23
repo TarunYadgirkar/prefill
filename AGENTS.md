@@ -56,7 +56,8 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
 | `AutoFill/` | `PrefillAutoFill`, a credential provider extension that declares only text insertion: long-press a field in any app, AutoFill, Prefill, pick a value. It reads the keyboard's snapshot from the keyboard's App Group and has no network code. Turned on from Settings › Use Prefill in other apps. On the iPhone (Oct 17, `AutoFillDeviceTests`, run with `TEST_RUNNER_PREFILL_DEVICE_AUTOFILL=1` on the connected phone) Prefill shows in AutoFill › Passwords and its list opens with the real values, but the picked text never lands in the field (Notes body or search field), the same as the spike in the Simulator. |
 | `MacApp/` | Menu bar app. `Autofill/` is the Accessibility engine (focus watcher, panel, key tap, filler). `Relay/` is the socket server and host-manifest installer. `Views/` holds the menu (with the first-run checklist, `SetupChecklist.swift`) and settings. |
 | `MacHost/` | The `prefill-host` native messaging executable. It checks its parent browser's signature and relays to the app. |
-| `MacShared/` | Code identity checks and the socket used by both sides. |
+| `MacSafari/` | `PrefillMacSafari`, Safari's extension on the Mac, embedded in the Mac app: the same scripts as on iPhone, with a sandboxed handler that relays each message to the app over `safari.sock` in the group container `5AKJYZ7USP.prefill` (the app checks it's Prefill's own extension). It accepts the sheet's requests too. |
+| `MacShared/` | Code identity checks, the sockets and `RelayClient`, used by the host, the Safari extension and the app. |
 | `docs/messages.md` | Every message between page, extension, app and host, with limits. Update it with any new message. |
 | `testbed/` | Local test pages (Greenhouse-style, signup, checkout) for the e2e tests. |
 | `scripts/` | build, test, install-device, auto-reinstall (and its launchd installer), install-mac, e2e-mac-chrome, e2e-mac-ax. `web/src/e2e/fillChrome.ts` runs one-tap fill in real Chromium with a stand-in host (`fakeHost.py`), on Linux or the Mac, including a page built with the real React-Select (`testbed/react-select/`). Run `pnpm --dir web build` first; set `PREFILL_CHROMIUM` to use a local Chromium. |
@@ -102,6 +103,13 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - CoreDevice error 4016 or 10002 means it's locked.
   - Main test simulator: `D03EE1A5-5538-4E81-BB43-5ABF852199F4`; its My Info is the Alex Rivera test card.
 - **Your own permissions:** you can't toggle Accessibility, Contacts or other privacy settings for the user, and computer-use can only look at browsers, not click in them. Hand those steps to the user.
+
+## Distribution (Oct 22)
+
+- **Mac:** one download. `scripts/release-mac.sh` archives the AppStore config, notarizes with the Apple ID signed in to Xcode (no app-specific password), staples, builds `build/release/Prefill-<version>.dmg` and Sparkle's `appcast.xml` (EdDSA key in Tarun's login keychain, account "prefill"), and prints the `gh release create` command; it publishes nothing. Only a release has a feed (`PREFILL_FEED_URL`), so Xcode builds never update themselves. It can't be a Mac App Store app: the sandbox blocks the Accessibility mode.
+- **First run:** the welcome window (`WelcomeView`) walks through Contacts, turning Prefill on in Safari's settings, and Accessibility for Chrome and other apps; the menu's checklist has the same steps. Loading the Chrome extension unpacked stays as an option inside the Safari step. A Chrome Web Store listing would let the app make Chrome offer the extension itself (an "External Extensions" file), but it costs $5 and Tarun said no paid steps.
+- **CloudKit:** a Developer ID build must sync in Production, while Xcode builds use Development. The release keeps its own sync state (`PREFILL_PRODUCTION_CLOUD`, `cloud-sync-production.json`), so it uploads this Mac's files to Production instead of reading Development's zone as deleted. The schema must be deployed to Production in the CloudKit console before a release syncs, and a Production Mac doesn't see a Development iPhone's applications.
+- **iPhone:** `scripts/release-ios.sh [--upload]` builds the AppStore config for TestFlight. It needs the App Store Connect record for `com.tarunyadgirkar.prefill` first; not run yet.
 
 ## Open items
 

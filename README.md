@@ -66,3 +66,9 @@ pnpm --dir web test
 ```
 
 `scripts/test.sh e2e` runs the simulator end-to-end tests. `scripts/e2e-mac-chrome.sh` and `scripts/e2e-mac-ax.sh` cover the Mac.
+
+## Releasing
+
+**Mac.** `zsh scripts/release-mac.sh` builds a Developer ID signed Prefill.app, has Apple notarize it with the account signed in to Xcode, and packs it into `build/release/Prefill-<version>.dmg` with an `appcast.xml` for Sparkle updates. It publishes nothing; it ends by printing the `gh release create` command to run. `VERSION` and `BUILD` override the version and build number, and `--archive-only` stops after the archive. If Xcode's notarization fails, the script falls back to a notarytool keychain profile; its header says how to make one.
+
+**iPhone.** `zsh scripts/release-ios.sh` archives the App Store build and exports it to `build/release/ios/export` for a look. `zsh scripts/release-ios.sh --upload` sends it to App Store Connect, where it shows in TestFlight after processing. The app record for `com.tarunyadgirkar.prefill` has to exist in App Store Connect first.

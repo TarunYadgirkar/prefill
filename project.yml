@@ -14,6 +14,10 @@ configFiles:
 packages:
   PrefillKit:
     path: Packages/PrefillKit
+  # Self-updates for the Mac app downloaded as a DMG.
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.9.6
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -155,20 +159,28 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.mac
         CODE_SIGN_ENTITLEMENTS: MacApp/Prefill.entitlements
         INFOPLIST_FILE: Config/MacInfo.plist
-        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) PREFILL_CLOUD
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: $(inherited) PREFILL_CLOUD $(PREFILL_CLOUD_FLAGS)
+        # scripts/release-mac.sh sets PREFILL_PRODUCTION_CLOUD: a Developer ID build syncs in
+        # CloudKit's Production database.
+        PREFILL_CLOUD_FLAGS: ""
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Prefill
         INFOPLIST_KEY_LSUIElement: YES
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
         INFOPLIST_KEY_NSContactsUsageDescription: Prefill reads your own contact card to suggest its emails, phone numbers and addresses in Chrome and Arc, and adds new ones you type there.
         ENABLE_USER_SCRIPT_SANDBOXING: NO
+        # Empty for builds from Xcode, so only a release (scripts/release-mac.sh) updates itself.
+        PREFILL_FEED_URL: ""
     dependencies:
       - package: PrefillKit
+      - package: Sparkle
       - target: PrefillHost
         embed: true
         codeSign: true
         copy:
           destination: executables
+      - target: PrefillMacSafari
+        embed: true
     postCompileScripts:
       - name: Copy the Chrome extension and the field rules
         basedOnDependencyAnalysis: false
@@ -180,6 +192,46 @@ targets:
           rules="$SRCROOT/web/dist-mac/autofill.js"
           if [ ! -f "$rules" ]; then echo "error: run pnpm --dir web build first"; exit 1; fi
           cp "$rules" "$TARGET_BUILD_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/autofill.js"
+  # Safari's extension on the Mac: the same scripts as on iPhone, with a handler that asks the
+  # running app over a socket in the shared group container instead of reading Contacts.
+  PrefillMacSafari:
+    type: app-extension
+    platform: macOS
+    sources:
+      - MacSafari/SafariWebExtensionHandler.swift
+      - MacShared
+      - path: Extension/Resources/manifest.json
+        buildPhase: resources
+      - path: Extension/Resources/content.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/background.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.html
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.js
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/popup.css
+        buildPhase: resources
+        optional: true
+      - path: Extension/Resources/_locales
+        type: folder
+        buildPhase: resources
+      - path: Extension/Resources/images
+        type: folder
+        buildPhase: resources
+    settings:
+      groups: [macSigning]
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tarunyadgirkar.prefill.mac.safari
+        CODE_SIGN_ENTITLEMENTS: MacSafari/PrefillSafari.entitlements
+        INFOPLIST_FILE: MacSafari/Info.plist
+        INFOPLIST_KEY_CFBundleDisplayName: Prefill
+    dependencies:
+      - package: PrefillKit
   PrefillHost:
     type: tool
     platform: macOS

@@ -50,4 +50,16 @@ struct ChromiumMessageTests {
             try MessageCoding.validatedRequest(Data(#"{"type":"popupState","host":"a.example","kinds":[]}"#.utf8))
         }
     }
+
+    @Test func safarisSheetRequestsPassOnlyWhenAllowed() throws {
+        let sheet = Data(#"{"type":"popupState","host":"a.example","kinds":[]}"#.utf8)
+        let relayed = try JSONSerialization.jsonObject(
+            with: MessageCoding.validatedRequest(sheet, allowingSheet: true)
+        ) as? NSDictionary
+        #expect(relayed?["type"] as? String == "popupState")
+        let badHost = Data(#"{"type":"popupState","host":"A B","kinds":[]}"#.utf8)
+        #expect(throws: MessageError.malformed) {
+            try MessageCoding.validatedRequest(badHost, allowingSheet: true)
+        }
+    }
 }

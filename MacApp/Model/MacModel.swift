@@ -19,6 +19,7 @@ final class MacModel {
     private static let loginItemKey = "registeredLoginItem"
     private static let heardFromExtensionKey = "heardFromExtension"
     private static let skippedExtensionKey = "skippedExtension"
+    private static let seenWelcomeKey = "seenWelcome"
 
     private(set) var access = Access.notDetermined
     private(set) var card: CardRecord?
@@ -34,6 +35,8 @@ final class MacModel {
     // Set once Prefill's host has relayed a request, which only the browser extension starts.
     private(set) var hasHeardFromExtension = UserDefaults.standard.bool(forKey: heardFromExtensionKey)
     private(set) var skippedExtension = UserDefaults.standard.bool(forKey: skippedExtensionKey)
+    private(set) var isSafariExtensionOn = false
+    private(set) var hasSeenWelcome = UserDefaults.standard.bool(forKey: seenWelcomeKey)
     var problem: String?
     // Job applications sent from the browsers here, and from the iPhone once its history is
     // copied over USB (scripts/sync-applications.sh), newest first.
@@ -51,6 +54,7 @@ final class MacModel {
     @ObservationIgnored let google = GoogleAccount()
     @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var server: RelayServer?
+    @ObservationIgnored private var safariServer: RelayServer?
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     // Set in the build the paid team signs (MacModel+Cloud).
     @ObservationIgnored var cloud: PrefillCloud?
@@ -100,8 +104,12 @@ final class MacModel {
     func start() async {
         guard server == nil else { return }
         let router = MessageRouter(store: store, gateway: gateway)
-        server = RelayServer(router: router) {
-            Task { @MainActor in MacModel.shared.relayAnswered() }
+        let answered: @Sendable () -> Void = { Task { @MainActor in MacModel.shared.relayAnswered() } }
+        server = RelayServer(
+            path: RelaySocket.path, peer: CodeIdentity.hostIdentifier, router: router, answered: answered
+        )
+        safariServer = RelaySocket.safariPath.flatMap {
+            RelayServer(path: $0, peer: CodeIdentity.safariIdentifier, router: router, answered: answered)
         }
         isRelayRunning = server != nil
         cardObserver = NotificationCenter.default.addObserver(
@@ -123,6 +131,7 @@ final class MacModel {
         browsers = fixedLink == nil ? HostInstaller.installAll() : []
         opensAtLogin = SMAppService.mainApp.status == .enabled
         isAccessibilityTrusted = AccessibilityTrust.isTrusted || Self.isShowcase
+        isSafariExtensionOn = await SafariExtension.isOn()
         guard access == .granted else {
             card = nil
             return
@@ -135,6 +144,7 @@ final class MacModel {
     // so the setup list asks again while it's on screen.
     func recheckSetup() async {
         isAccessibilityTrusted = AccessibilityTrust.isTrusted || Self.isShowcase
+        isSafariExtensionOn = await SafariExtension.isOn()
         guard fixedLink == nil, Self.currentAccess != access else { return }
         await refresh()
     }
@@ -142,6 +152,11 @@ final class MacModel {
     func skipExtension() {
         skippedExtension = true
         UserDefaults.standard.set(true, forKey: Self.skippedExtensionKey)
+    }
+
+    func finishWelcome() {
+        hasSeenWelcome = true
+        UserDefaults.standard.set(true, forKey: Self.seenWelcomeKey)
     }
 
     private func relayAnswered() {

@@ -15,5 +15,13 @@
 			</array>
 		</dict>
 	</array>
+	<!-- Sparkle: where a release looks for updates (empty in builds from Xcode) and the public
+	     half of the signing key in Tarun's login keychain (account "prefill"). -->
+	<key>SUFeedURL</key>
+	<string>$(PREFILL_FEED_URL)</string>
+	<key>SUPublicEDKey</key>
+	<string>twr888AyzSaGoRSP2ShhPfZ0X7ir0iPY1T3NeqAWTrY=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
 </dict>
 </plist>
