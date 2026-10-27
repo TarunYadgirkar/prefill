@@ -83,15 +83,28 @@ final class AppModel {
     static let shared = live()
 
     static func live() -> AppModel {
-        let gateway = CNContactStoreGateway()
+        let gateway = Self.gateway()
         let store = StoreFactory.make()
         StoreMigration.adoptKeychainStore(into: store)
         ReinstallCleanup.run(store: store, defaults: .standard)
         let model = AppModel(
-            store: store, gateway: gateway, contacts: LiveContactsSource(gateway: gateway), keyboard: .make()
+            store: store, gateway: gateway, contacts: LiveContactsSource(gateway: CNContactStoreGateway()),
+            keyboard: .make()
         )
         model.startCloud()
         return model
+    }
+
+    // With iCloud, the card reads merged with the iCloud copy of its links and custom fields.
+    private static func gateway() -> any ContactsGateway {
+        #if PREFILL_CLOUD
+        CloudMergedGateway(
+            inner: CNContactStoreGateway(),
+            file: CloudCardCopyFile(directory: ApplicationArchive.live().url.deletingLastPathComponent())
+        ) { names in Task { @MainActor in AppModel.shared.cloud?.sendCard(names) } }
+        #else
+        CNContactStoreGateway()
+        #endif
     }
 
     var phase: Phase {
@@ -160,7 +173,6 @@ final class AppModel {
         case .success(let fresh):
             card = fresh
             cardFailure = nil
-            cloud?.mirror(fresh)
             adoptCardValues(fresh)
             if let fresh = await CardWork.placement(gateway, identifier: link.contactIdentifier) {
                 placement = fresh

@@ -73,7 +73,7 @@ final class MacModel {
         }
         #endif
         self.store = AppGroupStore(directory: RelaySocket.directory.appending(path: "Store"))
-        self.gateway = CNContactStoreGateway()
+        self.gateway = Self.liveGateway()
         self.fixedLink = nil
     }
 
@@ -278,7 +278,6 @@ final class MacModel {
             return
         }
         card = fetched
-        cloud?.mirror(fetched)
         let merged = ManualOrder.allValues(card: fetched, known: state.values, now: .now)
         if merged.map(\.id) != state.values.map(\.id) { commit(state.with(values: merged)) }
     }

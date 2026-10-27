@@ -3,7 +3,8 @@ import Foundation
 
 // A copy of the links and custom fields on Prefill's contact, kept beside the app's archive and
 // synced through the person's private iCloud (AppCloud/), so they can move off Contacts later
-// (docs/PAID-ACCOUNT.md, step 3). Nothing reads it to fill yet: the contact stays the source.
+// (docs/PAID-ACCOUNT.md). The apps read the card merged with it (CloudMergedGateway): what the
+// other device keeps and this contact doesn't hold yet is added, never anything taken away.
 // Each entry is one CloudKit record. An entry that left this device's contact becomes a
 // tombstone; one that arrived from the other device stays until this contact changes it.
 public struct CloudCardCopy: Codable, Sendable, Hashable {
@@ -64,6 +65,33 @@ public struct CloudCardCopy: Codable, Sendable, Hashable {
         }
     }
 
+    // The card with every entry kept here that it doesn't hold yet added after its own, in a
+    // fixed order so two reads of the same files give the same record.
+    public func merged(into card: CardRecord) -> CardRecord {
+        guard !isStopped else { return card }
+        let fieldIDs = Set(card.customFields.map(\.id))
+        let linkKeys = Set(card.links.map(\.key))
+        var fields: [CustomField] = []
+        var links: [CardEntry] = []
+        for (_, entry) in entries.sorted(by: { $0.key < $1.key }) {
+            switch entry.body {
+            case .field(let field) where !fieldIDs.contains(field.id): fields.append(field)
+            case .link(let link) where !linkKeys.contains(link.key): links.append(link)
+            default: break
+            }
+        }
+        guard !fields.isEmpty || !links.isEmpty else { return card }
+        return card.replacingCustomFields(with: card.customFields + fields)
+            .replacing(.link, with: card.links + links)
+    }
+
+    // The person deleted these in the app while only this copy held them.
+    public mutating func forget(_ bodies: [Body], now: Date) -> [String] {
+        let names = bodies.map(Self.recordName).filter { entries[$0]?.body != nil }
+        for name in names { entries[name] = Entry(body: nil, modifiedAt: now) }
+        return names
+    }
+
     public mutating func stop() {
         self = CloudCardCopy()
         isStopped = true
@@ -91,6 +119,19 @@ public struct CloudCardCopyFile: Sendable {
         guard FileManager.default.fileExists(atPath: url.path(percentEncoded: false)) else { return CloudCardCopy() }
         return try DocumentCoder.decode(CloudCardCopy.self, from: Data(contentsOf: url))
     }
+
+    // Every change to the file goes through here, so the gateway, the iCloud sync and the
+    // mirror never write over each other's change. Nil when the file can't be read or written.
+    public func update<T>(_ change: (inout CloudCardCopy) -> T) -> T? {
+        Self.lock.lock()
+        defer { Self.lock.unlock() }
+        guard var copy = try? read() else { return nil }
+        let result = change(&copy)
+        guard (try? write(copy)) != nil else { return nil }
+        return result
+    }
+
+    private static let lock = NSLock()
 
     public func write(_ extras: CloudCardCopy) throws {
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
