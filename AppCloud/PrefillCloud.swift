@@ -52,12 +52,10 @@ final class PrefillCloud {
         Task { await applications.delete(names) }
     }
 
-    // Copies what Prefill's contact holds now into the card copy and sends what changed.
-    func mirror(_ record: CardRecord) {
-        guard var copy = try? cardFile.read() else { return }
-        let changed = copy.mirror(record, now: .now)
-        guard !changed.isEmpty, (try? cardFile.write(copy)) != nil else { return }
-        Task { await card.send(changed) }
+    // Card copy entries that changed on a read of the card or a delete in the app (CloudMergedGateway).
+    func sendCard(_ names: [String]) {
+        guard !names.isEmpty else { return }
+        Task { await card.send(names) }
     }
 
     // Both zones go before anything on this device does; it throws unless iCloud confirms.
@@ -103,20 +101,16 @@ final class PrefillCloud {
             stateFile: directory.appending(path: "card-sync\(stateSuffix).json"),
             local: { (try? file.read()).map { $0.entries.compactMapValues(CloudCardCopyFile.payload) } },
             receive: { incoming in
-                guard var copy = try? file.read() else { return nil }
                 let entries = incoming.compactMap { name, payload in
                     CloudCardCopyFile.entry(recordName: name, payload: payload).map { (name, $0) }
                 }
-                copy.merge(Dictionary(entries) { _, new in new })
-                guard (try? file.write(copy)) != nil else { return nil }
-                return copy.entries.filter { incoming[$0.key] != nil }.compactMapValues(CloudCardCopyFile.payload)
+                return file.update { copy in
+                    copy.merge(Dictionary(entries) { _, new in new })
+                    return copy.entries.filter { incoming[$0.key] != nil }.compactMapValues(CloudCardCopyFile.payload)
+                }
             },
             // The contact is left as it is; the copy empties and stops, so it isn't sent again.
-            deletedElsewhere: {
-                var stopped = CloudCardCopy()
-                stopped.stop()
-                try? file.write(stopped)
-            }
+            deletedElsewhere: { _ = file.update { $0.stop() } }
         )
     }
 

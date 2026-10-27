@@ -6,6 +6,18 @@ import PrefillKit
 // Prefill's contact (PrefillCloud). Without PREFILL_CLOUD, `cloud` stays nil and every call
 // here does nothing.
 extension MacModel {
+    // With iCloud, the card reads merged with the iCloud copy of its links and custom fields.
+    nonisolated static func liveGateway() -> any ContactsGateway {
+        #if PREFILL_CLOUD
+        let file = CloudCardCopyFile(directory: RelaySocket.directory)
+        return CloudMergedGateway(inner: CNContactStoreGateway(), file: file) { names in
+            Task { @MainActor in MacModel.shared.cloud?.sendCard(names) }
+        }
+        #else
+        CNContactStoreGateway()
+        #endif
+    }
+
     func startCloud() {
         #if PREFILL_CLOUD
         guard cloud == nil else { return }
