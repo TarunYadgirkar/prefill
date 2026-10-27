@@ -57,6 +57,24 @@ struct ApplicationTests {
         #expect(try archive.read().map(\.id) == [deleted.id])
     }
 
+    @Test func aDeletionOnTheOtherDeviceForgetsWhatIsQueuedHereToo() throws {
+        let archive = temporaryArchive()
+        let archived = SubmittedApplication(date: Date(timeIntervalSince1970: 1), request: Self.request)
+        let queued = SubmittedApplication(date: Date(timeIntervalSince1970: 2), request: Self.other)
+        try archive.merge([archived])
+        try archive.forgetAll(queued: [queued])
+        #expect(try archive.read().isEmpty)
+        let before = try archive.read()
+        let after = try archive.merge([archived, queued])
+        #expect(after.isEmpty)
+        #expect(ApplicationArchive.changed(from: before, to: after).isEmpty)
+        let sentLater = SubmittedApplication(
+            date: Date(timeIntervalSince1970: 3),
+            request: ApplicationRequest(host: "jobs.lever.co", path: "/new", title: "New", fields: [], files: [])
+        )
+        #expect(try archive.merge([queued, sentLater]).map(\.id) == [sentLater.id])
+    }
+
     @Test func theStepsOfOneApplicationBecomeOneRecord() throws {
         let archive = temporaryArchive()
         let id = UUID()

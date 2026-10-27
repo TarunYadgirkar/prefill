@@ -57,6 +57,18 @@ public struct ApplicationArchive: Sendable {
         return kept
     }
 
+    // The other device deleted Prefill's data: every application here goes, and so does every
+    // one still queued in the store, which only the extension writes. Their ids are kept, so
+    // neither this archive nor the queue brings any of them back or sends it up again.
+    public func forgetAll(queued: [SubmittedApplication]) throws {
+        let held = (try? read()) ?? []
+        let removed = try removedIDs().union((held + queued).map(\.id))
+        try write(removed.sorted { $0.uuidString < $1.uuidString }, to: removedURL)
+        do {
+            try FileManager.default.removeItem(at: url)
+        } catch CocoaError.fileNoSuchFile {}
+    }
+
     private func removedIDs() throws -> Set<UUID> {
         guard FileManager.default.fileExists(atPath: removedURL.path(percentEncoded: false)) else { return [] }
         return try Set(DocumentCoder.decode([UUID].self, from: Data(contentsOf: removedURL)))

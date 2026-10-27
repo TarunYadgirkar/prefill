@@ -46,6 +46,7 @@ actor ZoneSync: CKSyncEngineDelegate {
     private var serverRecords: [CKRecord.ID: CKRecord] = [:]
     // Items that changed before the engine started, sent once it does.
     private var queued: [String] = []
+    private var deletionsSeen = 0
 
     private static let log = PrefillLog.logger("cloud")
 
@@ -91,9 +92,10 @@ actor ZoneSync: CKSyncEngineDelegate {
 
     // For "Delete Prefill data": the zone goes, with every record in it, before anything on
     // this device does. It throws unless iCloud confirms the zone is gone, so nothing is
-    // deleted then. Afterwards this sync stops; the next launch starts a fresh one.
-    func deleteEverything() async throws {
-        if let engine {
+    // deleted then. Without an iCloud account there is no zone to delete. Afterwards this sync
+    // stops; the next launch starts a fresh one.
+    func deleteEverything(inICloud: Bool) async throws {
+        if inICloud, let engine {
             let delete = CKSyncEngine.PendingDatabaseChange.deleteZone(zoneID)
             engine.state.add(pendingDatabaseChanges: [delete])
             try await engine.sendChanges()
@@ -190,13 +192,39 @@ actor ZoneSync: CKSyncEngineDelegate {
             engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
             uploadAll()
         default:
-            saved.uploadedArchive = false
-            persist()
-            await zone.deletedElsewhere()
+            await deletedElsewhere()
         }
     }
 
+    // A zone the other device deleted comes down as a deletion before anything from here goes
+    // back up to recreate it, so nothing from before the deletion returns. Only a zone missing
+    // for another reason gets these records again.
+    private func zoneMissing(_ recordIDs: [CKRecord.ID]) async {
+        let seen = deletionsSeen
+        await fetch()
+        guard deletionsSeen == seen else { return }
+        engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
+        for recordID in recordIDs { serverRecords[recordID] = nil }
+        engine?.state.add(pendingRecordZoneChanges: recordIDs.map { .saveRecord($0) })
+    }
+
+    // What this device held goes, and the zone comes back empty for whatever is sent from now.
+    private func deletedElsewhere() async {
+        deletionsSeen += 1
+        serverRecords = [:]
+        await zone.deletedElsewhere()
+        engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
+        saved.uploadedArchive = true
+        persist()
+    }
+
     private func failedSaves(_ failures: [CKSyncEngine.Event.SentRecordZoneChanges.FailedRecordSave]) async {
+        if failures.contains(where: { $0.error.code == .zoneNotFound }) {
+            let recordIDs = failures.map(\.record.recordID)
+            engine?.state.remove(pendingRecordZoneChanges: recordIDs.map { .saveRecord($0) })
+            Task { await zoneMissing(recordIDs) }
+            return
+        }
         var resend: [CKRecord.ID] = []
         var newer: [CKRecord] = []
         for failure in failures {
@@ -205,10 +233,6 @@ actor ZoneSync: CKSyncEngineDelegate {
             case .serverRecordChanged:
                 guard let server = failure.error.serverRecord else { continue }
                 newer.append(server)
-                resend.append(recordID)
-            case .zoneNotFound:
-                engine?.state.add(pendingDatabaseChanges: [.saveZone(CKRecordZone(zoneID: zoneID))])
-                serverRecords[recordID] = nil
                 resend.append(recordID)
             case .unknownItem:
                 serverRecords[recordID] = nil
