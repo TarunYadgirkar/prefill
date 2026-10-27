@@ -209,20 +209,36 @@ function slotOf(element: FieldElement): Slot | undefined {
     : { control: "text", element: element as TextField, want };
 }
 
-// Ashby titles a fieldset with a label that labels none of its buttons.
-function fieldsetTitle(fieldset: HTMLFieldSetElement | null): string {
-  if (fieldset === null) return "";
+const precedes = (node: Node, other: Node): boolean =>
+  (node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0;
+
+// Ashby titles a fieldset with a label that labels none of its buttons. A fieldset can hold
+// more than one question, so the title is the last such label before the group, and none at
+// all when another group's button sits between them.
+function untitledLabel(fieldset: HTMLFieldSetElement, inputs: readonly HTMLInputElement[], first: HTMLInputElement): string {
+  const title = [...fieldset.querySelectorAll("label")].filter((label) => label.control === null && precedes(label, first)).at(-1);
+  if (title === undefined) return "";
+  const own = new Set<Element>(inputs);
+  const crossed = [...fieldset.querySelectorAll("input[type=radio], input[type=checkbox]")].some(
+    (input) => !own.has(input) && precedes(title, input) && precedes(input, first),
+  );
+  return crossed ? "" : title.textContent;
+}
+
+function fieldsetTitle(inputs: readonly HTMLInputElement[]): string {
+  const first = inputs[0];
+  const fieldset = first?.closest("fieldset") ?? null;
+  if (first === undefined || fieldset === null) return "";
   const legend = fieldset.querySelector("legend")?.textContent ?? "";
-  if (legend.trim() !== "") return legend;
-  return [...fieldset.querySelectorAll("label")].find((label) => label.control === null)?.textContent ?? "";
+  return legend.trim() !== "" ? legend : untitledLabel(fieldset, inputs, first);
 }
 
 // The question a group of radio buttons answers: its fieldset's legend or title, its
 // radiogroup's label, or the words around the buttons that aren't the buttons' own labels.
-function groupLabel(first: HTMLInputElement): string {
-  const title = fieldsetTitle(first.closest("fieldset"));
+function groupLabel(inputs: readonly HTMLInputElement[]): string {
+  const title = fieldsetTitle(inputs);
   if (title.trim() !== "") return title;
-  const group = first.closest("[role=radiogroup]");
+  const group = inputs[0]?.closest("[role=radiogroup]") ?? null;
   return group === null ? "" : (group.getAttribute("aria-label") ?? labelledBy(group));
 }
 
@@ -244,7 +260,7 @@ function nearbyWords(inputs: readonly HTMLInputElement[]): string[] {
 export function questionOf(inputs: readonly HTMLInputElement[]): string {
   const first = inputs[0];
   if (first === undefined) return "";
-  const label = groupLabel(first);
+  const label = groupLabel(inputs);
   return joinFieldText(label.trim() !== "" ? [label] : nearbyWords(inputs));
 }
 

@@ -219,6 +219,23 @@ describe("one-tap fill", () => {
     expect(send.mock.calls.filter(([request]) => request.type === "picked")).toHaveLength(1);
   });
 
+  it("gives each question in a fieldset without a legend its own title", async () => {
+    document.body.innerHTML = `<form>
+      <fieldset>
+        <label>Are you legally authorized to work in the United States?</label>
+        <label><input type="radio" name="auth" value="1"> Yes</label>
+        <label><input type="radio" name="auth" value="0"> No</label>
+        <label>Will you now or in the future require sponsorship?</label>
+        <label><input type="radio" name="sponsor" value="1"> Yes</label>
+        <label><input type="radio" name="sponsor" value="0"> No</label>
+      </fieldset>
+    </form>`;
+    const send = vi.fn((request: ExtensionRequest) => Promise.resolve(reply(request)));
+    await fillForm(document, { host: () => "boards.greenhouse.io", send });
+    expect((document.querySelector("input[name=auth][value='1']") as HTMLInputElement).checked).toBe(true);
+    expect([...document.querySelectorAll<HTMLInputElement>("input[name=sponsor]")].some((radio) => radio.checked)).toBe(false);
+  });
+
   it("stays off sign-in forms", () => {
     document.body.innerHTML =
       '<form><input type="email" name="email"><input type="password" autocomplete="current-password"><button>Sign in</button></form>';

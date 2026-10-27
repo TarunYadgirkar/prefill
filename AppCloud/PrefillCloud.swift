@@ -1,3 +1,4 @@
+import CloudKit
 import Foundation
 import PrefillKit
 
@@ -10,6 +11,7 @@ final class PrefillCloud {
     private let applications: ZoneSync
     private let card: ZoneSync
     private let cardFile: CloudCardCopyFile
+    private let directory: URL
 
     init(
         archive: ApplicationArchive,
@@ -20,6 +22,7 @@ final class PrefillCloud {
         let directory = archive.url.deletingLastPathComponent()
         let cardFile = CloudCardCopyFile(directory: directory)
         self.cardFile = cardFile
+        self.directory = directory
         var zone = Self.applicationsZone(
             archive: archive, receive: receiveApplications, deletedElsewhere: applicationsDeletedElsewhere
         )
@@ -61,10 +64,27 @@ final class PrefillCloud {
     }
 
     // Both zones go before anything on this device does; it throws unless iCloud confirms.
+    // Without an iCloud account Prefill may use, nothing is in iCloud, so only this device's
+    // files go. Both builds' sync state goes too.
     func deleteEverything() async throws {
-        try await card.deleteEverything()
-        try await applications.deleteEverything()
+        let inICloud = try await Self.hasICloudAccount()
+        try await card.deleteEverything(inICloud: inICloud)
+        try await applications.deleteEverything(inICloud: inICloud)
         try cardFile.removeAll()
+        for name in ["cloud-sync", "card-sync"] {
+            for suffix in ["", "-production"] {
+                try? FileManager.default.removeItem(at: directory.appending(path: "\(name)\(suffix).json"))
+            }
+        }
+    }
+
+    // A signed-in account iCloud can't answer for right now (.temporarilyUnavailable,
+    // .couldNotDetermine) may still hold a copy, so it counts as one.
+    private static func hasICloudAccount() async throws -> Bool {
+        switch try await CKContainer(identifier: ZoneSync.containerID).accountStatus() {
+        case .noAccount, .restricted: false
+        default: true
+        }
     }
 
     // CloudKit keeps its Development and Production databases apart, and a Developer ID release

@@ -60,7 +60,9 @@ extension MacModel {
 
     // "Delete Prefill data" on the iPhone, or the person removed Prefill's iCloud data.
     private func cloudCopyDeleted() {
-        try? archive.removeAll()
+        // The queue and anything else here from before the deletion never go up again.
+        try? archive.forgetAll(queued: (try? store.readEvents())?.applications ?? events.applications)
+        try? FileManager.default.removeItem(at: Self.importsDirectory)
         applications = []
     }
 }
