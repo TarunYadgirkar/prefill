@@ -9,6 +9,7 @@ import {
   inferredLabel,
   nameTexts,
   placeholderText,
+  shorten,
 } from "./dom";
 import type { FieldElement } from "./fieldTypes";
 import { onEmptied, trackGestures } from "./gesture";
@@ -121,7 +122,7 @@ export function joinFieldText(parts: readonly string[], max: number = LIMITS.fie
     .replace(/\p{Cs}/gu, " ")
     .replace(/\s+/gu, " ")
     .trim();
-  return text.slice(0, max).replace(/[\uD800-\uDBFF]$/u, "");
+  return shorten(text, max).replace(/[\uD800-\uDBFF]$/u, "");
 }
 
 const HEADINGS = "h1, h2, h3, h4, h5, h6, [role=heading], legend";

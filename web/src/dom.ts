@@ -82,8 +82,23 @@ export function mayHoldFields(node: Node): boolean {
   );
 }
 
+// Where a sentence before the question ends.
+const SENTENCE_END = /[.!?:]\s/gu;
+
+// A label longer than the limit is usually a paragraph of notice that ends in the question
+// (Akuna's work authorization question opens with its sponsorship policy), so the last
+// sentence asked is kept, with what follows it, rather than the opening words.
+export function shorten(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const end = text.lastIndexOf("?");
+  if (end < 0) return text.slice(0, max);
+  const start = [...text.slice(0, end).matchAll(SENTENCE_END)].at(-1);
+  const asked = text.slice(start === undefined ? 0 : start.index + start[0].length);
+  return asked.length < text.length ? asked.slice(0, max) : text.slice(0, max);
+}
+
 function squash(text: string): string {
-  return text.replace(/\s+/gu, " ").trim().slice(0, MAX_TEXT);
+  return shorten(text.replace(/\s+/gu, " ").trim(), MAX_TEXT);
 }
 
 // A label's own words, without the text of a select or input nested inside it.

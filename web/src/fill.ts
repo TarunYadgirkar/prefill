@@ -663,10 +663,22 @@ async function applyCombobox(input: HTMLInputElement, want: Want, values: readon
 
 const isPhoneWant = (want: Want): boolean => want.from === "contact" && want.field.kind === "phone";
 
+// A box that asks for detail ("Please provide additional detail about your sponsorship
+// needs", any text area) wants words, so a saved "Yes" or "No" doesn't answer it.
+const ASKS_DETAIL = /\b(?:detail|explain|describe|elaborate|list)/iu;
+const YES_NO = /^\s*(?:yes|no)\s*$/iu;
+
+function textChoices(slot: Extract<Slot, { control: "text" }>, choices: readonly Choice[]): readonly Choice[] {
+  if (isPhoneWant(slot.want)) return fitPhones(slot.element, choices);
+  if (slot.want.from !== "custom") return choices;
+  const wantsWords = slot.element.localName === "textarea" || ASKS_DETAIL.test(slot.want.text);
+  return wantsWords ? choices.filter(({ value }) => !YES_NO.test(value)) : choices;
+}
+
 // Fills one slot and says what it did, or undefined when nothing fit.
 function apply(slot: Slot, answers: Answers, report: Report, marks: Marks): Filled | undefined {
   const choices = choicesOf(slot.want, answers, report);
-  if (slot.control === "text") return applyText(slot.element, isPhoneWant(slot.want) ? fitPhones(slot.element, choices) : choices);
+  if (slot.control === "text") return applyText(slot.element, textChoices(slot, choices));
   const values = valuesOf(choices);
   if (slot.control === "select") return applySelect(slot.element, slot.want, values, marks);
   if (slot.control === "radio") return applyRadio(slot.inputs, slot.want, values, marks);
@@ -702,8 +714,8 @@ async function applyComboboxes(slots: readonly Slot[], answers: Answers, marks: 
 // clearly says it, or for a demographic list the option that declines.
 function hasAnswer(slot: Slot, answers: Answers): boolean {
   if (slot.control === "combobox") return slot.want.from === "decline" || choicesOf(slot.want, answers).length > 0;
+  if (slot.control === "text") return textChoices(slot, choicesOf(slot.want, answers)).length > 0;
   const values = valuesOf(choicesOf(slot.want, answers));
-  if (slot.control === "text") return values.length > 0;
   const options =
     slot.control === "select" ? [...slot.element.options].map(optionOf)
     : slot.control === "press" ? pressOptions(slot.buttons)

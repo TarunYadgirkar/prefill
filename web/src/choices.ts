@@ -134,11 +134,26 @@ const MONTH_ABBREVIATION = 3;
 // "May 2027" or "May 15, 2027": a month name, maybe a day, and a year.
 const MONTH_YEAR = /^([a-z]+)\.?\s+(?:\d{1,2},?\s+)?(\d{4})$/u;
 
+// "2028-05", "2028/05/15": a year and a month in numbers, as a date box saves them.
+const YEAR_MONTH = /^(\d{4})[-/.](\d{1,2})(?:[-/.]\d{1,2})?$/u;
+// "05/2028", "5-2028": the month first.
+const MONTH_NUMBER_YEAR = /^(\d{1,2})[-/.](\d{4})$/u;
+
+// The month name and year of a dated answer, written in words or in numbers.
+function monthAndYear(answer: string): [string | undefined, string] {
+  const said = answer.trim().toLowerCase();
+  const yearFirst = YEAR_MONTH.exec(said);
+  if (yearFirst !== null) return [MONTHS[Number(yearFirst[2]) - 1], yearFirst[1] ?? ""];
+  const monthFirst = MONTH_NUMBER_YEAR.exec(said);
+  if (monthFirst !== null) return [MONTHS[Number(monthFirst[1]) - 1], monthFirst[2] ?? ""];
+  const [, monthWord = "", year = ""] = MONTH_YEAR.exec(said) ?? [];
+  return [MONTHS.find((name) => monthWord.length >= MONTH_ABBREVIATION && name.startsWith(monthWord)), year];
+}
+
 // The ways an option may say each part of a dated answer on its own: the year, and the
 // month in full or cut to three letters.
 function dateParts(answer: string): string[] {
-  const [, monthWord = "", year = ""] = MONTH_YEAR.exec(answer.trim().toLowerCase()) ?? [];
-  const month = MONTHS.find((name) => monthWord.length >= MONTH_ABBREVIATION && name.startsWith(monthWord));
+  const [month, year] = monthAndYear(answer);
   return month === undefined ? [] : [year, month, month.slice(0, MONTH_ABBREVIATION)];
 }
 

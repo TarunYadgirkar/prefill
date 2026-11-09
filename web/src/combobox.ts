@@ -77,8 +77,22 @@ function shows(input: HTMLInputElement, text: string): boolean {
   return comboboxChoice(input) === text;
 }
 
+// Greenhouse's newer boards (job-boards.greenhouse.io) keep the list's open state outside
+// React-Select: a keyup opens it (Escape and Tab close it) and the box ignores the keydown
+// alone, so every key is pressed and let go, as a person would.
+function keyUp(input: HTMLInputElement, key: string): void {
+  input.dispatchEvent(new KeyboardEvent("keyup", { key, code: key, bubbles: true, cancelable: true }));
+}
+
 function press(input: HTMLInputElement, key: string): void {
-  input.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+  input.dispatchEvent(new KeyboardEvent("keydown", { key, code: key, bubbles: true, cancelable: true }));
+  keyUp(input, key);
+}
+
+// Typing ends on a key let go too, which is what opens Greenhouse's list for the search.
+function type(input: HTMLInputElement, text: string): void {
+  fillField(input, text);
+  keyUp(input, text.at(-1) ?? "Unidentified");
 }
 
 function click(element: HTMLElement): void {
@@ -93,7 +107,7 @@ async function openAndChoose(
   search?: string,
 ): Promise<HTMLElement | undefined> {
   if (search === undefined) press(input, "ArrowDown");
-  else fillField(input, search);
+  else type(input, search);
   const elements = await waitForOptions(input);
   const options = elements.map((element) => ({ text: element.textContent.trim(), value: element.id }));
   return elements[choose(options)];
