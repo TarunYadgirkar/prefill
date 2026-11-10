@@ -1,12 +1,10 @@
-import AuthenticationServices
 import SwiftUI
 
-// Prefill outside Safari: long-press AutoFill (the AutoFill extension) and the Prefill keyboard.
-// How to turn each on, and whether it's on: iOS reports AutoFill's state, and the keyboard
-// notes each time it's shown.
+// Prefill outside Safari: the Prefill keyboard. How to turn it on, and whether it's on: the
+// keyboard notes each time it's shown. Long-press AutoFill (AutoFill/) isn't offered: on a
+// device the picked text never lands in the field.
 struct KeyboardScreen: View {
     @Environment(AppModel.self) private var model
-    @State private var isAutoFillOn = false
 
     private static let steps: [LocalizedStringKey] = [
         "Open Settings › General › Keyboard › Keyboards › Add New Keyboard, and choose Prefill.",
@@ -16,7 +14,6 @@ struct KeyboardScreen: View {
 
     var body: some View {
         Form {
-            autoFillSection
             Section {
                 Text("""
                     The Prefill keyboard lists your saved emails, phone numbers, links and answers in any app. \
@@ -47,50 +44,6 @@ struct KeyboardScreen: View {
         .navigationTitle("Use Prefill in other apps")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { model.readKeyboardSeen() }
-        .task { await readAutoFill() }
-    }
-
-    private var autoFillSection: some View {
-        Section {
-            Text("""
-                Long-press a text field in any app, choose AutoFill, then Prefill, and pick what to \
-                insert. No Full Access needed.
-                """)
-            .textRole(.body)
-            LabeledContent {
-                Text(isAutoFillOn ? "On" : "Off")
-            } label: {
-                Label {
-                    Text("AutoFill with Prefill")
-                } icon: {
-                    StatusMark(isDone: isAutoFillOn)
-                }
-            }
-            .accessibilityIdentifier("autofill-status")
-            if !isAutoFillOn {
-                Button {
-                    Task { await turnOnAutoFill() }
-                } label: {
-                    Label("Turn on AutoFill", systemImage: "text.cursor")
-                }
-            }
-        } header: {
-            Text("Long-press AutoFill").textRole(.groupHeader)
-        }
-    }
-
-    private func readAutoFill() async {
-        isAutoFillOn = await ASCredentialIdentityStore.shared.state().isEnabled
-    }
-
-    // iOS asks in place where it can; otherwise it opens the AutoFill settings for Prefill.
-    private func turnOnAutoFill() async {
-        if await ASSettingsHelper.requestToTurnOnCredentialProviderExtension() {
-            isAutoFillOn = true
-            return
-        }
-        try? await ASSettingsHelper.openCredentialProviderAppSettings()
-        await readAutoFill()
     }
 
     private var statusSection: some View {
