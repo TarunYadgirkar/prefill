@@ -65,12 +65,15 @@ final class GoogleAccount {
     }
 
     // Ends the sign-in at Google, best effort, and forgets the token here.
-    func signOut() {
+    // False when the token is still in the keychain.
+    @discardableResult
+    func signOut() -> Bool {
         tokens = nil
         if let refresh = Self.storedRefreshToken() {
             Task.detached { _ = try? await URLSession.shared.data(for: GoogleSheets.revokeRequest(token: refresh)) }
         }
-        SecItemDelete(Self.query() as CFDictionary)
+        let status = SecItemDelete(Self.query() as CFDictionary)
+        return status == errSecSuccess || status == errSecItemNotFound
     }
 
     // A call to Google with the current token; a 401 means the cached token was revoked, so

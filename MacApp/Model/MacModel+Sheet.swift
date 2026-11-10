@@ -23,7 +23,8 @@ extension MacModel {
         } catch {
             Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
             sheetProblem = Self.sheetMessage(error)
-            sheetNeedsSignIn = sheet.spreadsheet != nil && error as? GoogleSheets.Failure == .signInNeeded
+            let failure = error as? GoogleSheets.Failure
+            sheetNeedsSignIn = sheet.spreadsheet != nil && (failure == .signInNeeded || failure == .refused(404))
         }
     }
 
@@ -118,6 +119,9 @@ extension MacModel {
     private static func sheetMessage(_ error: any Error) -> String {
         if error as? GoogleSheets.Failure == .signInNeeded {
             return String(localized: "Google needs you to sign in again. Your sheet stays as it is.")
+        }
+        if case GoogleSheets.Failure.refused(404) = error {
+            return String(localized: "This Google account can’t open your sheet. Sign in with the one that made it.")
         }
         if case GoogleSheets.Failure.refused(let status) = error {
             return String(localized: "Google turned the applications away (error \(status)). Prefill tries later.")
