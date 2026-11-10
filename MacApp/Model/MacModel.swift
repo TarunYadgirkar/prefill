@@ -17,10 +17,10 @@ final class MacModel {
 
     static let shared = MacModel()
     private static let loginItemKey = "registeredLoginItem"
-    private static let heardFromExtensionKey = "heardFromExtension"
+    static let heardFromExtensionKey = "heardFromExtension"
     private static let skippedExtensionKey = "skippedExtension"
     private static let heardBrowsersKey = "heardBrowsers"
-    private static let seenWelcomeKey = "seenWelcome"
+    static let seenWelcomeKey = "seenWelcome"
 
     private(set) var access = Access.notDetermined
     private(set) var card: CardRecord?
@@ -206,6 +206,7 @@ final class MacModel {
     func setApplications(_ merged: [SubmittedApplication]) {
         cloud?.sendApplications(ApplicationArchive.changed(from: applications, to: merged))
         applications = merged
+        Task { await askAboutOffers() }
         Task { await sendToSheet() }
     }
 

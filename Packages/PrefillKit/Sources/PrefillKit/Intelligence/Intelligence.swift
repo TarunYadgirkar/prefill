@@ -12,7 +12,7 @@ public enum IntelligenceState: Sendable, Hashable {
 // iPhone. Every call falls back to the rules: Apple Intelligence off, still downloading,
 // an older iPhone, a guardrail or any other model error all end in the rules' answer.
 // v1 calls it from the app only, never from the Safari handler. Prompts are never logged.
-public actor Intelligence: AnswerJudging {
+public actor Intelligence: AnswerJudging, OfferJudging {
     // An actor-free answer to which model produced a cached result, so a new model asks again.
     public nonisolated static var modelVariant: String {
         #if canImport(FoundationModels)
@@ -79,6 +79,20 @@ public actor Intelligence: AnswerJudging {
         #endif
     }
 
+    // Whether an answer the person gave on one form is one they would give again on another,
+    // with a short name for it. Nil when it's a one-off, or the model can't run.
+    public func reusableLabel(question: String, answer: String) async -> String? {
+        #if canImport(FoundationModels)
+        let prompt = "Question: \(question)\nAnswer: \(String(answer.prefix(100)))"
+        guard let reply = await ask(ReusableAnswer.self, instructions: Prompts.reuseInstructions, prompt: prompt),
+              reply.verdict == "reusable" else { return nil }
+        let name = reply.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return name.isEmpty || name.lowercased() == "none" ? nil : name
+        #else
+        return nil
+        #endif
+    }
+
     private func modelLabel(address: String, host: String) async -> SuggestedLabel? {
         #if canImport(FoundationModels)
         let prompt = "Email address: \(address)\nWebsite: \(Normalizer.registrableDomain(host))"
@@ -138,6 +152,18 @@ private enum Prompts {
         "Can you work in Canada?" with Work authorization (US) is needsNew.
         """
 
+    static let reuseInstructions = """
+        A questionnaire asked a question and a person answered it. Decide whether the answer is \
+        a fact about the person that stays the same on other questionnaires, or is written for \
+        this one only. Reply reusable with a name of one to four words for the fact. Reply \
+        oneOff when the answer is about this organization, this role or this date, or is a \
+        sentence written for the occasion. Reply unsure when you can't tell.
+        Examples: "How many years of experience do you have with Python?" answered "3" is \
+        reusable, Python experience. "Why do you want to join us?" is oneOff. \
+        "When can you start?" answered "June 2027" is reusable, Start date. \
+        "Which office do you prefer?" answered "Austin" is oneOff.
+        """
+
     static func answerPrompt(_ question: AnswerQuestion, candidates: [AnswerCandidate]) -> String {
         var lines = ["Question: \(question.text)"]
         if let heading = question.heading { lines.append("Section: \(heading)") }
@@ -177,6 +203,14 @@ private struct AnswerChoice {
     @Guide(.anyOf(["use", "needsNew", "unsure"]))
     let verdict: String
     @Guide(description: "With use, the name of the saved answer; otherwise none")
+    let name: String
+}
+
+@Generable
+private struct ReusableAnswer {
+    @Guide(.anyOf(["reusable", "oneOff", "unsure"]))
+    let verdict: String
+    @Guide(description: "With reusable, a name of one to four words for the fact; otherwise none")
     let name: String
 }
 

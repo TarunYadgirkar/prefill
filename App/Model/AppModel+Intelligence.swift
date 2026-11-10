@@ -17,20 +17,19 @@ extension AppModel {
 
     func refreshInsights() async {
         guard intelligenceState == .available, !isAskingModel else { return }
-        let items = unlabeledItems
-        let hosts = unplacedHosts
-        let questions = unansweredQuestions
-        guard !items.isEmpty || !hosts.isEmpty || !questions.isEmpty else { return }
         isAskingModel = true
         defer { isAskingModel = false }
         await intelligence.prewarm()
-        let labels = await askLabels(items)
-        let (siteAnswers, kinds) = await askSiteKinds(hosts)
+        let labels = await askLabels(unlabeledItems)
+        let (siteAnswers, kinds) = await askSiteKinds(unplacedHosts)
         let guesses = await AnswerGuessing.ask(
-            questions, fields: customFields, judge: intelligence, variant: Intelligence.modelVariant
+            unansweredQuestions, fields: customFields, judge: intelligence, variant: Intelligence.modelVariant
         )
-        guard !labels.isEmpty || !siteAnswers.isEmpty || !guesses.isEmpty else { return }
-        commit(state.recording(labels + siteAnswers + guesses, siteKinds: kinds))
+        // Which answers from the applications sent lately are worth offering to keep.
+        let offers = await AnswerOffers.ask(offerSource, judge: intelligence)
+        let answers = labels + siteAnswers + guesses + offers
+        guard !answers.isEmpty else { return }
+        commit(state.recording(answers, siteKinds: kinds))
     }
 
     private var workDomains: Set<String> { SiteSense.workDomains(state.values) }

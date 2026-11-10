@@ -1,17 +1,20 @@
 import Foundation
 import PrefillKit
 
-// What needs the person: a value Prefill wasn't sure about, an answer a form changed, or the
-// on-device model's guess at a question, to confirm before Fill form uses it. Routine saves
+// What needs the person: a value Prefill wasn't sure about, an answer a form changed, the
+// on-device model's guess at a question, to confirm before Fill form uses it, or an answer
+// from an application they sent, to save or not. Routine saves
 // and picks aren't here; they're in each answer's history on the You tab.
 enum InboxEntry: Identifiable, Hashable {
     case changed(LearnedAnswer, CustomField)
     case guess(GuessToConfirm)
+    case offer(AnswerOffer)
 
     var id: String {
         switch self {
         case .changed(let answer, _): "changed-\(answer.id)"
         case .guess(let guess): "guess-\(guess.question.text)"
+        case .offer(let offer): "offer-\(offer.id)"
         }
     }
 
@@ -19,6 +22,7 @@ enum InboxEntry: Identifiable, Hashable {
         switch self {
         case .changed(let answer, _): answer.date
         case .guess(let guess): guess.question.date
+        case .offer(let offer): offer.date
         }
     }
 }
@@ -47,7 +51,29 @@ extension AppModel {
             guard answer.previous != nil, !seenChanges.contains(answer.id.uuidString) else { return nil }
             return customFields.first(where: answer.matches).map { InboxEntry.changed(answer, $0) }
         }
-        return (changed + guessesToConfirm.map(InboxEntry.guess)).sorted { $0.date > $1.date }
+        let entries = changed + guessesToConfirm.map(InboxEntry.guess) + answerOffers.map(InboxEntry.offer)
+        return entries.sorted { $0.date > $1.date }
+    }
+
+    // Answers from applications sent lately that Prefill could keep, each waiting for Save.
+    var answerOffers: [AnswerOffer] {
+        AnswerOffers.offers(offerSource)
+    }
+
+    var offerSource: AnswerOffers.Source {
+        AnswerOffers.Source(
+            applications: applications, fields: customFields, state: state, variant: Intelligence.modelVariant,
+            now: .now
+        )
+    }
+
+    func save(_ offer: AnswerOffer) async {
+        guard let reason = await saveCustomField(offer.field, replacing: nil) else { return }
+        problem = Problem(title: String(localized: "Prefill couldn’t save that answer"), message: reason)
+    }
+
+    func dismiss(_ offer: AnswerOffer) {
+        commit(state.dismissing(offer))
     }
 
     // The guesses still to confirm, one per question and per answer on each site.

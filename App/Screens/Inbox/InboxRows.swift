@@ -148,3 +148,37 @@ struct GuessRow: View {
             .accessibilityIdentifier("inbox-reject-guess")
     }
 }
+
+// An answer from an application the person sent. It is saved only when they say Save.
+struct OfferRow: View {
+    @Environment(AppModel.self) private var model
+    let offer: AnswerOffer
+
+    var body: some View {
+        InboxRowFrame(mark: .waiting, line: line) {
+            VStack(alignment: .leading, spacing: Spacing.hairline) {
+                Text(verbatim: offer.field.label).textRole(.valueCaption)
+                Text(offer.field.value).textRole(.value).fixedSize(horizontal: false, vertical: true)
+            }
+        } actions: {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: Spacing.small) { buttons }
+                VStack(alignment: .leading, spacing: Spacing.small) { buttons }
+            }
+        }
+        .accessibilityIdentifier("offer-\(offer.field.label)")
+    }
+
+    private var line: Text {
+        Text("You answered this on \(offer.host.breakableAtPunctuation). Save it for other forms?")
+    }
+
+    @ViewBuilder private var buttons: some View {
+        Button("Save") { Task { await model.save(offer) } }
+            .prefillButtonStyle(.rowPrimary)
+            .accessibilityIdentifier("inbox-save-offer")
+        Button("Don’t save") { model.dismiss(offer) }
+            .prefillButtonStyle(.rowSecondary)
+            .accessibilityIdentifier("inbox-dismiss-offer")
+    }
+}

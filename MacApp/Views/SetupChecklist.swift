@@ -1,19 +1,23 @@
 import AppKit
 import SwiftUI
 
-// Which first-run steps are done. Accessibility isn't needed while "Suggest in every app" is
-// off, and the browser step counts once Safari's extension is on, a browser has talked to
-// Prefill, or the person skipped it.
+// Which first-run steps are done. Accessibility is a step only while "Suggest in every app" is
+// on (it is off on a new install), and the browser step counts once Safari's extension is on,
+// a browser has talked to Prefill, or the person skipped it.
 struct SetupProgress {
     let hasContacts: Bool
+    let needsAccessibility: Bool
     let hasAccessibility: Bool
     let hasExtension: Bool
 
-    var isComplete: Bool { hasContacts && hasAccessibility && hasExtension }
-    var doneCount: Int { [hasContacts, hasAccessibility, hasExtension].count { $0 } }
+    private var steps: [Bool] { [hasContacts, hasExtension] + (needsAccessibility ? [hasAccessibility] : []) }
+    var isComplete: Bool { steps.allSatisfy { $0 } }
+    var doneCount: Int { steps.count { $0 } }
+    var stepCount: Int { steps.count }
 
     @MainActor init(model: MacModel, engine: AutofillEngine) {
         hasContacts = model.access == .granted
+        needsAccessibility = engine.isEnabled
         hasAccessibility = model.isAccessibilityTrusted || !engine.isEnabled
         hasExtension = model.isSafariExtensionOn || model.hasHeardFromExtension || model.skippedExtension
     }
@@ -28,14 +32,16 @@ struct SetupChecklist: View {
             HStack(alignment: .firstTextBaseline) {
                 Text("Set up Prefill").font(.headline)
                 Spacer()
-                Text("\(progress.doneCount) of 3 done")
+                Text("\(progress.doneCount) of \(progress.stepCount) done")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .monospacedDigit()
             }
             SetupItem(title: "Allow Contacts", isDone: progress.hasContacts) { ContactsStep() }
             SetupItem(title: "Turn on Prefill in Safari", isDone: progress.hasExtension) { BrowserStep() }
-            SetupItem(title: "Turn on Accessibility", isDone: progress.hasAccessibility) { AccessibilityStep() }
+            if progress.needsAccessibility {
+                SetupItem(title: "Turn on Accessibility", isDone: progress.hasAccessibility) { AccessibilityStep() }
+            }
         }
         .rechecksSetup()
     }
@@ -134,8 +140,8 @@ struct BrowserStep: View {
             Button("Open Safari settings") { SafariExtension.openSettings() }
             if hasChromium {
                 Text("""
-                    In Chrome or Arc, add Prefill's extension. Without it Prefill suggests values for text \
-                    fields there, but saves no new answers and records no applications.
+                    In Chrome or Arc, add Prefill's extension. It is how Prefill fills forms there, saves \
+                    new answers and records applications.
                     """)
                 .foregroundStyle(.secondary)
                 DisclosureGroup("Add the extension to Chrome or Arc") { ChromeExtensionHelp() }

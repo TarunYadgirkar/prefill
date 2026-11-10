@@ -94,7 +94,7 @@ struct ScopedAnswerTests {
             original: Alex.card, snapshotAt: .daysAgo(30)
         )
         let store = MemoryStore(AppState(values: Alex.allValues, cardLink: link))
-        return MessageRouter(store: store, gateway: gateway, now: { .testNow })
+        return MessageRouter(store: store, gateway: gateway, now: { .testNow }, addsLearnedAnswers: true)
     }
 
     private func learn(_ value: String, _ text: String?, host: String = "jobs.lever.co") -> AnswersRequest {
@@ -181,7 +181,7 @@ struct ScopedAnswerTests {
             original: Alex.card, snapshotAt: .daysAgo(30)
         )
         let store = MemoryStore(AppState(values: Alex.allValues, cardLink: link))
-        let router = MessageRouter(store: store, gateway: gateway, now: { .testNow })
+        let router = MessageRouter(store: store, gateway: gateway, now: { .testNow }, addsLearnedAnswers: true)
         _ = router.answers(learn("Yes", Self.usText))
         let pick = PickedRequest(host: "jobs.example.ca", kind: .custom, value: "Yes", question: Self.canadaText)
         _ = router.picked(pick)

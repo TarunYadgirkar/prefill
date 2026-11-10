@@ -13,7 +13,7 @@ struct AskBeforeUpdateTests {
             original: Alex.card, snapshotAt: .daysAgo(30)
         )
         let store = MemoryStore(AppState(values: Alex.allValues, cardLink: link))
-        return (MessageRouter(store: store, gateway: gateway, now: { .testNow }), store)
+        return (MessageRouter(store: store, gateway: gateway, now: { .testNow }, addsLearnedAnswers: true), store)
     }
 
     private func request(_ action: AnswersRequest.Action, _ school: String, changed: Bool = true) -> AnswersRequest {

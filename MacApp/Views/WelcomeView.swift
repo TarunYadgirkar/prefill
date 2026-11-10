@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-// The window a new install opens on: the three setup steps, each checking itself, with the
+// The window a new install opens on: the setup steps, each checking itself, with the
 // menu bar icon pointed out so the person knows where Prefill lives afterwards.
 struct WelcomeView: View {
     @Environment(MacModel.self) private var model
@@ -15,8 +15,10 @@ struct WelcomeView: View {
             VStack(alignment: .leading, spacing: Spacing.medium) {
                 SetupItem(title: "1. Allow Contacts", isDone: progress.hasContacts) { ContactsStep() }
                 SetupItem(title: "2. Turn on Prefill in Safari", isDone: progress.hasExtension) { BrowserStep() }
-                SetupItem(title: "3. Turn on Accessibility for other apps", isDone: progress.hasAccessibility) {
-                    AccessibilityStep()
+                if progress.needsAccessibility {
+                    SetupItem(title: "3. Turn on Accessibility for other apps", isDone: progress.hasAccessibility) {
+                        AccessibilityStep()
+                    }
                 }
             }
             HStack {
