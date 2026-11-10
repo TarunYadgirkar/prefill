@@ -26,7 +26,7 @@ struct MenuContent: View {
             Divider()
             AutofillSection(explainsAccess: setup.isComplete)
             Divider()
-            BrowserList(browsers: model.browsers.filter(\.isInstalled))
+            BrowserList(browsers: model.browsers.filter(\.isInstalled), heard: model.heardBrowsers)
             Divider()
             HStack {
                 OpenSettingsButton()

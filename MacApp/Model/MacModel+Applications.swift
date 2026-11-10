@@ -70,3 +70,19 @@ extension MacModel {
         }
     }
 }
+
+extension MacModel {
+    // For "Delete Prefill data", after iCloud's copy is gone. Every step runs even when one
+    // fails, so a retry has less left to do. False when something is still on this Mac.
+    func deleteFiles() -> Bool {
+        let steps: [() throws -> Void] = [
+            { [google] in if !google.signOut() { throw CocoaError(.fileWriteUnknown) } },
+            archive.removeAll, sheetFile.removeAll, store.removeAll,
+            {
+                guard FileManager.default.fileExists(atPath: Self.importsDirectory.path) else { return }
+                try FileManager.default.removeItem(at: Self.importsDirectory)
+            }
+        ]
+        return steps.count { (try? $0()) == nil } == 0
+    }
+}

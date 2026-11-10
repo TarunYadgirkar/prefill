@@ -72,8 +72,6 @@ targets:
         embed: true
       - target: PrefillKeyboard
         embed: true
-      - target: PrefillAutoFill
-        embed: true
   PrefillSafari:
     type: app-extension
     platform: iOS
@@ -128,6 +126,7 @@ targets:
       - package: PrefillKit
   # Prefill in iOS's long-press AutoFill menu (text insertion only). It reads the keyboard's
   # snapshot from the keyboard's App Group and nothing else.
+  # Not embedded in the app: on a device the picked text never lands in the field.
   PrefillAutoFill:
     type: app-extension
     platform: iOS

@@ -28,7 +28,7 @@ struct SettingsView: View {
             SharingSection()
             SheetSection()
             Section {
-                BrowserList(browsers: model.browsers.filter(\.isInstalled))
+                BrowserList(browsers: model.browsers.filter(\.isInstalled), heard: model.heardBrowsers)
                 ExtensionFolder()
             } header: {
                 Text("Browsers")

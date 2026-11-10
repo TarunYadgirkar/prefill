@@ -9,6 +9,8 @@ struct BrowserHost: Identifiable, Sendable, Hashable {
     let name: String
     // Relative to ~/Library/Application Support; the browser's own folder, which shows it's installed.
     let folder: String
+    // Lowercased, as ExtensionPresence keeps it.
+    let bundleID: String
     var isInstalled = false
     var hasHost = false
 
@@ -23,11 +25,11 @@ enum HostInstaller {
     private static let log = PrefillLog.logger("hosts")
 
     static let browsers = [
-        BrowserHost(name: "Chrome", folder: "Google/Chrome"),
-        BrowserHost(name: "Arc", folder: "Arc/User Data"),
-        BrowserHost(name: "Brave", folder: "BraveSoftware/Brave-Browser"),
-        BrowserHost(name: "Edge", folder: "Microsoft Edge"),
-        BrowserHost(name: "Chromium", folder: "Chromium")
+        BrowserHost(name: "Chrome", folder: "Google/Chrome", bundleID: "com.google.chrome"),
+        BrowserHost(name: "Arc", folder: "Arc/User Data", bundleID: "company.thebrowser.browser"),
+        BrowserHost(name: "Brave", folder: "BraveSoftware/Brave-Browser", bundleID: "com.brave.browser"),
+        BrowserHost(name: "Edge", folder: "Microsoft Edge", bundleID: "com.microsoft.edgemac"),
+        BrowserHost(name: "Chromium", folder: "Chromium", bundleID: "org.chromium.chromium")
     ]
 
     static func manifest(hostPath: String) -> Data {

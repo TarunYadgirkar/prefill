@@ -4,13 +4,13 @@ import UIKit
 
 // The Prefill keyboard. It reads the values the app shares through the keychain group (or
 // the App Group), types the one the person taps and hands them back to their own keyboard.
-// It has no network code and writes only when it was last shown (to the shared store) and
-// its own recent picks (to its own defaults).
+// It has no network code and writes only when it was last shown and its own recent picks,
+// both to the shared store.
 final class KeyboardViewController: UIInputViewController {
     private let share = KeyboardShare.make()
     private var host: UIHostingController<KeyboardPanel>?
     private var snapshot: KeyboardSnapshot?
-    private let picks = KeyboardPicks()
+    private lazy var picks = KeyboardPicks(share: share)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +66,7 @@ final class KeyboardViewController: UIInputViewController {
         KeyboardContext(
             before: textDocumentProxy.documentContextBeforeInput ?? "",
             hint: FieldTraits.hint(textDocumentProxy),
-            recentPicks: picks.recents.ids
+            recentPicks: picks.recents(hasFullAccess: hasFullAccess).ids
         )
     }
 
@@ -83,7 +83,7 @@ final class KeyboardViewController: UIInputViewController {
         let replaced = context.replacedLength(for: value)
         for _ in 0..<replaced { textDocumentProxy.deleteBackward() }
         textDocumentProxy.insertText(value.text)
-        picks.record(value.id)
+        picks.record(value.id, hasFullAccess: hasFullAccess)
         advanceToNextInputMode()
     }
 }

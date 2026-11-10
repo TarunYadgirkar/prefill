@@ -23,6 +23,16 @@ struct SheetSection: View {
                 if let spreadsheet = model.sheet.spreadsheet, spreadsheet.isValid {
                     Link("Open “\(GoogleSheets.title)”", destination: spreadsheet.url)
                 }
+                if model.sheetNeedsSignIn {
+                    Button(isConnecting ? "Waiting for Google…" : "Sign in again") {
+                        isConnecting = true
+                        Task {
+                            await model.signInToGoogleAgain()
+                            isConnecting = false
+                        }
+                    }
+                    .disabled(isConnecting)
+                }
                 Toggle("Send applications", isOn: sendsApplications)
                 LabeledContent("Waiting to send", value: model.sheet.waiting(model.applications).count.formatted())
                 if let lastSent = model.sheet.lastSent {

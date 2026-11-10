@@ -18,10 +18,13 @@ extension MacModel {
             sheet.listed.formUnion(listed)
             sheet.lastSent = .now
             sheetProblem = nil
+            sheetNeedsSignIn = false
             saveSheet()
         } catch {
             Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
             sheetProblem = Self.sheetMessage(error)
+            let failure = error as? GoogleSheets.Failure
+            sheetNeedsSignIn = sheet.spreadsheet != nil && (failure == .signInNeeded || failure == .refused(404))
         }
     }
 
@@ -32,8 +35,32 @@ extension MacModel {
     private func sendToGoogle() async throws -> Set<UUID> {
         guard let spreadsheet = sheet.spreadsheet, spreadsheet.isValid else { return [] }
         let waiting = sheet.waiting(applications)
-        _ = try await google.send { GoogleSheets.appendRequest(waiting, to: spreadsheet.id, token: $0) }
+        // What the sheet already lists is read first, so a send Google took but never answered,
+        // or a lost settings file, adds no row twice.
+        let found = try GoogleSheets.listing(
+            from: await google.send { GoogleSheets.listingRequest(spreadsheet.id, token: $0) }
+        )
+        let missing = waiting.filter { !found.ids.contains($0.id) }
+        if !missing.isEmpty {
+            _ = try await google.send {
+                GoogleSheets.appendRequest(missing, to: spreadsheet.id, tab: found.tab, token: $0)
+            }
+        }
         return Set(waiting.map(\.id))
+    }
+
+    // Google asked for the sign-in again (a revoked or expired grant). The sheet and what it
+    // already lists stay, so nothing starts over.
+    func signInToGoogleAgain() async {
+        do {
+            try await google.signIn()
+            sheetNeedsSignIn = false
+            sheetProblem = nil
+            await sendToSheet()
+        } catch {
+            Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
+            sheetProblem = Self.sheetMessage(error)
+        }
     }
 
     // Signs in with Google, creates the "Job Applications" sheet in the person's Drive and sends
@@ -48,6 +75,7 @@ extension MacModel {
             sheet.isOn = true
             saveSheet()
             sheetProblem = nil
+            sheetNeedsSignIn = false
             await sendToSheet()
         } catch {
             Self.sheetLog.error("sheet: \(String(describing: error), privacy: .public)")
@@ -76,6 +104,7 @@ extension MacModel {
         google.signOut()
         sheet = SheetSettings()
         sheetProblem = nil
+        sheetNeedsSignIn = false
         try? sheetFile.removeAll()
     }
 
@@ -89,7 +118,10 @@ extension MacModel {
 
     private static func sheetMessage(_ error: any Error) -> String {
         if error as? GoogleSheets.Failure == .signInNeeded {
-            return String(localized: "Google needs you to sign in again. Choose Connect Google Sheets.")
+            return String(localized: "Google needs you to sign in again. Your sheet stays as it is.")
+        }
+        if case GoogleSheets.Failure.refused(404) = error {
+            return String(localized: "This Google account can’t open your sheet. Sign in with the one that made it.")
         }
         if case GoogleSheets.Failure.refused(let status) = error {
             return String(localized: "Google turned the applications away (error \(status)). Prefill tries later.")

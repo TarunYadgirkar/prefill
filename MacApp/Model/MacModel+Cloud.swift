@@ -32,7 +32,8 @@ extension MacModel {
         #endif
     }
 
-    // False when iCloud couldn't be reached, so "Delete Prefill data" deletes nothing.
+    // False when iCloud couldn't confirm, so "Delete Prefill data" leaves this Mac alone.
+    // One of the two iCloud zones may already be gone by then; deleting again finishes it.
     func deleteCloudCopy() async -> Bool {
         guard let cloud else { return true }
         do {
@@ -41,7 +42,9 @@ extension MacModel {
             return true
         } catch {
             problem = String(
-                localized: "iCloud couldn’t be reached, so nothing was deleted. Check you’re online and try again."
+                localized: """
+                    iCloud couldn’t confirm, so nothing on this Mac was deleted. Check you’re online and delete again.
+                    """
             )
             return false
         }

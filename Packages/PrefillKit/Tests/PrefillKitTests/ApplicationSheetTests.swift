@@ -110,9 +110,33 @@ struct GoogleSheetsTests {
             request: ApplicationRequest(host: "jobs.ashbyhq.com", path: "/notion/apply", title: "Intern @ Notion",
                                         fields: [], files: [])
         )
-        let request = GoogleSheets.appendRequest([application], to: "S", token: "a2")
-        #expect(request.url?.path() == "/v4/spreadsheets/S/values/Applications!A1:append")
-        let body = try JSONSerialization.jsonObject(with: try #require(request.httpBody)) as? [String: [[String]]]
-        #expect(body?["values"]?.first?[1] == "Notion")
+        let request = GoogleSheets.appendRequest([application], to: "S", tab: 7, token: "a2")
+        #expect(request.url?.path() == "/v4/spreadsheets/S:batchUpdate")
+        let body = try JSONSerialization.jsonObject(with: try #require(request.httpBody)) as? [String: Any]
+        let append = ((body?["requests"] as? [[String: Any]])?.first?["appendCells"]) as? [String: Any]
+        #expect(append?["sheetId"] as? Int == 7)
+        let cells = ((append?["rows"] as? [[String: Any]])?.first?["values"]) as? [[String: Any]]
+        #expect((cells?[1]["userEnteredValue"] as? [String: String])?["stringValue"] == "Notion")
+        #expect(cells?[0]["note"] as? String == "Prefill \(application.id.uuidString)")
+        #expect(cells?[1]["note"] == nil)
+    }
+
+    // A send that timed out after Google took the rows finds them listed and adds nothing twice.
+    @Test func theListingReadsTheIdsTheSheetAlreadyHoldsAndItsTab() throws {
+        let id = UUID()
+        let answer = """
+            {"sheets":[{"properties":{"sheetId":3,"title":"Other"}},
+            {"properties":{"sheetId":9,"title":"Applications"},"data":[{"rowData":[{"values":[{}]},
+            {"values":[{"note":"Prefill \(id.uuidString)"}]},{},{"values":[{"note":"my own note"}]}]}]}]}
+            """
+        let listing = try GoogleSheets.listing(from: Data(answer.utf8))
+        #expect(listing == GoogleSheets.Listing(tab: 9, ids: [id]))
+        let renamed = #"{"sheets":[{"properties":{"title":"Jobs"}}]}"#
+        #expect(try GoogleSheets.listing(from: Data(renamed.utf8)) == GoogleSheets.Listing(tab: 0, ids: []))
+        let empty = Data(#"{"sheets":[]}"#.utf8)
+        #expect(throws: GoogleSheets.Failure.unreadable) { try GoogleSheets.listing(from: empty) }
+        let request = GoogleSheets.listingRequest("S", token: "a2")
+        #expect(request.httpMethod == "GET")
+        #expect(request.url?.query()?.contains("note") == true)
     }
 }

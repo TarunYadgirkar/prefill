@@ -28,6 +28,7 @@ enum StoreDocument: String, CaseIterable {
     case events = "ext-events"
     case keyboardValues = "keyboard-values"
     case keyboardSeen = "keyboard-seen"
+    case keyboardPicks = "keyboard-picks"
 }
 
 enum StoreLog {
