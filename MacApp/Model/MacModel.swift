@@ -206,6 +206,7 @@ final class MacModel {
     func setApplications(_ merged: [SubmittedApplication]) {
         cloud?.sendApplications(ApplicationArchive.changed(from: applications, to: merged))
         applications = merged
+        Task { await askAboutOffers() }
         Task { await sendToSheet() }
     }
 

@@ -2,8 +2,8 @@ import PrefillKit
 import SwiftUI
 
 // Only what needs the person: values Prefill wasn't sure about, then, newest first, answers a
-// form changed and the on-device model's guesses to confirm. Routine saves and picks go to
-// each answer's history on the You tab.
+// form changed, the on-device model's guesses to confirm and answers from applications to
+// save. Routine saves and picks go to each answer's history on the You tab.
 struct InboxScreen: View {
     @Environment(AppModel.self) private var model
 
@@ -14,8 +14,8 @@ struct InboxScreen: View {
                     EmptyStateView(
                         title: "Nothing new", systemImage: "tray",
                         message: Text("""
-                            Prefill saves what you type into forms. Anything it isn’t sure about, \
-                            or an answer a form changed, shows up here.
+                            Answers from applications you send show up here for you to save, with \
+                            anything Prefill isn’t sure about.
                             """)
                     )
                 } else {
@@ -76,6 +76,7 @@ private struct InboxList: View {
         switch entry {
         case .changed(let answer, let field): ChangedRow(answer: answer, field: field) { editing = field }
         case .guess(let guess): GuessRow(guess: guess)
+        case .offer(let offer): OfferRow(offer: offer)
         }
     }
 }

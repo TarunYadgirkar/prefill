@@ -11,7 +11,7 @@ struct AnswerTests {
             original: Alex.card, snapshotAt: .daysAgo(30)
         )
         let store = MemoryStore(AppState(values: Alex.allValues, cardLink: link))
-        return (MessageRouter(store: store, gateway: gateway, now: { date }), store)
+        return (MessageRouter(store: store, gateway: gateway, now: { date }, addsLearnedAnswers: true), store)
     }
 
     private let applied = AnswersRequest(host: "boards.example.io", action: .learn, answers: [
@@ -31,6 +31,17 @@ struct AnswerTests {
         #expect(try store.readEvents().answers.map(\.value) == applied.answers.map(\.value))
         #expect(router.answers(applied) == AnswersResponse(saved: 0))
         #expect(gateway.card.customFields.count == 3)
+    }
+
+    // The apps offer them in the Inbox instead (AnswerOffers).
+    @Test func aPagesSubmitNoLongerAddsAnswersByItself() {
+        let store = MemoryStore(AppState(values: Alex.allValues, cardLink: CardLink(
+            contactIdentifier: Alex.card.identifier, containerIdentifier: nil, linkedIdentifiers: [],
+            original: Alex.card, snapshotAt: .daysAgo(30)
+        )))
+        let router = MessageRouter(store: store, gateway: gateway, now: { .testNow })
+        #expect(router.answers(applied) == AnswersResponse(saved: 0))
+        #expect(gateway.card.customFields.isEmpty)
     }
 
     @Test func aLaterAnswerReplacesALearnedOneAndUndoPutsItBack() throws {

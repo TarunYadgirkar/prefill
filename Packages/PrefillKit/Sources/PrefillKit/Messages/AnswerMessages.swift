@@ -106,6 +106,8 @@ struct LearnLimits {
     let asks: Bool
     // Answers the person kept on this site, by `key`.
     let kept: Set<String>
+    // Whether a question without an answer gets one (`MessageRouter.addsLearnedAnswers`).
+    let adds: Bool
 
     static func key(_ label: String, _ value: String) -> String {
         "\(label.lowercased())\u{1F}\(value)"
@@ -150,7 +152,8 @@ extension MessageRouter {
         let site = Normalizer.registrableDomain(request.host)
         let limits = LearnLimits(
             budget: Self.maxAnswersPerWindow - recent, replacedToday: replacedToday, asks: request.action == .learn,
-            kept: Set(events().overrides.filter { $0.host == site }.map { LearnLimits.key($0.label, $0.value) })
+            kept: Set(events().overrides.filter { $0.host == site }.map { LearnLimits.key($0.label, $0.value) }),
+            adds: addsLearnedAnswers
         )
         let changes = Self.changes(request.answers, card: card, learned: learned, limits: limits)
         let scope: CardSaveScope = changes.replaced.isEmpty
@@ -179,7 +182,9 @@ extension MessageRouter {
             guard let field = answer.field, changes.count < limits.budget else { return }
             let fields = card.customFields + changes.added
             guard let existing = fields.first(where: { $0.id == field.id }) else {
-                if changes.added.count < room, hasScopeRoom(for: field, in: fields) { changes.added.append(field) }
+                if limits.adds, changes.added.count < room, hasScopeRoom(for: field, in: fields) {
+                    changes.added.append(field)
+                }
                 return
             }
             guard !existing.isDraft, existing.value != field.value, !limits.replacedToday.contains(existing.id),

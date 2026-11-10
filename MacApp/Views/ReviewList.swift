@@ -1,9 +1,9 @@
 import PrefillKit
 import SwiftUI
 
-// The menu's inbox: values typed in Chrome or Arc that Prefill held back instead of saving,
-// such as ones from a form the person left without sending, then answers it learned from
-// job applications lately.
+// The menu's inbox: values typed in a browser that Prefill held back instead of saving, such
+// as ones from a form the person left without sending, answers from applications sent lately
+// to save or not, then answers it learned from job applications before.
 struct ReviewList: View {
     @Environment(MacModel.self) private var model
 
@@ -11,10 +11,10 @@ struct ReviewList: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.small) {
-            if model.waiting.isEmpty && learned.isEmpty {
+            if model.waiting.isEmpty && learned.isEmpty && model.answerOffers.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.hairline) {
                     Text("Nothing new").font(.headline)
-                    Text("Prefill adds what you type into forms, and it shows up here.")
+                    Text("Answers from applications you send show up here for you to save.")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -24,6 +24,12 @@ struct ReviewList: View {
                 Text("Needs you").font(.headline)
                 ForEach(model.waiting.prefix(Size.reviewRows)) { item in
                     WaitingRow(item: item)
+                }
+            }
+            if !model.answerOffers.isEmpty {
+                Text("Save these answers?").font(.headline)
+                ForEach(model.answerOffers) { offer in
+                    OfferRow(offer: offer)
                 }
             }
             if !learned.isEmpty {
@@ -82,6 +88,23 @@ private struct WaitingRow: View {
                 .accessibilityLabel("Add \(item.value.display) to your card")
             Button("Dismiss") { model.dismiss(item) }
                 .accessibilityLabel("Dismiss \(item.value.display)")
+        }
+    }
+}
+
+// An answer from an application the person sent. It is saved only when they say Save.
+private struct OfferRow: View {
+    @Environment(MacModel.self) private var model
+    let offer: AnswerOffer
+
+    var body: some View {
+        let detail = "\(offer.field.label), answered on \(offer.host)"
+        return ReviewRow(isWaiting: true, value: offer.field.value, detail: detail) {
+            Button("Save") { Task { await model.save(offer) } }
+                .buttonStyle(.borderedProminent)
+                .accessibilityLabel("Save \(offer.field.label) answer")
+            Button("Don’t save") { model.dismiss(offer) }
+                .accessibilityLabel("Don’t save \(offer.field.label) answer")
         }
     }
 }

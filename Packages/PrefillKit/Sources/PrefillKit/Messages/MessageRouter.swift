@@ -11,11 +11,23 @@ public struct MessageRouter: Sendable {
     let store: any SharedStore
     let gateway: any ContactsGateway
     let now: @Sendable () -> Date
+    // Since Nov 10 a page's submit no longer adds answers by itself: the apps offer them from
+    // the application's record and the person saves them in the Inbox (AnswerOffers). Answers
+    // learned before then can still be replaced and undone, which the tests set up with this on.
+    let addsLearnedAnswers: Bool
 
     public init(store: any SharedStore, gateway: any ContactsGateway, now: @escaping @Sendable () -> Date = Date.init) {
+        self.init(store: store, gateway: gateway, now: now, addsLearnedAnswers: false)
+    }
+
+    init(
+        store: any SharedStore, gateway: any ContactsGateway, now: @escaping @Sendable () -> Date,
+        addsLearnedAnswers: Bool
+    ) {
         self.store = store
         self.gateway = gateway
         self.now = now
+        self.addsLearnedAnswers = addsLearnedAnswers
     }
 
     public func route(_ message: Any?) -> ExtensionResponse {
