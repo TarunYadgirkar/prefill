@@ -58,6 +58,10 @@ private struct InboxList: View {
                     ForEach(model.exceptions) { entry in
                         row(entry)
                     }
+                    if model.answerOffers.count > 1 {
+                        Button("Don’t save any") { model.dismissAllOffers() }
+                            .accessibilityIdentifier("inbox-dismiss-all-offers")
+                    }
                 } header: {
                     Text("To check").textRole(.groupHeader)
                 }

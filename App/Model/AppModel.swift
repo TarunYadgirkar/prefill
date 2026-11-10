@@ -26,13 +26,15 @@ final class AppModel {
     static let seenChangesKey = "seenChanges"
     static let maxSeenChanges = 100
 
-    private(set) var state = AppState()
+    private(set) var state = AppState() { didSet { refreshOffers() } }
     private(set) var events = ExtensionEvents()
     // Every job application sent from this iPhone, newest first, from the app's own archive.
-    var applications: [SubmittedApplication] = []
+    var applications: [SubmittedApplication] = [] { didSet { refreshOffers() } }
+    // Read from the three above and the card when one of them changes, never while drawing.
+    var answerOffers: [AnswerOffer] = []
     var sheet = SheetSettings()
     var sheetProblem: String?
-    private(set) var card: CardRecord?
+    private(set) var card: CardRecord? { didSet { refreshOffers() } }
     private(set) var cardFailure: CardWriteFailure?
     // What is on the person's own card, which Share Contact sends, and what Prefill's contact holds.
     private(set) var placement = CardPlacement(onCard: [])

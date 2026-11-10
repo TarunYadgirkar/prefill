@@ -27,7 +27,15 @@ struct ReviewList: View {
                 }
             }
             if !model.answerOffers.isEmpty {
-                Text("Save these answers?").font(.headline)
+                HStack(alignment: .firstTextBaseline) {
+                    Text("Save these answers?").font(.headline)
+                    Spacer()
+                    if model.answerOffers.count > 1 {
+                        Button("Don’t save any") { model.dismissAllOffers() }
+                            .buttonStyle(.borderless)
+                            .controlSize(.small)
+                    }
+                }
                 ForEach(model.answerOffers) { offer in
                     OfferRow(offer: offer)
                 }

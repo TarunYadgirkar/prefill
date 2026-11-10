@@ -72,5 +72,7 @@ struct AnswerOfferTests {
         let dismissed = AppState().dismissing(saved[0])
         #expect(AnswerOffers.offers(source(applications, fields: [school], state: dismissed)).isEmpty)
         #expect(AnswerOffers.offers(source([application(sent, daysAgo: 30)])).isEmpty)
+        let none = AppState().dismissing(AnswerOffers.allOffers(source(applications)))
+        #expect(AnswerOffers.allOffers(source(applications, state: none)).isEmpty)
     }
 }

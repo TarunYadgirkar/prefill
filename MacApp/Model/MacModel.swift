@@ -23,11 +23,11 @@ final class MacModel {
     static let seenWelcomeKey = "seenWelcome"
 
     private(set) var access = Access.notDetermined
-    private(set) var card: CardRecord?
+    private(set) var card: CardRecord? { didSet { refreshOffers() } }
     // What is on My Card, which sharing the card sends along, and what Prefill's contact holds.
     private(set) var placement = CardPlacement(onCard: [])
     private(set) var hasMeCard = true
-    private(set) var state = AppState()
+    private(set) var state = AppState() { didSet { refreshOffers() } }
     private(set) var events = ExtensionEvents()
     private(set) var browsers: [BrowserHost] = []
     private(set) var isRelayRunning = false
@@ -45,7 +45,9 @@ final class MacModel {
     @ObservationIgnored private var isStateUnreadable = false
     // Job applications sent from the browsers here, and from the iPhone once its history is
     // copied over USB (scripts/sync-applications.sh), newest first.
-    var applications: [SubmittedApplication] = []
+    var applications: [SubmittedApplication] = [] { didSet { refreshOffers() } }
+    // Read from the applications, the card and the state when one changes, never while drawing.
+    var answerOffers: [AnswerOffer] = []
     // Where applications go in the person's Google Sheet, once they add its link (MacModel+Sheet).
     var sheet = SheetSettingsFile(directory: RelaySocket.directory).read()
     var sheetProblem: String?
@@ -100,11 +102,6 @@ final class MacModel {
     var waiting: [RecentItem] {
         guard let card else { return [] }
         return RecentCaptures.items(events: events, state: state, card: card).filter { $0.state == .waiting }
-    }
-
-    func values(_ kind: ContactKind) -> [ContactValue] {
-        guard let card else { return [] }
-        return ManualOrder.values(kind, card: card, known: state.values, now: .now)
     }
 
     func start() async {
@@ -301,6 +298,11 @@ final class MacModel {
 }
 
 extension MacModel {
+    func values(_ kind: ContactKind) -> [ContactValue] {
+        guard let card else { return [] }
+        return ManualOrder.values(kind, card: card, known: state.values, now: .now)
+    }
+
     func skipExtension() {
         skippedExtension = true
         UserDefaults.standard.set(true, forKey: Self.skippedExtensionKey)

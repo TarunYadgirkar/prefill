@@ -56,8 +56,14 @@ extension AppModel {
     }
 
     // Answers from applications sent lately that Prefill could keep, each waiting for Save.
-    var answerOffers: [AnswerOffer] {
-        AnswerOffers.offers(offerSource)
+    // Reading them walks every recent application, so the Inbox draws from the stored list.
+    func refreshOffers() {
+        let offers = AnswerOffers.offers(offerSource)
+        if offers != answerOffers { answerOffers = offers }
+    }
+
+    func dismissAllOffers() {
+        commit(state.dismissing(AnswerOffers.allOffers(offerSource)))
     }
 
     var offerSource: AnswerOffers.Source {
