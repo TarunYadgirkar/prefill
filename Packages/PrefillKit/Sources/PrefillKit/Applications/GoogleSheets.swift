@@ -140,17 +140,57 @@ public enum GoogleSheets {
         return spreadsheet
     }
 
-    // Adds one row per application under the last one.
-    public static func appendRequest(
-        _ applications: [SubmittedApplication], to sheetID: String, token: String
-    ) -> URLRequest {
+    // What the sheet lists already: the tab the rows go to and the applications on it. Each
+    // row's first cell carries a note, "Prefill <id>", the same mark the Apps Script leaves.
+    public struct Listing: Sendable, Hashable {
+        public let tab: Int
+        public let ids: Set<UUID>
+    }
+
+    static let notePrefix = "Prefill "
+
+    // Only the tabs' names and the notes, never the cells.
+    public static func listingRequest(_ sheetID: String, token: String) -> URLRequest {
         var parts = URLComponents(string: "https://sheets.googleapis.com")!
-        parts.path = "/v4/spreadsheets/\(sheetID)/values/\(tab)!A1:append"
+        parts.path = "/v4/spreadsheets/\(sheetID)"
         parts.queryItems = [
-            .init(name: "valueInputOption", value: "RAW"), .init(name: "insertDataOption", value: "INSERT_ROWS")
+            .init(name: "fields", value: "sheets(properties(sheetId,title),data(rowData(values(note))))")
         ]
-        let rows = applications.map { ApplicationSheet.row($0).cells }
-        return json(parts.url!, token: token, body: ["values": rows])
+        var request = URLRequest(url: parts.url!, timeoutInterval: 30)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        return request
+    }
+
+    // The tab Prefill named, or the first one when the person renamed it.
+    public static func listing(from data: Data) throws -> Listing {
+        let properties = { (sheet: [String: Any]) in sheet["properties"] as? [String: Any] }
+        guard let answer = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let sheets = answer["sheets"] as? [[String: Any]],
+              let sheet = sheets.first(where: { properties($0)?["title"] as? String == tab }) ?? sheets.first
+        else { throw Failure.unreadable }
+        let rows = (sheet["data"] as? [[String: Any]] ?? []).flatMap { $0["rowData"] as? [[String: Any]] ?? [] }
+        let notes = rows.flatMap { $0["values"] as? [[String: Any]] ?? [] }.compactMap { $0["note"] as? String }
+        let ids = notes.filter { $0.hasPrefix(notePrefix) }
+            .compactMap { UUID(uuidString: String($0.dropFirst(notePrefix.count))) }
+        return Listing(tab: properties(sheet)?["sheetId"] as? Int ?? 0, ids: Set(ids))
+    }
+
+    // Adds one row per application under the last one, as plain text so a cell starting with =
+    // never runs as a formula, with the application's id as a note on its first cell.
+    public static func appendRequest(
+        _ applications: [SubmittedApplication], to sheetID: String, tab: Int, token: String
+    ) -> URLRequest {
+        let rows = applications.map { application in
+            let cells = ApplicationSheet.row(application).cells.enumerated().map { index, text in
+                var cell: [String: Any] = ["userEnteredValue": ["stringValue": text]]
+                if index == 0 { cell["note"] = notePrefix + application.id.uuidString }
+                return cell
+            }
+            return ["values": cells]
+        }
+        let append: [String: Any] = ["sheetId": tab, "rows": rows, "fields": "userEnteredValue,note"]
+        let url = URL(string: "https://sheets.googleapis.com/v4/spreadsheets/\(sheetID):batchUpdate")!
+        return json(url, token: token, body: ["requests": [["appendCells": append]]])
     }
 
     private static func form(_ fields: [String: String]) -> URLRequest {
