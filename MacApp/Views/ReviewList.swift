@@ -98,23 +98,70 @@ private struct LearnedRow: View {
     }
 }
 
+// Each installed Chromium browser and whether Prefill's extension has talked from it. Without
+// the extension the Accessibility panel still fills text fields there, but nothing is saved,
+// learned or recorded, so the list says so.
 struct BrowserList: View {
     let browsers: [BrowserHost]
+    let heard: Set<String>
+
+    private var lacksExtension: Bool {
+        browsers.contains { $0.hasHost && !heard.contains($0.bundleID) }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
             Text("Browsers").font(.headline)
             if browsers.isEmpty {
-                Text("Install Chrome or Arc to use Prefill on this Mac.").font(.callout).foregroundStyle(.secondary)
+                Text("Prefill works in Safari. Chrome, Arc, Brave and Edge show here once installed.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
             ForEach(browsers) { browser in
-                Label {
-                    Text(browser.name)
-                } icon: {
-                    Image(systemName: browser.hasHost ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
-                        .foregroundStyle(browser.hasHost ? Palette.positive : Palette.warning)
-                }
-                .accessibilityValue(browser.hasHost ? "Connected" : "Couldn’t connect")
+                BrowserRow(browser: browser, hasExtension: heard.contains(browser.bundleID))
+            }
+            if lacksExtension {
+                Text("""
+                    Without Prefill’s extension, a browser gets suggestions for text fields only. Prefill \
+                    saves no new answers there and records no applications.
+                    """)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+                DisclosureGroup("Add the extension") { ChromeExtensionHelp() }
+                    .font(.callout)
+            }
+        }
+    }
+}
+
+private struct BrowserRow: View {
+    let browser: BrowserHost
+    let hasExtension: Bool
+
+    private var status: LocalizedStringKey {
+        if !browser.hasHost { return "Couldn’t connect" }
+        return hasExtension ? "Extension on" : "No extension yet"
+    }
+
+    private var symbol: String {
+        if !browser.hasHost { return "exclamationmark.triangle.fill" }
+        return hasExtension ? "checkmark.circle.fill" : "circle.dashed"
+    }
+
+    private var tint: Color {
+        if !browser.hasHost { return Palette.warning }
+        return hasExtension ? Palette.positive : .secondary
+    }
+
+    var body: some View {
+        LabeledContent {
+            Text(status).font(.callout).foregroundStyle(.secondary)
+        } label: {
+            Label {
+                Text(browser.name)
+            } icon: {
+                Image(systemName: symbol).foregroundStyle(tint)
             }
         }
     }

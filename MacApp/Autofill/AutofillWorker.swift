@@ -56,6 +56,11 @@ enum ExtensionPresence {
         browsers.withLock { $0[bundleID.lowercased()] = pid }
     }
 
+    // Every browser the extension has talked from since Prefill opened, lowercased.
+    static var seen: Set<String> {
+        browsers.withLock { Set($0.keys) }
+    }
+
     static func isActive(in bundleID: String) -> Bool {
         browsers.withLock { known in
             guard let pid = known[bundleID.lowercased()] else { return false }

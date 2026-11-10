@@ -119,34 +119,41 @@ struct AccessibilityStep: View {
 }
 
 // Safari's extension ships inside the app, so one switch in Safari's settings turns it on.
-// Chrome and Arc are covered by Accessibility; their extension is for people who want it.
+// Chrome and Arc get suggestions for text fields through Accessibility, but only their
+// extension saves answers, fills a whole form and records applications, so the step says
+// that before the person skips it.
 struct BrowserStep: View {
     @Environment(MacModel.self) private var model
+
+    private var hasChromium: Bool { model.browsers.contains(where: \.isInstalled) }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
             Text("In Safari's settings, check Prefill under Extensions, then allow it on every website.")
                 .foregroundStyle(.secondary)
-            HStack {
-                Button("Open Safari settings") { SafariExtension.openSettings() }
-                Spacer()
-                Button("I don't use Safari") { model.skipExtension() }
-                    .buttonStyle(.borderless)
+            Button("Open Safari settings") { SafariExtension.openSettings() }
+            if hasChromium {
+                Text("""
+                    In Chrome or Arc, add Prefill's extension. Without it Prefill suggests values for text \
+                    fields there, but saves no new answers and records no applications.
+                    """)
+                .foregroundStyle(.secondary)
+                DisclosureGroup("Add the extension to Chrome or Arc") { ChromeExtensionHelp() }
             }
-            DisclosureGroup("Use the extension in Chrome or Arc") { ChromeExtensionHelp() }
+            Button("Skip for now") { model.skipExtension() }
+                .buttonStyle(.borderless)
         }
     }
 }
 
-private struct ChromeExtensionHelp: View {
+struct ChromeExtensionHelp: View {
     @State private var isCopied = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
             Text("""
-                Accessibility already brings Prefill to Chrome and Arc. For one-tap fill there too, open \
-                chrome://extensions (in Arc, arc://extensions), turn on Developer mode and click Load \
-                unpacked. Press Command-Shift-G, paste the folder path and click Select.
+                Open chrome://extensions (in Arc, arc://extensions), turn on Developer mode and click \
+                Load unpacked. Press Command-Shift-G, paste the folder path and click Select.
                 """)
             .foregroundStyle(.secondary)
             Button(isCopied ? "Copied" : "Copy folder path") {
