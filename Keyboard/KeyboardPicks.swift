@@ -1,21 +1,25 @@
 import Foundation
 import PrefillKit
 
-// The values picked in this keyboard, most recent first, in the keyboard's own defaults.
-// They rank the row and never leave the keyboard.
+// The values picked in this keyboard, most recent first. They rank the row. They sit in the
+// store shared with the app, so "Delete Prefill data" clears them.
 final class KeyboardPicks {
-    private static let key = "recentPicks"
-    private let defaults: UserDefaults
+    private static let legacyKey = "recentPicks"
+    private let share: KeyboardShare
 
-    init(defaults: UserDefaults = .standard) {
-        self.defaults = defaults
+    init(share: KeyboardShare, defaults: UserDefaults = .standard) {
+        self.share = share
+        // Earlier builds kept the picks, with each value's text, in the keyboard's own defaults.
+        defaults.removeObject(forKey: Self.legacyKey)
     }
 
-    var recents: KeyboardRecents {
-        KeyboardRecents(ids: defaults.stringArray(forKey: Self.key) ?? [])
+    func recents(hasFullAccess: Bool) -> KeyboardRecents {
+        guard hasFullAccess else { return KeyboardRecents() }
+        return (try? share.readPicks()) ?? KeyboardRecents()
     }
 
-    func record(_ id: String) {
-        defaults.set(recents.picking(id).ids, forKey: Self.key)
+    func record(_ id: String, hasFullAccess: Bool) {
+        guard hasFullAccess else { return }
+        try? share.writePicks(recents(hasFullAccess: true).picking(id))
     }
 }

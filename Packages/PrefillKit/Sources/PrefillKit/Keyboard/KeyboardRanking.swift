@@ -94,8 +94,8 @@ struct KeyboardFallback {
     }
 }
 
-// The keyboard's own picks, most recent first, by value id. Kept in the keyboard's own
-// defaults, which need no Full Access.
+// The keyboard's own picks, most recent first, by value id. An id holds the value's text, so
+// they live beside the snapshot, where "Delete Prefill data" reaches them.
 public struct KeyboardRecents: Sendable, Hashable {
     public static let maxCount = 30
 

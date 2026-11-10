@@ -19,6 +19,7 @@ final class MacModel {
     private static let loginItemKey = "registeredLoginItem"
     private static let heardFromExtensionKey = "heardFromExtension"
     private static let skippedExtensionKey = "skippedExtension"
+    private static let heardBrowsersKey = "heardBrowsers"
     private static let seenWelcomeKey = "seenWelcome"
 
     private(set) var access = Access.notDetermined
@@ -35,15 +36,20 @@ final class MacModel {
     // Set once Prefill's host has relayed a request, which only the browser extension starts.
     private(set) var hasHeardFromExtension = UserDefaults.standard.bool(forKey: heardFromExtensionKey)
     private(set) var skippedExtension = UserDefaults.standard.bool(forKey: skippedExtensionKey)
+    // The browsers whose Prefill extension has talked to the app, by bundle identifier. Without
+    // the extension a browser gets only the Accessibility panel, which saves and records nothing.
+    private(set) var heardBrowsers = Set(UserDefaults.standard.stringArray(forKey: heardBrowsersKey) ?? [])
     private(set) var isSafariExtensionOn = false
     private(set) var hasSeenWelcome = UserDefaults.standard.bool(forKey: seenWelcomeKey)
     var problem: String?
+    @ObservationIgnored private var isStateUnreadable = false
     // Job applications sent from the browsers here, and from the iPhone once its history is
     // copied over USB (scripts/sync-applications.sh), newest first.
     var applications: [SubmittedApplication] = []
     // Where applications go in the person's Google Sheet, once they add its link (MacModel+Sheet).
     var sheet = SheetSettingsFile(directory: RelaySocket.directory).read()
     var sheetProblem: String?
+    var sheetNeedsSignIn = false
 
     let store: any SharedStore
     let gateway: any ContactsGateway
@@ -149,18 +155,9 @@ final class MacModel {
         await refresh()
     }
 
-    func skipExtension() {
-        skippedExtension = true
-        UserDefaults.standard.set(true, forKey: Self.skippedExtensionKey)
-    }
-
-    func finishWelcome() {
-        hasSeenWelcome = true
-        UserDefaults.standard.set(true, forKey: Self.seenWelcomeKey)
-    }
-
     private func relayAnswered() {
         readStore()
+        noteHeardBrowsers()
         guard !hasHeardFromExtension else { return }
         hasHeardFromExtension = true
         UserDefaults.standard.set(true, forKey: Self.heardFromExtensionKey)
@@ -175,19 +172,15 @@ final class MacModel {
     // waiting to merge in from the iPhone. The contact card is left as it is.
     func deleteAllData() async {
         guard await deleteCloudCopy() else { return }
-        do {
-            try archive.removeAll()
-            try sheetFile.removeAll()
-            google.signOut()
-            try? FileManager.default.removeItem(at: Self.importsDirectory)
-            try store.removeAll()
-        } catch {
-            problem = "Prefill couldn’t delete its data. Try again in a moment."
+        guard deleteFiles() else {
+            problem = String(localized: "Some of Prefill’s data is still on this Mac. Delete again in a moment.")
+            readStore()
             return
         }
-        for key in [Self.heardFromExtensionKey, Self.skippedExtensionKey] {
+        for key in [Self.heardFromExtensionKey, Self.skippedExtensionKey, Self.heardBrowsersKey] {
             UserDefaults.standard.removeObject(forKey: key)
         }
+        heardBrowsers = []
         hasHeardFromExtension = false
         skippedExtension = false
         state = AppState()
@@ -195,11 +188,15 @@ final class MacModel {
         applications = []
         sheet = SheetSettings()
         sheetProblem = nil
+        sheetNeedsSignIn = false
         await refresh()
     }
 
     func readStore() {
-        state = (try? store.readAppState()) ?? state
+        // A state that can't be read is never taken for an empty one: commit won't replace it.
+        let stored = try? store.readAppState()
+        isStateUnreadable = stored == nil
+        state = stored ?? state
         events = (try? store.readEvents()) ?? events
         let folded = state.folding(events)
         if folded != state { commit(folded) }
@@ -214,6 +211,10 @@ final class MacModel {
 
     func commit(_ next: AppState) {
         state = next
+        guard !isStateUnreadable else {
+            problem = String(localized: "Prefill couldn’t read what it saved earlier. Quit Prefill and open it again.")
+            return
+        }
         do {
             try store.writeAppState(next)
         } catch {
@@ -295,5 +296,24 @@ final class MacModel {
         guard !UserDefaults.standard.bool(forKey: Self.loginItemKey) else { return }
         UserDefaults.standard.set(true, forKey: Self.loginItemKey)
         try? SMAppService.mainApp.register()
+    }
+}
+
+extension MacModel {
+    func skipExtension() {
+        skippedExtension = true
+        UserDefaults.standard.set(true, forKey: Self.skippedExtensionKey)
+    }
+
+    func finishWelcome() {
+        hasSeenWelcome = true
+        UserDefaults.standard.set(true, forKey: Self.seenWelcomeKey)
+    }
+
+    private func noteHeardBrowsers() {
+        let heard = heardBrowsers.union(ExtensionPresence.seen)
+        guard heard != heardBrowsers else { return }
+        heardBrowsers = heard
+        UserDefaults.standard.set(heard.sorted(), forKey: Self.heardBrowsersKey)
     }
 }

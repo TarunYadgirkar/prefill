@@ -60,6 +60,7 @@ final class AppModel {
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
+    @ObservationIgnored var isStateUnreadable = false
     // Set in the build the paid team signs (AppModel+Cloud).
     @ObservationIgnored var cloud: PrefillCloud?
 
@@ -207,16 +208,16 @@ final class AppModel {
     // Forgets everything Prefill stored and starts setup again. The contact card is left as it is.
     func deleteAllData() async {
         guard await deleteCloudCopy() else { return }
-        do {
-            try archive.removeAll()
-            try sheetFile.removeAll()
-            try store.removeAll()
-            try keyboard?.removeAll()
-        } catch {
-            problem = Problem(
-                title: String(localized: "Prefill couldn’t delete its data"),
-                message: String(localized: "Nothing was deleted. Try again in a moment.")
-            )
+        // Every step runs even when one fails, so a retry has less left to do.
+        let steps: [() throws -> Void] = [
+            archive.removeAll, sheetFile.removeAll, store.removeAll,
+            { [keyboard] in try keyboard?.removeAll() },
+            { [store] in try StoreMigration.removeKeychainStore(besides: store) }
+        ]
+        let failures = steps.count { (try? $0()) == nil }
+        guard failures == 0 else {
+            problem = .notAllDeleted
+            await reload()
             return
         }
         defaults.removeObject(forKey: Self.finishedOnboardingKey)
@@ -244,6 +245,10 @@ final class AppModel {
     func commit(_ next: AppState) {
         state = next
         shareWithKeyboard()
+        guard !isStateUnreadable else {
+            problem = .stateUnreadable
+            return
+        }
         do {
             try store.writeAppState(next)
         } catch {
@@ -259,7 +264,10 @@ final class AppModel {
     }
 
     func readStore() {
-        state = (try? store.readAppState()) ?? state
+        // A state that can't be read is never taken for an empty one: commit won't replace it.
+        let stored = try? store.readAppState()
+        isStateUnreadable = stored == nil
+        state = stored ?? state
         events = (try? store.readEvents()) ?? events
         foldSafariChoices()
         archiveApplications()
@@ -357,5 +365,24 @@ nonisolated enum CardWork {
         _ gateway: any ContactsGateway, _ edit: CardEditor.Edit, identifier: String
     ) async -> CardWriteOutcome {
         CardEditor(gateway: gateway).apply(edit, cardIdentifier: identifier)
+    }
+}
+
+extension AppModel.Problem {
+    static var stateUnreadable: Self {
+        Self(
+            title: String(localized: "Prefill couldn’t save that"),
+            message: String(localized: """
+                Prefill couldn’t read what it saved earlier, so it isn’t writing over it. Close Prefill and \
+                open it again.
+                """)
+        )
+    }
+
+    static var notAllDeleted: Self {
+        Self(
+            title: String(localized: "Prefill couldn’t delete everything"),
+            message: String(localized: "Some of its data is still on this iPhone. Delete again in a moment.")
+        )
     }
 }

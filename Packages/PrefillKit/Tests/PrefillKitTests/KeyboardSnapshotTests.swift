@@ -73,4 +73,14 @@ struct KeyboardShareTests {
         try AppGroupStore(directory: directory).removeAll()
         #expect(try share.readSeen() == nil)
     }
+
+    @Test func deletingClearsTheRecentPicksWhichHoldEachValuesText() throws {
+        let directory = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let share = KeyboardShare(store: AppGroupStore(directory: directory))
+        try share.writePicks(KeyboardRecents().picking("email:Work email:alex@example.com"))
+        #expect(try share.readPicks().ids == ["email:Work email:alex@example.com"])
+        try share.removeAll()
+        #expect(try share.readPicks().ids.isEmpty)
+    }
 }

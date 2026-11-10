@@ -2,7 +2,7 @@ import Foundation
 
 // What the app and the Prefill keyboard pass each other through an App Group of their own,
 // which the Safari extension's store is not in: the app writes the values, the keyboard writes
-// when it was last shown. One writer each. So even with Full Access the keyboard can read only
+// when it was last shown and its recent picks. One writer each. So even with Full Access the keyboard can read only
 // keyboard-values. Without that group (a build with no paid team) it falls back to the store.
 public struct KeyboardShare: Sendable {
     private let store: any DocumentStore
@@ -44,9 +44,22 @@ public struct KeyboardShare: Sendable {
         try store.writeDocument(.keyboardSeen, data: DocumentCoder.encode(date))
     }
 
+    public func readPicks() throws -> KeyboardRecents {
+        guard let data = try store.readDocument(.keyboardPicks), data.count <= KeyboardSnapshot.maxBytes else {
+            return KeyboardRecents()
+        }
+        return KeyboardRecents(ids: try DocumentCoder.decode([String].self, from: data))
+    }
+
+    public func writePicks(_ picks: KeyboardRecents) throws {
+        try store.writeDocument(.keyboardPicks, data: DocumentCoder.encode(picks.ids))
+    }
+
     // For "Delete Prefill data".
     public func removeAll() throws {
-        for document in [StoreDocument.keyboardValues, .keyboardSeen] { try store.removeDocument(document) }
+        for document in [StoreDocument.keyboardValues, .keyboardSeen, .keyboardPicks] {
+            try store.removeDocument(document)
+        }
     }
 }
 
