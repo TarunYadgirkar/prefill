@@ -41,7 +41,8 @@ enum FieldReader {
             label: label(of: element),
             names: [element.string("AXDOMIdentifier")].compactMap { $0 }.filter { !$0.isEmpty },
             placeholder: squash([element.string(kAXPlaceholderValueAttribute)]),
-            signIn: isSignIn(element)
+            signIn: isSignIn(element),
+            context: context(of: element)
         )
         let value = element.string(kAXValueAttribute) ?? ""
         return FocusedField(
@@ -118,6 +119,18 @@ enum FieldReader {
         ])
         guard own.isEmpty, squash([element.string(kAXPlaceholderValueAttribute)]).isEmpty else { return own }
         return squash([NearbyLabel.pick(preceding: textBefore(element))])
+    }
+
+    // The names of the groups the field sits in, as a fieldset's legend or a group's or region's
+    // label reach Accessibility: "Emergency contact" over a Phone box, "E-Signature" over a name.
+    private static func context(of element: AXUIElement) -> String {
+        var names: [String?] = []
+        for ancestor in element.ancestors(limit: formClimb) {
+            if ancestor.role == "AXWebArea" || ancestor.role == kAXWindowRole { break }
+            guard ancestor.role == kAXGroupRole else { continue }
+            names += [ancestor.string(kAXTitleAttribute), ancestor.string(kAXDescriptionAttribute)]
+        }
+        return squash(names)
     }
 
     private static func textBefore(_ element: AXUIElement) -> [String?] {

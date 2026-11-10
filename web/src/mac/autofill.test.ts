@@ -24,6 +24,12 @@ describe("Mac autofill plan", () => {
     expect(plan(field({ label: "Email", signIn: true }))).toEqual({ kind: "none" });
   });
 
+  it("keeps the person's details out of a group about someone else or a signature", () => {
+    expect(plan(field({ type: "tel", label: "Phone" }))).toMatchObject({ kind: "contact" });
+    expect(plan(field({ type: "tel", label: "Phone", context: "Emergency contact" })).kind).not.toBe("contact");
+    expect(fillPlan(field({ label: "Full name", context: "E-Signature" }))).toEqual({ kind: "none" });
+  });
+
   it("sends the words of an unclaimed text field for custom values", () => {
     expect(plan(field({ label: "School", names: ["eduSchool"] }))).toEqual({
       kind: "custom",

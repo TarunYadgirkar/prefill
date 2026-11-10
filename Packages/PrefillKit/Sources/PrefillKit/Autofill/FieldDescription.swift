@@ -14,10 +14,13 @@ public struct FieldDescription: Codable, Sendable, Hashable {
     public let names: [String]
     public let placeholder: String
     public let signIn: Bool
+    // What the group the field sits in is for ("Emergency contact", "E-Signature"); only read
+    // to tell a signature or someone else's details.
+    public let context: String
 
     public init(
         tag: Tag, type: String = "text", autocomplete: String? = nil, label: String = "", names: [String] = [],
-        placeholder: String = "", signIn: Bool = false
+        placeholder: String = "", signIn: Bool = false, context: String = ""
     ) {
         self.tag = tag
         self.type = type
@@ -26,6 +29,7 @@ public struct FieldDescription: Codable, Sendable, Hashable {
         self.names = names
         self.placeholder = placeholder
         self.signIn = signIn
+        self.context = context
     }
 }
 
