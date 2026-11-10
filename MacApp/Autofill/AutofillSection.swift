@@ -14,8 +14,8 @@ struct AutofillSection: View {
                 if explainsAccess { accessNotice }
             } else {
                 Text(engine.isEnabled
-                     ? "Click or tab into a field, then pick a value. The browser extension is optional."
-                     : "The browser extension shows suggestions in Chrome and Arc instead.")
+                     ? "Click or tab into a field in any app, then pick a value. Only the extension saves new answers."
+                     : "Prefill works in browsers through its extension. Turn this on for suggestions in other apps.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)

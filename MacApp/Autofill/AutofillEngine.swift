@@ -41,10 +41,24 @@ final class AutofillEngine {
     @ObservationIgnored private var router: MessageRouter?
 
     private init() {
-        isEnabled = UserDefaults.standard.object(forKey: Self.enabledKey) as? Bool ?? true
+        isEnabled = Self.storedChoice()
         panel.model.pick = { [weak self] row in self?.pick(row) }
         panel.model.fillForm = { [weak self] in self?.fillForm() }
         panel.model.undoFill = { [weak self] in self?.undoFill() }
+    }
+
+    // Off on a new install: in a browser the extension is the one way Prefill works, and this
+    // is for other apps. Someone who set Prefill up while it was on by default keeps it on.
+    private static func storedChoice() -> Bool {
+        if let stored = UserDefaults.standard.object(forKey: enabledKey) as? Bool { return stored }
+        #if PREFILL_TEST_BROWSERS
+        return true
+        #else
+        let wasSetUp = UserDefaults.standard.bool(forKey: MacModel.seenWelcomeKey)
+            || UserDefaults.standard.bool(forKey: MacModel.heardFromExtensionKey)
+        UserDefaults.standard.set(wasSetUp, forKey: enabledKey)
+        return wasSetUp
+        #endif
     }
 
     func start(router: MessageRouter) {

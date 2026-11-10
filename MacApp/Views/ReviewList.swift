@@ -122,7 +122,7 @@ struct BrowserList: View {
             }
             if lacksExtension {
                 Text("""
-                    Without Prefill’s extension, a browser gets suggestions for text fields only. Prefill \
+                    Without Prefill’s extension, a browser gets at most suggestions for text fields. Prefill \
                     saves no new answers there and records no applications.
                     """)
                 .font(.callout)

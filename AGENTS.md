@@ -120,6 +120,7 @@ Read this first, then [docs/PRODUCT.md](docs/PRODUCT.md) for why things are the 
   - The Mac puts values back one at a time ("Put back on card"); it has no Restore yet.
   - The one-time offer for existing users is the "Keep your card short" section at the top of the Inbox. "Not now" sets `declinedShortCard` in UserDefaults; onboarding's Sharing step (Phase 9 / 4.3) should set the same key when the person declines there.
 - **Mac Accessibility mode:**
+  - Off on a new install since Nov 10 ("Suggest in every app" in the menu turns it on); an install set up before then keeps it on. Setup shows the Accessibility step only while it is on.
   - In a browser whose Prefill extension has sent the app a request, the panel stays out until that browser quits and the extension gives every list and Fill form (`ExtensionPresence`).
   - It doesn't save new values; only the extension does.
   - Arc, Safari, Electron apps and Firefox are untested.
