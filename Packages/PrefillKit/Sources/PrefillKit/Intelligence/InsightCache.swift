@@ -32,6 +32,9 @@ public enum InsightKey {
 
 public extension AppState {
     static let maxInsights = 300
+    // Room kept for "don't save" answers, so newer model answers never push one out and bring
+    // its offer back.
+    static let maxDismissals = 100
 
     func insight(_ key: String) -> String? {
         insights.last { $0.key == key }?.answer
@@ -41,9 +44,12 @@ public extension AppState {
     func recording(_ answers: [CachedInsight], siteKinds kinds: [String: SiteKind]) -> AppState {
         let keys = Set(answers.map(\.key))
         let kept = insights.filter { !keys.contains($0.key) } + answers
+        let dismissals = kept.filter { $0.key.hasPrefix(AnswerOffers.dismissPrefix) }.suffix(Self.maxDismissals)
+        let others = kept.filter { !$0.key.hasPrefix(AnswerOffers.dismissPrefix) }
+            .suffix(Self.maxInsights - dismissals.count)
         return copy(
             siteKinds: siteKinds.merging(kinds) { _, new in new },
-            insights: Array(kept.suffix(Self.maxInsights))
+            insights: Array(others) + Array(dismissals)
         )
     }
 

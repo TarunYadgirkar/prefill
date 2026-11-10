@@ -54,8 +54,10 @@ final class AutofillEngine {
         #if PREFILL_TEST_BROWSERS
         return true
         #else
+        // Accessibility already granted means they used it before the welcome window existed.
         let wasSetUp = UserDefaults.standard.bool(forKey: MacModel.seenWelcomeKey)
             || UserDefaults.standard.bool(forKey: MacModel.heardFromExtensionKey)
+            || AccessibilityTrust.isTrusted
         UserDefaults.standard.set(wasSetUp, forKey: enabledKey)
         return wasSetUp
         #endif

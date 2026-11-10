@@ -26,6 +26,22 @@ struct AnswerOfferTests {
         ("Why do you want to work at Acme?", "I love rockets")
     ]
 
+    // A page words its own questions, so it could talk the model into a name the rules own.
+    @Test func aNameTheModelGivesIsHeldToTheRules() {
+        #expect(AnswerOffers.namedField("Python experience", answer: "3")?.label == "Python experience")
+        for name in ["Work authorization (US)", "School", "Email", "Sponsorship", "Gender", "Reference name"] {
+            #expect(AnswerOffers.namedField(name, answer: "Yes") == nil, "\(name)")
+        }
+    }
+
+    @Test func aDismissalOutlivesAnyNumberOfNewerModelAnswers() throws {
+        let offer = try #require(AnswerOffers.offers(source([application(sent)])).first)
+        let flood = (0..<400).map { CachedInsight(key: "site|m|\($0).example", answer: "work") }
+        let state = AppState().dismissing(offer).recording(flood, siteKinds: [:])
+        #expect(state.insights.count == AppState.maxInsights)
+        #expect(!AnswerOffers.offers(source([application(sent)], state: state)).contains(offer))
+    }
+
     private func source(
         _ applications: [SubmittedApplication], fields: [CustomField] = [], state: AppState = AppState()
     ) -> AnswerOffers.Source {

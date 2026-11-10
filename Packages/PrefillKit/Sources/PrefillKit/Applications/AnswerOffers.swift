@@ -44,7 +44,10 @@ public enum AnswerOffers {
         /(?i)linkedin|github|website|portfolio|\burl\b|resume|\bcv\b|cover letter/,
         /(?i)gender|\brace\b|ethnic|hispanic|latino|veteran|disab|orientation|pronoun/,
         /(?i)birth|\bage\b|social security|\bssn\b|passport|licen[sc]e|password|salary|compensation/,
-        /(?i)agree|acknowledge|certify|consent|signature|i understand/
+        /(?i)agree|acknowledge|certify|consent|signature|i understand/,
+        /(?i)citizen|nationality|criminal|convict|felony|religio|marital|sexual|transgender|income/,
+        // Someone else's details, as SOMEONE_ELSE in web/src/patterns.ts.
+        /(?i)reference|referr|emergency|guardian|parent|spouse|recipient/
     ]
     nonisolated(unsafe) private static let contactLike = /@|https?:|www\.|\.com\b|(?:\d[\s().-]*){7,}/
 
@@ -101,20 +104,35 @@ public enum AnswerOffers {
         return question.field(answer: candidate.answer, scope: scope)
     }
 
-    static func verdictKey(_ question: String, variant: String) -> String {
-        "offer|\(variant)|\(CustomFieldMatcher.key(question))"
+    // The verdict is for this answer to this question: a page can't have a harmless answer
+    // judged and then send another under the same question.
+    static func verdictKey(_ candidate: Candidate, variant: String) -> String {
+        "offer|\(variant)|\(CustomFieldMatcher.key(candidate.question))|\(AnswerRevision.hash(candidate.answer))"
     }
 
+    // The model read a question the page wrote, so its name for the answer is held to the same
+    // rules as a question: never one of the answers the rules own ("Work authorization",
+    // "School"), a contact detail or anything else Prefill doesn't offer.
+    static func namedField(_ name: String?, answer: String) -> CustomField? {
+        guard let name, !notAnAnswer.contains(where: { name.contains($0) }), jobQuestion(asking: name) == nil,
+              !name.contains(/(?i)authori[sz]|\bwork permit/),
+              !JobQuestion.allCases.contains(where: { $0.label.caseInsensitiveCompare(name) == .orderedSame })
+        else { return nil }
+        return try? CustomField.make(label: name, value: answer, alsoMatches: "").get()
+    }
+
+    static let dismissPrefix = "offerNo|"
+
     static func dismissKey(_ field: CustomField) -> String {
-        "offerNo|\(field.id)|\(AnswerRevision.hash(field.value))"
+        "\(dismissPrefix)\(field.id)|\(AnswerRevision.hash(field.value))"
     }
 
     private static func field(for candidate: Candidate, state: AppState, variant: String) -> CustomField? {
         if let field = ruleField(candidate) { return field }
-        guard let label = state.insight(verdictKey(candidate.question, variant: variant)), label != notReusable else {
+        guard let label = state.insight(verdictKey(candidate, variant: variant)), label != notReusable else {
             return nil
         }
-        return try? CustomField.make(label: label, value: candidate.answer, alsoMatches: "").get()
+        return namedField(label, answer: candidate.answer)
     }
 
     // What offers are read from: the applications, the saved answers, the cached verdicts and
@@ -154,17 +172,15 @@ public enum AnswerOffers {
     // verdicts to cache. A name that can't label an answer counts as a one-off.
     public static func ask(_ source: Source, judge: some OfferJudging) async -> [CachedInsight] {
         let unjudged = source.candidates.filter { candidate in
-            let key = verdictKey(candidate.question, variant: source.variant)
+            let key = verdictKey(candidate, variant: source.variant)
             return ruleField(candidate) == nil && source.state.insight(key) == nil
         }
         var verdicts: [CachedInsight] = []
         for candidate in unjudged.prefix(maxAsked) {
             let name = await judge.reusableLabel(question: candidate.question, answer: candidate.answer)
-            let named = name.flatMap {
-                try? CustomField.make(label: $0, value: candidate.answer, alsoMatches: "").get()
-            }
+            let named = namedField(name, answer: candidate.answer)
             verdicts.append(CachedInsight(
-                key: verdictKey(candidate.question, variant: source.variant), answer: named?.label ?? notReusable
+                key: verdictKey(candidate, variant: source.variant), answer: named?.label ?? notReusable
             ))
         }
         return verdicts
