@@ -151,6 +151,7 @@ targets:
       - MacShared
       - AppCloud
       - path: App/AppIcon.icon
+      - path: App/Fonts
     settings:
       groups: [macSigning]
       base:

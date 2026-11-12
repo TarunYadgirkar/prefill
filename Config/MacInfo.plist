@@ -17,6 +17,9 @@
 	</array>
 	<!-- Sparkle: where a release looks for updates (empty in builds from Xcode) and the public
 	     half of the signing key in Tarun's login keychain (account "prefill"). -->
+	<!-- The bundled faces in Contents/Resources (App/Fonts). -->
+	<key>ATSApplicationFontsPath</key>
+	<string>.</string>
 	<key>SUFeedURL</key>
 	<string>$(PREFILL_FEED_URL)</string>
 	<key>SUPublicEDKey</key>

@@ -13,27 +13,26 @@ struct ReviewList: View {
         VStack(alignment: .leading, spacing: Spacing.small) {
             if model.waiting.isEmpty && learned.isEmpty && model.answerOffers.isEmpty {
                 VStack(alignment: .leading, spacing: Spacing.hairline) {
-                    Text("Nothing new").font(.headline)
+                    Text("Nothing new").font(TextRole.emphasis)
                     Text("Answers from applications you send show up here for you to save.")
-                        .font(.callout)
+                        .font(TextRole.detail)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
             if !model.waiting.isEmpty {
-                Text("Needs you").font(.headline)
+                Text("Needs you").sectionLabel()
                 ForEach(model.waiting.prefix(Size.reviewRows)) { item in
                     WaitingRow(item: item)
                 }
             }
             if !model.answerOffers.isEmpty {
                 HStack(alignment: .firstTextBaseline) {
-                    Text("Save these answers?").font(.headline)
+                    Text("Save these answers?").sectionLabel()
                     Spacer()
                     if model.answerOffers.count > 1 {
                         Button("Don’t save any") { model.dismissAllOffers() }
-                            .buttonStyle(.borderless)
-                            .controlSize(.small)
+                            .buttonStyle(.menu(.plain))
                     }
                 }
                 ForEach(model.answerOffers) { offer in
@@ -41,7 +40,7 @@ struct ReviewList: View {
                 }
             }
             if !learned.isEmpty {
-                Text("Learned").font(.headline)
+                Text("Learned").sectionLabel()
                 ForEach(learned) { answer in
                     LearnedRow(answer: answer)
                 }
@@ -56,7 +55,7 @@ private struct InboxMark: View {
 
     var body: some View {
         Image(systemName: isWaiting ? "circle" : "sparkle")
-            .foregroundStyle(isWaiting ? Palette.attention : Palette.accent)
+            .foregroundStyle(isWaiting ? Palette.attention : Palette.ink)
             .accessibilityHidden(true)
     }
 }
@@ -75,10 +74,10 @@ private struct ReviewRow<Actions: View>: View {
             VStack(alignment: .leading, spacing: Spacing.xSmall) {
                 VStack(alignment: .leading, spacing: Spacing.hairline) {
                     Text(value).lineLimit(2).truncationMode(.middle)
-                    Text(detail).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                    Text(detail).font(TextRole.detail).foregroundStyle(.secondary).lineLimit(2)
                 }
                 HStack(spacing: Spacing.xSmall) { actions() }
-                    .controlSize(.small)
+                    .buttonStyle(.menu(.quiet))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -92,7 +91,7 @@ private struct WaitingRow: View {
     var body: some View {
         ReviewRow(isWaiting: true, value: item.value.display, detail: "Typed on \(item.host)") {
             Button("Add to card") { Task { await model.save(item) } }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.menu(.keep))
                 .accessibilityLabel("Add \(item.value.display) to your card")
             Button("Dismiss") { model.dismiss(item) }
                 .accessibilityLabel("Dismiss \(item.value.display)")
@@ -109,7 +108,7 @@ private struct OfferRow: View {
         let detail = "\(offer.field.label), answered on \(offer.host)"
         return ReviewRow(isWaiting: true, value: offer.field.value, detail: detail) {
             Button("Save") { Task { await model.save(offer) } }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.menu(.keep))
                 .accessibilityLabel("Save \(offer.field.label) answer")
             Button("Don’t save") { model.dismiss(offer) }
                 .accessibilityLabel("Don’t save \(offer.field.label) answer")
@@ -124,6 +123,7 @@ private struct LearnedRow: View {
     var body: some View {
         ReviewRow(isWaiting: false, value: answer.value, detail: "\(answer.label), learned from \(answer.host)") {
             Button("Remove", role: .destructive) { Task { await model.removeLearned(answer) } }
+                .buttonStyle(.menu(.destructive))
                 .accessibilityLabel("Remove \(answer.label) answer")
         }
     }
@@ -142,10 +142,11 @@ struct BrowserList: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xSmall) {
-            Text("Browsers").font(.headline)
+            Text("Browsers").sectionLabel()
             if browsers.isEmpty {
                 Text("Prefill works in Safari. Chrome, Arc, Brave and Edge show here once installed.")
-                    .font(.callout)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .font(TextRole.detail)
                     .foregroundStyle(.secondary)
             }
             ForEach(browsers) { browser in
@@ -156,11 +157,10 @@ struct BrowserList: View {
                     Without Prefill’s extension, a browser gets at most suggestions for text fields. Prefill \
                     saves no new answers there and records no applications.
                     """)
-                .font(.callout)
+                .font(TextRole.detail)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
                 DisclosureGroup("Add the extension") { ChromeExtensionHelp() }
-                    .font(.callout)
             }
         }
     }
@@ -187,7 +187,7 @@ private struct BrowserRow: View {
 
     var body: some View {
         LabeledContent {
-            Text(status).font(.callout).foregroundStyle(.secondary)
+            Text(status).font(TextRole.meta).foregroundStyle(.secondary)
         } label: {
             Label {
                 Text(browser.name)

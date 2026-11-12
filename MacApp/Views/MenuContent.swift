@@ -36,27 +36,28 @@ struct MenuContent: View {
                 Spacer()
                 Button("Quit Prefill") { NSApplication.shared.terminate(nil) }
             }
-            .buttonStyle(.borderless)
+            .buttonStyle(.menu(.plain))
         }
+        .font(TextRole.body)
         .padding(Spacing.medium)
         .frame(width: Size.menuWidth)
     }
 }
 
 // Whose card Prefill fills from and what it holds, before anything that needs the person.
-// The capsule is the lifted row from the app icon.
+// The yellow mark is a filled-in field, the lifted row from the app icon.
 struct MenuHeader: View {
     @Environment(MacModel.self) private var model
 
     var body: some View {
         HStack(alignment: .center, spacing: Spacing.small) {
-            Capsule()
-                .fill(Palette.accent)
+            RoundedRectangle(cornerRadius: Size.liftMarkRadius)
+                .fill(Palette.fill)
                 .frame(width: Size.liftMarkWidth, height: Size.liftMarkHeight)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.hairline) {
-                Text(model.cardName).font(.title3.weight(.semibold).width(.expanded))
-                Text(model.cardSummary).font(.callout).foregroundStyle(.secondary)
+                Text(model.cardName).font(TextRole.title)
+                Text(model.cardSummary).font(TextRole.detail).foregroundStyle(.secondary)
             }
         }
         .accessibilityElement(children: .combine)
@@ -71,27 +72,40 @@ struct ApplicationsRow: View {
     // The newest ones; an older one is deleted on the iPhone.
     private static let deletable = 25
 
+    private static func title(_ application: SubmittedApplication) -> String {
+        "\(application.title), \(application.date.formatted(date: .abbreviated, time: .omitted))"
+    }
+
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: Spacing.hairline) {
-                Text("Applications")
+        // The actions sit under the count, so neither is cut off at the menu's width.
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Applications").sectionLabel()
+                Spacer()
                 let count = model.applications.count
                 Text(count == 0 ? "None sent yet" : "\(count) sent")
+                    .font(TextRole.meta)
                     .foregroundStyle(.secondary)
-                    .font(.caption)
             }
-            Spacer()
-            Menu("Delete") {
-                ForEach(model.applications.prefix(Self.deletable)) { application in
-                    Button("\(application.title), \(application.date.formatted(date: .abbreviated, time: .omitted))") {
-                        toDelete = application
+            HStack(spacing: Spacing.xSmall) {
+                Button("Export for Google Sheets") { model.exportApplications() }
+                    .buttonStyle(.menu(.quiet))
+                Menu {
+                    ForEach(model.applications.prefix(Self.deletable)) { application in
+                        Button(Self.title(application)) { toDelete = application }
+                    }
+                } label: {
+                    // The custom face drops the system's arrow, so the menu draws its own.
+                    HStack(spacing: Spacing.hairline * 2) {
+                        Text("Delete")
+                        Image(systemName: "chevron.down").imageScale(.small).accessibilityHidden(true)
                     }
                 }
+                .menuStyle(.button)
+                .buttonStyle(.menu(.quiet))
+                .fixedSize()
             }
-            .fixedSize()
             .disabled(model.applications.isEmpty)
-            Button("Export for Google Sheets") { model.exportApplications() }
-                .disabled(model.applications.isEmpty)
         }
         .confirmationDialog(
             "Delete this application from this Mac and your iPhone?",
@@ -170,14 +184,14 @@ struct Notice<Actions: View>: View {
                 .foregroundStyle(.tint)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.xSmall) {
-                Text(title).font(.headline)
+                Text(title).font(TextRole.emphasis)
                 if let detail {
                     Text(detail)
-                        .font(.callout)
+                        .font(TextRole.detail)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                actions()
+                actions().buttonStyle(.menu(.quiet))
             }
         }
     }
