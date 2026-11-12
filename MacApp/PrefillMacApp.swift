@@ -24,6 +24,7 @@ struct PrefillMacApp: App {
             WelcomeView()
                 .environment(model)
                 .tint(Palette.accent)
+                .font(TextRole.body)
                 .task { await model.refresh() }
         }
         .windowResizability(.contentSize)

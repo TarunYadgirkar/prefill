@@ -31,7 +31,7 @@ struct WelcomeView: View {
                     dismissWindow(id: WelcomeView.windowID)
                 }
                 .keyboardShortcut(.defaultAction)
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.menu(.keep))
             }
         }
         .padding(Spacing.large)
@@ -51,7 +51,7 @@ private struct WelcomeHeader: View {
                 .frame(width: Size.welcomeIcon, height: Size.welcomeIcon)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: Spacing.hairline) {
-                Text("Welcome to Prefill").font(.title.weight(.semibold).width(.expanded))
+                Text("Welcome to Prefill").font(TextRole.welcomeTitle)
                 Text("Prefill fills forms with the details on your own contact card. Three steps and you’re set.")
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
