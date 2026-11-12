@@ -9,20 +9,23 @@ struct GoogleSheetScreen: View {
     @State private var isRefused = false
 
     var body: some View {
-        Form {
-            Section {
-                Text("""
-                    Each job application you send adds a row to your Google Sheet: date, company, role and \
-                    the page you applied on. An application the sheet already lists is skipped.
-                    """)
-                .textRole(.body)
-                Text("""
-                    Easiest: choose Connect Google Sheets in Prefill's settings on your Mac. Applications \
-                    from this iPhone reach the Mac through iCloud, so nothing needs setting up here.
-                    """)
-                .textRole(.body)
+        List {
+            Group {
+                Section {
+                    Text("""
+                        Each job application you send adds a row to your Google Sheet: date, company, role and \
+                        the page you applied on. An application the sheet already lists is skipped.
+                        """)
+                    .textRole(.body)
+                    Text("""
+                        Easiest: choose Connect Google Sheets in Prefill's settings on your Mac. Applications \
+                        from this iPhone reach the Mac through iCloud, so nothing needs setting up here.
+                        """)
+                    .textRole(.body)
+                }
+                if model.sheet.address == nil { linkSection } else { statusSection }
             }
-            if model.sheet.address == nil { linkSection } else { statusSection }
+            .prefillRows()
         }
         .prefillCanvas()
         .navigationTitle("Google Sheet")
@@ -58,6 +61,7 @@ struct GoogleSheetScreen: View {
     private var statusSection: some View {
         Section {
             Toggle("Send applications", isOn: sendsApplications)
+                    .tint(Palette.positive)
                 .accessibilityIdentifier("sheet-on")
             LabeledContent("Waiting to send", value: model.sheet.waiting(model.applications).count.formatted())
             if let lastSent = model.sheet.lastSent {

@@ -12,12 +12,15 @@ struct RelabelSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                TextField("For example, Side project", text: $custom)
-                    .submitLabel(.done)
-                    .onSubmit(applyCustom)
-                    .focused($isFocused)
-                    .accessibilityLabel("Label")
+            List {
+                Group {
+                    TextField("For example, Side project", text: $custom)
+                        .submitLabel(.done)
+                        .onSubmit(applyCustom)
+                        .focused($isFocused)
+                        .accessibilityLabel("Label")
+                }
+                .prefillRows()
             }
             .prefillCanvas()
             .navigationTitle("Custom label")
@@ -64,23 +67,26 @@ struct AddValueSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    fields
-                } footer: {
-                    if let error {
-                        Label(error, systemImage: "exclamationmark.circle")
-                            .foregroundStyle(Palette.destructive)
+            List {
+                Group {
+                    Section {
+                        fields
+                    } footer: {
+                        if let error {
+                            Label(error, systemImage: "exclamationmark.circle")
+                                .foregroundStyle(Palette.destructive)
+                        }
                     }
-                }
-                Section {
-                    Picker("Label", selection: $label) {
-                        Text(kind == .link ? "Automatic" : "No label").tag(String?.none)
-                        ForEach(LabelChoices.system(for: kind), id: \.self) { choice in
-                            Text(LabelChoices.caption(choice, kind: kind)).tag(Optional(choice))
+                    Section {
+                        Picker("Label", selection: $label) {
+                            Text(kind == .link ? "Automatic" : "No label").tag(String?.none)
+                            ForEach(LabelChoices.system(for: kind), id: \.self) { choice in
+                                Text(LabelChoices.caption(choice, kind: kind)).tag(Optional(choice))
+                            }
                         }
                     }
                 }
+                .prefillRows()
             }
             .prefillCanvas()
             .navigationTitle(kind.addTitle)

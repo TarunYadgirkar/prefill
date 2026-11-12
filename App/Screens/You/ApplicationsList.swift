@@ -18,20 +18,22 @@ struct ApplicationsList: View {
 
     var body: some View {
         List(shown) { application in
-            NavigationLink {
-                ApplicationDetail(application: application)
-            } label: {
-                ApplicationRow(application: application)
-            }
-            .accessibilityIdentifier("application-\(application.id)")
-            .swipeActions {
-                Button("Delete", systemImage: "trash", role: .destructive) {
-                    model.removeApplications([application.id])
+            Group {
+                NavigationLink {
+                    ApplicationDetail(application: application)
+                } label: {
+                    ApplicationRow(application: application)
+                }
+                .accessibilityIdentifier("application-\(application.id)")
+                .swipeActions {
+                    Button("Delete", systemImage: "trash", role: .destructive) {
+                        model.removeApplications([application.id])
+                    }
                 }
             }
+            .prefillRows()
         }
         .prefillCanvas()
-        .listStyle(.insetGrouped)
         .navigationTitle("Applications")
         .searchable(text: $query, prompt: Text("Search questions and answers"))
         .overlay { emptyState }
@@ -81,29 +83,31 @@ struct ApplicationDetail: View {
 
     var body: some View {
         List {
-            Section {
-                Text("\(application.site) · \(application.date.formatted(date: .long, time: .shortened))")
-                    .textRole(.secondary)
-            }
-            if !application.files.isEmpty {
+            Group {
                 Section {
-                    ForEach(application.files, id: \.self) { file in
-                        answer(question: file.question, text: file.name)
+                    Text("\(application.site) · \(application.date.formatted(date: .long, time: .shortened))")
+                        .textRole(.secondary)
+                }
+                if !application.files.isEmpty {
+                    Section {
+                        ForEach(application.files, id: \.self) { file in
+                            answer(question: file.question, text: file.name)
+                        }
+                    } header: {
+                        Text("Files").textRole(.groupHeader)
+                    }
+                }
+                Section {
+                    ForEach(Array(application.fields.enumerated()), id: \.offset) { _, field in
+                        answer(question: field.question, text: field.answer)
                     }
                 } header: {
-                    Text("Files").textRole(.groupHeader)
+                    Text("Answers").textRole(.groupHeader)
                 }
             }
-            Section {
-                ForEach(Array(application.fields.enumerated()), id: \.offset) { _, field in
-                    answer(question: field.question, text: field.answer)
-                }
-            } header: {
-                Text("Answers").textRole(.groupHeader)
-            }
+            .prefillRows()
         }
         .prefillCanvas()
-        .listStyle(.insetGrouped)
         .navigationTitle(application.title)
         .navigationBarTitleDisplayMode(.inline)
         .background(Palette.canvas)

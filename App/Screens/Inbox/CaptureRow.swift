@@ -6,7 +6,9 @@ import SwiftUI
 struct CaptureRow: View {
     @Environment(AppModel.self) private var model
     let item: RecentItem
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isWorking = false
+    @State private var isWashed = false
     // Nil until the person picks a label; until then the suggestion stands.
     @State private var picked: String??
 
@@ -22,7 +24,7 @@ struct CaptureRow: View {
     }
 
     var body: some View {
-        InboxRowFrame(mark: mark, line: line) {
+        InboxRowFrame(mark: mark, line: line, isWashed: isWashed) {
             if item.state == .saved {
                 ValueRow(value: item.value, showsKindCaption: false)
             } else {
@@ -77,7 +79,13 @@ struct CaptureRow: View {
     }
 
     @ViewBuilder private var reviewButtons: some View {
-        Button("Add") { run { await model.save(item, label: label) } }
+        Button("Add") {
+            isWorking = true
+            WashedSave(reduceMotion: reduceMotion).run($isWashed) {
+                await model.save(item, label: label)
+                isWorking = false
+            }
+        }
             .prefillButtonStyle(.rowPrimary)
             .accessibilityIdentifier("inbox-add")
         Button("Dismiss") { model.dismiss(item) }

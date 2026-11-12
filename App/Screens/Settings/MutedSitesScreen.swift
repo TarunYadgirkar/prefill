@@ -26,21 +26,27 @@ struct MutedSitesScreen: View {
 
     private var list: some View {
         List {
-            Section {
-                ForEach(model.state.mutedSites.reversed(), id: \.self) { host in
-                    HStack {
-                        Text(host.breakableAtPunctuation)
-                            .textRole(.body)
-                        Spacer(minLength: Spacing.xSmall)
-                        Button("Save here again") { model.saveAgain(on: host) }
-                            .accessibilityLabel("Save on \(host) again")
+            Group {
+                Section {
+                    ForEach(model.state.mutedSites.reversed(), id: \.self) { host in
+                        HStack {
+                            Text(host.breakableAtPunctuation)
+                                .textRole(.body)
+                            Spacer(minLength: Spacing.xSmall)
+                            Button("Save here again") { model.saveAgain(on: host) }
+                                .accessibilityLabel("Save on \(host) again")
+                        }
+                        .accessibilityIdentifier("muted-\(host)")
                     }
-                    .accessibilityIdentifier("muted-\(host)")
+                } footer: {
+                    Text("""
+                        Prefill doesn’t save new emails, phone numbers, addresses or answers you type on \
+                        these sites.
+                        """)
+                        .textRole(.footnote)
                 }
-            } footer: {
-                Text("Prefill doesn’t save new emails, phone numbers, addresses or answers you type on these sites.")
-                    .textRole(.footnote)
             }
+            .prefillRows()
         }
         .prefillCanvas()
     }

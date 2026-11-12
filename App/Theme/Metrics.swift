@@ -16,7 +16,10 @@ enum Spacing {
 enum Radius {
     static let keyboard: CGFloat = 26
     static let key: CGFloat = 8
-    static let listGroup: CGFloat = 26
+    static let listGroup: CGFloat = 14
+    static let button: CGFloat = 10
+    static let rowButton: CGFloat = 8
+    static let glyph: CGFloat = 7
     static let diagramInner: CGFloat = Radius.listGroup - Spacing.small
     static let field: CGFloat = 12
     static let fieldRing: CGFloat = Radius.field + Size.fieldRing
@@ -33,7 +36,9 @@ enum Size {
     // (assets/generated/ios27-prefix-casey-4th-value.png).
     static let loneSlotGutter: CGFloat = 30
     static let statusMark: CGFloat = 24
-    static let kindGlyph: CGFloat = 30
+    static let kindGlyph: CGFloat = 28
+    static let button: CGFloat = 48
+    static let rowButton: CGFloat = 32
     static let hitTarget: CGFloat = 44
     static let barSeparator: CGFloat = 1
     static let readableWidth: CGFloat = 560
@@ -44,10 +49,14 @@ enum Size {
 }
 
 enum Motion {
-    // Bounce stays 0 everywhere: springs settle without overshoot.
-    static let reorder = Animation.spring(duration: 0.4, bounce: 0)
-    static let state = Animation.spring(duration: 0.3, bounce: 0)
+    // Short and without overshoot: a change lands before the finger has left the screen.
+    static let reorder = Animation.snappy(duration: 0.28, extraBounce: 0)
+    static let state = Animation.snappy(duration: 0.22, extraBounce: 0)
     static let fade = Animation.easeOut(duration: 0.15)
+    static let press = Animation.easeOut(duration: 0.1)
+    // The yellow wash that crosses a row as it is saved, and how long the save waits for it.
+    static let wash = Animation.easeOut(duration: 0.18)
+    static let washDuration: Duration = .milliseconds(180)
 
     static func reorder(reduceMotion: Bool) -> Animation {
         reduceMotion ? fade : reorder

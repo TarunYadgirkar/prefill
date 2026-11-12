@@ -13,32 +13,35 @@ struct KeyboardScreen: View {
     ]
 
     var body: some View {
-        Form {
-            Section {
-                Text("""
-                    The Prefill keyboard lists your saved emails, phone numbers, links and answers in any app. \
-                    Tap one to type it and go back to your keyboard.
-                    """)
-                .textRole(.body)
-            }
-            Section {
-                ForEach(Array(Self.steps.enumerated()), id: \.offset) { index, step in
-                    Label {
-                        Text(step).textRole(.body)
-                    } icon: {
-                        Image(systemName: "\(index + 1).circle")
-                            .foregroundStyle(Palette.accent)
+        List {
+            Group {
+                Section {
+                    Text("""
+                        The Prefill keyboard lists your saved emails, phone numbers, links and answers in any app. \
+                        Tap one to type it and go back to your keyboard.
+                        """)
+                    .textRole(.body)
+                }
+                Section {
+                    ForEach(Array(Self.steps.enumerated()), id: \.offset) { index, step in
+                        Label {
+                            Text(step).textRole(.body)
+                        } icon: {
+                            Image(systemName: "\(index + 1).circle")
+                                .foregroundStyle(Palette.accent)
+                        }
                     }
+                    Button {
+                        Task { await SafariExtension.openAppSettings() }
+                    } label: {
+                        Label("Open Settings", systemImage: "arrow.up.forward.app")
+                    }
+                } header: {
+                    Text("Turn it on").textRole(.groupHeader)
                 }
-                Button {
-                    Task { await SafariExtension.openAppSettings() }
-                } label: {
-                    Label("Open Settings", systemImage: "arrow.up.forward.app")
-                }
-            } header: {
-                Text("Turn it on").textRole(.groupHeader)
+                statusSection
             }
-            statusSection
+            .prefillRows()
         }
         .prefillCanvas()
         .navigationTitle("Use Prefill in other apps")

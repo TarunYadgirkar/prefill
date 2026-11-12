@@ -10,6 +10,12 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FunnelDisplay.ttf</string>
+		<string>FunnelSans.ttf</string>
+		<string>SplineSansMono.ttf</string>
+	</array>
 	<key>PrefillKeyboardGroup</key>
 	<string>$(PREFILL_KEYBOARD_GROUP)</string>
 	<key>PrefillKeychainGroup</key>

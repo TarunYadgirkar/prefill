@@ -11,32 +11,35 @@ struct SharingScreen: View {
     @State private var isConfirming = false
 
     var body: some View {
-        Form {
-            Section {
-                ShareFact(
-                    title: "NameDrop", systemImage: "iphone.radiowaves.left.and.right",
-                    text: """
-                        Sends your name, your Contact Poster and one phone number or email you pick. \
-                        Pick your phone number.
-                        """
-                )
-                ShareFact(
-                    title: "Share Contact", systemImage: "square.and.arrow.up",
-                    text: """
-                        Sends everything on your card. Tap Filter Fields at the top of the share sheet \
-                        and turn off what you want to keep to yourself.
-                        """
-                )
-            } header: {
-                Text("What people get").textRole(.groupHeader)
+        List {
+            Group {
+                Section {
+                    ShareFact(
+                        title: "NameDrop", systemImage: "iphone.radiowaves.left.and.right",
+                        text: """
+                            Sends your name, your Contact Poster and one phone number or email you pick. \
+                            Pick your phone number.
+                            """
+                    )
+                    ShareFact(
+                        title: "Share Contact", systemImage: "square.and.arrow.up",
+                        text: """
+                            Sends everything on your card. Tap Filter Fields at the top of the share sheet \
+                            and turn off what you want to keep to yourself.
+                            """
+                    )
+                } header: {
+                    Text("What people get").textRole(.groupHeader)
+                }
+                onCardSection
+                if !heldPhones.isEmpty {
+                    heldPhonesSection
+                }
+                if model.access == .limited {
+                    macSection
+                }
             }
-            onCardSection
-            if !heldPhones.isEmpty {
-                heldPhonesSection
-            }
-            if model.access == .limited {
-                macSection
-            }
+            .prefillRows()
         }
         .prefillCanvas()
         .navigationTitle("Sharing your card")
@@ -64,6 +67,7 @@ struct SharingScreen: View {
                             Text(extra.value).textRole(.footnote).foregroundStyle(Palette.textSecondary)
                         }
                     }
+                    .tint(Palette.positive)
                     .accessibilityIdentifier("extra-\(extra.id)")
                 }
                 Button("Move \(chosenExtras.count) off your card") { isConfirming = true }

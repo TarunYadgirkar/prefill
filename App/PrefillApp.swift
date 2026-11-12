@@ -24,5 +24,6 @@ struct PrefillApp: App {
         RootView()
             .environment(AppModel.shared)
             .tint(Palette.accent)
+            .font(TextRole.body.font)
     }
 }
