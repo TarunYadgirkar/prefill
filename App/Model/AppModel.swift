@@ -26,15 +26,23 @@ final class AppModel {
     static let seenChangesKey = "seenChanges"
     static let maxSeenChanges = 100
 
-    private(set) var state = AppState() { didSet { refreshOffers() } }
+    private(set) var state = AppState() {
+        didSet { if state.insights != oldValue.insights { refreshOffers() } }
+    }
     private(set) var events = ExtensionEvents()
     // Every job application sent from this iPhone, newest first, from the app's own archive.
-    var applications: [SubmittedApplication] = [] { didSet { refreshOffers() } }
-    // Read from the three above and the card when one of them changes, never while drawing.
+    var applications: [SubmittedApplication] = [] {
+        didSet { if applications != oldValue { refreshOffers() } }
+    }
+    // Read off the main thread from the three above and the card when one of them changes.
     var answerOffers: [AnswerOffer] = []
+    // Rows the person removed whose card write is still running: hidden at once, back if it fails.
+    var removing: Set<String> = []
     var sheet = SheetSettings()
     var sheetProblem: String?
-    private(set) var card: CardRecord? { didSet { refreshOffers() } }
+    private(set) var card: CardRecord? {
+        didSet { if card?.customFields != oldValue?.customFields { refreshOffers() } }
+    }
     private(set) var cardFailure: CardWriteFailure?
     // What is on the person's own card, which Share Contact sends, and what Prefill's contact holds.
     private(set) var placement = CardPlacement(onCard: [])
@@ -61,6 +69,7 @@ final class AppModel {
     @ObservationIgnored var isSendingToSheet = false
     @ObservationIgnored private var cardObserver: (any NSObjectProtocol)?
     @ObservationIgnored var reorderSync: Task<Void, Never>?
+    @ObservationIgnored var offersRefresh: Task<Void, Never>?
     @ObservationIgnored var keyboardValues: [KeyboardValue]?
     @ObservationIgnored var isStateUnreadable = false
     // Set in the build the paid team signs (AppModel+Cloud).
@@ -120,11 +129,6 @@ final class AppModel {
         return [card.givenName, card.familyName].filter { !$0.isEmpty }.joined(separator: " ")
     }
 
-    func values(_ kind: ContactKind) -> [ContactValue] {
-        guard let card else { return [] }
-        return ManualOrder.values(kind, card: card, known: state.values, now: .now)
-    }
-
     var recent: [RecentItem] {
         guard let card else { return [] }
         return RecentCaptures.items(events: events, state: state, card: card)
@@ -174,10 +178,12 @@ final class AppModel {
         }
         switch await CardWork.fetch(gateway, identifier: link.contactIdentifier) {
         case .success(let fresh):
-            card = fresh
+            // Contacts reports Prefill's own writes too; the same card again redraws nothing.
+            if fresh != card { card = fresh }
             cardFailure = nil
             adoptCardValues(fresh)
-            if let fresh = await CardWork.placement(gateway, identifier: link.contactIdentifier) {
+            if let fresh = await CardWork.placement(gateway, identifier: link.contactIdentifier),
+               fresh != placement {
                 placement = fresh
             }
             shareWithKeyboard()
@@ -317,56 +323,6 @@ extension CardWriteFailure {
             """)
         case .notWritable, .changedDuringSave, .other: reason
         }
-    }
-}
-
-// Contacts calls block, so they run off the main actor.
-nonisolated enum CardWork {
-    @concurrent static func fetch(
-        _ gateway: any ContactsGateway, identifier: String
-    ) async -> Result<CardRecord, CardWriteFailure> {
-        do throws(CardWriteFailure) {
-            return .success(try gateway.fetchCard(identifier: identifier))
-        } catch {
-            return .failure(error)
-        }
-    }
-
-    // Nil when the card couldn't be read, so the screen doesn't claim it is clean.
-    @concurrent static func placement(_ gateway: any ContactsGateway, identifier: String) async -> CardPlacement? {
-        try? gateway.placement(identifier: identifier)
-    }
-
-    @concurrent static func moveOffCard(
-        _ gateway: any ContactsGateway, _ chosen: [CardExtra], identifier: String
-    ) async -> CardWriteFailure? {
-        do throws(CardWriteFailure) {
-            try gateway.moveOffCard(chosen, identifier: identifier)
-            return nil
-        } catch {
-            return error
-        }
-    }
-
-    @concurrent static func moveOntoCard(
-        _ gateway: any ContactsGateway, _ chosen: [CardExtra]?, identifier: String, leavingMinimal: Bool
-    ) async -> CardWriteFailure? {
-        do throws(CardWriteFailure) {
-            try gateway.moveOntoCard(chosen, identifier: identifier, leavingMinimal: leavingMinimal)
-            return nil
-        } catch {
-            return error
-        }
-    }
-
-    @concurrent static func sync(_ gateway: any ContactsGateway, _ request: CardSyncRequest) async -> CardWriteOutcome {
-        CardWriter(gateway: gateway).sync(request).outcome
-    }
-
-    @concurrent static func edit(
-        _ gateway: any ContactsGateway, _ edit: CardEditor.Edit, identifier: String
-    ) async -> CardWriteOutcome {
-        CardEditor(gateway: gateway).apply(edit, cardIdentifier: identifier)
     }
 }
 

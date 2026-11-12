@@ -35,13 +35,15 @@ private struct InboxList: View {
     @State private var editing: CustomField?
 
     var body: some View {
+        let needsYou = model.needsYou
+        let exceptions = model.exceptions
         List {
             if model.offersShortCard {
                 ShortCardOffer()
             }
-            if !model.needsYou.isEmpty {
+            if !needsYou.isEmpty {
                 Section {
-                    ForEach(model.needsYou) { item in
+                    ForEach(needsYou) { item in
                         CaptureRow(item: item)
                     }
                 } header: {
@@ -53,9 +55,9 @@ private struct InboxList: View {
                         .textRole(.footnote)
                 }
             }
-            if !model.exceptions.isEmpty {
+            if !exceptions.isEmpty {
                 Section {
-                    ForEach(model.exceptions) { entry in
+                    ForEach(exceptions) { entry in
                         row(entry)
                     }
                     if model.answerOffers.count > 1 {
@@ -68,8 +70,8 @@ private struct InboxList: View {
             }
         }
         .prefillCanvas()
-        .animation(Motion.state(reduceMotion: reduceMotion), value: model.needsYou)
-        .animation(Motion.state(reduceMotion: reduceMotion), value: model.exceptions)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: needsYou)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: exceptions)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.offersShortCard)
         .sheet(item: $editing) { field in
             CustomFieldSheet(original: field)
