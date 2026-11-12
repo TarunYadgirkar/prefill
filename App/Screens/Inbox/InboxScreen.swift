@@ -35,37 +35,46 @@ private struct InboxList: View {
     @State private var editing: CustomField?
 
     var body: some View {
+        let needsYou = model.needsYou
+        let exceptions = model.exceptions
         List {
-            if model.offersShortCard {
-                ShortCardOffer()
-            }
-            if !model.needsYou.isEmpty {
-                Section {
-                    ForEach(model.needsYou) { item in
-                        CaptureRow(item: item)
+            Group {
+                if model.offersShortCard {
+                    ShortCardOffer()
+                }
+                if !needsYou.isEmpty {
+                    Section {
+                        ForEach(needsYou) { item in
+                            CaptureRow(item: item)
+                        }
+                    } header: {
+                        Text("Needs you").textRole(.groupHeader)
+                    } footer: {
+                        Text(model.state.settings.saveNewInfo
+                            ? "Prefill wasn’t sure these are yours, so they aren’t on your card yet."
+                            : "Save new info is off, so everything new waits here for you.")
+                            .textRole(.footnote)
                     }
-                } header: {
-                    Text("Needs you").textRole(.groupHeader)
-                } footer: {
-                    Text(model.state.settings.saveNewInfo
-                        ? "Prefill wasn’t sure these are yours, so they aren’t on your card yet."
-                        : "Save new info is off, so everything new waits here for you.")
-                        .textRole(.footnote)
+                }
+                if !exceptions.isEmpty {
+                    Section {
+                        ForEach(exceptions) { entry in
+                            row(entry)
+                        }
+                        if model.answerOffers.count > 1 {
+                            Button("Don’t save any") { model.dismissAllOffers() }
+                                .accessibilityIdentifier("inbox-dismiss-all-offers")
+                        }
+                    } header: {
+                        Text("To check").textRole(.groupHeader)
+                    }
                 }
             }
-            if !model.exceptions.isEmpty {
-                Section {
-                    ForEach(model.exceptions) { entry in
-                        row(entry)
-                    }
-                } header: {
-                    Text("To check").textRole(.groupHeader)
-                }
-            }
+            .prefillRows()
         }
         .prefillCanvas()
-        .animation(Motion.state(reduceMotion: reduceMotion), value: model.needsYou)
-        .animation(Motion.state(reduceMotion: reduceMotion), value: model.exceptions)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: needsYou)
+        .animation(Motion.state(reduceMotion: reduceMotion), value: exceptions)
         .animation(Motion.state(reduceMotion: reduceMotion), value: model.offersShortCard)
         .sheet(item: $editing) { field in
             CustomFieldSheet(original: field)

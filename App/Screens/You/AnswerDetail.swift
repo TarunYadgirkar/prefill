@@ -33,29 +33,31 @@ struct AnswerDetail: View {
 
     private func content(_ current: YouItem, answer: Answer?) -> some View {
         List {
-            Section {
-                heading(current)
-                if let answer {
-                    LabeledContent("Stored", value: answer.place.title)
-                        .accessibilityIdentifier("stored-place")
+            Group {
+                Section {
+                    heading(current)
+                    if let answer {
+                        LabeledContent("Stored", value: answer.place.title)
+                            .accessibilityIdentifier("stored-place")
+                    }
+                } footer: {
+                    if let answer { Text(answer.place.footer).textRole(.footnote) }
                 }
-            } footer: {
-                if let answer { Text(answer.place.footer).textRole(.footnote) }
+                if let answer, let memory = model.memory {
+                    AnswerFactsSection(answer: answer)
+                    ChangesSection(changes: memory.changes(of: answer))
+                    UsedOnSection(uses: memory.uses(of: answer))
+                }
+                if case .value(let value) = current {
+                    FirstOnSection(value: value)
+                }
+                Section {
+                    actions(current)
+                }
             }
-            if let answer, let memory = model.memory {
-                AnswerFactsSection(answer: answer)
-                ChangesSection(changes: memory.changes(of: answer))
-                UsedOnSection(uses: memory.uses(of: answer))
-            }
-            if case .value(let value) = current {
-                FirstOnSection(value: value)
-            }
-            Section {
-                actions(current)
-            }
+            .prefillRows()
         }
         .prefillCanvas()
-        .listStyle(.insetGrouped)
         .confirmationDialog(
             removeTitle(current), isPresented: $isRemoving, titleVisibility: .visible
         ) {

@@ -7,8 +7,14 @@ extension MacModel {
     private static let offerJudge = Intelligence()
     private static var isAskingAboutOffers = false
 
-    var answerOffers: [AnswerOffer] {
-        AnswerOffers.offers(offerSource)
+    // Reading them walks every recent application, so the menu draws from the stored list.
+    func refreshOffers() {
+        let offers = AnswerOffers.offers(offerSource)
+        if offers != answerOffers { answerOffers = offers }
+    }
+
+    func dismissAllOffers() {
+        commit(state.dismissing(AnswerOffers.allOffers(offerSource)))
     }
 
     private var offerSource: AnswerOffers.Source {

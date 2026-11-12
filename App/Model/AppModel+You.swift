@@ -31,6 +31,12 @@ enum YouItem: Identifiable, Hashable {
 }
 
 extension AppModel {
+    func values(_ kind: ContactKind) -> [ContactValue] {
+        guard let card else { return [] }
+        let values = ManualOrder.values(kind, card: card, known: state.values, now: .now)
+        return removing.isEmpty ? values : values.filter { !removing.contains(YouItem.value($0).id) }
+    }
+
     var memory: Memory? {
         guard let card else { return nil }
         return Memory.read(card: card, placement: placement, state: state, events: events)

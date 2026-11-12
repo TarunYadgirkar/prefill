@@ -56,8 +56,22 @@ extension AppModel {
     }
 
     // Answers from applications sent lately that Prefill could keep, each waiting for Save.
-    var answerOffers: [AnswerOffer] {
-        AnswerOffers.offers(offerSource)
+    // Reading them walks every recent application, so it happens off the main thread and the
+    // Inbox draws from the stored list. A newer change replaces a read still running.
+    func refreshOffers() {
+        let source = offerSource
+        offersRefresh?.cancel()
+        offersRefresh = Task {
+            let offers = await CardWork.offers(source)
+            guard !Task.isCancelled, offers != answerOffers else { return }
+            answerOffers = offers
+        }
+    }
+
+    func dismissAllOffers() {
+        let all = AnswerOffers.allOffers(offerSource)
+        answerOffers = []
+        commit(state.dismissing(all))
     }
 
     var offerSource: AnswerOffers.Source {
@@ -67,19 +81,25 @@ extension AppModel {
         )
     }
 
+    // The row leaves at once; a save that fails brings it back.
     func save(_ offer: AnswerOffer) async {
+        answerOffers = answerOffers.filter { $0.id != offer.id }
         guard let reason = await saveCustomField(offer.field, replacing: nil) else { return }
+        refreshOffers()
         problem = Problem(title: String(localized: "Prefill couldn’t save that answer"), message: reason)
     }
 
     func dismiss(_ offer: AnswerOffer) {
+        answerOffers = answerOffers.filter { $0.id != offer.id }
         commit(state.dismissing(offer))
     }
 
     // The guesses still to confirm, one per question and per answer on each site.
     var guessesToConfirm: [GuessToConfirm] {
-        AnswerGuessing.toConfirm(events.questions, picks: events.answerPicks) { question in
-            state.guessedAnswer(for: question, in: customFields, variant: Intelligence.modelVariant)
+        let fields = customFields
+        let variant = Intelligence.modelVariant
+        return AnswerGuessing.toConfirm(events.questions, picks: events.answerPicks) { question in
+            state.guessedAnswer(for: question, in: fields, variant: variant)
         }.map(GuessToConfirm.init)
     }
 

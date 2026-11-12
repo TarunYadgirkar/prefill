@@ -34,6 +34,9 @@ extension AppModel {
     }
 
     func remove(_ value: ContactValue) async {
+        let id = YouItem.value(value).id
+        removing.insert(id)
+        defer { removing.remove(id) }
         guard await edit(.remove(value)) == nil else { return }
         commit(state.with(values: state.values.filter { $0.id != value.id }))
     }
@@ -156,7 +159,10 @@ extension AppModel {
         return outcome
     }
 
-    var customFields: [CustomField] { card?.customFields ?? [] }
+    var customFields: [CustomField] {
+        let fields = card?.customFields ?? []
+        return removing.isEmpty ? fields : fields.filter { !removing.contains(YouItem.field($0).id) }
+    }
 
     // Returns why the field can't be saved, or nil once it is on the card.
     func saveCustomField(_ field: CustomField, replacing old: CustomField?) async -> String? {
@@ -165,6 +171,9 @@ extension AppModel {
     }
 
     func removeCustomField(_ field: CustomField) async {
+        let id = YouItem.field(field).id
+        removing.insert(id)
+        defer { removing.remove(id) }
         await edit(.removeCustomField(id: field.id))
     }
 

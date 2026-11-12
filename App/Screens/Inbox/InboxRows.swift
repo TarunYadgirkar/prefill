@@ -45,8 +45,11 @@ struct InboxMark: View {
 struct InboxRowFrame<Content: View, Actions: View>: View {
     let mark: InboxMark.Kind
     let line: Text
+    // True while the row is being saved: autofill yellow crosses it before it leaves.
+    var isWashed = false
     @ViewBuilder var content: () -> Content
     @ViewBuilder var actions: () -> Actions
+    @Environment(\.colorScheme) private var scheme
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: Spacing.small) {
@@ -57,7 +60,6 @@ struct InboxRowFrame<Content: View, Actions: View>: View {
                     line.textRole(.footnote)
                 }
                 actions()
-                    .controlSize(.small)
                     // A list row would set the icon in its own column, apart from the title.
                     .labelStyle(.titleAndIcon)
             }
@@ -66,12 +68,47 @@ struct InboxRowFrame<Content: View, Actions: View>: View {
         .padding(.vertical, Spacing.xxSmall)
         .alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
         .accessibilityElement(children: .contain)
+        // Ink stays dark over the yellow in dark mode too.
+        .environment(\.colorScheme, isWashed ? .light : scheme)
+        .listRowBackground(RowWash(isOn: isWashed))
     }
 }
 
 extension InboxRowFrame where Actions == EmptyView {
     init(mark: InboxMark.Kind, line: Text, @ViewBuilder content: @escaping () -> Content) {
         self.init(mark: mark, line: line, content: content) { EmptyView() }
+    }
+}
+
+// The fill that crosses a row from its leading edge as the row is saved.
+private struct RowWash: View {
+    let isOn: Bool
+
+    var body: some View {
+        Palette.surface
+            .overlay {
+                Palette.fill
+                    .scaleEffect(x: isOn ? 1 : 0, anchor: .leading)
+                    .animation(Motion.wash, value: isOn)
+            }
+    }
+}
+
+// Shows the wash, then runs the save. With Reduce Motion the save runs at once.
+struct WashedSave {
+    let reduceMotion: Bool
+
+    func run(_ isWashed: Binding<Bool>, _ save: @escaping () async -> Void) {
+        guard !reduceMotion else {
+            Task { await save() }
+            return
+        }
+        isWashed.wrappedValue = true
+        Task {
+            try? await Task.sleep(for: Motion.washDuration)
+            await save()
+            isWashed.wrappedValue = false
+        }
     }
 }
 
@@ -152,10 +189,12 @@ struct GuessRow: View {
 // An answer from an application the person sent. It is saved only when they say Save.
 struct OfferRow: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let offer: AnswerOffer
+    @State private var isWashed = false
 
     var body: some View {
-        InboxRowFrame(mark: .waiting, line: line) {
+        InboxRowFrame(mark: .waiting, line: line, isWashed: isWashed) {
             VStack(alignment: .leading, spacing: Spacing.hairline) {
                 Text(verbatim: offer.field.label).textRole(.valueCaption)
                 Text(offer.field.value).textRole(.value).fixedSize(horizontal: false, vertical: true)
@@ -174,7 +213,7 @@ struct OfferRow: View {
     }
 
     @ViewBuilder private var buttons: some View {
-        Button("Save") { Task { await model.save(offer) } }
+        Button("Save") { WashedSave(reduceMotion: reduceMotion).run($isWashed) { await model.save(offer) } }
             .prefillButtonStyle(.rowPrimary)
             .accessibilityIdentifier("inbox-save-offer")
         Button("Don’t save") { model.dismiss(offer) }

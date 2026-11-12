@@ -17,18 +17,21 @@ struct StudentAnswersSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    ForEach(missing, id: \.self) { question in
-                        LabeledContent(question.label) {
-                            TextField(StudentStarter.example(question), text: answer(question))
-                                .multilineTextAlignment(.trailing)
-                                .accessibilityIdentifier("student-\(question.rawValue)")
+            List {
+                Group {
+                    Section {
+                        ForEach(missing, id: \.self) { question in
+                            LabeledContent(question.label) {
+                                TextField(StudentStarter.example(question), text: answer(question))
+                                    .multilineTextAlignment(.trailing)
+                                    .accessibilityIdentifier("student-\(question.rawValue)")
+                            }
                         }
+                    } footer: {
+                        Text("Change anything that isn’t right and leave blank what you’d rather type each time.")
                     }
-                } footer: {
-                    Text("Change anything that isn’t right and leave blank what you’d rather type each time.")
                 }
+                .prefillRows()
             }
             .prefillCanvas()
             .navigationTitle("Student answers")
@@ -74,34 +77,37 @@ struct CustomFieldSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField(draft ? "Label, like Cover letter" : "Label, like School", text: $label)
-                        .textInputAutocapitalization(.sentences)
-                        .focused($isFocused)
-                        .accessibilityLabel("Label")
-                        .accessibilityIdentifier("custom-label")
-                    if draft {
-                        TextField("Your draft", text: $value, axis: .vertical)
-                            .lineLimit(6...14)
-                            .accessibilityLabel("Draft")
-                            .accessibilityIdentifier("custom-value")
-                    } else {
-                        TextField("Answer, like UC Berkeley", text: $value)
-                            .accessibilityLabel("Answer")
-                            .accessibilityIdentifier("custom-value")
-                    }
-                } footer: {
-                    if let error {
-                        Label(error, systemImage: "exclamationmark.circle")
-                            .foregroundStyle(Palette.destructive)
-                    } else if draft {
-                        Text("""
-                            Prefill offers a draft in its list under a matching field, for you to pick and edit. \
-                            Fill form never uses it.
-                            """)
+            List {
+                Group {
+                    Section {
+                        TextField(draft ? "Label, like Cover letter" : "Label, like School", text: $label)
+                            .textInputAutocapitalization(.sentences)
+                            .focused($isFocused)
+                            .accessibilityLabel("Label")
+                            .accessibilityIdentifier("custom-label")
+                        if draft {
+                            TextField("Your draft", text: $value, axis: .vertical)
+                                .lineLimit(6...14)
+                                .accessibilityLabel("Draft")
+                                .accessibilityIdentifier("custom-value")
+                        } else {
+                            TextField("Answer, like UC Berkeley", text: $value)
+                                .accessibilityLabel("Answer")
+                                .accessibilityIdentifier("custom-value")
+                        }
+                    } footer: {
+                        if let error {
+                            Label(error, systemImage: "exclamationmark.circle")
+                                .foregroundStyle(Palette.destructive)
+                        } else if draft {
+                            Text("""
+                                Prefill offers a draft in its list under a matching field, for you to pick and edit. \
+                                Fill form never uses it.
+                                """)
+                        }
                     }
                 }
+                .prefillRows()
             }
             .prefillCanvas()
             .navigationTitle(title)

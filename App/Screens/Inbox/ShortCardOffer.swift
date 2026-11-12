@@ -38,7 +38,6 @@ struct ShortCardOffer: View {
                 HStack(spacing: Spacing.small) { buttons }
                 VStack(alignment: .leading, spacing: Spacing.small) { buttons }
             }
-            .controlSize(.small)
             .disabled(isWorking)
         } header: {
             Text("Keep your card short").textRole(.groupHeader)

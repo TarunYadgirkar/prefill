@@ -37,16 +37,20 @@ private struct Figure: View {
     let label: LocalizedStringKey
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.hairline) {
-            Text(count, format: .number).textRole(.summaryNumber)
-            Text(label).textRole(.footnote).fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading, spacing: Spacing.xSmall) {
+            Text(count, format: .number)
+                .textRole(.summaryNumber)
+                .contentTransition(.numericText())
+                .padding(.horizontal, Spacing.xSmall)
+                .background(Palette.fill, in: .rect(cornerRadius: Radius.glyph))
+            Text(label).textRole(.groupHeader).fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
     }
 }
 
-// What kind of answer a row holds, as a glyph on a wash of the accent, so a long list scans
+// What kind of answer a row holds, as a glyph on a quiet square, so a long list scans
 // by shape before it is read. VoiceOver reads the caption beside it instead.
 struct KindGlyph: View {
     let symbol: String
@@ -56,7 +60,7 @@ struct KindGlyph: View {
         Image(systemName: symbol)
             .textRole(.kindGlyph)
             .frame(width: size, height: size)
-            .background(Palette.accentWash, in: .circle)
+            .background(Palette.accentWash, in: .rect(cornerRadius: Radius.glyph))
             .accessibilityHidden(true)
     }
 }

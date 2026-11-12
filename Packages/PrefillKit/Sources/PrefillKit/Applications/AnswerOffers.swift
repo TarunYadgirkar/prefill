@@ -159,13 +159,18 @@ public enum AnswerOffers {
 
     // What to show in the Inbox: one per answer name, newest first.
     public static func offers(_ source: Source) -> [AnswerOffer] {
+        Array(allOffers(source).prefix(maxOffers))
+    }
+
+    // Every offer there is, including those waiting behind the ones shown, for "Don't save any".
+    public static func allOffers(_ source: Source) -> [AnswerOffer] {
         var seen = Set(source.fields.map(\.id))
         let offers = source.candidates.compactMap { candidate -> AnswerOffer? in
             guard let field = field(for: candidate, state: source.state, variant: source.variant),
                   source.state.insight(dismissKey(field)) == nil, seen.insert(field.id).inserted else { return nil }
             return AnswerOffer(question: candidate.question, field: field, host: candidate.host, date: candidate.date)
         }
-        return Array(offers.prefix(maxOffers))
+        return offers
     }
 
     // Asks the model about each question the rules don't know, once per model, and returns the
@@ -190,6 +195,10 @@ public enum AnswerOffers {
 public extension AppState {
     // The person said not to keep this answer; the same answer isn't offered again.
     func dismissing(_ offer: AnswerOffer) -> AppState {
-        recording([CachedInsight(key: AnswerOffers.dismissKey(offer.field), answer: "no")], siteKinds: [:])
+        dismissing([offer])
+    }
+
+    func dismissing(_ offers: [AnswerOffer]) -> AppState {
+        recording(offers.map { CachedInsight(key: AnswerOffers.dismissKey($0.field), answer: "no") }, siteKinds: [:])
     }
 }

@@ -37,17 +37,19 @@ private struct SharingStep: View {
 
     var body: some View {
         List {
-            if model.placement.suggestedMoves.isEmpty {
-                Section {
-                    Text("Your card already holds only your name and phone number.").textRole(.body)
+            Group {
+                if model.placement.suggestedMoves.isEmpty {
+                    Section {
+                        Text("Your card already holds only your name and phone number.").textRole(.body)
+                    }
+                } else {
+                    ShortCardOffer { path.append(.safari) }
                 }
-            } else {
-                ShortCardOffer { path.append(.safari) }
             }
+            .prefillRows()
         }
         .navigationTitle("Your card")
-        .background(Palette.canvas)
-        .scrollContentBackground(.hidden)
+        .prefillCanvas()
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button(model.placement.suggestedMoves.isEmpty ? "Continue" : "Not now") {

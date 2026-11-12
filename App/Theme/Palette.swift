@@ -1,40 +1,40 @@
 import SwiftUI
 import UIKit
 
-// Semantic colors, the only colors views use. The keyboard colors live in KeyboardPalette,
+// Semantic colors, the only colors views use. Ink on paper with one fill color, autofill
+// yellow; green, orange and red mark state and stay apart from it. The keyboard colors live in KeyboardPalette,
 // which the Prefill keyboard shares. Nonisolated, as SwiftUI resolves dynamic colors off the
 // main thread (see KeyboardPalette).
 nonisolated enum Palette {
-    // The grays lean toward the accent's teal, so the grouped canvas reads as Prefill's own
-    // rather than Settings'. Dark mode keeps near-black with the same lean.
-    static let canvas = dynamic(light: 0xEEF2F2, dark: 0x0B1011)
-    // List rows keep the system's grouped surface, so onboarding cards match them.
-    static let surface = Color(uiColor: .secondarySystemGroupedBackground)
-    static let textPrimary = Color(uiColor: .label)
-    // 6.0:1 on white and 5.3:1 on the canvas, past 4.5:1 for the 13pt captions and footnotes
-    // it sets; dark mode keeps the system color, which already passes.
-    static let textSecondary = Color(uiColor: UIColor {
-        $0.userInterfaceStyle == .dark ? .secondaryLabel : UIColor(hex: 0x56666A)
-    })
-    static let highlight = Color(uiColor: .tertiarySystemFill)
-    static let fieldBorder = Color(uiColor: .opaqueSeparator)
-    static let focusRing = accent.opacity(0.4)
+    // Paper and graphite: grays that lean a little toward the yellow, so they read as chosen.
+    // Dark mode is a slate, not black, so the yellow sits on it as a fill and never glows.
+    static let canvas = dynamic(light: 0xF4F4F1, dark: 0x1A1C1E)
+    // Cards, sheets and anything raised off the canvas.
+    static let surface = dynamic(light: 0xFFFFFF, dark: 0x222528)
+    // Ink. 16.5:1 on paper, 14:1 on graphite.
+    static let textPrimary = dynamic(light: 0x16181A, dark: 0xECEDE8)
+    // Pencil. 5.7:1 on paper and 6.4:1 on graphite, past 4.5:1 for the 12pt captions it sets.
+    static let textSecondary = dynamic(light: 0x5C6166, dark: 0x9BA1A6)
+    static let highlight = textPrimary.opacity(0.06)
+    static let rule = dynamic(light: 0xDEDED8, dark: 0x2E3235)
+    static let fieldBorder = rule
+    static let focusRing = fill
 
-    // Lift, the teal of a value Prefill raises into a field. 5.8:1 on white in light mode and
-    // about 8:1 on the dark list surface, so the same color serves text, tint and marks. It stays apart
-    // from the green that marks what is saved.
-    static let accent = dynamic(light: 0x00707E, dark: 0x4CC9D6)
-    static let accentText = accent
-    // The tinted wash behind a kind glyph or a summary number.
-    static let accentWash = accent.opacity(0.12)
-    static let positive = Color(uiColor: .systemGreen)
-    static let pending = Color(uiColor: .secondaryLabel)
-    static let destructive = Color(uiColor: .systemRed)
-    // Marks what waits for the person. systemOrange is 2.2:1 on white, short of 3:1 for a
-    // mark; light mode goes darker, to 4.0:1 on white and 3.6:1 on the canvas.
-    static let attention = Color(uiColor: UIColor {
-        $0.userInterfaceStyle == .dark ? .systemOrange : UIColor(hex: 0xC86400)
-    })
+    // Actions are ink: links, icons and the tint. Color is kept for the fill and for state.
+    static let accent = textPrimary
+    static let accentText = textPrimary
+    static let accentWash = textPrimary.opacity(0.07)
+    // Autofill yellow, the color a browser gives a field it filled in. Only ever a fill, with
+    // `onFill` over it (14:1 in both modes): primary buttons, the summary numbers and a row
+    // as it is saved.
+    static let fill = dynamic(light: 0xFFDD33, dark: 0xF5D547)
+    static let onFill = Color(uiColor: UIColor(hex: 0x16181A))
+    // Saved. 4.9:1 on paper; the lighter green is 9:1 on graphite.
+    static let positive = dynamic(light: 0x1F7A4A, dark: 0x6CCB8E)
+    static let pending = textSecondary
+    static let destructive = dynamic(light: 0xC4321F, dark: 0xFF7A66)
+    // Waits for the person. 4.2:1 on paper, 8:1 on graphite, past 3:1 for a mark.
+    static let attention = dynamic(light: 0xB85C00, dark: 0xF2A04A)
 
     static let keyboardSurface = KeyboardPalette.surface
     static let keyboardKey = KeyboardPalette.key
@@ -49,9 +49,22 @@ nonisolated enum Palette {
 }
 
 extension View {
-    // Lists and forms sit on Prefill's canvas instead of the system's grouped gray.
+    // Lists and forms are flat rows on Prefill's canvas, with no grouped cards.
     func prefillCanvas() -> some View {
-        scrollContentBackground(.hidden).background(Palette.canvas)
+        listStyle(.grouped)
+            .listSectionSpacing(.compact)
+            .scrollContentBackground(.hidden)
+            .background(Palette.canvas)
+    }
+
+    // Applied to a list's content: every row sits on the surface, divided by the rule color,
+    // with tighter insets than the system's so more rows fit a screen.
+    func prefillRows() -> some View {
+        listRowBackground(Palette.surface)
+            .listRowSeparatorTint(Palette.rule)
+            .listRowInsets(EdgeInsets(
+                top: Spacing.xSmall, leading: Spacing.medium, bottom: Spacing.xSmall, trailing: Spacing.medium
+            ))
     }
 }
 

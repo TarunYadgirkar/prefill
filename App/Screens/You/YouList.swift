@@ -19,32 +19,34 @@ struct YouList: View {
         let links = items(model.values(.link).map(YouItem.value))
         let answers = items(model.customFields.map(YouItem.field))
         List {
-            if !isSearching, model.card != nil {
-                Section {
-                    YouSummary()
-                }
-            }
-            if !contact.isEmpty {
-                Section {
-                    ForEach(ContactKind.siteKinds) { kind in
-                        rows(items(model.values(kind).map(YouItem.value)), memory: memory)
-                            .onMove(perform: move(kind))
+            Group {
+                if !isSearching, model.card != nil {
+                    Section {
+                        YouSummary()
                     }
-                } header: {
-                    Text("Contact").textRole(.groupHeader)
+                }
+                if !contact.isEmpty {
+                    Section {
+                        ForEach(ContactKind.siteKinds) { kind in
+                            rows(items(model.values(kind).map(YouItem.value)), memory: memory)
+                                .onMove(perform: move(kind))
+                        }
+                    } header: {
+                        Text("Contact").textRole(.groupHeader)
+                    }
+                }
+                group("Links", links, memory: memory)
+                group("Answers", answers, memory: memory)
+                if !isSearching {
+                    ApplicationsSection(count: model.applications.count)
+                }
+                if !isSearching, let memory {
+                    PreferencesSection(preferences: memory.preferences)
                 }
             }
-            group("Links", links, memory: memory)
-            group("Answers", answers, memory: memory)
-            if !isSearching {
-                ApplicationsSection(count: model.applications.count)
-            }
-            if !isSearching, let memory {
-                PreferencesSection(preferences: memory.preferences)
-            }
+            .prefillRows()
         }
         .prefillCanvas()
-        .listStyle(.insetGrouped)
         .overlay { emptyState(isEmpty: contact.isEmpty && links.isEmpty && answers.isEmpty) }
         .sensoryFeedback(.selection, trigger: model.state.values.map(\.id))
     }
@@ -124,8 +126,7 @@ struct YouRow: View {
                 }
                 if useCount > 0 {
                     Text("^[\(useCount) site](inflect: true)")
-                        .textRole(.footnote)
-                        .monospacedDigit()
+                        .textRole(.meta)
                         .accessibilityLabel(Text("Used on ^[\(useCount) site](inflect: true)"))
                 }
             }

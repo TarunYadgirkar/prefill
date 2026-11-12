@@ -17,17 +17,20 @@ struct CardChooser: View {
 
     var body: some View {
         List {
-            Section {
-                ForEach(shown) { card in
-                    row(card)
+            Group {
+                Section {
+                    ForEach(shown) { card in
+                        row(card)
+                    }
+                } footer: {
+                    Text("""
+                        Pick the card that Safari lists as My Info. That card holds the emails, phone numbers and \
+                        addresses Safari suggests.
+                        """)
+                        .textRole(.footnote)
                 }
-            } footer: {
-                Text("""
-                    Pick the card that Safari lists as My Info. That card holds the emails, phone numbers and \
-                    addresses Safari suggests.
-                    """)
-                    .textRole(.footnote)
             }
+            .prefillRows()
         }
         .prefillCanvas()
         .navigationTitle("Which card is yours?")
