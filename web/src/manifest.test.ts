@@ -74,6 +74,16 @@ describe("content scripts", () => {
   });
 });
 
+it("gives both extensions the app's marketing version", () => {
+  const project = readFileSync(new URL("../../project.yml", import.meta.url), "utf8");
+  const appVersion = /^ *MARKETING_VERSION: "(.+)"/mu.exec(project)?.[1];
+  const chrome = JSON.parse(
+    readFileSync(new URL("../chromium/manifest.json", import.meta.url), "utf8"),
+  ) as { version: string };
+  const safari = JSON.parse(readFileSync(new URL("manifest.json", RESOURCES), "utf8")) as { version: string };
+  expect([safari.version, chrome.version]).toEqual([appVersion, appVersion]);
+});
+
 describe("manifest action", () => {
   it("opens Safari's Prefill sheet from the page menu", () => {
     expect(manifest.action.default_popup).toBe("popup.html");

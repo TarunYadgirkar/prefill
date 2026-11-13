@@ -13,6 +13,11 @@ const EXACT_HOSTS: ReadonlySet<string> = new Set([
   "jobs.smartrecruiters.com",
 ]);
 
+// Form builders that sites embed for their application forms, such as Modal's builder grant
+// form on modal.com/builders, which is a Fillout form in a frame from embed.fillout.com.
+// These run Prefill in the frame like an ATS does, but aren't assumed to be job applications.
+const FORM_FRAME_HOSTS: ReadonlySet<string> = new Set(["embed.fillout.com", "forms.fillout.com"]);
+
 // Each company gets its own subdomain here, such as acme.wd5.myworkdayjobs.com or
 // us-careers-acme.icims.com (iCIMS shows its form in a frame from the same host).
 const DOMAIN_SUFFIXES: readonly string[] = ["myworkdayjobs.com", "icims.com"];
@@ -22,5 +27,5 @@ export function isAtsHost(hostname: string): boolean {
 }
 
 export function isAtsFrame(protocol: string, hostname: string): boolean {
-  return protocol === "https:" && isAtsHost(hostname);
+  return protocol === "https:" && (isAtsHost(hostname) || FORM_FRAME_HOSTS.has(hostname));
 }
