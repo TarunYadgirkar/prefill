@@ -92,6 +92,8 @@ it.each([
   ["a job form frame inside a plain http page", { isTopFrame: false, hostname: "jobs.lever.co", isSecureContext: false }],
   ["a job form frame over plain http", { isTopFrame: false, protocol: "http:", hostname: "jobs.lever.co" }],
   ["a frame on a look-alike host", { isTopFrame: false, hostname: "jobs.lever.co.example.com" }],
+  ["a form builder frame over plain http", { isTopFrame: false, protocol: "http:", hostname: "embed.fillout.com" }],
+  ["a subdomain of a form builder", { isTopFrame: false, hostname: "evil.embed.fillout.com" }],
 ])("does nothing on %s", async (_, overrides: Partial<PageEnvironment>) => {
   const send = await load(
     '<form><input type="email" autocomplete="email"></form>',
@@ -100,7 +102,7 @@ it.each([
   expect(send).not.toHaveBeenCalled();
 });
 
-it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com", "us-careers-rivian.icims.com"])(
+it.each(["boards.greenhouse.io", "jobs.ashbyhq.com", "acme.wd5.myworkdayjobs.com", "us-careers-rivian.icims.com", "embed.fillout.com"])(
   "runs in a job application frame from %s, under its own host",
   async (hostname) => {
     const send = await load('<input type="email" autocomplete="email">', { isTopFrame: false, hostname });
