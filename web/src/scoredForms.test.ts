@@ -162,6 +162,15 @@ describe("a saved date against year and month lists", () => {
     expect(pickOption([{ text: "2027", value: "a" }, { text: "May", value: "b" }], "May 2027")).toBe(-1);
   });
 
+  it("reads a date saved in numbers (\"2028-05\", \"05/2028\")", () => {
+    const years = ["2027", "2028", "2029"].map((text) => ({ text, value: text }));
+    const months = ["April", "May", "June"].map((text) => ({ text, value: text }));
+    expect(pickOption(years, "2028-05")).toBe(1);
+    expect(pickOption(months, "2028-05")).toBe(1);
+    expect(pickOption(months, "05/2028")).toBe(1);
+    expect(pickOption(months, "2028-13")).toBe(-1);
+  });
+
   it("fills Lever's graduation year and month from \"May 2027\"", async () => {
     load("leverPalantir");
     const send = (request: ExtensionRequest): Promise<unknown> => {

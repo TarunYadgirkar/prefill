@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { classify } from "./classify";
-import { isCombobox, isComboboxEmpty } from "./combobox";
+import { fillCombobox, isCombobox, isComboboxEmpty } from "./combobox";
 import { fieldText } from "./custom";
 import { fieldElements } from "./dom";
 import { fillForm, findSlots } from "./fill";
 import type { ExtensionRequest } from "./messages";
 import type { FieldElement } from "./fieldTypes";
 import ashbyDecagon from "./fixtures/ats-ashby-decagon.html?raw";
+import greenhouseAkuna from "./fixtures/ats-greenhouse-akuna.html?raw";
 import greenhouseBraeburn from "./fixtures/ats-greenhouse-braeburn.html?raw";
 import greenhouseGarner from "./fixtures/ats-greenhouse-garner.html?raw";
 import leverKepler from "./fixtures/ats-lever-kepler.html?raw";
@@ -195,5 +196,73 @@ describe("Greenhouse's searchable dropdowns", () => {
     fieldIn("greenhouseGarner", "email");
     const texts = findSlots(document).flatMap((slot) => (slot.want.from === "custom" ? [slot.want.text] : []));
     expect(texts.some((text) => text.startsWith("If"))).toBe(false);
+  });
+});
+
+describe("Greenhouse's newer boards (Akuna)", () => {
+  beforeEach(() => {
+    document.body.innerHTML = greenhouseAkuna;
+    vi.spyOn(Element.prototype, "getBoundingClientRect").mockReturnValue(new DOMRect(10, 10, 200, 30));
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const input = (id: string): HTMLInputElement => document.getElementById(id) as HTMLInputElement;
+
+  // job-boards.greenhouse.io keeps the list's open state itself: a keyup opens it, and the
+  // keydown React-Select reads does nothing alone. This stands in for that.
+  function opensOnKeyUp(box: HTMLInputElement, options: readonly string[]): () => string {
+    let chosen = "";
+    box.addEventListener("keyup", (event) => {
+      if (event.key === "Escape" || box.nextElementSibling?.getAttribute("role") === "listbox") return;
+      const list = document.createElement("div");
+      list.setAttribute("role", "listbox");
+      list.id = `react-select-${box.id}-listbox`;
+      options.forEach((text, index) => {
+        const option = document.createElement("div");
+        option.id = `react-select-${box.id}-option-${String(index)}`;
+        option.setAttribute("role", "option");
+        option.textContent = text;
+        option.addEventListener("click", () => {
+          chosen = text;
+          list.remove();
+        });
+        list.append(option);
+      });
+      box.after(list);
+    });
+    return () => chosen;
+  }
+
+  it("opens a list that waits for the key to be let go, and picks the declining option", async () => {
+    const box = input("6019");
+    const chosen = opensOnKeyUp(box, ["Yes", "No", "I prefer to self-describe", "I don't wish to answer"]);
+    const undo = await fillCombobox(box, (options) => options.findIndex((option) => option.text.startsWith("I don")));
+    expect(undo).toBeDefined();
+    expect(chosen()).toBe("I don't wish to answer");
+  });
+
+  it("asks the work authorization question by its last sentence, not its sponsorship notice", () => {
+    const asked = findSlots(document).find((slot) => slot.control === "combobox" && slot.element.id === "question_67436776");
+    expect(asked?.want).toEqual(expect.objectContaining({ text: expect.stringMatching(/^If hired, are you legally authorized to work/u) as string }));
+  });
+
+  it("keeps a saved No out of the box asking for detail about sponsorship needs", async () => {
+    const send = (request: ExtensionRequest): Promise<unknown> =>
+      Promise.resolve(
+        request.type === "customSuggestions"
+          ? { type: "customSuggestionsResult", fields: request.fields.map(({ text }) => ({ values: /sponsor/iu.test(text) ? [{ value: "No", label: "Sponsorship" }] : [] })) }
+          : { type: "error", message: "none" },
+      );
+    const box = document.getElementById("question_67436781") as HTMLTextAreaElement;
+    const scope = box.parentElement?.parentElement ?? box;
+    const sponsorship = document.getElementById("question_67436777")?.parentElement?.parentElement ?? box;
+    expect(fieldElements(scope)).toEqual([box]);
+    expect((await fillForm(scope, { host: () => "job-boards.greenhouse.io", send })).filled).toBe(0);
+    expect(box.value).toBe("");
+    // The yes/no question beside it still takes the answer.
+    expect(findSlots(sponsorship).map((slot) => slot.control)).toEqual(["combobox"]);
   });
 });
